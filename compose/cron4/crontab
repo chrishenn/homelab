@@ -1,0 +1,8 @@
+14 7 * * * rsync -a --progress --stats /mnt/q/media_library /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/k/docker /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/k/images /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/h/images /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/h/datasets /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/h/windows /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/h/linux /mnt/f/backup/
+14 7 * * * rsync -a --progress --stats /mnt/h/porn /mnt/f/backup/

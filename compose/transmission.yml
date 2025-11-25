@@ -1,0 +1,25 @@
+# torrent client
+---
+services:
+  transmission:
+    profiles: [transmission]
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      USER: ${USER}
+      PASS: ${PASS}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/transmission/config:/config
+      - $DATA/transmission/downloads:/downloads
+    network_mode: service:gluetun

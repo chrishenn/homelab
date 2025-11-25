@@ -1,0 +1,14 @@
+---
+services:
+  blocky_k:
+    profiles: [blocky_k]
+    image: ${REGISTRY}/keepalived:latest
+    container_name: blocky_k
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      KEEPALIVED_CUSTOM_CONFIG: "true"
+    volumes:
+      - ../../rack4/apps/blocky_k/backup.conf:/etc/keepalived/keepalived.conf
+    network_mode: host
+    cap_add: [NET_ADMIN, NET_BROADCAST]

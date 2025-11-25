@@ -1,0 +1,26 @@
+---
+services:
+  minio:
+    profiles: [minio]
+    image: minio/minio
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: 12341234
+      MINIO_DEFAULT_BUCKETS:
+    volumes:
+      - $DATA/minio:/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.minio.rule: Host(`minio.henn.dev`)
+      traefik.http.routers.minio.entrypoints: websecure
+      traefik.http.routers.minio.tls.certresolver: cf
+      traefik.http.services.minio.loadbalancer.server.port: 9001
+      homepage.group: Infra
+      homepage.name: Minio
+      homepage.icon: minio.png
+      homepage.href: https://minio.henn.dev
+      homepage.description: Object Store

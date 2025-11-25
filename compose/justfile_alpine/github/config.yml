@@ -1,0 +1,9 @@
+github:
+  - job_name: github.com
+    access_token: op://homelab/github/credential
+    owned: true
+    starred: false
+    collaborator: false
+    org_member: false
+    url:
+    exclude:

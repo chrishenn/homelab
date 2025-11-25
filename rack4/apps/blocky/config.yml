@@ -1,0 +1,107 @@
+upstreams:
+  init:
+    # startup behavior: {blocking, failOnError, fast}
+    strategy: fast
+  groups:
+    default:
+      - https://one.one.one.one/dns-query
+      - tcp-tls:one.one.one.one:853
+      - https://dns.nextdns.io/74c891
+      - tcp-tls:74c891.dns.nextdns.io:853
+
+  # strategy blocky uses to choose upstream servers: {parallel_best, strict, random}
+  strategy: parallel_best
+  timeout: 2s
+  userAgent: none
+
+bootstrapDns: 1.1.1.1
+
+# Determines how blocky will create outgoing connections; impacts both upstreams and lists: {dual, v4, v6}
+connectIPVersion: v4
+
+customDNS:
+  customTTL: 1h
+  filterUnmappedTypes: false
+  mapping:
+    # traefik VIP with {master, backup} = {192.168.1.142, 192.168.1.70}
+    henn.dev: 192.168.1.4
+
+blocking:
+  # Note: if the same group has both allow/denylists, allowlists take precedence
+  denylists:
+    ads:
+      - /app/blacklists/hosts
+      - /app/blacklists/pro.plus.txt
+      - /app/blacklists/fake.txt
+      - /app/blacklists/popupads.txt
+      - /app/blacklists/tif.txt
+      - /app/blacklists/native.samsung.txt
+      - /app/blacklists/native.winoffice.txt
+  allowlists:
+    ads:
+      - |
+        s.youtube.com
+        assistant-s3-pa.googleapis.com
+  clientGroupsBlock:
+    default:
+      - ads
+  blockType: zeroIp
+  blockTTL: 6h
+  loading:
+    refreshPeriod: 4h
+    downloads:
+      timeout: 5s
+      attempts: 5
+      cooldown: 10s
+    concurrency: 4
+    strategy: blocking
+    maxErrorsPerSource: 5
+
+caching:
+  minTime: 0m
+  maxTime: 0m
+  maxItemsCount: 0
+  prefetching: true
+  prefetchExpires: 2h
+  prefetchThreshold: 5
+  prefetchMaxItemsCount: 0
+  cacheTimeNegative: 30m
+
+clientLookup:
+  # this DNS resolver will be used to perform reverse DNS lookup (typically local router)
+  upstream: 192.168.1.1
+
+prometheus:
+  enable: true
+  path: /metrics
+
+# if https port > 0: path to cert and key file for SSL encryption. if not set, self-signed certificate will be generated
+minTlsServeVersion: 1.3
+
+# if path defined, use this file for query resolution (A, AAAA and rDNS). Default: empty
+hostsFile:
+
+# ports configuration
+ports:
+  dns: 53
+  tls: 853
+  https: 443
+  http: 4000
+
+log:
+  # Log level: {trace, debug, info, warn, error}
+  level: info
+  # Log format: {text, json}
+  format: text
+  timestamp: true
+  privacy: false
+
+ede:
+  enable: true
+
+specialUseDomains:
+  rfc6762-appendixG: true
+
+ecs:
+  useAsClient: true
+  forward: true

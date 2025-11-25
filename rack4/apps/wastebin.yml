@@ -1,0 +1,19 @@
+---
+services:
+  wastebin:
+    profiles: [wastebin]
+    image: quxfoo/wastebin:latest
+    container_name: wastebin
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.wastebin.rule: Host(`wastebin.henn.dev`)
+      traefik.http.routers.wastebin.entrypoints: websecure
+      traefik.http.routers.wastebin.tls.certresolver: cf
+      traefik.http.services.wastebin.loadbalancer.server.port: 8088
+      homepage.group: Code
+      homepage.name: Wastebin
+      homepage.icon: pastebin-dark.webp
+      homepage.href: https://wastebin.henn.dev
+      homepage.description: Pastebin

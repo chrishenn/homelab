@@ -1,0 +1,41 @@
+Vagrant.configure("2") do |config|
+    config.winrm.max_tries = 300
+    config.winrm.retry_delay = 2
+    config.winrm.username = "vagrant"
+    config.winrm.password = "vagrant"
+
+    config.vm.define "${VM_NAME}"
+    config.vm.box = "${VAGRANT_BOX_PATH}"
+    config.vm.hostname = "${VM_NAME}"
+    config.vm.box_check_update = false
+    config.vm.communicator = "winrm"
+    config.vm.guest = :windows
+
+    config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+    config.vm.network :forwarded_port, guest: 22, host: 2022, id: "ssh", protocol: "tcp", auto_correct: true
+
+    config.vm.provider "libvirt" do |libvirt|
+        libvirt.machine_type = 'q35'
+        libvirt.cpu_mode = "maximum"
+        libvirt.cpus = ${CPUS}
+        libvirt.cputopology :sockets => "1", :cores => "${CORES}", :threads => "2"
+
+        libvirt.memory = ${MEMORY}
+        libvirt.memorybacking :access, :mode => "shared"
+
+        libvirt.machine_virtual_size = ${DISK_SIZE}
+        libvirt.disk_driver :discard => "unmap"
+
+        libvirt.usb_controller :model => "none"
+        libvirt.management_network_pci_bus = "0"
+        libvirt.management_network_pci_slot = "3"
+        libvirt.memballoon_enabled = true
+        libvirt.memballoon_pci_bus = "0"
+        libvirt.memballoon_pci_slot = "4"
+        libvirt.video_type = 'vga'
+        libvirt.input :type => "tablet", :bus => "virtio"
+    end
+
+    config.vm.provision "shell", privileged: true, path: "provision.ps1"
+
+end

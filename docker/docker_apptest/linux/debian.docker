@@ -1,0 +1,37 @@
+FROM debian:bookworm-20210816
+
+## install systemd
+ENV container docker
+RUN apt-get update ; \
+    apt-get install -y systemd systemd-sysv ; \
+    apt-get clean ; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ; \
+    cd /lib/systemd/system/sysinit.target.wants/ ; \
+    ls | grep -v systemd-tmpfiles-setup | xargs rm -f $1 ; \
+    rm -f /lib/systemd/system/multi-user.target.wants/* ; \
+    rm -f /etc/systemd/system/*.wants/* ; \
+    rm -f /lib/systemd/system/local-fs.target.wants/* ; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev* ; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl* ; \
+    rm -f /lib/systemd/system/basic.target.wants/* ; \
+    rm -f /lib/systemd/system/anaconda.target.wants/* ; \
+    rm -f /lib/systemd/system/plymouth* ; \
+    rm -f /lib/systemd/system/systemd-update-utmp*
+
+## install the app
+ENV INSTALLER_SUFFIX=.deb
+ENV ARCH=amd64
+ENV INSTALLER_FILE=app*${ARCH}${INSTALLER_SUFFIX}
+ENV SETTINGS_FILE=app.json
+
+COPY ${INSTALLER_FILE} .
+RUN apt update && \
+    apt install libcurl4 procps libmnl0 man unzip less -y && \
+    dpkg -i ./${INSTALLER_FILE} && \
+    apt-get clean
+
+RUN mkdir -p /etc/app/
+COPY ${SETTINGS_FILE} /etc/app/app
+RUN systemctl enable app
+
+CMD ["/lib/systemd/systemd"]

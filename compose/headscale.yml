@@ -1,0 +1,63 @@
+# works. unused for now
+# openssl rand -base64 32
+
+# just attach headscale 'headscale apikeys create'
+# use this api key in the headscale_ui web interface
+
+# just attach headscale 'headscale users create chris'
+# just attach headscale 'headscale users list'
+# just attach headscale 'headscale preauthkeys create -u 1 --reusable'
+# just attach headscale 'headscale preauthkeys list -u 1'
+# sudo tailscale up --login-server https://hs.henn.dev
+# sudo tailscale up --login-server https://hs.henn.dev --authkey <YOUR_preauthkey>
+
+# copy from browser
+# just attach headscale 'headscale nodes register --user chris --key <key>'
+
+---
+services:
+  headscale:
+    profiles: [headscale]
+    image: headscale/headscale:latest
+    container_name: headscale
+    restart: unless-stopped
+    volumes:
+      - ./headscale:/etc/headscale/
+      - $DATA/headscale/lib:/var/lib/headscale
+      - $DATA/headscale/run:/var/run/headscale
+    command: serve
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.headscale.service: headscale
+      traefik.http.routers.headscale.rule: Host(`hs.henn.dev`) && PathPrefix(`/`)
+      traefik.http.routers.headscale.entrypoints: websecure
+      traefik.http.routers.headscale.tls.certresolver: cf
+      traefik.http.services.headscale.loadbalancer.server.port: 8080
+
+      traefik.http.routers.headscale_metrics.service: headscale_metrics
+      traefik.http.routers.headscale_metrics.rule: Host(`hs.henn.dev`) && (PathPrefix(`/metrics`) || PathPrefix(`/debug`))
+      traefik.http.routers.headscale_metrics.entrypoints: websecure
+      traefik.http.routers.headscale_metrics.tls.certresolver: cf
+      traefik.http.services.headscale_metrics.loadbalancer.server.port: 9090
+
+  headscale_ui:
+    profiles: [headscale]
+    image: ghcr.io/gurucomputing/headscale-ui:latest
+    container_name: headscale_ui
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      HS_SERVER: https://hs.henn.dev
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.headscale_ui.rule: Host(`hs.henn.dev`) && PathPrefix(`/web`)
+      traefik.http.routers.headscale_ui.entrypoints: websecure
+      traefik.http.routers.headscale_ui.tls.certresolver: cf
+      traefik.http.services.headscale_ui.loadbalancer.server.port: 8080
+      homepage.group: Infra
+      homepage.name: Headscale UI
+      homepage.icon: headscale.png
+      homepage.href: https://hs.henn.dev/web
+      homepage.description: Tailnet Control Server

@@ -1,0 +1,26 @@
+---
+services:
+  beszel_rack0:
+    profiles: [beszel_rack0]
+    image: henrygd/beszel-agent-nvidia
+    container_name: beszel_rack0
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [utility]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $HOME/beszel/beszel_rack0:/var/lib/beszel-agent
+    environment:
+      LISTEN: 45876
+      KEY: ${BESZEL_KEY}
+      TOKEN: ${BESZEL_TOKEN}
+      HUB_URL: https://beszel.henn.dev
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "/agent", "health"]
+      interval: 120s

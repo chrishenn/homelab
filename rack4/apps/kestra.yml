@@ -1,0 +1,76 @@
+# to use curl to launch an execution
+# curl -u <email> -X post ...
+# curl will prompt for password
+---
+services:
+  kestra:
+    profiles: [kestra]
+    image: kestra/kestra:latest
+    container_name: kestra
+    restart: unless-stopped
+    user: root
+    command: server standalone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/kestra/kestra:/app/storage
+      - $DATA/kestra/tmp/:/tmp/kestra-wd
+    environment:
+      EMAIL: ${EMAIL}
+      PASS: ${PASS}
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://kestra_pg:5432/kestra # trufflehog:ignore
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: k3str4
+        kestra:
+          server:
+            basicAuth:
+              username: ${EMAIL}
+              password: ${PASS}
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              basePath: "/app/storage"
+          queue:
+            type: postgres
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:8080/
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.kestra.rule: Host(`kestra.henn.dev`)
+      traefik.http.routers.kestra.entrypoints: websecure
+      traefik.http.routers.kestra.tls.certresolver: cf
+      traefik.http.services.kestra.loadbalancer.server.port: 8080
+      homepage.group: Code
+      homepage.name: Kestra
+      homepage.icon: kestra.png
+      homepage.href: https://kestra.henn.dev
+      homepage.description: Workflow Orchestration
+    depends_on:
+      kestra_pg:
+        condition: service_started
+
+  kestra_pg:
+    profiles: [kestra]
+    image: postgres:16
+    container_name: kestra_pg
+    restart: unless-stopped
+    volumes:
+      - $DATA/kestra/kestra_pg:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: k3str4
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    networks: [traefik]

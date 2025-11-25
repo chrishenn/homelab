@@ -1,0 +1,24 @@
+---
+services:
+  ollama:
+    profiles: [ollama]
+    image: docker.io/ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: all
+    volumes:
+      - $DATA/ollama/ollama:/root/.ollama
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ollama_api.rule: Host(`ollama-api.henn.dev`)
+      traefik.http.routers.ollama_api.entrypoints: websecure
+      traefik.http.routers.ollama_api.tls.certresolver: cf
+      traefik.http.services.ollama_api.loadbalancer.server.port: 11434

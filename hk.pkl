@@ -1,0 +1,63 @@
+amends "package://github.com/jdx/hk/releases/download/v1.24.1/hk@1.24.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.24.1/hk@1.24.1#/Builtins.pkl"
+
+local formatters = new Mapping<String, Step> {
+    ["ruff"] = Builtins.ruff
+    ["ruff_format"] = (Builtins.ruff_format) {
+        output_summary = "hide"
+    }
+    ["mypy"] = (Builtins.mypy) {
+        exclude = "*noqa*"
+    }
+    ["prettier"] = (Builtins.prettier) {
+        batch = false
+    }
+    ["pkl"] = Builtins.pkl
+    ["newlines"] = Builtins.newlines
+    ["mixed_line_ending"] = Builtins.mixed_line_ending
+    ["trailing_whitespace"] = Builtins.trailing_whitespace
+    ["shfmt"] = Builtins.shfmt
+    ["just"] {
+        workspace_indicator = "hk.pkl"
+        fix = "just --fmt --unstable {{workspace}}"
+    }
+    ["mise"] {
+        workspace_indicator = "hk.pkl"
+        fix = "mise fmt"
+    }
+}
+
+local linters = new Mapping<String, Step> {
+    ["detect_private_key"] = Builtins.detect_private_key
+    ["gitleaks"] {
+        workspace_indicator = "hk.pkl"
+        check = "gitleaks git {{workspace}} --no-banner --pre-commit --log-level=fatal"
+    }
+    ["trufflehog"] {
+        glob = List("*")
+        check = "trufflehog filesystem --fail --no-update --no-verification --log-level=-1 {{files}}"
+        output_summary = "hide"
+    }
+    ["detect-secrets"] {
+        glob = List("*")
+        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --baseline safe_secrets.json {{files}}"
+        batch = true
+    }
+//     ["shellcheck"] = Builtins.shellcheck
+}
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "git"
+        steps = new Mapping<String, Step> {...formatters ...linters}
+    }
+    ["check"] {
+      fix = false
+      steps = new Mapping<String, Step> {...formatters ...linters}
+    }
+    ["fix"] {
+        fix = true
+        steps = formatters
+    }
+}

@@ -1,0 +1,112 @@
+# compose operations over {profiles, svcs}
+
+profile := "'*'"
+
+up profile=profile *svcs:
+    docker compose --profile {{profile}} up -d --remove-orphans {{svcs}}
+
+down profile=profile *svcs:
+    docker compose --profile {{profile}} down {{svcs}}
+
+bounce profile=profile *svcs:
+    #!/bin/bash
+    docker compose --profile {{profile}} down {{svcs}} && \
+    docker compose --profile {{profile}} up -d --remove-orphans {{svcs}}
+
+build *svcs:
+    docker compose build --push {{svcs}}
+
+run *svcs:
+    docker compose run --rm -it {{svcs}}
+
+log *args:
+    docker compose logs {{args}}
+
+follow *args:
+    just log --follow {{args}}
+
+attach svc cmd="/bin/sh":
+    docker compose exec -it {{svc}} {{cmd}}
+
+ps:
+    docker compose ps
+
+watch:
+    watch -n 1 "docker compose ps"
+
+bbounce profile=profile *svcs:
+    #!/bin/bash
+    docker compose --profile {{profile}} down {{svcs}} || true \
+    && docker compose build --push {{svcs}} \
+    && docker compose --profile {{profile}} up -d --remove-orphans --pull always {{svcs}}
+
+pbounce profile=profile *svcs:
+    #!/bin/bash
+    docker compose pull && \
+    just bounce "{{profile}}" {{svcs}}
+
+# logins, keys, helpers
+
+keys:
+    echo "$(op read 'op://homelab/dkey/public key')" | $DOCKERHOST_SSH "cat >> ~/.ssh/authorized_keys"
+
+login:
+    #!/bin/bash
+    echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin
+    echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin
+
+rlogin:
+    #!/bin/bash
+    $DOCKERHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
+    $DOCKERHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
+
+alias s := sync
+sync message="sync":
+    git commit -a -m "{{message}}" || true && git pull && git push
+    $DOCKERHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
+
+rsync message="sync":
+    $DOCKERHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
+    git commit -a -m "{{message}}" || true && git pull && git push
+
+reset:
+    $DOCKERHOST_SSH -At "cd ${REPO} && git fetch origin"
+    $DOCKERHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
+
+ssh:
+    $DOCKERHOST_SSH -At "cd ${REPO_MACHINE} && exec $SHELL"
+
+# service-specific recipes
+
+sync_dns:
+    just sync
+    just bounce core blocky
+
+sync_traefik:
+    just sync
+    just bounce core traefik
+
+sync_recyclarr:
+    just sync
+    just bounce media recyclarr
+    docker compose exec recyclarr recyclarr sync
+
+now_backups *svcs:
+    #!/bin/bash
+    SYNC_MODE=now just bbounce bkp {{svcs}}
+
+now_rebuild:
+    #!/bin/bash
+    SYNC_MODE=now just bbounce core rebuild
+
+# for reference. unused right now
+git_sync:
+    git remote set-head origin -a
+    branch="$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')"
+    git fetch origin $branch && git reset --hard FETCH_HEAD
+
+wasabi_add:
+    mc alias set wasabi $WASABI_URL $WASABI_ACCESS_KEY $WASABI_SECRET_KEY
+
+wasabi:
+    mc du wasabi

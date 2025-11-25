@@ -1,0 +1,15 @@
+# NOTE: just here for reference. paths may have changed.
+# this file is generated in the install script with paths inserted
+
+[Unit]
+Description=BlueBubbles iMessage relay server
+Requires=docker.service
+After=docker.service libvirtd.service
+
+[Service]
+Restart=always
+ExecStart=/bin/bash /home/bluebubbles_start.sh
+ExecStop=/bin/bash /home/bluebubbles_stop.sh
+
+[Install]
+WantedBy=multi-user.target

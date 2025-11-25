@@ -1,0 +1,24 @@
+---
+services:
+  cognito:
+    profiles: [cognito]
+    image: kekepower/cognito-ai-search:latest
+    container_name: cognito
+    restart: unless-stopped
+    environment:
+      SEARXNG_API_URL: http://searx:8080
+      OLLAMA_API_URL: http://ollama:11434
+      DEFAULT_OLLAMA_MODEL: llama3.1:8b
+      NODE_ENV: production
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.cognito.rule: Host(`cognito.henn.dev`)
+      traefik.http.routers.cognito.entrypoints: websecure
+      traefik.http.routers.cognito.tls.certresolver: cf
+      traefik.http.services.cognito.loadbalancer.server.port: 3000
+      homepage.group: AI
+      homepage.name: Cognito
+      homepage.icon: meilisearch.png
+      homepage.href: https://cognito.henn.dev
+      homepage.description: AI Search

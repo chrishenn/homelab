@@ -1,0 +1,30 @@
+---
+services:
+  gocron:
+    profiles: [gocron]
+    image: ghcr.io/flohoss/gocron:latest
+    restart: unless-stopped
+    container_name: gocron
+    hostname: gocron
+    user: $PUID:$PGID
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      # - NTFY_URL=https://
+      # - NTFY_TOPIC=cron
+      # - NTFY_TOKEN=<token>
+    volumes:
+      - ./gocron:/app/config/
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.cron.rule: Host(`cron.henn.dev`)
+      traefik.http.routers.cron.entrypoints: websecure
+      traefik.http.routers.cron.tls.certresolver: cf
+      traefik.http.services.cron.loadbalancer.server.port: 8156
+      homepage.group: Infra
+      homepage.name: Go Cron
+      homepage.icon: chronograf.png
+      homepage.href: https://cron.henn.dev
+      homepage.description: Go Cron

@@ -1,0 +1,9 @@
+keygen:
+    ssh-keygen -t ed25519 -f $HOME/.ssh/id_rsa
+
+boot:
+    uv run pyinfra src/blocky/infra/boot_inv.py src/blocky/infra/boot_deploy.py -y
+
+push:
+    uv run pyinfra src/blocky/infra/inventory.py src/blocky/deploy.py -y
+

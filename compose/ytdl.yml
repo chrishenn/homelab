@@ -1,0 +1,43 @@
+# automated youtube downloader; also edits metadata for jellyfin ingest
+# uses vscode container as its frontend, to edit its cli config files
+---
+services:
+  ytdl:
+    profiles: [ytdl]
+    image: ghcr.io/jmbannon/ytdl-sub-gui:latest
+    container_name: ytdl
+    restart: unless-stopped
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      CRON_SCHEDULE: "0 */1 * * *"
+      CRON_RUN_ON_START: true
+      NVIDIA_DRIVER_CAPABILITIES: all
+      NVIDIA_VISIBLE_DEVICES: all
+    volumes:
+      - $DATA/ytdl/config:/config
+      - $DATA/ytdl/tv_shows:/tv_shows
+      - $DATA/ytdl/movies:/movies
+      - $DATA/ytdl/music_videos:/music_videos
+      - $DATA/ytdl/music:/music
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ytdl.rule: Host(`ytdl.henn.dev`)
+      traefik.http.routers.ytdl.entrypoints: websecure
+      traefik.http.routers.ytdl.tls.certresolver: cf
+      traefik.http.services.ytdl.loadbalancer.server.port: 8443
+      homepage.group: Tools
+      homepage.name: Youtube Download
+      homepage.icon: youtube-dl.png
+      homepage.href: https://ytdl.henn.dev
+      homepage.description: Youtube Downloader

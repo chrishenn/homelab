@@ -1,0 +1,6 @@
+---
+services:
+  registrytest:
+    image: forgejo.henn.dev/chris/registrytest
+    build: .
+    container_name: registrytest

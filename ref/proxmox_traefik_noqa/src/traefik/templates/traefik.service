@@ -1,0 +1,10 @@
+[Unit]
+Description=Traefik: an open-source Edge Router
+
+[Service]
+Type=notify
+Restart=on-failure
+ExecReload=/bin/kill -USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+[env]
+# also set in the just file for docker stacks, as just cannot export this var into the parent shell env
+# set here in shell env so that one-off docker commands run against the remote host
+DOCKER_HOST = "tcp://192.168.1.65:2375"

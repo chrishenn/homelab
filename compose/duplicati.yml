@@ -1,0 +1,26 @@
+# automated backups
+# replaced by backrest/restic
+---
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      SETTINGS_ENCRYPTION_KEY:
+      CLI_ARGS:
+      DUPLICATI__WEBSERVICE_PASSWORD:
+    volumes:
+      - $DATA/duplicati/config:/config
+      - $DATA/duplicati/backups:/backups
+      - $DATA/duplicati/source:/source
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.duplicati.rule: Host(`duplicati.henn.dev`)
+      traefik.http.routers.duplicati.entrypoints: websecure
+      traefik.http.routers.duplicati.tls.certresolver: cf
+      traefik.http.services.duplicati.loadbalancer.server.port: 8200

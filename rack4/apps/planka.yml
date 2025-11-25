@@ -1,0 +1,54 @@
+services:
+  planka:
+    profiles: [planka]
+    image: ghcr.io/plankanban/planka:2.0.0-rc.4
+    container_name: planka
+    restart: unless-stopped
+    volumes:
+      - $DATA/planka/favicons:/app/public/favicons
+      - $DATA/planka/user-avatars:/app/public/user-avatars
+      - $DATA/planka/background-images:/app/public/background-images
+      - $DATA/planka/attachments:/app/private/attachments
+    environment:
+      BASE_URL: https://planka.henn.dev
+      DATABASE_URL: postgresql://postgres@planka_db/planka
+      SECRET_KEY: notsecretkey
+      TRUST_PROXY: true
+      MAX_UPLOAD_FILE_SIZE: 10G
+      DEFAULT_LANGUAGE: en-US
+      DEFAULT_ADMIN_USERNAME: ${USER}
+      DEFAULT_ADMIN_PASSWORD: ${PASS}
+      DEFAULT_ADMIN_EMAIL: ${EMAIL}
+      DEFAULT_ADMIN_NAME: ${USER}
+    depends_on:
+      planka_db:
+        condition: service_healthy
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.planka.rule: Host(`planka.henn.dev`)
+      traefik.http.routers.planka.entrypoints: websecure
+      traefik.http.routers.planka.tls.certresolver: cf
+      traefik.http.services.planka.loadbalancer.server.port: 1337
+      homepage.group: Tools
+      homepage.name: Planka
+      homepage.icon: planka.png
+      homepage.href: https://planka.henn.dev
+      homepage.description: Private Trello
+
+  planka_db:
+    profiles: [planka]
+    image: postgres:16-alpine
+    container_name: planka_db
+    restart: unless-stopped
+    volumes:
+      - $DATA/planka/db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: planka
+      POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d planka"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [traefik]

@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+ENV INSTALLER_SUFFIX .msi
+ENV ARCH x64
+ENV INSTALLER_GLOB app*${ARCH}${INSTALLER_SUFFIX}
+ENV SETTINGS_FILE app.json
+
+WORKDIR "C:\tmp"
+
+RUN [void](mkdir -ea 0 "C:\ProgramData\app")
+COPY $SETTINGS_FILE "C:\ProgramData\app\app.json"
+
+# globbing for RUN is done by powershell directly, and it's an insane mess
+COPY $INSTALLER_GLOB .
+RUN & msiexec /i (Get-ChildItem -File -Filter $INSTALLER_GLOB).Name /qn | Out-Default; exit $LASTEXITCODE
+RUN Set-Service app -StartupType Automatic
+
+ENTRYPOINT ["powershell", "-NoLogo", "-ExecutionPolicy", "Bypass"]

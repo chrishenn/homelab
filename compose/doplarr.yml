@@ -1,0 +1,32 @@
+# An *arr request bot for discord
+# untried
+---
+services:
+  doplarr:
+    image: lscr.io/linuxserver/doplarr:latest
+    container_name: doplarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - DISCORD__TOKEN=
+      - OVERSEERR__API=
+      - OVERSEERR__URL=http://localhost:5055
+      - RADARR__API=
+      - RADARR__URL=http://localhost:7878
+      - SONARR__API=
+      - SONARR__URL=http://localhost:8989
+      - DISCORD__MAX_RESULTS=25
+      - DISCORD__REQUESTED_MSG_STYLE=:plain
+      - SONARR__QUALITY_PROFILE=
+      - RADARR__QUALITY_PROFILE=
+      - SONARR__ROOTFOLDER=
+      - RADARR__ROOTFOLDER=
+      - SONARR__LANGUAGE_PROFILE=
+      - OVERSEERR__DEFAULT_ID=
+      - PARTIAL_SEASONS=true
+      - LOG_LEVEL=:info
+      - JAVA_OPTS=
+    volumes:
+      - /path/to/doplarr/config:/config

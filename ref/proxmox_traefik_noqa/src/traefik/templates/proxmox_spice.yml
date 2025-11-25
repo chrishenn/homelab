@@ -1,0 +1,22 @@
+tcp:
+  routers:
+    spice:
+      rule: HostSNI(`*`)
+      entrypoints: spice
+      tls: false
+      service: spice
+    spice-tls:
+      entryPoints: spice-tls
+      service: spice-tls
+      rule: HostSNI(`proxmox.henn.dev`)
+      tls:
+        passthrough: true
+  services:
+    spice:
+      loadbalancer:
+        servers:
+          - address: "192.168.1.42:3128"
+    spice-tls:
+      loadBalancer:
+        servers:
+          - address: "192.168.1.42:61001"

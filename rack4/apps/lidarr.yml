@@ -1,0 +1,28 @@
+---
+services:
+  lidarr:
+    profiles: [lidarr]
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/lidarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.lidarr.rule: Host(`lidarr.henn.dev`)
+      traefik.http.routers.lidarr.entrypoints: websecure
+      traefik.http.routers.lidarr.tls.certresolver: cf
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+      homepage.group: Media
+      homepage.name: Lidarr
+      homepage.icon: lidarr.png
+      homepage.href: https://lidarr.henn.dev
+      homepage.description: Music

@@ -1,0 +1,104 @@
+src = ["packages"]
+include = ["packages/*.py"]
+
+respect-gitignore = true
+output-format = "concise"
+line-length = 120
+indent-width = 4
+target-version = "py313"
+
+exclude = [
+    "*.conf.py",
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".idea",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pycache__",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "deprecated",
+]
+
+[lint]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+select = ["ALL"]
+ignore = [
+    # do not enable: buggy inspections
+    "EXE",
+
+    # assign err string to variable first
+    "EM101",
+
+    # disallow file noqa
+    "PGH004",
+
+    # docstrings; general pains
+    "D", "RUF009",
+
+    # allow print(), exceptions f-strings, todos
+    "T201", "EM102", "TD002", "TD003", "FIX002",
+
+    # do not enable: conflicts with ruff formatter
+    "W191", "E111", "E114", "E117", "D206", "D300", "Q000", "Q001", "Q002", "Q003", "COM812", "COM819", "ISC001", "ISC002",
+
+    # do not enable
+    "G004",     # flake8-logging-format (buggy)
+    "A004",     # Import <pkg> is shadowing a Python builtin (useful for map, filter, etc)
+    "C90",      # mccabe name complexity (odd)
+    "F811",     # Redefinition of unused {func-name} (conflicts with multimethod)
+    "PIE796",   # Enum contains duplicate value (advanced enum use)
+    "TRY",      # tryceratops (bad)
+    "ERA",      # eradicate (buggy)
+    "EXE003",   # shebang should contain python (incompatible with uv)
+    "S101",     # raw assert (used in pytests)
+    "S110",     # try-except-pass should log
+    "N805",     # First argument of a method should be named `self` (conflicts with decorated type)
+    "TC003",    # move import into type-checking block (breaks pydantic runtime type-checking)
+]
+
+[lint.per-file-ignores]
+"*deprecated*" = ["ALL"]
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.isort]
+lines-after-imports = 2
+combine-as-imports = true
+split-on-trailing-comma = false
+
+[lint.pylint]
+allow-magic-value-types = ["int", "str"]
+
+[lint.pycodestyle]
+max-line-length = 160
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = true
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 120

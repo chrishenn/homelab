@@ -1,0 +1,11 @@
+# note: mount into container at /gluetun/auth/config.toml
+# note: VERY sensitive to permissions
+
+[[roles]]
+name = "qbittorrent"
+routes = [
+    "GET /v1/publicip/ip",
+    "GET /v1/openvpn/portforwarded",
+    "GET /v1/updater/status",
+]
+auth = "none"

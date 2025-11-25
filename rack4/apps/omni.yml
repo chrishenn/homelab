@@ -1,0 +1,19 @@
+---
+services:
+  omni:
+    profiles: [omni]
+    image: iib0011/omni-tools:latest
+    container_name: omni
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.omni.rule: Host(`omni.henn.dev`)
+      traefik.http.routers.omni.entrypoints: websecure
+      traefik.http.routers.omni.tls.certresolver: cf
+      traefik.http.services.omni.loadbalancer.server.port: 80
+      homepage.group: File Edit, Convert
+      homepage.name: Omni Converters
+      homepage.icon: omni-tools.png
+      homepage.href: https://omni.henn.dev
+      homepage.description: File Edit, Convert

@@ -1,0 +1,20 @@
+FROM redhat/ubi9:9.0.0-1468
+
+# set root password
+RUN yum install passwd -y
+RUN echo 'root' | passwd --stdin root
+
+# install the app
+ENV INSTALLER_SUFFIX=.rpm
+ENV ARCH=x86_64
+ENV INSTALLER_FILE=app*${ARCH}${INSTALLER_SUFFIX}
+ENV SETTINGS_FILE=app.json
+
+COPY ./$INSTALLER_FILE .
+RUN yum install $INSTALLER_FILE man unzip -y
+
+RUN mkdir -p /etc/app/
+COPY ./$SETTINGS_FILE /etc/app/app
+RUN systemctl enable app
+
+CMD ["/lib/systemd/systemd"]

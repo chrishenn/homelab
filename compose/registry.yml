@@ -1,0 +1,38 @@
+# OCI container registry, and a janky web frontend
+---
+services:
+  registry_server:
+    profiles: [registry]
+    image: registry:latest
+    container_name: registry_server
+    restart: unless-stopped
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: true
+    volumes:
+      - $DATA/registry:/var/lib/registry
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registry.rule: Host(`reg.henn.dev`)
+      traefik.http.routers.registry.entrypoints: websecure
+      traefik.http.routers.registry.tls.certresolver: cf
+      traefik.http.services.registry.loadbalancer.server.port: 5000
+
+  registry_ui:
+    profiles: [registry]
+    image: joxit/docker-registry-ui:latest
+    container_name: registry_ui
+    restart: unless-stopped
+    environment:
+      DELETE_IMAGES: true
+      REGISTRY_TITLE: Dancing Containers
+      NGINX_PROXY_PASS_URL: http://registry_server:5000
+      SINGLE_REGISTRY: true
+    depends_on: ["registry_server"]
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registryui.rule: Host(`regui.henn.dev`)
+      traefik.http.routers.registryui.entrypoints: websecure
+      traefik.http.routers.registryui.tls.certresolver: cf
+      traefik.http.services.registryui.loadbalancer.server.port: 80

@@ -1,0 +1,90 @@
+# private frontend for youtube
+# broken. I think I need to regen tokens
+# generate tokens, from the same public ip address as you'll use invidious from
+# docker run --rm quay.io/invidious/youtube-trusted-session-generator
+---
+services:
+  invidious:
+    profiles: [invidious]
+    image: quay.io/invidious/invidious:latest
+    container_name: invidious
+    restart: unless-stopped
+    environment:
+      INV_VISITOR: ${INV_VISITOR}
+      INV_TOKEN: ${INV_TOKEN}
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: invidious
+          password: invidious
+          host: invidious_db
+          port: 5432
+        check_tables: true
+        signature_server: inv_sig_helper:12999
+        visitor_data: ${INV_VISITOR}
+        po_token: ${INV_TOKEN}
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        hmac_key: "as;elfkj132l4kjh5ASKLDJFHQ@#K%JH"
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://invidious:3000/api/v1/trending || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    depends_on:
+      - invidious_db
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.invidious.rule: Host(`invidious.henn.dev`)
+      traefik.http.routers.invidious.entrypoints: websecure
+      traefik.http.routers.invidious.tls.certresolver: cf
+      traefik.http.services.invidious.loadbalancer.server.port: 3000
+      homepage.group: Tools
+      homepage.name: Invidious
+      homepage.icon: invidious.png
+      homepage.href: https://invidious.henn.dev
+      homepage.description: Private Youtube Frontend
+
+  inv_sig_helper:
+    profiles: [invidious]
+    image: quay.io/invidious/inv-sig-helper:latest
+    container_name: inv_sig_helper
+    restart: unless-stopped
+    init: true
+    command: ["--tcp", "0.0.0.0:12999"]
+    environment:
+      - RUST_LOG=info
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges=true
+    networks: [traefik]
+
+  invidious_db:
+    profiles: [invidious]
+    image: docker.io/library/postgres:14
+    container_name: invidious_db
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./invidious/sql:/config/sql
+      - ./invidious/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: invidious
+      POSTGRES_PASSWORD: invidious
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+    networks: [traefik]
+
+volumes:
+  postgresdata:

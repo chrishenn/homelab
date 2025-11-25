@@ -1,0 +1,29 @@
+# "no matching manifest for linux/amd64" probably an oopsie
+---
+services:
+  readarr:
+    profiles: [readarr]
+    image: linuxserver/readarr:develop
+    container_name: readarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/readarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.readarr.rule: Host(`readarr.henn.dev`)
+      traefik.http.routers.readarr.entrypoints: websecure
+      traefik.http.routers.readarr.tls.certresolver: cf
+      traefik.http.services.readarr.loadbalancer.server.port: 8787
+      homepage.group: Media
+      homepage.name: Readarr
+      homepage.icon: readarr.png
+      homepage.href: https://readarr.henn.dev
+      homepage.description: Books

@@ -1,0 +1,33 @@
+---
+services:
+  linkstack:
+    profiles: [linkstack]
+    image: linkstackorg/linkstack:latest
+    container_name: linkstack
+    restart: unless-stopped
+    hostname: linkstack
+    environment:
+      TZ: $TZ
+      SERVER_ADMIN: ${EMAIL}
+      HTTP_SERVER_NAME: "linkstack.henn.dev"
+      HTTPS_SERVER_NAME: "linkstack.henn.dev"
+      PHP_MEMORY_LIMIT: "2000M"
+      UPLOAD_MAX_FILESIZE: "2000M"
+    volumes:
+      - linkstack:/htdocs
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.linkstack.rule: Host(`linkstack.henn.dev`)
+      traefik.http.routers.linkstack.entrypoints: websecure
+      traefik.http.routers.linkstack.tls.certresolver: cf
+      traefik.http.services.linkstack.loadbalancer.server.port: 443
+      traefik.http.services.linkstack.loadbalancer.server.scheme: https
+      homepage.group: Tools
+      homepage.name: Linkstack
+      homepage.icon: linkstack.png
+      homepage.href: https://linkstack.henn.dev
+      homepage.description: Linktree
+
+volumes:
+  linkstack:

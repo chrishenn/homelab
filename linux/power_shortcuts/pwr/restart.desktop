@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Restart
+Exec=bash -c "sudo /home/chris/.local/share/applications/restart.sh"
+Comment=Restart
+Terminal=true
+Type=Application
+Icon=system-reboot

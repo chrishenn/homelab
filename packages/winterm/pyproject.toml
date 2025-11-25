@@ -1,0 +1,15 @@
+[project]
+name = "winterm"
+version = "0.1.0"
+description = ""
+readme = "readme.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fabric>=3.2.2",
+    "python-dotenv>=1.1.1",
+    "typer>=0.16.0",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"

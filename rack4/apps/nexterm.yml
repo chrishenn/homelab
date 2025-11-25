@@ -1,0 +1,23 @@
+---
+services:
+  nexterm:
+    profiles: [nexterm]
+    image: germannewsmaker/nexterm
+    container_name: nexterm
+    restart: unless-stopped
+    volumes:
+      - $DATA/nexterm:/app/data
+    environment:
+      ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.nexterm.rule: Host(`nexterm.henn.dev`)
+      traefik.http.routers.nexterm.entrypoints: websecure
+      traefik.http.routers.nexterm.tls.certresolver: cf
+      traefik.http.services.nexterm.loadbalancer.server.port: 6989
+      homepage.group: Infra
+      homepage.name: Nexterm
+      homepage.icon: nexterm.png
+      homepage.href: https://nexterm.henn.dev
+      homepage.description: Server Manager

@@ -1,0 +1,70 @@
+---
+services:
+  paperless:
+    profiles: [paperless]
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    volumes:
+      - $DATA/paperless/data:/usr/src/paperless/data
+      - $DATA/paperless/media:/usr/src/paperless/media
+      - $DATA/paperless/export:/usr/src/paperless/export
+      - $DATA/paperless/consume:/usr/src/paperless/consume
+
+    environment:
+      PAPERLESS_TIME_ZONE: ${TZ}
+      USERMAP_UID: ${PUID}
+      USERMAP_GID: ${PGID}
+      PAPERLESS_URL: https://paperless.henn.dev
+      PAPERLESS_REDIS: redis://paperless_redis:6379
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_OCR_LANGUAGE: eng
+    networks: [traefik, paperless]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.paperless.rule: Host(`paperless.henn.dev`)
+      traefik.http.routers.paperless.entrypoints: websecure
+      traefik.http.routers.paperless.tls.certresolver: cf
+      traefik.http.services.paperless.loadbalancer.server.port: 8000
+      homepage.group: AI
+      homepage.name: Paperless
+      homepage.icon: paperless.png
+      homepage.href: https://paperless.henn.dev
+      homepage.description: Document Organization
+    depends_on:
+      - paperless_redis
+
+  paperless_redis:
+    profiles: [paperless]
+    image: docker.io/library/redis:8
+    container_name: paperless_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/paperless/redis:/data
+    networks: [paperless]
+
+  paperless_ai:
+    profiles: [paperless]
+    image: clusterzx/paperless-ai
+    container_name: paperless_ai
+    restart: unless-stopped
+    environment:
+      OLLAMA_API_URL: http://ollama:11434
+      OLLAMA_MODEL: "deepseek-r1:14b"
+    volumes:
+      - $DATA/paperless/paperless_ai:/app/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.paperless_ai.rule: Host(`paperless_ai.henn.dev`)
+      traefik.http.routers.paperless_ai.entrypoints: websecure
+      traefik.http.routers.paperless_ai.tls.certresolver: cf
+      traefik.http.services.paperless_ai.loadbalancer.server.port: 3000
+      homepage.group: AI
+      homepage.name: Paperless AI
+      homepage.icon: paperless.png
+      homepage.href: https://paperless_ai.henn.dev
+      homepage.description: AI Document Processing
+
+networks:
+  paperless:

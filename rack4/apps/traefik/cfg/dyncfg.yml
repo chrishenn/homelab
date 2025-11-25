@@ -1,0 +1,113 @@
+http:
+  routers:
+    brother_router:
+      entryPoints: websecure
+      rule: Host(`brother.henn.dev`)
+      service: brother
+      tls:
+        certResolver: cf
+    kube-traefik_router:
+      entryPoints: websecure
+      rule: Host(`kube-traefik.henn.dev`)
+      service: kube-traefik
+      tls:
+        certResolver: cf
+    kvm0_router:
+      entryPoints: websecure
+      rule: Host(`kvm0.henn.dev`)
+      service: kvm0
+      tls:
+        certResolver: cf
+    librespeed_router:
+      entryPoints: websecure
+      rule: Host(`librespeed.henn.dev`)
+      service: librespeed
+      tls:
+        certResolver: cf
+    netalert_router:
+      entryPoints: websecure
+      rule: Host(`netalert.henn.dev`)
+      service: netalert
+      tls:
+        certResolver: cf
+    one-mikrotik_router:
+      entryPoints: websecure
+      rule: Host(`one.mikrotik.henn.dev`)
+      service: one-mikrotik
+      tls:
+        certResolver: cf
+    pikvm_router:
+      entryPoints: websecure
+      rule: Host(`pikvm.henn.dev`)
+      service: pikvm
+      tls:
+        certResolver: cf
+    proxmox_router:
+      entryPoints: websecure
+      rule: Host(`proxmox.henn.dev`)
+      service: proxmox
+      tls:
+        certResolver: cf
+    speedtest_router:
+      entryPoints: websecure
+      rule: Host(`speedtest.henn.dev`)
+      service: speedtest
+      tls:
+        certResolver: cf
+    two-mikrotik_router:
+      entryPoints: websecure
+      rule: Host(`two.mikrotik.henn.dev`)
+      service: two-mikrotik
+      tls:
+        certResolver: cf
+    zyxel_router:
+      entryPoints: websecure
+      rule: Host(`zyxel.henn.dev`)
+      service: zyxel
+      tls:
+        certResolver: cf
+  services:
+    brother:
+      loadBalancer:
+        servers:
+          - url: https://192.168.1.9
+    kube-traefik:
+      loadBalancer:
+        servers:
+          - url: http://192.168.30.80:8080
+    kvm0:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.22:80
+    librespeed:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.142:3040
+    netalert:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.142:20211
+    one-mikrotik:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.1
+    pikvm:
+      loadBalancer:
+        servers:
+          - url: https://192.168.1.31
+    proxmox:
+      loadBalancer:
+        servers:
+          - url: https://192.168.1.42:8006
+    speedtest:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.142:3030
+    two-mikrotik:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.2
+    zyxel:
+      loadBalancer:
+        servers:
+          - url: https://192.168.1.12

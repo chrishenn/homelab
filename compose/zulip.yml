@@ -1,0 +1,134 @@
+# private slack
+# quite resource heavy
+
+# just attach zulip
+# cat /var/log/zulip/server.log
+# su zulip -c '/home/zulip/deployments/current/manage.py generate_realm_creation_link'
+---
+services:
+  zulip_pg:
+    profiles: [zulip]
+    image: zulip/zulip-postgresql:14
+    container_name: zulip_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "zulip"
+      POSTGRES_USER: "zulip"
+      POSTGRES_PASSWORD: "REPLACE_WITH_SECURE_POSTGRES_PASSWORD"
+    volumes:
+      - $DATA/zulip/zulip_pg:/var/lib/postgresql/data:rw
+    networks: [zulip]
+
+  zulip_memcached:
+    profiles: [zulip]
+    image: memcached:alpine
+    container_name: zulip_memcached
+    restart: unless-stopped
+    command:
+      - "sh"
+      - "-euc"
+      - |
+        echo 'mech_list: plain' > "$$SASL_CONF_PATH"
+        echo "zulip@$$HOSTNAME:$$MEMCACHED_PASSWORD" > "$$MEMCACHED_SASL_PWDB"
+        echo "zulip@localhost:$$MEMCACHED_PASSWORD" >> "$$MEMCACHED_SASL_PWDB"
+        exec memcached -S
+    environment:
+      SASL_CONF_PATH: "/home/memcache/memcached.conf"
+      MEMCACHED_SASL_PWDB: "/home/memcache/memcached-sasl-db"
+      MEMCACHED_PASSWORD: "REPLACE_WITH_SECURE_MEMCACHED_PASSWORD"
+    networks: [zulip]
+
+  zulip_rabbitmq:
+    profiles: [zulip]
+    image: rabbitmq:4.0.7
+    container_name: zulip_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: "zulip"
+      RABBITMQ_DEFAULT_PASS: "REPLACE_WITH_SECURE_RABBITMQ_PASSWORD"
+    volumes:
+      - $DATA/zulip/zulip_rabbitmq:/var/lib/rabbitmq:rw
+    networks: [zulip]
+
+  zulip_redis:
+    profiles: [zulip]
+    image: redis:alpine
+    container_name: zulip_redis
+    restart: unless-stopped
+    command:
+      - "sh"
+      - "-euc"
+      - |
+        echo "requirepass '$$REDIS_PASSWORD'" > /etc/redis.conf
+        exec redis-server /etc/redis.conf
+    environment:
+      REDIS_PASSWORD: "REPLACE_WITH_SECURE_REDIS_PASSWORD"
+    volumes:
+      - $DATA/zulip/zulip_redis:/data:rw
+    networks: [zulip]
+
+  zulip:
+    profiles: [zulip]
+    image: zulip/docker-zulip:11.2-0
+    container_name: zulip
+    restart: unless-stopped
+    environment:
+      # https://github.com/zulip/docker-zulip#configuration
+      DB_HOST: zulip_pg
+      DB_HOST_PORT: "5432"
+      DB_USER: "zulip"
+
+      SETTING_MEMCACHED_LOCATION: zulip_memcached:11211
+      SETTING_RABBITMQ_HOST: zulip_rabbitmq
+      SETTING_REDIS_HOST: zulip_redis
+
+      SECRETS_rabbitmq_password: "REPLACE_WITH_SECURE_RABBITMQ_PASSWORD"
+      SECRETS_postgres_password: "REPLACE_WITH_SECURE_POSTGRES_PASSWORD"
+      SECRETS_memcached_password: "REPLACE_WITH_SECURE_MEMCACHED_PASSWORD"
+      SECRETS_redis_password: "REPLACE_WITH_SECURE_REDIS_PASSWORD"
+      SECRETS_secret_key: "REPLACE_WITH_SECURE_SECRET_KEY"
+
+      SETTING_EMAIL_HOST: ""
+      SETTING_EMAIL_HOST_USER: "noreply@example.com"
+      SETTING_EMAIL_PORT: "587"
+      SETTING_EMAIL_USE_SSL: "False"
+      SETTING_EMAIL_USE_TLS: "True"
+      SECRETS_email_password: "123456789"
+
+      SETTING_EXTERNAL_HOST: zulip.henn.dev
+      SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
+      ZULIP_AUTH_BACKENDS: "EmailAuthBackend,GitHubAuthBackend"
+
+      SSL_CERTIFICATE_GENERATION: "self-signed"
+      DISABLE_HTTPS: "True"
+      SETTING_USE_X_FORWARDED_HOST: "True"
+      LOADBALANCER_IPS: "192.168.100.0/24"
+    volumes:
+      - $DATA/zulip/data:/data:rw
+    networks: [traefik, zulip]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.zulip.rule: HostRegexp(`([a-zA-Z0-9\-]+\.)?zulip\.henn\.dev`)
+      traefik.http.routers.zulip.entrypoints: websecure
+      traefik.http.routers.zulip.tls: true
+      traefik.http.routers.zulip.tls.certresolver: cf
+      # this worked, but then I turned it off and it kept working
+      # traefik.http.routers.zulip.tls.domains[0].main: 'zulip.henn.dev'
+      # traefik.http.routers.zulip.tls.domains[0].sans: '*.zulip.henn.dev'
+      # necessary when not using Host() matcher
+      traefik.http.routers.zulip.tls.domains[0].main: "henn.dev"
+      traefik.http.routers.zulip.tls.domains[0].sans: "*.henn.dev"
+      traefik.http.services.zulip.loadbalancer.server.port: 80
+      homepage.group: Tools
+      homepage.name: Zulip
+      homepage.icon: zulip.png
+      homepage.href: https://fluff.zulip.henn.dev
+      homepage.description: Free Slack Alternative
+    depends_on:
+      - zulip_pg
+      - zulip_memcached
+      - zulip_rabbitmq
+      - zulip_redis
+
+networks:
+  zulip:

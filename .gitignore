@@ -1,0 +1,26 @@
+/.vscode/
+.idea/
+.venv/
+*__pycache__*
+*secret*
+!safe_secrets.json
+*.env
+*.dmypy.json*
+*out/
+node_modules/
+.mypy_cache/
+.ruff_cache/
+tmp/
+*.bak*
+docker/apps/backrest/scripts/github/gitbackup
+
+# these are duplicated from subdirs because prettier doesn't respect .gitignores in subdirs
+docker/apps/vert/VERT
+docker/apps/vert/vertd
+
+# logs
+/docker/apps/homepage/config/logs*
+/docker/apps/Piped/
+/docker/apps/Piped-Docker/
+
+.mise/

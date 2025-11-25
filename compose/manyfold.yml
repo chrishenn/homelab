@@ -1,0 +1,25 @@
+# web application for managing a collection of 3D models
+---
+services:
+  manyfold:
+    profiles: [manyfold]
+    image: lscr.io/linuxserver/manyfold:latest
+    container_name: manyfold
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      DATABASE_URL:
+      REDIS_URL:
+      SECRET_KEY_BASE:
+    volumes:
+      - $DATA/manyfold/config:/config
+      - $DATA/manyfold/libraries:/libraries
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.manyfold.rule: Host(`manyfold.henn.dev`)
+      traefik.http.routers.manyfold.entrypoints: websecure
+      traefik.http.routers.manyfold.tls.certresolver: cf
+      traefik.http.services.manyfold.loadbalancer.server.port: 3214

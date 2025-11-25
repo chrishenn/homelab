@@ -1,0 +1,46 @@
+# private slack
+# cpu and mem use at idle (4GB!) is quite high
+---
+services:
+  campfire:
+    profiles: [campfire]
+    image: ${REGISTRY}/campfire:1.0
+    container_name: campfire
+    restart: unless-stopped
+    environment:
+      SECRET_KEY_BASE: ${CAMPFIRE_SECRET_KEY_BASE}
+    volumes:
+      - $DATA/campfire:/rails/storage
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      docker-volume-backup.stop-during-backup: campfire
+      traefik.http.routers.campfire.rule: Host(`campfire.henn.dev`)
+      traefik.http.routers.campfire.entrypoints: websecure
+      traefik.http.routers.campfire.tls.certresolver: cf
+      traefik.http.services.campfire.loadbalancer.server.port: 80
+      homepage.group: Tools
+      homepage.name: Campfire
+      homepage.icon: firebase.png
+      homepage.href: https://campfire.henn.dev
+      homepage.description: Private Slack
+
+  campfire_backup:
+    profiles: [campfire]
+    image: offen/docker-volume-backup:latest
+    container_name: campfire_backup
+    restart: unless-stopped
+    networks: [traefik, docker]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      # source data to backup
+      - $DATA/campfire:/backup/actualbudget:ro
+      # backup destination
+      - $BACKUP/campfire:/archive
+    environment:
+      BACKUP_STOP_DURING_BACKUP_LABEL: campfire
+      BACKUP_CRON_EXPRESSION: "@daily"
+      BACKUP_FILENAME: "campfire-%Y-%m-%dT%H-%M-%S.{{ .Extension }}"
+      BACKUP_PRUNING_PREFIX: "campfire-"
+      BACKUP_RETENTION_DAYS: 2

@@ -1,0 +1,17 @@
+[global]
+name=seq-read-throughput-single-disk
+rw=read
+time_based
+runtime=30
+loops=5
+ioengine=io_uring
+direct=1
+buffered=0
+group_reporting
+numjobs=4
+bs=2m
+iodepth=64
+size=2g
+
+[job1]
+filename=/home/chris/testfile

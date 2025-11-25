@@ -1,0 +1,13 @@
+# I couldn't get any https or traefik setup to work with apt
+# the DNS step may also be to blame
+---
+services:
+  aptcache:
+    profiles: [aptcache]
+    image: sameersbn/apt-cacher-ng
+    container_name: aptcache
+    restart: unless-stopped
+    volumes:
+      - $DATA/aptcache:/var/cache/apt-cacher-ng
+    ports:
+      - "3142:3142"

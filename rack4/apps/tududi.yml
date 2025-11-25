@@ -1,0 +1,30 @@
+---
+services:
+  tududi:
+    profiles: [tududi]
+    image: chrisvel/tududi:latest
+    container_name: tududi
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      TUDUDI_USER_EMAIL: ${EMAIL}
+      TUDUDI_USER_PASSWORD: ${PASS}
+      TUDUDI_ALLOWED_ORIGINS: https://tududi.henn.dev,http://tududi:3002
+      TUDUDI_SESSION_SECRET: ${TUDUDI_SECRET}
+    volumes:
+      - $DATA/tududi/db:/app/backend/db
+      - $DATA/tududi/uploads:/app/backend/uploads
+    networks: [traefik, docmost]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tududi.rule: Host(`tududi.henn.dev`)
+      traefik.http.routers.tududi.entrypoints: websecure
+      traefik.http.routers.tududi.tls.certresolver: cf
+      traefik.http.services.tududi.loadbalancer.server.port: 3002
+      homepage.group: Tools
+      homepage.name: Tududi
+      homepage.icon: atlassian.png
+      homepage.href: https://tududi.henn.dev
+      homepage.description: Project Management

@@ -1,0 +1,45 @@
+# constantly broken because it relies on hacky api access to upstream searches
+---
+services:
+  searx:
+    profiles: [searx]
+    image: searxng/searxng:latest
+    container_name: searx
+    restart: unless-stopped
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID, DAC_OVERRIDE]
+    environment:
+      SEARXNG_BASE_URL: https://searx.henn.dev
+      SEARXNG_LIMITER: false
+      SEARXNG_IMAGE_PROXY: true
+      SEARXNG_PUBLIC_INSTANCE: false
+      SEARXNG_VALKEY_URL: valkey://searx_redis:6379/0
+      SEARXNG_SECRET: ${SEARXNG_SECRET}
+      SEARXNG_PORT: 8080
+      SEARXNG_BIND_ADDRESS: ${SVC_IP}
+    volumes:
+      - $DATA/searx/app:/etc/searxng:rw
+      - $DATA/searx/cache:/var/cache/searxng:rw
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.sear.rule: Host(`searx.henn.dev`)
+      traefik.http.routers.sear.entrypoints: websecure
+      traefik.http.routers.sear.tls.certresolver: cf
+      traefik.http.services.sear.loadbalancer.server.port: 8080
+      homepage.group: AI
+      homepage.name: Searx
+      homepage.icon: searxng.png
+      homepage.href: https://searx.henn.dev
+      homepage.description: Private Search
+    depends_on: [searx_redis]
+
+  searx_redis:
+    profiles: [searx]
+    image: valkey/valkey:8-alpine
+    container_name: searx_redis
+    restart: unless-stopped
+    command: valkey-server --save 30 1 --loglevel warning
+    volumes:
+      - $DATA/searx/redis:/data
+    networks: [traefik]

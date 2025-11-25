@@ -1,0 +1,11 @@
+---
+services:
+  runner-win:
+    image: tobiasfenster/github-runner-windows:ltsc2022
+    volumes:
+      - source: '\\.\pipe\docker_engine'
+        target: '\\.\pipe\docker_engine'
+        type: npipe
+    environment:
+      GITHUBREPO_OR_ORG: chrishenn-org
+      GITHUBPAT: $GHRUNNER_PAT

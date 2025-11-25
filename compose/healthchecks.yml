@@ -1,0 +1,36 @@
+---
+services:
+  healthchecks:
+    profiles: [healthchecks]
+    image: lscr.io/linuxserver/healthchecks:latest
+    container_name: healthchecks
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      SITE_ROOT: https://healthchecks.henn.dev
+      SITE_NAME: "Chicken Vibes"
+      DEFAULT_FROM_EMAIL: ${EMAIL}
+    volumes:
+      - $DATA/healthchecks/config:/config
+    depends_on:
+      - healthchecks_db
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uwsgi /opt/healthchecks/docker/uwsgi.ini'
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.healthchecks.rule: Host(`healthchecks.henn.dev`)
+      traefik.http.routers.healthchecks.entrypoints: websecure
+      traefik.http.routers.healthchecks.tls.certresolver: cf
+      traefik.http.services.healthchecks.loadbalancer.server.port: 8000
+
+  healthchecks_db:
+    profiles: [healthchecks]
+    image: postgres:16
+    container_name: healthchecks_db
+    environment:
+      POSTGRES_DB: healthchecks
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - $DATA/healthchecks/db:/var/lib/postgresql/data

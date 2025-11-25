@@ -1,0 +1,15 @@
+[global]
+name=raw-randread
+rw=randread
+bs=4K
+numjobs=4
+iodepth=256
+size=1G
+direct=1
+ioengine=io_uring
+group_reporting
+time_based
+runtime=30
+
+[job1]
+filename=/om2/fast/test0

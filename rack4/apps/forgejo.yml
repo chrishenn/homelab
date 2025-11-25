@@ -1,0 +1,87 @@
+# watchtower stops containers all at once, and some of them rely on forgejo's registry to pull fresh images
+---
+services:
+  forgejo:
+    profiles: [forgejo]
+    image: codeberg.org/forgejo/forgejo:11
+    container_name: forgejo
+    restart: unless-stopped
+    environment:
+      USER_UID: $PUID
+      USER_GID: $PGID
+      FORGEJO__database__DB_TYPE: postgres
+      FORGEJO__database__HOST: forgejo_db:5432
+      FORGEJO__database__NAME: forgejo
+      FORGEJO__database__USER: forgejo
+      FORGEJO__database__PASSWD: forgejo
+      ROOT_URL: https://forgejo.henn.dev/
+      DOMAIN: forgejo.henn.dev
+      SSH_DOMAIN: forgejo.henn.dev
+      REGISTRY_HTTP_HOST: https://forgejo.henn.dev
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/forgejo/data:/data
+    networks: [traefik]
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+      docker-volume-backup.stop-during-backup: forgejo
+
+      traefik.enable: true
+      traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)
+      traefik.http.routers.forgejo.entrypoints: websecure
+      traefik.http.routers.forgejo.tls.certresolver: cf
+      traefik.http.routers.forgejo.service: forgejo
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
+
+      traefik.tcp.routers.forgejo-ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.forgejo-ssh.entrypoints: tcp22
+      traefik.tcp.routers.forgejo-ssh.service: forgejo-ssh
+      traefik.tcp.services.forgejo-ssh.loadbalancer.server.port: 22
+
+      homepage.group: Code
+      homepage.name: Forgejo
+      homepage.icon: forgejo.png
+      homepage.href: https://forgejo.henn.dev
+      homepage.description: Git Server
+    depends_on: [forgejo_db]
+
+  forgejo_db:
+    profiles: [forgejo]
+    image: postgres:14
+    container_name: forgejo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: forgejo
+      POSTGRES_PASSWORD: forgejo
+      POSTGRES_DB: forgejo
+    volumes:
+      - $DATA/forgejo/db:/var/lib/postgresql/data
+    networks: [traefik]
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+      docker-volume-backup.stop-during-backup: forgejo
+
+  forgejo_backup:
+    profiles: [forgejo]
+    image: offen/docker-volume-backup:latest
+    container_name: forgejo_backup
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      # source data to backup
+      - $DATA/forgejo/data:/backup/forgejo/data:ro
+      - $DATA/forgejo/db:/backup/forgejo/db:ro
+      # backup destination
+      - $BACKUP/forgejo:/archive
+    environment:
+      TZ: $TZ
+      BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
+      BACKUP_CRON_EXPRESSION: "@daily"
+      BACKUP_FILENAME: "forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}"
+      BACKUP_PRUNING_PREFIX: "forgejo-"
+      BACKUP_RETENTION_DAYS: 2
+    networks: [traefik, docker]
+    labels:
+      com.centurylinklabs.watchtower.enable: false

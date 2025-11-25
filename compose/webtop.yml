@@ -1,0 +1,168 @@
+# NOTE YOU BREAK GPU ON HOSTS IF YOU ADD CAPABILITIES BEYOND "GPU"
+#
+# simple cli 3D benchmark
+# sudo apt update -y && sudo apt install -y glmark2 && glmark2
+# sudo apk add mesa-utils && glxgears
+# sudo pacman -Sy && sudo pacman -S glmark2 --noconfirm && glmark2
+---
+services:
+  # gpu passthrough is not working, but software graphics do work
+  alpine:
+    profiles: [webtop]
+    image: linuxserver/webtop:alpine-icewm
+    container_name: alpine
+    restart: no
+    security_opt:
+      - seccomp=unconfined
+    shm_size: 3gb
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TITLE: Alpine
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - alpine:/config
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.alpine.rule: Host(`alpine.henn.dev`)
+      traefik.http.routers.alpine.entrypoints: websecure
+      traefik.http.routers.alpine.tls.certresolver: cf
+      traefik.http.services.alpine.loadbalancer.server.port: 3000
+      homepage.group: Webtop
+      homepage.name: Alpine
+      homepage.icon: alpine-linux.png
+      homepage.href: https://alpine.henn.dev
+      homepage.description: Alpine Linux Desktop
+
+  arch:
+    profiles: [webtop]
+    # window trailing is rough but gpu accel is working
+    image: linuxserver/webtop:arch-kde
+    container_name: arch
+    restart: no
+    shm_size: 3gb
+    security_opt:
+      - seccomp=unconfined
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TITLE: Arch Btw
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - arch:/config
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.arch.rule: Host(`arch.henn.dev`)
+      traefik.http.routers.arch.entrypoints: websecure
+      traefik.http.routers.arch.tls.certresolver: cf
+      traefik.http.services.arch.loadbalancer.server.port: 3000
+      homepage.group: Webtop
+      homepage.name: Arch
+      homepage.icon: arch-linux.png
+      homepage.href: https://arch.henn.dev
+      homepage.description: Arch Linux Desktop
+
+  debian:
+    profiles: [webtop]
+    image: linuxserver/webtop:debian-kde
+    container_name: debian
+    restart: no
+    security_opt:
+      - seccomp=unconfined
+    shm_size: 3gb
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TITLE: Debian
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - debian:/config
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.debian.rule: Host(`debian.henn.dev`)
+      traefik.http.routers.debian.entrypoints: websecure
+      traefik.http.routers.debian.tls.certresolver: cf
+      traefik.http.services.debian.loadbalancer.server.port: 3000
+      homepage.group: Webtop
+      homepage.name: Debian
+      homepage.icon: debian-linux.png
+      homepage.href: https://debian.henn.dev
+      homepage.description: Debian Linux Desktop
+
+  ubuntu:
+    profiles: [webtop]
+    image: linuxserver/webtop:ubuntu-kde
+    container_name: ubuntu
+    restart: no
+    security_opt:
+      - seccomp=unconfined
+    shm_size: 3gb
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TITLE: Ubuntu
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ubu:/config
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ubuntu.rule: Host(`ubuntu.henn.dev`)
+      traefik.http.routers.ubuntu.entrypoints: websecure
+      traefik.http.routers.ubuntu.tls.certresolver: cf
+      traefik.http.services.ubuntu.loadbalancer.server.port: 3000
+
+      homepage.group: Webtop
+      homepage.name: Ubuntu
+      homepage.icon: ubuntu-linux.png
+      homepage.href: https://ubuntu.henn.dev
+      homepage.description: Ubuntu Linux Desktop
+
+volumes:
+  alpine:
+  arch:
+  debian:
+  ubu:

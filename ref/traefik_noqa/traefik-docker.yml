@@ -1,0 +1,35 @@
+# this style of declaring the traefik static config kinda sucks for more complicated configs
+---
+services:
+  traefik:
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entryPoints.web.address=:80
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.asDefault=true
+      - --entrypoints.websecure.http.tls.certresolver=cf
+      - --entrypoints.websecure.http.tls.domains[0].main=henn.dev
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.henn.dev
+      - --serverstransport.insecureskipverify=true
+      - --certificatesresolvers.cf.acme.dnschallenge=true
+      - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cf.acme.dnschallenge.delaybeforecheck=10
+      - --certificatesresolvers.cf.acme.dnschallenge.resolvers=1.1.1.1:53
+      - --certificatesresolvers.cf.acme.email=<email>
+      - --certificatesresolvers.cf.acme.storage=${PWD}/letsencrypt/acme.json
+      - --api.dashboard=true
+      - --ping=true
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.whoami.rule: Host(`whoami.henn.dev`)
+      traefik.http.routers.whoami.entrypoints: websecure
+      traefik.http.routers.whoami.tls.certresolver: cf
+      traefik.http.services.whoami.loadbalancer.server.port: 80

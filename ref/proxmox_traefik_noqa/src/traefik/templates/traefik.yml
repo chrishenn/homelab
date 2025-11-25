@@ -1,0 +1,76 @@
+global:
+  checkNewVersion: true
+
+serversTransport:
+  insecureSkipVerify: true
+
+providers:
+  file:
+    directory: /rules
+    watch: true
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+
+entryPoints:
+  web:
+    address: :80
+    forwardedHeaders:
+      trustedIPs:
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: :443
+    forwardedHeaders:
+      trustedIPs:
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+      middlewares:
+        - securityHeaders@file
+  traefik:
+    address: ":8080"
+  spice:
+    address: ":3128"
+  spice-tls:
+    address: ":61001"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      storage: /ssl/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
+
+api:
+  debug: true
+  dashboard: true
+  insecure: true
+
+log:
+  filePath: /logs/traefik.log
+  level: DEBUG
+
+accessLog:
+  filePath: /logs/traefik-access.log
+  filters:
+    statusCodes:
+      - "200"
+      - "400-599"
+    retryAttempts: true
+    minDuration: "10ms"
+  bufferingSize: 0
+  fields:
+    headers:
+      defaultMode: drop
+      names:
+        User-Agent: keep

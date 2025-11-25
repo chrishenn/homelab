@@ -1,0 +1,22 @@
+---
+services:
+  librespeed:
+    profiles: [librespeed]
+    image: lscr.io/linuxserver/librespeed:latest
+    container_name: librespeed
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $DATA/librespeed:/config
+    labels:
+      homepage.group: Tools
+      homepage.name: librespeed
+      homepage.icon: librespeed.png
+      # bypass traefik and use the ip for performance over 3Gbps
+      homepage.href: http://$SVC_IP:3040
+      homepage.description: Internet Speed test
+    ports:
+      - "$SVC_IP:3040:80"

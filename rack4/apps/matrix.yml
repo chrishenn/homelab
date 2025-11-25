@@ -1,0 +1,53 @@
+---
+services:
+  matrix:
+    profiles: [matrix]
+    image: forgejo.ellis.link/continuwuation/continuwuity:latest
+    container_name: matrix
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 1048567
+        hard: 1048567
+    environment:
+      CONTINUWUITY_SERVER_NAME: matrix.henn.dev
+      CONTINUWUITY_DATABASE_PATH: /var/lib/continuwuity
+      CONTINUWUITY_PORT: 6167
+      CONTINUWUITY_MAX_REQUEST_SIZE: 20000000
+      CONTINUWUITY_ALLOW_REGISTRATION: "true"
+      CONTINUWUITY_REGISTRATION_TOKEN: "asdf2345DFSG@#$%"
+      CONTINUWUITY_ALLOW_FEDERATION: "false"
+      CONTINUWUITY_ALLOW_CHECK_FOR_UPDATES: "true"
+      CONTINUWUITY_TRUSTED_SERVERS: '["matrix.org"]'
+      CONTINUWUITY_ADDRESS: 0.0.0.0
+      CONTINUWUITY_CONFIG: "/etc/continuwuity.toml"
+      CONTINUWUITY_WELL_KNOWN: |
+        {
+        client=https://matrix.henn.dev,
+        server=matrix.henn.dev:443
+        }
+    volumes:
+      - /etc/resolv.conf:/etc/resolv.conf:ro
+      - $DATA/continuwuity:/var/lib/continuwuity
+      - $DATA/continuwuity/config.toml:/etc/continuwuity.toml
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.matrix.rule: (Host(`matrix.henn.dev`) || (Host(`henn.dev`) && PathPrefix(`/.well-known/matrix`)))
+      traefik.http.routers.matrix.entrypoints: websecure
+      traefik.http.routers.matrix.tls.certresolver: cf
+      traefik.http.services.matrix.loadbalancer.server.port: 6167
+      homepage.group: Tools
+      homepage.name: Matrix Chat
+      homepage.icon: matrix.png
+      homepage.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
+      homepage.description: Federated Discord
+
+  matrix_turn:
+    profiles: [matrix]
+    image: docker.io/coturn/coturn
+    container_name: matrix_turn
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - $DATA/coturn/coturn.conf:/etc/coturn/turnserver.conf

@@ -1,0 +1,13 @@
+# todo: keygen command that reads ssh pass from secrets.env file
+
+boot:
+    op run --env-file .env.secrets -- uv run pyinfra src/traefik/infra/boot_inv.py src/traefik/infra/boot_deploy.py -y
+push:
+    op run --env-file .env.secrets -- uv run pyinfra src/traefik/infra/inventory.py src/traefik/deploy.py -y
+cli *args:
+    op run --env-file .env.secrets -- uv run src/traefik/cli.py {{args}}
+gen:
+    just cli gen fresh
+genpush:
+    just gen
+    just push

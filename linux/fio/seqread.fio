@@ -1,0 +1,14 @@
+[global]
+name=seqread
+rw=read
+bs=1M
+numjobs=1
+iodepth=1
+size=20G
+direct=1
+ioengine=sync
+fdatasync=1
+group_reporting
+
+[job1]
+filename=/media/chris/1967E5FF082A6CE6/test1

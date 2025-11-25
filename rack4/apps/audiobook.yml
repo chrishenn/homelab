@@ -1,0 +1,25 @@
+---
+services:
+  audiobookshelf:
+    profiles: [audiobookshelf]
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: unless-stopped
+    volumes:
+      - $MEDIA:/media_library
+      - $DATA/audiobookshelf/config:/config
+      - $DATA/audiobookshelf/metadata:/metadata
+    environment:
+      TZ: $TZ
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.audiobookshelf.rule: Host(`audiobookshelf.henn.dev`)
+      traefik.http.routers.audiobookshelf.entrypoints: websecure
+      traefik.http.routers.audiobookshelf.tls.certresolver: cf
+      traefik.http.services.audiobookshelf.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: AudioBookshelf
+      homepage.icon: audiobookshelf.png
+      homepage.href: https://audiobookshelf.henn.dev
+      homepage.description: AudioBooks

@@ -1,0 +1,6 @@
+include:
+  - apps/blocky.yml
+  - apps/blocky_k.yml
+  - apps/traefik.yml
+  - apps/traefik_k.yml
+  - apps/beszel.yml

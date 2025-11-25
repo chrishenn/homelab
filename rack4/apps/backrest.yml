@@ -1,0 +1,37 @@
+# error when pruning: "unable to create lock in backend: repository is already locked by PID ..."
+# backrest will only clear "stale" locks that are over 30 minutes old
+# --> wait 30 minutes, then press the "unlock repo" button
+---
+services:
+  backrest:
+    profiles: [backrest]
+    image: garethgeorge/backrest:latest
+    container_name: backrest
+    restart: unless-stopped
+    volumes:
+      # backrest runs hooks in containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/backrest/data:/data
+      - $DATA/backrest/cache:/cache
+      - $DATA/backrest/config:/config
+      - ./backrest/scripts:/scripts
+      - /mnt/k:/mnt/k
+      - /mnt/h:/mnt/h
+    environment:
+      TZ: $TZ
+      OP_SERVICE_ACCOUNT_TOKEN: ${OP_SERVICE_ACCOUNT_TOKEN}
+      WASABI_ACCESS_KEY: ${WASABI_ACCESS_KEY}
+      WASABI_SECRET_KEY: ${WASABI_SECRET_KEY}
+      WASABI_RESTIC_PASSWORD: ${WASABI_RESTIC_PASSWORD}
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.backrest.rule: Host(`backrest.henn.dev`)
+      traefik.http.routers.backrest.entrypoints: websecure
+      traefik.http.routers.backrest.tls.certresolver: cf
+      traefik.http.services.backrest.loadbalancer.server.port: 9898
+      homepage.group: Infra
+      homepage.name: Backrest
+      homepage.icon: backrest.png
+      homepage.href: https://backrest.henn.dev
+      homepage.description: Backup Automation Server

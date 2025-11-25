@@ -1,0 +1,25 @@
+---
+services:
+  perplexica:
+    profiles: [perplexica]
+    image: itzcrazykns1337/perplexica:main
+    container_name: perplexica
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /home/perplexica
+    volumes:
+      - $DATA/perplexica/db:/home/perplexica/data
+      - $DATA/perplexica/uploads:/home/perplexica/uploads
+      - ./perplexica/config.toml:/home/perplexica/config.toml
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.perplexica.rule: Host(`perplexica.henn.dev`)
+      traefik.http.routers.perplexica.entrypoints: websecure
+      traefik.http.routers.perplexica.tls.certresolver: cf
+      traefik.http.services.perplexica.loadbalancer.server.port: 3000
+      homepage.group: AI
+      homepage.name: Perplexica
+      homepage.icon: perplexity-book-dark.png
+      homepage.href: https://perplexica.henn.dev
+      homepage.description: AI Search

@@ -1,0 +1,38 @@
+---
+services:
+  netboot:
+    profiles: [netboot]
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netboot
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/netboot/config:/config
+      - $DATA/netboot/assets:/assets
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.netboot.rule: Host(`netboot.henn.dev`)
+      traefik.http.routers.netboot.entrypoints: websecure
+      traefik.http.routers.netboot.tls.certresolver: cf
+      traefik.http.routers.netboot.service: netboot
+      traefik.http.services.netboot.loadbalancer.server.port: 3000
+
+      traefik.http.routers.netboot-assets.rule: Host(`netboot-assets.henn.dev`)
+      traefik.http.routers.netboot-assets.entrypoints: websecure
+      traefik.http.routers.netboot-assets.tls.certresolver: cf
+      traefik.http.routers.netboot-assets.service: netboot-assets
+      traefik.http.services.netboot-assets.loadbalancer.server.port: 80
+
+      homepage.group: Infra
+      homepage.name: Netboot.xyz
+      homepage.icon: netbootxyz.png
+      homepage.href: https://netboot.henn.dev
+      homepage.description: iPXE Network Boot Server
+
+    ports:
+      - 69:69/udp

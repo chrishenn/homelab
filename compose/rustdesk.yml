@@ -1,0 +1,36 @@
+# rustdesk remote desktop client, served on web
+---
+services:
+  rustdesk:
+    profiles: [gpu, rustdesk]
+    image: lscr.io/linuxserver/rustdesk:latest
+    container_name: rustdesk
+    restart: no
+    security_opt:
+      - seccomp=unconfined
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu, video, compute]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TITLE: RustDesk
+    volumes:
+      - $DATA/rustdesk:/config
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.rustdesk.rule: Host(`rustdesk.henn.dev`)
+      traefik.http.routers.rustdesk.entrypoints: websecure
+      traefik.http.routers.rustdesk.tls.certresolver: cf
+      traefik.http.services.rustdesk.loadbalancer.server.port: 3000
+      homepage.group: Webtop
+      homepage.name: Rustdesk
+      homepage.icon: rustdesk.png
+      homepage.href: https://rustdesk.henn.dev
+      homepage.description: Remote Desktop

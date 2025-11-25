@@ -1,0 +1,44 @@
+# idle memory use is rediculous (2.4GB)
+---
+services:
+  shlink:
+    profiles: [shlink]
+    image: shlinkio/shlink-web-client
+    container_name: shlink
+    restart: unless-stopped
+    environment:
+      SHLINK_SERVER_URL: shlink.henn.dev
+      SHLINK_SERVER_API_KEY: ${SHLINK_SERVER_API_KEY}
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.shlink.rule: Host(`shlink.henn.dev`)
+      traefik.http.routers.shlink.entrypoints: websecure
+      traefik.http.routers.shlink.tls.certresolver: cf
+      traefik.http.services.shlink.loadbalancer.server.port: 8080
+      homepage.group: Tools
+      homepage.name: Shlink
+      homepage.icon: shlink.png
+      homepage.href: https://shlink.henn.dev
+      homepage.description: Link Shortener
+    depends_on:
+      - shlink-backend
+
+  shlink-backend:
+    profiles: [shlink]
+    image: shlinkio/shlink:stable
+    container_name: shlink-backend
+    restart: unless-stopped
+    environment:
+      DEFAULT_DOMAIN: shlink.henn.dev
+      IS_HTTPS_ENABLED: true
+      INITIAL_API_KEY: ${SHLINK_SERVER_API_KEY}
+      GEOLITE_LICENSE_KEY: ${SHLINK_GEOLITE_LICENSE_KEY}
+    networks: [traefik]
+    labels:
+      # must be exposed by traefik. not sure how the frontend is finding the backend
+      traefik.enable: true
+      traefik.http.routers.shlink-backend.rule: Host(`sh.henn.dev`)
+      traefik.http.routers.shlink-backend.entrypoints: websecure
+      traefik.http.routers.shlink-backend.tls.certresolver: cf
+      traefik.http.services.shlink-backend.loadbalancer.server.port: 8080

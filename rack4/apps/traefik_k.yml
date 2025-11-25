@@ -1,0 +1,14 @@
+---
+services:
+  traefik_k:
+    profiles: [traefik_k]
+    image: shawly/keepalived:latest
+    container_name: traefik_k
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      KEEPALIVED_CUSTOM_CONFIG: "true"
+    volumes:
+      - ./traefik_k/master.conf:/etc/keepalived/keepalived.conf
+    network_mode: host
+    cap_add: [NET_ADMIN, NET_BROADCAST]

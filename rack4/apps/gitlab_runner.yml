@@ -1,0 +1,80 @@
+---
+services:
+  # see glrunner_dind_register to automatically edit the global concurrency in the config file
+  glrunner_shell:
+    profiles: [gitlab_runner]
+    image: gitlab/gitlab-runner:latest
+    container_name: glrunner_shell
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/gitlab/runner:/etc/gitlab-runner
+
+    # to register, either run this manually, or launch `just run glrunner_shell_register` below
+  # just attach glrunner_shell \
+  #   "gitlab-runner register --non-interactive --request-concurrency 8 --url https://gitlab.henn.dev \
+  #   --token $(op read op://homelab/Gitlab/runner_token) --executor shell"
+
+  # just run glrunner_shell_register
+  #  glrunner_shell_register:
+  #    profiles: [gitlab_runner]
+  #    image: gitlab/gitlab-runner:latest
+  #    container_name: glrunner_shell_register
+  #    restart: no
+  #    volumes:
+  #      - /var/run/docker.sock:/var/run/docker.sock
+  #      - $DATA/gitlab/runner:/etc/gitlab-runner
+  #    command:
+  #      - register
+  #      - --non-interactive
+  #      - --name=gitlab_runner
+  #      - --request-concurrency=8
+  #      - --executor=shell
+  #      - --docker-volumes=/var/run/docker.sock:/var/run/docker.sock
+  #      - --token=${GL_RUNNER_TOKEN}
+  #      - --url=${GITLAB_URL}
+
+  glrunner_dind:
+    profiles: [gitlab_runner]
+    image: gitlab/gitlab-runner:alpine
+    container_name: glrunner_dind
+    restart: unless-stopped
+    volumes:
+      - $DATA/gitlab/gitlab_runner_dind/config:/etc/gitlab-runner:z
+      - $DATA/gitlab/gitlab_runner_dind/cache:/cache
+    environment:
+      DOCKER_HOST: tcp://glrunner_dind_helper:2375
+
+  glrunner_dind_helper:
+    profiles: [gitlab_runner]
+    image: docker:20-dind
+    container_name: glrunner_dind_helper
+    restart: unless-stopped
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    command:
+      - --storage-driver=overlay2
+    volumes:
+      - $DATA/gitlab/gitlab_runner_dind/docker:/var/lib/docker
+
+  # just run glrunner_dind_register
+#  glrunner_dind_register:
+#    profiles: [gitlab_runner]
+#    image: gitlab/gitlab-runner:alpine
+#    container_name: glrunner_dind_register
+#    restart: no
+#    environment:
+#      GITLAB_URL: ${GITLAB_URL}
+#    entrypoint: ["/bin/bash", "-c"]
+#    command: >
+#      '
+#      apk add sd
+#      && sd "^concurrent(.*)$" "concurrent = 16" /etc/gitlab-runner/config.toml -n 1
+#      && gitlab-runner register --non-interactive --name=glrunner_dind --request-concurrency=8 --executor=docker \
+#        --docker-image=docker:20-dind --docker-volumes=/var/run/docker.sock:/var/run/docker.sock \
+#        --token=${GL_RUNNER_TOKEN2} --url=${GITLAB_URL}
+#      '
+#    volumes:
+#      - $DATA/gitlab/gitlab_runner_dind/config:/etc/gitlab-runner
+#      - $DATA/gitlab/gitlab_runner_dind/docker:/var/lib/docker

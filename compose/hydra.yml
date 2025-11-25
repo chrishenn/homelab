@@ -1,0 +1,30 @@
+# usenet search
+---
+services:
+  hydra:
+    profiles: [hydra]
+    image: linuxserver/nzbhydra2:latest
+    container_name: hydra
+    restart: unless-stopped
+    volumes:
+      - $DATA/hydra/config:/config
+      - $DATA/hydra/downloads:/downloads
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    security_opt:
+      - no-new-privileges=true
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.hydra.rule: Host(`hydra.henn.dev`)
+      traefik.http.routers.hydra.entrypoints: websecure
+      traefik.http.routers.hydra.tls.certresolver: cf
+      traefik.http.services.hydra.loadbalancer.server.port: 5076
+      homepage.group: Download
+      homepage.name: Nzb Hydra
+      homepage.icon: nzbhydra2.png
+      homepage.href: https://hydra.henn.dev
+      homepage.description: Usenet Search

@@ -1,0 +1,19 @@
+---
+services:
+  ittools:
+    profiles: [ittools]
+    image: corentinth/it-tools:latest
+    container_name: ittools
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ittools.rule: Host(`ittools.henn.dev`)
+      traefik.http.routers.ittools.entrypoints: websecure
+      traefik.http.routers.ittools.tls.certresolver: cf
+      traefik.http.services.ittools.loadbalancer.server.port: 80
+      homepage.group: Code
+      homepage.name: IT-Tools
+      homepage.icon: it-tools.png
+      homepage.href: https://ittools.henn.dev
+      homepage.description: Peripheral Code Calculators

@@ -1,0 +1,16 @@
+# minecraft server written in rust
+# couldn't get it to work, might be a client issue
+---
+services:
+  pumpkin:
+    profiles: [pumpkin]
+    image: ghcr.io/pumpkin-mc/pumpkin:master
+    container_name: pumpkin
+    restart: no
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.pumpkin.rule: Host(`pumpkin.henn.dev`)
+      traefik.http.routers.pumpkin.entrypoints: websecure
+      traefik.http.routers.pumpkin.tls.certresolver: cf
+      traefik.http.services.pumpkin.loadbalancer.server.port: 25565

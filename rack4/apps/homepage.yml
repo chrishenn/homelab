@@ -1,0 +1,24 @@
+---
+services:
+  homepage:
+    profiles: [homepage]
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./homepage/config:/app/config
+      - ./homepage/images:/app/public/images
+      - /mnt/k:/mnt/k
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: home.henn.dev
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.home.rule: Host(`home.henn.dev`)
+      traefik.http.routers.home.entrypoints: websecure
+      traefik.http.routers.home.tls.certresolver: cf
+      traefik.http.services.home.loadbalancer.server.port: 3000

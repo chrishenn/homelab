@@ -1,0 +1,62 @@
+---
+services:
+  # first login: admin/admin123
+  calibre:
+    profiles: [calibre]
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      HARDCOVER_TOKEN: ${HARDCOVER_TOKEN}
+      NETWORK_SHARE_MODE: false
+    volumes:
+      - $DATA/calibre/config:/config
+      - $DATA/calibre/ingest:/cwa-book-ingest
+      - $DATA/calibre/library:/calibre-library
+      - $DATA/calibre/plugins:/config/.config/calibre/plugins
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
+      traefik.http.routers.calibre.entrypoints: websecure
+      traefik.http.routers.calibre.tls.certresolver: cf
+      traefik.http.services.calibre.loadbalancer.server.port: 8083
+      homepage.group: Media
+      homepage.name: Calibre
+      homepage.icon: calibre.png
+      homepage.href: https://calibre.henn.dev
+      homepage.description: Book Server
+
+  calibre_dl:
+    profiles: [calibre]
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    container_name: calibre_dl
+    restart: unless-stopped
+    environment:
+      UID: $PUID
+      GID: $PGID
+      TZ: $TZ
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en
+      USE_BOOK_TITLE: true
+      APP_ENV: prod
+      CWA_DB_PATH: /auth/app.db
+    volumes:
+      - $DATA/calibre/ingest:/cwa-book-ingest
+      - $DATA/calibre/config/app.db:/auth/app.db
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.calibre_dl.rule: Host(`calibre_dl.henn.dev`)
+      traefik.http.routers.calibre_dl.entrypoints: websecure
+      traefik.http.routers.calibre_dl.tls.certresolver: cf
+      traefik.http.services.calibre_dl.loadbalancer.server.port: 8084
+      homepage.group: Media
+      homepage.name: Calibre Downloader
+      homepage.icon: calibre.png
+      homepage.href: https://calibre_dl.henn.dev
+      homepage.description: Book Downloader

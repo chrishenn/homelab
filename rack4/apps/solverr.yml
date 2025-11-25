@@ -1,0 +1,26 @@
+---
+services:
+  solverr:
+    profiles: [solverr]
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: solverr
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      LOG_LEVEL: info
+      LOG_HTML: false
+      CAPTCHA_SOLVER: none
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.solverr.rule: Host(`solverr.henn.dev`)
+      traefik.http.routers.solverr.entrypoints: websecure
+      traefik.http.routers.solverr.tls.certresolver: cf
+      traefik.http.services.solverr.loadbalancer.server.port: 8191
+      homepage.group: Infra
+      homepage.name: Solverr
+      homepage.icon: flaresolverr.png
+      homepage.href: https://solverr.henn.dev
+      homepage.description: Cloudflare Captcha Solver

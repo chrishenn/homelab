@@ -1,0 +1,22 @@
+---
+services:
+  netalert:
+    profiles: [netalert]
+    image: ghcr.io/jokob-sk/netalertx:latest
+    container_name: netalert
+    restart: unless-stopped
+    environment:
+      PORT: 20211
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/netalert/config:/config
+      - $DATA/netalert/db:/app/db
+    network_mode: host
+    labels:
+      homepage.group: Tools
+      homepage.name: NetalertX
+      homepage.icon: netalertx.png
+      homepage.href: https://netalert.henn.dev
+      homepage.description: Network Scanner

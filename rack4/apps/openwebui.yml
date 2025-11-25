@@ -1,0 +1,38 @@
+---
+services:
+  openwebui:
+    profiles: [openwebui]
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: openwebui
+    restart: unless-stopped
+    volumes:
+      - $DATA/ollama/webui:/app/backend/data
+    environment:
+      OLLAMA_BASE_URLS: http://ollama:11434
+      WEBUI_AUTH: False
+      WEBUI_NAME: Chicken AI
+      WEBUI_URL: https://ollama.henn.dev
+
+      AUDIO_STT_ENGINE: openai
+      AUDIO_STT_OPENAI_API_BASE_URL: http://speach:8000/v1
+      AUDIO_STT_OPENAI_API_KEY: "super_secure_key"
+      AUDIO_STT_MODEL: "Systran/faster-whisper-large-v3"
+
+      AUDIO_TTS_ENGINE: openai
+      AUDIO_TTS_OPENAI_API_BASE_URL: http://speach:8000/v1
+      AUDIO_TTS_OPENAI_API_KEY: "super_secure_key"
+      AUDIO_TTS_MODEL: "speaches-ai/Kokoro-82M-v1.0-ONNX"
+      AUDIO_TTS_VOICE: bf_isabella
+
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ollama.rule: Host(`ollama.henn.dev`)
+      traefik.http.routers.ollama.entrypoints: websecure
+      traefik.http.routers.ollama.tls.certresolver: cf
+      traefik.http.services.ollama.loadbalancer.server.port: 8080
+      homepage.group: AI
+      homepage.name: Ollama
+      homepage.icon: ollama.png
+      homepage.href: https://ollama.henn.dev
+      homepage.description: AI Chat

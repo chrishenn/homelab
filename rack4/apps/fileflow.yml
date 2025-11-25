@@ -1,0 +1,31 @@
+---
+services:
+  fileflow:
+    profiles: [fileflow]
+    image: revenz/fileflows
+    container_name: fileflow
+    restart: unless-stopped
+    runtime: nvidia
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      NVIDIA_DRIVER_CAPABILITIES: compute, video, utility
+      NVIDIA_VISIBLE_DEVICES: all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/q/media_library:/media
+      - $DATA/fileflow/fileflow:/app/Data
+      - $DATA/fileflow/temp:/temp
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.fileflow.rule: Host(`fileflow.henn.dev`)
+      traefik.http.routers.fileflow.entrypoints: websecure
+      traefik.http.routers.fileflow.tls.certresolver: cf
+      traefik.http.services.fileflow.loadbalancer.server.port: 5000
+      homepage.group: File Edit, Convert
+      homepage.name: Fileflow
+      homepage.icon: fileflows.png
+      homepage.href: https://fileflow.henn.dev
+      homepage.description: Automatic File Flows

@@ -1,0 +1,22 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+OP_SERVICE_ACCOUNT_TOKEN= { provider = "onepass", value = "op://homelab/osuyuc25hlprsxvfrlajni7sqa/credential" }
+
+USER= { provider = "onepass", value = "op://homelab/chris/username" }
+PASS= { provider = "onepass", value = "op://homelab/chris/password" }
+DOCKERHUB_USER= { provider = "onepass", value = "op://homelab/dockerhub/username" }
+DOCKERHUB_PASS= { provider = "onepass", value = "op://homelab/dockerhub/password" }
+
+CF_API_EMAIL= { provider = "onepass", value = "op://homelab/cloudflare_token/username" }
+CF_DNS_API_TOKEN= { provider = "onepass", value = "op://homelab/cloudflare_token/credential" }
+TWINGATE_NETWORK= { provider = "onepass", value = "op://homelab/twingate/network" }
+TWINGATE_ACCESS_TOKEN= { provider = "onepass", value = "op://homelab/twingate/access_token" }
+TWINGATE_REFRESH_TOKEN= { provider = "onepass", value = "op://homelab/twingate/refresh_token" }
+TWINGATE_LABEL_HOSTNAME= { provider = "onepass", value = "op://homelab/twingate/label_hostname" }
+TWINGATE_LABEL_DEPLOYED_BY= { provider = "onepass", value = "op://homelab/twingate/deployed_by" }
+BESZEL_KEY= { provider = "onepass", value = "op://homelab/beszel/key" }
+BESZEL_TOKEN= { provider = "onepass", value = "op://homelab/beszel/token" }

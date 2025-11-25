@@ -1,0 +1,47 @@
+---
+networks:
+  traefik:
+    name: traefik
+    driver: bridge
+
+services:
+  traefik:
+    profiles: [traefik]
+    image: traefik:v3.5
+    container_name: traefik
+    restart: unless-stopped
+    security_opt: [no-new-privileges=true]
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      CF_API_EMAIL: ${CF_API_EMAIL}
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../../rack4/apps/traefik/traefik.yml:/traefik.yml:ro
+      - ../../rack4/apps/traefik/cfg:/cfg:ro
+      # CANNOT BE A CIFS MOUNT. Will work the first time, then fail after restarting container
+      - $HOME/rack0_traefik/ssl:/ssl
+      - $HOME/rack0_traefik/logs:/logs
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.dash.rule: Host(`rack0-traefik.henn.dev`)
+      traefik.http.routers.dash.entrypoints: websecure
+      traefik.http.routers.dash.service: api@internal
+      traefik.http.routers.dash.tls.certresolver: cf
+      homepage.group: Infra
+      homepage.name: Traefik-Rack0
+      homepage.icon: traefik.png
+      homepage.href: https://rack0-traefik.henn.dev
+      homepage.description: Rack0 Traefik Gui
+      homepage.widget.type: traefik
+      homepage.widget.url: https://rack0-traefik.henn.dev
+    ports:
+      - "${SVC_IP}:80:80"
+      - "${SVC_IP}:443:443"
+      - "${SVC_IP}:8080:8080"
+      - "${TRAEFIK_VIP}:80:80"
+      - "${TRAEFIK_VIP}:443:443"
+      - "${TRAEFIK_VIP}:8080:8080"

@@ -1,0 +1,25 @@
+---
+services:
+  blocky:
+    profiles: [blocky]
+    image: ghcr.io/0xerr0r/blocky:latest
+    container_name: blocky
+    restart: unless-stopped
+    hostname: blocky
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/blocky/blacklists:/app/blacklists/:ro
+      - $DATA/blocky/whitelists:/app/whitelists/:ro
+      # don't overwrite blocky logs from rack4 with this rack0 instance
+      - $HOME/blocky/logs:/logs
+      # shared blocky config
+      - ../../rack4/apps/blocky/config.yml:/app/config.yml:ro
+    ports:
+      - "${SVC_IP}:53:53/tcp"
+      - "${SVC_IP}:53:53/udp"
+      - "${DNS_VIP}:53:53/tcp"
+      - "${DNS_VIP}:53:53/udp"

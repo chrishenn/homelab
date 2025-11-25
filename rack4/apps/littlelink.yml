@@ -1,0 +1,63 @@
+---
+services:
+  littlelink:
+    profiles: [littlelink]
+    image: ghcr.io/timothystewart6/littlelink-server:latest
+    container_name: littlelink
+    restart: unless-stopped
+    environment:
+      META_TITLE: Chris Henn
+      META_DESCRIPTION: Software Engineer
+      META_AUTHOR: Chris Henn
+      META_KEYWORDS: Software, Data, ML, Engineering
+      LANG: en
+      META_INDEX_STATUS: all
+      OG_SITE_NAME: Chris Henn
+      OG_TITLE: Chris Henn
+      OG_DESCRIPTION: The home of Chris Henn
+      OG_URL: https://home.henn.deev
+      OG_IMAGE: https://avatars.githubusercontent.com/u/43179500
+      OG_IMAGE_WIDTH: 400
+      OG_IMAGE_HEIGHT: 400
+      GA_TRACKING_ID:
+      THEME: Dark
+      FAVICON_URL: https://avatars.githubusercontent.com/u/43179500
+      AVATAR_URL: https://avatars.githubusercontent.com/u/43179500
+      AVATAR_2X_URL: https://avatars.githubusercontent.com/u/43179500
+      AVATAR_ALT:
+      NAME: ChrisHenn
+      BIO: Software Engineer
+      use: ENV variable names for order, listed buttons will be boosted to the top
+      BUTTON_ORDER: YOUTUBE,TWITCH,TWITTER,GITHUB,INSTAGRAM,LINKED_IN,DISCORD,FACEBOOK,TIKTOK,PATREON,GEAR,DOCUMENTATION
+      you: can render an unlimited amount of custom buttons by adding
+      the: CUSTOM_BUTTON_* variables and by using a comma as a separator.
+      CUSTOM_BUTTON_TEXT: Documentation,Recommended Gear
+      CUSTOM_BUTTON_URL: https://home.henn.dev
+      CUSTOM_BUTTON_COLOR: #000000,#000000
+      CUSTOM_BUTTON_TEXT_COLOR: #ffffff,#ffffff
+      CUSTOM_BUTTON_ALT_TEXT: Documentation
+      CUSTOM_BUTTON_NAME: DOCUMENTATION,GEAR
+      CUSTOM_BUTTON_ICON: fas file-alt,fas fa-cog
+      GITHUB: https://home.henn.dev
+      TWITTER: https://home.henn.dev
+      INSTAGRAM: https://home.henn.dev
+      LINKED_IN: https://home.henn.dev
+      YOUTUBE: https://home.henn.dev
+      TWITCH: https://home.henn.dev
+      DISCORD: https://home.henn.dev
+      TIKTOK: https://home.henn.dev
+      FACEBOOK: https://home.henn.dev
+      PATREON: https://home.henn.dev
+      FOOTER: Chris Henn © 2025
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.littlelink.rule: Host(`littlelink.henn.dev`)
+      traefik.http.routers.littlelink.entrypoints: websecure
+      traefik.http.routers.littlelink.tls.certresolver: cf
+      traefik.http.services.littlelink.loadbalancer.server.port: 3000
+      homepage.group: Tools
+      homepage.name: Littlelink
+      homepage.icon: littlelink-custom.png
+      homepage.href: https://littlelink.henn.dev
+      homepage.description: Linktree (simple)

@@ -1,0 +1,19 @@
+---
+services:
+  wordle:
+    profiles: [wordle]
+    image: ghcr.io/clupasq/word-mastermind:latest
+    container_name: wordle
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.wordle.rule: Host(`wordle.henn.dev`)
+      traefik.http.routers.wordle.entrypoints: websecure
+      traefik.http.routers.wordle.tls.certresolver: cf
+      traefik.http.services.wordle.loadbalancer.server.port: 80
+      homepage.group: Games
+      homepage.name: Wordle
+      homepage.icon: microsoft-word.png
+      homepage.href: https://wordle.henn.dev
+      homepage.description: Wordle Clone

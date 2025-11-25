@@ -1,0 +1,20 @@
+---
+services:
+  openresume:
+    profiles: [openresume]
+    image: ${REGISTRY}/openresume:latest
+    build: https://github.com/xitanggg/open-resume.git
+    container_name: openresume
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.openresume.rule: Host(`openresume.henn.dev`)
+      traefik.http.routers.openresume.entrypoints: websecure
+      traefik.http.routers.openresume.tls.certresolver: cf
+      traefik.http.services.openresume.loadbalancer.server.port: 3000
+      homepage.group: File Edit, Convert
+      homepage.name: openresume
+      homepage.icon: open-resume.png
+      homepage.href: https://openresume.henn.dev
+      homepage.description: Resume Generator

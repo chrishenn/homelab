@@ -1,0 +1,89 @@
+---
+services:
+  rxresume:
+    profiles: [rxresume]
+    image: amruthpillai/reactive-resume:latest
+    restart: unless-stopped
+    container_name: rxresume
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      PUBLIC_URL: https://rxresume.henn.dev
+      STORAGE_URL: http://rxresume_minio:9000/default
+      CHROME_TOKEN: chrome_token
+      CHROME_URL: ws://rxresume_chrome:3000
+      DATABASE_URL: postgresql://postgres:postgres@rxresume_pg:5432/postgres # trufflehog:ignore
+      ACCESS_TOKEN_SECRET: access_token_secret
+      REFRESH_TOKEN_SECRET: refresh_token_secret
+      MAIL_FROM: noreply@localhost
+      STORAGE_ENDPOINT: rxresume_minio
+      STORAGE_PORT: 9000
+      STORAGE_REGION: undefined
+      STORAGE_BUCKET: default
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      STORAGE_USE_SSL: false
+      STORAGE_SKIP_BUCKET_CHECK: true
+    depends_on:
+      - rxresume_pg
+      - rxresume_minio
+      - rxresume_chrome
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.rxresume.rule: Host(`rxresume.henn.dev`)
+      traefik.http.routers.rxresume.entrypoints: websecure
+      traefik.http.routers.rxresume.tls.certresolver: cf
+      traefik.http.services.rxresume.loadbalancer.server.port: 3000
+      homepage.group: File Edit, Convert
+      homepage.name: rxresume
+      homepage.icon: reactive-resume.png
+      homepage.href: https://rxresume.henn.dev
+      homepage.description: Resume Editor
+
+  rxresume_chrome:
+    profiles: [rxresume]
+    image: ghcr.io/browserless/chromium:v2.18.0
+    restart: unless-stopped
+    container_name: rxresume_chrome
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TIMEOUT: 10000
+      CONCURRENT: 10
+      TOKEN: chrome_token
+      EXIT_ON_HEALTH_FAILURE: "true"
+      PRE_REQUEST_HEALTH_CHECK: "true"
+    networks: [traefik]
+
+  rxresume_pg:
+    profiles: [rxresume]
+    image: postgres:16-alpine
+    container_name: rxresume_pg
+    restart: unless-stopped
+    volumes:
+      - $DATA/rxresume/rxresume_pg:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      start_period: 15s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [traefik]
+
+  rxresume_minio:
+    profiles: [rxresume]
+    image: minio/minio:latest
+    restart: unless-stopped
+    container_name: rxresume_minio
+    command: server /data
+    volumes:
+      - $DATA/rxresume/rxresume_minio:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    networks: [traefik]

@@ -1,0 +1,18 @@
+# torrent client
+# default password: deluge
+---
+services:
+  deluge:
+    profiles: [deluge]
+    image: ghcr.io/linuxserver/deluge:latest
+    container_name: deluge
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/deluge/config:/config
+      - $DATA/deluge/downloads:/downloads
+    network_mode: service:gluetun

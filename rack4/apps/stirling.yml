@@ -1,0 +1,22 @@
+---
+services:
+  stirling:
+    profiles: [stirling]
+    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    container_name: stirling
+    restart: unless-stopped
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - LANGS=en_US
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.stirling.rule: Host(`stirling.henn.dev`)
+      traefik.http.routers.stirling.entrypoints: websecure
+      traefik.http.routers.stirling.tls.certresolver: cf
+      traefik.http.services.stirling.loadbalancer.server.port: 8080
+      homepage.group: File Edit, Convert
+      homepage.name: Stirling
+      homepage.icon: stirling-pdf.png
+      homepage.href: https://stirling.henn.dev
+      homepage.description: PDF Editing

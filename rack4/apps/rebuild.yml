@@ -1,0 +1,31 @@
+---
+services:
+  rebuild:
+    profiles: [rebuild]
+    image: ${REGISTRY}/cron3:latest
+    build: ./cron3
+    container_name: rebuild
+    restart: unless-stopped
+    environment:
+      # configure the cron task
+      TZ: $TZ
+      CRON_SCHEDULE: "0 0 * * 0"
+      CRON_CMD: "/run.sh"
+      RUN_NOW: 1
+
+      # these are used by the rebuild.sh script
+      SVCS: "vertd, rsync"
+      REPO_MACHINE: ${REPO_MACHINE}
+      OP_SERVICE_ACCOUNT_TOKEN: ${OP_SERVICE_ACCOUNT_TOKEN}
+
+      # pass through vars used by docker commands - mise env is not available inside the container
+      REGISTRY: ${REGISTRY}
+      REPO: ${REPO}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./rebuild/rebuild.sh:/run.sh
+      # the compose `project` has a hardcoded `config file` path, so host and container paths must match
+      - ${REPO_MACHINE}:${REPO_MACHINE}
+      # remember to `docker login` on the docker host
+      - $HOME/.docker/config.json:/config.json
+    privileged: true

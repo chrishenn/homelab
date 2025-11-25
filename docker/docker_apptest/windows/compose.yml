@@ -1,0 +1,28 @@
+---
+services:
+  ltsc2019:
+    image: test-ltsc2019:latest
+    container_name: test-ltsc2019
+    hostname: test-ltsc2019
+    restart: no
+    build:
+      context: .
+      dockerfile: ltsc2019.docker
+
+  servercore-ltsc2022:
+    image: test-servercore-ltsc2022:latest
+    container_name: test-servercore-ltsc2022
+    hostname: test-servercore-ltsc2022
+    restart: no
+    build:
+      context: .
+      dockerfile: ltsc2022_core.docker
+
+  server-ltsc2022:
+    image: test-server-ltsc2022:latest
+    container_name: test-server-ltsc2022
+    hostname: test-server-ltsc2022
+    restart: no
+    build:
+      context: .
+      dockerfile: ltsc2022.docker

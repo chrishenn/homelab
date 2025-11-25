@@ -1,0 +1,14 @@
+[global]
+name=readlatency-test-job
+rw=randread
+bs=1M
+iodepth=1
+numjobs=1
+direct=1
+ioengine=io_uring
+group_reporting
+time_based
+runtime=30
+
+[job1]
+filename=/om2/fast/test0

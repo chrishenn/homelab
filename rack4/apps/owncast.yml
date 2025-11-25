@@ -1,0 +1,29 @@
+# default user/pass: admin/abc123
+---
+services:
+  owncast:
+    profiles: [owncast]
+    image: owncast/owncast:latest
+    container_name: owncast
+    restart: unless-stopped
+    volumes:
+      - $DATA/owncast:/app/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.owncast.rule: Host(`owncast.henn.dev`)
+      traefik.http.routers.owncast.entrypoints: websecure
+      traefik.http.routers.owncast.tls.certresolver: cf
+      traefik.http.routers.owncast.service: owncast
+      traefik.http.services.owncast.loadbalancer.server.port: 8080
+
+      traefik.tcp.routers.owncast-rtmp.rule: HostSNI(`*`)
+      traefik.tcp.routers.owncast-rtmp.entrypoints: rtmp
+      traefik.tcp.routers.owncast-rtmp.service: owncast-rtmp
+      traefik.tcp.services.owncast-rtmp.loadbalancer.server.port: 1935
+
+      homepage.group: Tools
+      homepage.name: Owncast
+      homepage.icon: owncast.png
+      homepage.href: https://owncast.henn.dev
+      homepage.description: Federated Streaming Server

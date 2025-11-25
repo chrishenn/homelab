@@ -1,0 +1,64 @@
+services:
+  al2023:
+    image: test-al2023
+    container_name: test-al2023
+    hostname: test-al2023
+    privileged: true
+    restart: "no"
+    build:
+      context: .
+      dockerfile: al2023.docker
+
+  alma:
+    image: test-alma
+    container_name: test-alma
+    hostname: test-alma
+    privileged: true
+    restart: "no"
+    build:
+      context: .
+      dockerfile: alma.docker
+
+  rhel:
+    image: test-rhel
+    container_name: test-rhel
+    hostname: test-rhel
+    privileged: true
+    restart: "no"
+    build:
+      context: .
+      dockerfile: rhel.docker
+
+  # NOTE: big big danger below. Testing only!
+  debian:
+    image: test-debian
+    container_name: test-debian
+    hostname: test-debian
+    privileged: true
+    restart: "no"
+    build:
+      context: .
+      dockerfile: debian.docker
+
+    cgroup: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    tmpfs:
+      - /run
+      - /run/lock
+  ubuntu:
+    image: test-ubuntu
+    container_name: test-ubuntu
+    hostname: test-ubuntu
+    privileged: true
+    restart: "no"
+    build:
+      context: .
+      dockerfile: ubuntu.docker
+
+    cgroup: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    tmpfs:
+      - /run
+      - /run/lock

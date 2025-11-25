@@ -1,0 +1,26 @@
+# crappy UI, though server features are pretty great
+---
+services:
+  copyparty:
+    profiles: [copyparty]
+    image: copyparty/ac:latest
+    container_name: copyparty
+    restart: no
+    user: $PGID:$PUID
+    volumes:
+      - ./copyparty/config.conf:/cfg/config.conf:ro
+      - /mnt/h:/mnt/h
+      - /mnt/q:/mnt/q
+      - /mnt/f:/mnt/f
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.copyparty.rule: Host(`copyparty.henn.dev`)
+      traefik.http.routers.copyparty.entrypoints: websecure
+      traefik.http.routers.copyparty.tls.certresolver: cf
+      traefik.http.services.copyparty.loadbalancer.server.port: 3923
+      homepage.group: File Edit, Convert
+      homepage.name: Copy Party
+      homepage.icon: copyparty.png
+      homepage.href: https://copyparty.henn.dev
+      homepage.description: File server

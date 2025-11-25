@@ -1,0 +1,51 @@
+# containers that consume this socket-proxy must be on the "docker" network to find this
+#
+# can be used like this (portainer, watchtower):
+#   DOCKER_HOST: tcp://socket-proxy:2375
+# or like this for traefik:
+# - --providers.docker.endpoint=tcp://socket-proxy:2375
+---
+services:
+  socket-proxy:
+    profiles: [socket-proxy]
+    image: linuxserver/socket-proxy:latest
+    container_name: socket-proxy
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      ALLOW_START: 1
+      ALLOW_STOP: 1
+      ALLOW_RESTARTS: 1
+      AUTH: 1
+      BUILD: 1
+      COMMIT: 1
+      CONFIGS: 1
+      CONTAINERS: 1
+      LOG_LEVEL: warning
+      DISABLE_IPV6: 1
+      DISTRIBUTION: 1
+      EVENTS: 1
+      EXEC: 1
+      IMAGES: 1
+      INFO: 1
+      NETWORKS: 1
+      NODES: 1
+      POST: 1
+      SECRETS: 1
+      SERVICES: 1
+      SESSION: 1
+      SYSTEM: 1
+      TASKS: 1
+      VERSION: 1
+      VOLUMES: 1
+    privileged: true
+    security_opt:
+      - no-new-privileges=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [docker]
+    labels:
+      # watchtower depends on the socket-proxy to function
+      com.centurylinklabs.watchtower.enable: false

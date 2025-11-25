@@ -1,0 +1,29 @@
+---
+services:
+  lancache_dns:
+    profiles: [lancache]
+    image: lancachenet/lancache-dns:latest
+    container_name: lancache_dns
+    restart: unless-stopped
+    environment:
+      USE_GENERIC_CACHE: true
+      DISABLE_RIOT: true
+      LANCACHE_IP: ${LANCACHE_IP}
+      UPSTREAM_DNS: ${DNS_VIP}
+    ports:
+      - "${LANCACHE_DNS}:53:53/udp"
+      - "${LANCACHE_DNS}:53:53/tcp"
+
+  lancache_monolithic:
+    profiles: [lancache]
+    image: lancachenet/monolithic:latest
+    container_name: lancache_monolithic
+    restart: unless-stopped
+    environment:
+      CACHE_DISK_SIZE: 1000g
+    volumes:
+      - $DATA/lancache/cache:/data/cache
+      - $DATA/lancache/logs:/data/logs
+    ports:
+      - "${LANCACHE_IP}:80:80/tcp"
+      - "${LANCACHE_IP}:443:443/tcp"

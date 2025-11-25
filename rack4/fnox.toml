@@ -1,0 +1,42 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+OP_SERVICE_ACCOUNT_TOKEN= { provider = "onepass", value = "op://homelab/osuyuc25hlprsxvfrlajni7sqa/credential" }
+
+USER= { provider = "onepass", value = "op://homelab/chris/username" }
+PASS= { provider = "onepass", value = "op://homelab/chris/password" }
+EMAIL= { provider = "onepass", value = "op://homelab/chris/email" }
+
+DOCKERHUB_USER= { provider = "onepass", value = "op://homelab/dockerhub/username" }
+DOCKERHUB_PASS= { provider = "onepass", value = "op://homelab/dockerhub/password" }
+
+CF_API_EMAIL= { provider = "onepass", value = "op://homelab/cloudflare_token/username" }
+CF_DNS_API_TOKEN= { provider = "onepass", value = "op://homelab/cloudflare_token/credential" }
+WIREGUARD_PRIVATE_KEY= { provider = "onepass", value = "op://homelab/proton/wireguard_private_key" }
+SHLINK_SERVER_API_KEY= { provider = "onepass", value = "op://homelab/shlink/credential" }
+SHLINK_GEOLITE_LICENSE_KEY= { provider = "onepass", value = "op://homelab/shlink/maxmind" }
+WASABI_URL= { provider = "onepass", value = "op://homelab/wasabi/wasabi_url" }
+WASABI_ACCESS_KEY= { provider = "onepass", value = "op://homelab/wasabi/access_key" }
+WASABI_SECRET_KEY= { provider = "onepass", value = "op://homelab/wasabi/secret_key" }
+WASABI_RESTIC_PASSWORD= { provider = "onepass", value = "op://homelab/wasabi/wasabi_restic_password" }
+GHRUNNER_PAT= { provider = "onepass", value = "op://homelab/ghrunner/credential" }
+GL_RUNNER_TOKEN= { provider = "onepass", value = "op://homelab/Gitlab/runner_token" }
+GL_RUNNER_TOKEN2= { provider = "onepass", value = "op://homelab/Gitlab/runner_token2" }
+RADARR_URL= { provider = "onepass", value = "op://homelab/radarr/url" }
+RADARR_KEY= { provider = "onepass", value = "op://homelab/radarr/credential" }
+SONARR_URL= { provider = "onepass", value = "op://homelab/sonarr/url" }
+SONARR_KEY= { provider = "onepass", value = "op://homelab/sonarr/credential" }
+TURN_SECRET= { provider = "onepass", value = "op://homelab/Element-Home/turn_secret" }
+HARDCOVER_TOKEN= { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
+CAMPFIRE_SECRET_KEY_BASE= { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
+NEXTERM_ENCRYPTION_KEY= { provider = "onepass", value = "op://homelab/nexterm/credential" }
+BESZEL_KEY= { provider = "onepass", value = "op://homelab/beszel/key" }
+BESZEL_TOKEN= { provider = "onepass", value = "op://homelab/beszel/token" }
+DOCMOST_SECRET= { provider = "onepass", value = "op://homelab/docmost/credential" }
+TUDUDI_SECRET= { provider = "onepass", value = "op://homelab/tududi/credential" }
+SEARXNG_SECRET= { provider = "onepass", value = "op://homelab/searxng/credential" }
+YOUTUBE_API= { provider = "onepass", value = "op://homelab/youtube_data_api_v3/credential" }
+PAPERLESS_SECRET_KEY= { provider = "onepass", value = "op://homelab/paperless/secret_key" }

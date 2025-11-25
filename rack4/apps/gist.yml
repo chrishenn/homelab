@@ -1,0 +1,25 @@
+---
+services:
+  gist:
+    profiles: [gist]
+    image: ghcr.io/thomiceli/opengist:1.10
+    container_name: gist
+    restart: unless-stopped
+    volumes:
+      - $DATA/gist:/opengist
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.gist.rule: Host(`gist.henn.dev`)
+      traefik.http.routers.gist.entrypoints: websecure
+      traefik.http.routers.gist.tls.certresolver: cf
+      traefik.http.services.gist.loadbalancer.server.port: 6157
+      traefik.tcp.routers.gist-ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.gist-ssh.entrypoints: tcp2222
+      traefik.tcp.routers.gist-ssh.service: gist-ssh
+      traefik.tcp.services.gist-ssh.loadbalancer.server.port: 2222
+      homepage.group: Code
+      homepage.name: OpenGist
+      homepage.icon: opengist.png
+      homepage.href: https://gist.henn.dev
+      homepage.description: Gist

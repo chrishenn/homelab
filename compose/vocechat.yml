@@ -1,0 +1,25 @@
+# private slack
+---
+services:
+  vocechat:
+    profiles: [vocechat]
+    image: privoce/vocechat-server:latest
+    container_name: vocechat
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - /docker/vocechat/data:/home/vocechat-server/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.vocechat.rule: Host(`vocechat.henn.dev`)
+      traefik.http.routers.vocechat.entrypoints: websecure
+      traefik.http.routers.vocechat.tls.certresolver: cf
+      traefik.http.services.vocechat.loadbalancer.server.port: 3000
+      homepage.group: Tools
+      homepage.name: VoceChat
+      homepage.icon: slack.png
+      homepage.href: https://vocechat.henn.dev
+      homepage.description: Private Messagaging
