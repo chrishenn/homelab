@@ -24,7 +24,7 @@ services:
       traefik.http.routers.hydra.tls.certresolver: cf
       traefik.http.services.hydra.loadbalancer.server.port: 5076
       homepage.group: Download
-      homepage.name: Nzb Hydra
+      homepage.name: Hydra
       homepage.icon: nzbhydra2.png
       homepage.href: https://hydra.henn.dev
       homepage.description: Usenet Search

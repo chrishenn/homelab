@@ -1,2 +1,0 @@
-deploy:
-    uv run src/winterm/deploy.py

@@ -54,7 +54,7 @@ include:
   - apps/linkstack.yml
   - apps/littlelink.yml
   - apps/matrix.yml
-  - apps/audiobook.yml
+  - apps/audiobookshelf.yml
   - apps/bazarr.yml
   - apps/jellyfin.yml
   - apps/jellyseerr.yml
@@ -68,7 +68,6 @@ include:
   - apps/minio.yml
   - apps/n8n.yml
   - apps/navidrome.yml
-  - apps/netalert.yml
   - apps/netboot.yml
   - apps/nexterm.yml
   - apps/ntfy.yml
@@ -100,3 +99,4 @@ include:
   - apps/gitlab.yml
   - apps/gitlab_runner.yml
   - apps/nginx.yml
+  - apps/newt.yml

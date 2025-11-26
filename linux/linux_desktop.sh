@@ -56,12 +56,9 @@ alt.base.color=#0a112401
 
 # package managers
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
-. ~/.bashrc
-
 curl https://mise.run | sh
-echo 'eval "$(~/.local/bin/mise activate bash)"' >>~/.bashrc
-. ~/.bashrc
+curl -fsSL https://pixi.sh/install.sh | sh
+bash <(curl -fsSL https://moonrepo.dev/install/proto.sh)
 
 brew install dra
 sudo $(which dra) download TheAssassin/AppImageLauncher -is appimagelauncher_3.0.0-alpha-4-gha275.0bcc75d_amd64.deb
@@ -87,7 +84,7 @@ flatpak override --user --device=all com.obsproject.Studio
 sudo flatpak remote-add --if-not-exists signal-flatpak https://signalflatpak.github.io/signal/signal.flatpakrepo
 flatpak install -y signal-flatpak org.signal.Signal
 
-mise use -g pixi gh rust@stable node pnpm uv go zig cmake ninja sd eza zoxide bat fd hk \
+mise use -g gh rust@stable node pnpm uv go zig cmake ninja sd eza zoxide bat fd hk \
 	cargo:cargo-binstall cargo:topgrade
 
 pushd $HOME
@@ -123,11 +120,11 @@ rm pkg.tar.gz
 sudo apt install -y cifs-utils
 sudo mkdir -p /mnt/h /mnt/k /mnt/m /mnt/f
 
->sudo nano /etc/fstab
-//192.168.1.142/k /mnt/k cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
-//192.168.1.142/h /mnt/h cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
-//192.168.1.142/m /mnt/m cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
-//192.168.1.142/f /mnt/f cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
+sudo nano /etc/fstab
+192.168.1.142:/mnt/h /mnt/h nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+192.168.1.142:/mnt/k /mnt/k nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+192.168.1.142:/mnt/f /mnt/f nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+192.168.1.142:/mnt/q /mnt/q nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
 
 sudo systemctl daemon-reload
 sudo mount -a

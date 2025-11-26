@@ -1,9 +1,0 @@
-TGT := x"~/Downloads/gitbackup_" + datetime("%Y-%m-%d-%H%M%S")
-
-run:
-    op inject -i config.tpl.yml -o secrets.yml -f
-    ./git-backup-linux-x64 -backup.path {{TGT}} -config.file secrets.yml -backup.fail-at-end
-
-    7z a {{TGT}}.zip {{TGT}}
-    rsync {{TGT}}.zip /mnt/h/backup/
-    rm -rf {{TGT}}.zip {{TGT}} secrets.yml

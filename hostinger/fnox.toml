@@ -1,0 +1,7 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+HOSTINGERIP = { provider = "onepass", value = "op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/hostinger_ip" }

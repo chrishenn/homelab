@@ -1,0 +1,46 @@
+node {
+    // location inside msi-builder image
+    def msbuild = "C:\\bt\\MSBuild\\Current\\Bin\\MSBuild.exe"
+
+    // hacky. absolute project location on local (node's) disk.
+    def proj_src = "C:\\path\\to\\project"
+
+    // path to msi-builder dockerfile within project and workspace
+    def wrk_dockerfile = "${WORKSPACE}\\containers\\windows\\Containerfile.msibuilder"
+    def wrk_artifact = "${WORKSPACE}\\windows\\installer\\bin\\x64\\Release\\*.msi"
+
+    // clean the workspace so that file changes are picked up
+    cleanWs()
+
+    stage('Copy project to jenkins workspace') {
+        powershell "Copy-Item -Path ${proj_src}\\* -Destination ${WORKSPACE} -Recurse -Force"
+    }
+
+    // hacky. better to push builder image to remote repo
+    stage('Build msi-builder if noexist') {
+        // hacky. count of lines found for image:tag. count<2 because column headers take up one line
+        def dobuild = powershell(returnStdout: true, script: '$nimg = (docker images msi-builder:latest).Count;
+            if ($nimg -lt 2) {echo "TRUE"} else {echo "FALSE"}')
+        dobuild = dobuild.trim()
+
+        if ("${dobuild}" == "TRUE") {
+            echo 'BUILDING msi-builder : msi-builder:latest NOT FOUND in local repo'
+            docker.build('msi-builder:latest', "-f ${wrk_dockerfile} .")
+        }
+    }
+
+    docker.image('msi-builder:latest').inside {
+        stage('Build msi installer') {
+            script {
+                dir("${WORKSPACE}\\windows\\installer") {
+                    bat "call \"${msbuild}\" vs_target.sln -p:Configuration=Release -p:Platform=x64 -p:RestorePackagesConfig=true -restore"
+                }
+            }
+        }
+    }
+
+    stage('Copy build artifact') {
+        powershell "Copy-Item -Path ${wrk_artifact} -Destination ${proj_src}\\build\\src -Force"
+    }
+}
+

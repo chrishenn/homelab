@@ -57,6 +57,19 @@ restart-computer
 # smb share the c drive
 New-SmbShare -Name C -Path "C:\" -FullAccess "Everyone"
 
+# enable smbdirect
+enable-windowsoptionalfeature -online -featurename smbdirect -all -norestart
+Set-SmbServerConfiguration -EnableMultiChannel $true
+Set-SmbClientConfiguration -EnableMultiChannel $true -force
+# set for interface
+Enable-NetAdapterRDMA <name>
+# set globally for all interfaces
+Set-NetOffloadGlobalSetting -NetworkDirect Enabled
+# observe
+Get-SmbServerNetworkInterface
+Get-SmbClientNetworkInterface
+get-NetAdapterRDMA
+
 
 
 # ssh keys

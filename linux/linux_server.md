@@ -181,20 +181,6 @@ sudo systemctl enable --now smbd
 > sudo nano /etc/samba/smb.conf
 > see samba/smb.con
 sudo systemctl restart smbd
-
-# samba client: connect to remote shares
-sudo apt install -y cifs-utils
-sudo mkdir -p /mnt/f /mnt/h /mnt/k /mnt/m /mnt/q
-
-> sudo nano /etc/fstab
-
-//192.168.1.142/f /mnt/f cifs file_mode=0777,dir_mode=0777,uid=1000,gid=1000,user=<user>,pass=<pass>,vers=3,noatime,auto,nobrl,noperm 0 0
-//192.168.1.142/h /mnt/h cifs file_mode=0777,dir_mode=0777,uid=1000,gid=1000,user=<user>,pass=<pass>,vers=3,noatime,auto,nobrl,noperm 0 0
-//192.168.1.142/k /mnt/k cifs file_mode=0777,dir_mode=0777,uid=1000,gid=1000,user=<user>,pass=<pass>,vers=3,noatime,auto,nobrl,noperm 0 0
-//192.168.1.142/m /mnt/m cifs file_mode=0777,dir_mode=0777,uid=1000,gid=1000,user=<user>,pass=<pass>,vers=3,noatime,auto,nobrl,noperm 0 0
-
-sudo systemctl daemon-reload
-sudo mount -a
 ```
 
 ---

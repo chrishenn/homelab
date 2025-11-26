@@ -1,5 +1,9 @@
 # samba client
 
+note: use nfs instead where possible
+
+---
+
 samba client: install and mount
 
 ```bash

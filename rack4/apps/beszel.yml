@@ -1,9 +1,9 @@
 ---
 services:
-  beszel_server:
+  beszel:
     profiles: [beszel]
     image: henrygd/beszel
-    container_name: beszel_server
+    container_name: beszel
     restart: unless-stopped
     environment:
       AUTO_LOGIN: true

@@ -3,7 +3,7 @@
 profile := "'*'"
 
 up profile=profile *svcs:
-    docker compose --profile {{profile}} up -d --remove-orphans {{svcs}}
+    docker compose --profile {{profile}} up -d --remove-orphans --pull missing {{svcs}}
 
 down profile=profile *svcs:
     docker compose --profile {{profile}} down {{svcs}}
@@ -22,6 +22,7 @@ run *svcs:
 log *args:
     docker compose logs {{args}}
 
+alias f := follow
 follow *args:
     just log --follow {{args}}
 
@@ -48,7 +49,7 @@ pbounce profile=profile *svcs:
 # logins, keys, helpers
 
 keys:
-    echo "$(op read 'op://homelab/dkey/public key')" | $DOCKERHOST_SSH "cat >> ~/.ssh/authorized_keys"
+    echo "$(op read 'op://homelab/dkey/public key')" | $DHOST_SSH "cat >> ~/.ssh/authorized_keys"
 
 login:
     #!/bin/bash
@@ -57,25 +58,27 @@ login:
 
 rlogin:
     #!/bin/bash
-    $DOCKERHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
-    $DOCKERHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
+    $DHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
+    $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
 
 alias s := sync
 sync message="sync":
     git commit -a -m "{{message}}" || true && git pull && git push
-    $DOCKERHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
+    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
 
 rsync message="sync":
-    $DOCKERHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
+    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
     git commit -a -m "{{message}}" || true && git pull && git push
 
 reset:
-    $DOCKERHOST_SSH -At "cd ${REPO} && git fetch origin"
-    $DOCKERHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
+    $DHOST_SSH -At "cd ${REPO} && git fetch origin"
+    $DHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
 
 ssh:
-    $DOCKERHOST_SSH -At "cd ${REPO_MACHINE} && exec $SHELL"
+    $DHOST_SSH -At "cd ${REPO_MACHINE} && exec $SHELL"
 
+cm:
+    $DHOST_SSH -At "$HOME/.local/share/mise/installs/chezmoi/latest/chezmoi init chrishenn --apply --force"
 
 # service-specific recipes
 

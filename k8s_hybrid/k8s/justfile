@@ -1,0 +1,17 @@
+keys:
+    #!/bin/bash
+    if [ ! -f ~/.ssh/id_ed25519 ]; then
+        echo "add dkey from op"
+        exit 1
+    fi
+    cat ~/.ssh/id_ed25519.pub | ssh $USER@$CONTROL_PLANE -p 2200 "cat >> ~/.ssh/authorized_keys"
+
+cfg:
+    #!/bin/bash
+    src="/etc/kubernetes/admin.conf"
+    dst="$HOME/.kube/config"
+    pass=$(op read op://homelab/chris/password)
+    echo $pass | ssh -p 2200 $USER@$CONTROL_PLANE "sudo -S cp -f $src $dst"
+    echo $pass | ssh -p 2200 $USER@$CONTROL_PLANE "sudo -S chown $(id -u):$(id -g) $dst"
+    scp -P 2200 $USER@$CONTROL_PLANE:$dst $dst
+    sudo chown $(id -u):$(id -g) $dst && sudo chmod a+rwx $dst

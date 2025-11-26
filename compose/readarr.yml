@@ -1,9 +1,9 @@
-# "no matching manifest for linux/amd64" probably an oopsie
+# do not use; project is dead
 ---
 services:
   readarr:
     profiles: [readarr]
-    image: linuxserver/readarr:develop
+    image: lscr.io/linuxserver/readarr:amd64-develop
     container_name: readarr
     restart: unless-stopped
     environment:
