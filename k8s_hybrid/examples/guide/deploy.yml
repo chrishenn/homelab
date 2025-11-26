@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  name: traefik-ingress-controller
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: default
+  name: traefik
+  labels:
+    app: traefik
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          image: traefik:v3.4
+          env:
+            - name: CF_API_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: email
+                  name: cloudflare-api-credentials
+            - name: CF_DNS_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: apiKey
+                  name: cloudflare-api-credentials
+          args:
+            - --providers.kubernetesingress=true
+            - --entryPoints.web.Address=:80
+            - --entryPoints.websecure.Address=:443
+            - --entryPoints.websecure.asDefault=true
+            - --entryPoints.websecure.http.tls.certResolver=resolver0
+            - --certificatesresolvers.resolver0.acme.storage=acme.json
+            - --certificatesresolvers.resolver0.acme.email=christopherpenn1000@gmail.com
+            - --certificatesresolvers.resolver0.acme.dnschallenge.provider=cloudflare
+            - --certificatesresolvers.resolver0.acme.dnschallenge.delaybeforecheck=0
+            - --api.dashboard
+            - --api.insecure
+            - --accesslog
+          ports:
+            - name: web
+              containerPort: 80
+            - name: websecure
+              containerPort: 443
+            - name: admin
+              containerPort: 8080
+          securityContext:
+            capabilities:
+              add: ["NET_BIND_SERVICE"]
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: default
+  name: whoami
+  labels:
+    app: whoami
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - name: web
+              containerPort: 80

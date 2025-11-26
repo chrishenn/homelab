@@ -1,0 +1,22 @@
+[project]
+name = "k3s"
+version = "0.1.0"
+description = ""
+readme = "readme.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ansible-core>=2.16.2",
+    "jmespath>=1.0.1",
+    "jsonpatch>=1.33",
+    "kubernetes>=29.0.0",
+    "molecule>=6.0.3",
+    "molecule-plugins[vagrant]>=23.7.0",
+    "netaddr>=0.10.1",
+    "pre-commit>=3.6.0",
+    "pre-commit-hooks>=4.5.0",
+    "pyyaml>=6.0.1",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"

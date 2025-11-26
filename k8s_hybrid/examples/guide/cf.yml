@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-credentials
+  namespace: traefik
+type: Opaque
+stringData:
+  email: YOUR_CLOUDFLARE_EMAIL
+  apiKey: YOUR_API_TOKEN

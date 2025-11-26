@@ -1,0 +1,17 @@
+---
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: default-ipv4-ippool
+spec:
+  allowedUses:
+    - Workload
+    - Tunnel
+  assignmentMode: Automatic
+  blockSize: 26
+  cidr: 192.168.2.0/24
+  natOutgoing: true
+  nodeSelector: all()
+  ipipMode: Never
+  vxlanMode: Always
+  disableBGPExport: true

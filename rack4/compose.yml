@@ -54,7 +54,7 @@ include:
   - apps/linkstack.yml
   - apps/littlelink.yml
   - apps/matrix.yml
-  - apps/audiobook.yml
+  - apps/audiobookshelf.yml
   - apps/bazarr.yml
   - apps/jellyfin.yml
   - apps/jellyseerr.yml

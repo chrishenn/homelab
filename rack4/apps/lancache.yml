@@ -14,10 +14,10 @@ services:
       - "${LANCACHE_DNS}:53:53/udp"
       - "${LANCACHE_DNS}:53:53/tcp"
 
-  lancache_monolithic:
+  lancache:
     profiles: [lancache]
     image: lancachenet/monolithic:latest
-    container_name: lancache_monolithic
+    container_name: lancache
     restart: unless-stopped
     environment:
       CACHE_DISK_SIZE: 1000g

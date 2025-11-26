@@ -2,7 +2,7 @@
 services:
   traefik:
     profiles: [traefik]
-    image: traefik:v3.5
+    image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     security_opt:
