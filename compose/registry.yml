@@ -1,10 +1,10 @@
 # OCI container registry, and a janky web frontend
 ---
 services:
-  registry_server:
+  registry:
     profiles: [registry]
     image: registry:latest
-    container_name: registry_server
+    container_name: registry
     restart: unless-stopped
     environment:
       REGISTRY_STORAGE_DELETE_ENABLED: true
@@ -26,9 +26,8 @@ services:
     environment:
       DELETE_IMAGES: true
       REGISTRY_TITLE: Dancing Containers
-      NGINX_PROXY_PASS_URL: http://registry_server:5000
+      NGINX_PROXY_PASS_URL: http://registry:5000
       SINGLE_REGISTRY: true
-    depends_on: ["registry_server"]
     networks: [traefik]
     labels:
       traefik.enable: true

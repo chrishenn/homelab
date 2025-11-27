@@ -1,4 +1,3 @@
-# automated backups
 # replaced by backrest/restic
 ---
 services:
