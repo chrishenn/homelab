@@ -1,9 +1,9 @@
 ---
 services:
-  immich_server:
+  immich:
     profiles: [immich]
     image: ghcr.io/immich-app/immich-server:release
-    container_name: immich_server
+    container_name: immich
     restart: always
     env_file: ./immich/.env
     runtime: nvidia

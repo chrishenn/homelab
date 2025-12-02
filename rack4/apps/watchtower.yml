@@ -6,6 +6,8 @@ services:
     container_name: watchtower
     restart: unless-stopped
     environment:
+      # bugfix. this should be unecessary for newer watchtower builds, soon
+      DOCKER_API_VERSION: 1.52
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
