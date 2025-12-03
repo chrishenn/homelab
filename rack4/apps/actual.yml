@@ -3,7 +3,7 @@ services:
   actual:
     profiles: [actual]
     image: docker.io/actualbudget/actual-server:latest
-    container_name: actual_server
+    container_name: actual
     restart: unless-stopped
     environment:
       ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB: 200
@@ -20,7 +20,7 @@ services:
     networks: [traefik]
     labels:
       traefik.enable: true
-      docker-volume-backup.stop-during-backup: actual_server
+      docker-volume-backup.stop-during-backup: actual
       traefik.http.routers.actual.rule: Host(`actual.henn.dev`)
       traefik.http.routers.actual.entrypoints: websecure
       traefik.http.routers.actual.tls.certresolver: cf
@@ -45,7 +45,7 @@ services:
       # backup destination
       - $BACKUP/actualbudget:/archive
     environment:
-      BACKUP_STOP_DURING_BACKUP_LABEL: actual_server
+      BACKUP_STOP_DURING_BACKUP_LABEL: actual
       BACKUP_CRON_EXPRESSION: "@daily"
       BACKUP_FILENAME: "actual_server-%Y-%m-%dT%H-%M-%S.{{ .Extension }}"
       BACKUP_PRUNING_PREFIX: "actual_server-"

@@ -68,7 +68,6 @@ include:
   - apps/minio.yml
   - apps/n8n.yml
   - apps/navidrome.yml
-  - apps/netalert.yml
   - apps/netboot.yml
   - apps/nexterm.yml
   - apps/ntfy.yml

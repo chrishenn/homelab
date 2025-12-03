@@ -1,3 +1,4 @@
+# can't get db permissions to work
 ---
 services:
   netalert:
@@ -5,15 +6,19 @@ services:
     image: ghcr.io/jokob-sk/netalertx:latest
     container_name: netalert
     restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_RAW, NET_ADMIN, NET_BIND_SERVICE]
+    network_mode: host
     environment:
       PORT: 20211
-      PUID: $PUID
-      PGID: $PGID
+      GRAPHQL_PORT: 20212
+      LISTEN_ADDR: ${SVC_IP}
       TZ: $TZ
+    tmpfs:
+      - "/tmp:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
     volumes:
-      - $DATA/netalert/config:/config
-      - $DATA/netalert/db:/app/db
-    network_mode: host
+      - $DATA/netalert/data:/data
     labels:
       homepage.group: Tools
       homepage.name: NetalertX
