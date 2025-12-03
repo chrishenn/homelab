@@ -1,58 +1,39 @@
 ## Registry Test
 
-https://forgejo.org/docs/latest/user/packages/container/
-
-username-based login
+forgejo
 
 ```bash
 docker login forgejo.henn.dev
-```
 
-Images must follow this naming convention:
-{registry}/{owner}/{image}
-
-```bash
-# build an image with tag
-docker build -t {registry}/{owner}/{image}:{tag} .
-# name an existing image with tag
-docker tag {some-existing-image}:{tag} {registry}/{owner}/{image}:{tag}
-
-docker push forgejo.henn.dev/chris/{image}:{tag}
-docker pull forgejo.henn.dev/chris/{image}:{tag}
-```
-
-```bash
-docker compose build
-docker compose push
-
-# or,
 user=chris
 registry=forgejo.henn.dev
 image=repotest
 tag=latest
-docker build -t $registry/$user/$image:$tag
+docker build -t $registry/$user/$image:$tag . --load --push
+
+docker build -t forgejo.henn.dev/chris/repotest:latest . --load --push
 ```
 
-Gitlab. An image is pushed to a container registry that is a sub-repo of an existing project repo.
+gitlab
 
 ```bash
-# the "image repository with no name" under the "container registry" for the project "testproject"
-registry.gitlab.henn.dev/chris/testproject:latest
+# you MUST have a project first! the repo is inside the project
+git init
+git add --all
+git commit -m "init"
+if ! glab auth status &>/dev/null; then
+    glab auth login --hostname gitlab.henn.dev -g ssh -a gitlab.henn.dev -p https --token $(op read "op://homelab/Gitlab/pat")
+fi
+glab repo create --defaultBranch "main" --private --skipGitInit
+git push --set-upstream origin --all
+git push --set-upstream origin --tags
 
-# the "image repository with name repo1" under the "container registry" for the project "testproject"
-registry.gitlab.henn.dev/chris/testproject/repo1:latest
-
-# multiple images can be pushed to an "image repository" with a given name by using different tags
-```
-
-```bash
-podman login registry.gitlab.henn.dev
-podman build -t registry.gitlab.henn.dev/chris/repotest:latest .
-podman push registry.gitlab.henn.dev/chris/repotest:latest
-```
-
-```bash
+# login
 docker login registry.gitlab.henn.dev
+
+# project 'testproject' -> deploy -> container registry -> repository 'testproject' -> tag 'latest'
 docker build -t registry.gitlab.henn.dev/chris/testproject:latest . --load --push
-docker build -t registry.gitlab.henn.dev/chris/testproject:docker . --load --push
+
+# project 'testproject' -> deploy -> container registry -> repository 'repo_1' -> tag 'latest'
+docker build -t registry.gitlab.henn.dev/chris/testproject/repo_1:latest . --load --push
 ```

@@ -1,7 +1,8 @@
 # initial user/pass: root/output from running gitlab_pass service
 # - docker compose run --rm -it gitlab_pass
 # - sign in as root using password from gitlab_pass
-# - create user 'chris' with password
+# - create user 'chris' as 'validated'
+# - edit user 'chris' to add password
 ---
 services:
   gitlab:
@@ -71,15 +72,6 @@ services:
               'max_per_repo' => 3,
             },
           ],
-          cgroups: {
-              repositories: {
-                  count: 2,
-              },
-              mountpoint: '/sys/fs/cgroup',
-              hierarchy_root: 'gitaly',
-              memory_bytes: 500000,
-              cpu_shares: 512,
-          },
         }
         gitaly['env'] = {
           'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000',
