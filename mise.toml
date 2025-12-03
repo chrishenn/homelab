@@ -2,7 +2,7 @@
 gitleaks = "latest"
 just = "latest"
 pre-commit = "latest"
-prettier = "next"
+prettier = "latest"
 ruff = "latest"
 bun = "latest"
 node = "latest"
