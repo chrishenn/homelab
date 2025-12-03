@@ -2,23 +2,23 @@
 gitleaks = "latest"
 just = "latest"
 pre-commit = "latest"
-prettier = "latest"
 ruff = "latest"
 bun = "latest"
 node = "latest"
 pnpm = "latest"
-eza = { version = "latest", os = ["linux"] }
 pkl = "latest"
 shfmt = "latest"
 shellcheck = "latest"
+eza = "latest"
+#prettier = "latest"
 
 [hooks.enter]
 shell = "bash"
 script = """
-    mise i -q \
-    && [ -d .venv ] || uv venv --allow-existing \
-    && [ ! -z ${VIRTUAL_ENV+x} ] || source .venv/bin/activate \
-    && uv sync
+    mise i -q
+#    [ -d .venv ] || uv venv --allow-existing \
+#    && [ ! -z ${VIRTUAL_ENV+x} ] || source .venv/bin/activate \
+#    && uv sync
     """
 
 [env]

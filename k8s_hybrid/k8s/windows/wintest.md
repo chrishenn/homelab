@@ -52,7 +52,6 @@ k get pods -o wide -w
 ```
 
 1. Check that the deployment succeeded. To verify:
-
    - Several pods listed from the Linux control plane node, use `kubectl get pods`
    - Node-to-pod communication across the network, `curl` port 80 of your pod IPs from the Linux control plane node to check for a web server response
    - Pod-to-pod communication, ping between pods (and across hosts, if you have more than one Windows node) using `kubectl exec`

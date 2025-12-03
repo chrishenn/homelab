@@ -40,7 +40,7 @@ local linters = new Mapping<String, Step> {
     }
     ["detect-secrets"] {
         glob = List("*")
-        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --baseline safe_secrets.json {{files}}"
+        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --baseline ds.json {{files}}"
         batch = true
     }
 //     ["shellcheck"] = Builtins.shellcheck

@@ -3,7 +3,6 @@
 .venv/
 *__pycache__*
 *secret*
-!safe_secrets.json
 *.env
 *.dmypy.json*
 *out/

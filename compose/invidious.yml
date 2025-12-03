@@ -10,8 +10,8 @@ services:
     container_name: invidious
     restart: unless-stopped
     environment:
-      INV_VISITOR: ${INV_VISITOR}
-      INV_TOKEN: ${INV_TOKEN}
+      INV_VISITOR: ${INVIDIOUS_VISITOR}
+      INV_TOKEN: ${INVIDIOUS_TOKEN}
       # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
       INVIDIOUS_CONFIG: |
         db:
@@ -22,7 +22,7 @@ services:
           port: 5432
         check_tables: true
         signature_server: inv_sig_helper:12999
-        visitor_data: ${INV_VISITOR}
+        visitor_data: ${INVIDIOUS_VISITOR}
         po_token: ${INV_TOKEN}
         # external_port:
         # domain:
