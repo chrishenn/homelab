@@ -17,7 +17,7 @@ PGID = 1000
 # compose host
 DOCKER_HOST = "tcp://192.168.1.70:2375"
 REGISTRY = "forgejo.henn.dev/chris"
-DOCKERHOST_SSH = "ssh chris@192.168.1.70 -p 22"
+DHOST_SSH = "ssh chris@192.168.1.70 -p 22"
 
 # paths to homelab repo on host
 REPO = "/home/chris/Projects/homelab/"
