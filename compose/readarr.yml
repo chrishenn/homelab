@@ -1,4 +1,4 @@
-# "no matching manifest for linux/amd64" probably an oopsie
+# do not use; project is dead
 ---
 services:
   readarr:
