@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# note: no worky on 25.10, as apt-key has been deprecated
+
 # Install Mellanox Ofed on Ubuntu Machines
 # Author: Nilson Lopes (06/17/2021)
 
