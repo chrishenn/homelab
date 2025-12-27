@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# status: PFC is nonworking because I cannot get the mellanox ofed driver to build.
+# without the ofed driver, I cannot set the nic to mark traffic_class 3 with prio3 pause PFC/ECN markers
+
 # https://manpages.ubuntu.com/manpages/noble/man1/nfstest_rdma.1.html
 # http://www.unstructureddatatips.com/onefs-nfs-over-rdma-client-configuration/
 # https://forum.level1techs.com/t/does-anybody-here-have-experience-setting-up-nfsordma-in-ubuntu-18-04-lts-with-the-inbox-driver/152774/33
@@ -83,6 +86,12 @@ sudo ./python/mlnx_qos -i $ifname --trust dscp
 
 # enable PFC on PFC Priority 3
 sudo ./python/mlnx_qos -i $ifname --pfc 0,0,0,1,0,0,0,0
+
+# need ofed to work
+# clear Traffic Class (TC) settings
+# echo "tclass=-1" | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
+# set default ToS (= DSCP value * 4) for RoCE traffic
+# echo 106 | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
 
 # set default ToS for RoCE traffic
 sudo ./sbin/cma_roce_tos -d $dev -t 106
