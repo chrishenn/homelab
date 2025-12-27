@@ -51,28 +51,42 @@ cat /proc/fs/nfsd/portlist
 mount | grep /tmp
 
 echo '/tmp *(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
-exportfs -a
+echo '/mnt/q *(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
+
+sudo exportfs -a
 sudo systemctl restart nfs-kernel-server
 
-# or if using a ZFS filesystem
-zfs set sharenfs="rw=@192.168.1.0/24,no_root_squash,async" pool0
+# or, if using a ZFS filesystem
+sudo zfs set sharenfs="rw=@192.168.1.0/24,no_root_squash,insecure,async" pool1
 
 # client
 sudo apt install -y nfs-common
 sudo modprobe rpcrdma
 
-sudo mkdir -p /mnt/q_nfs
-sudo mount -t nfs 192.168.1.142:/mnt/q /mnt/q_nfs -o proto=rdma,port=20049,async,noatime,nodiratime -vvvv
+# verify that these modules are present
+lsmod | grep xprtrdma
+lsmod | grep svcrdma
+lsmod | grep rpcrdma
 
-# on the server: sudo chmod -R 777 /mnt/q/speedtest
-sudo mkdir -p /mnt/q_nfs/speedtest
-fio --name=testfile --directory=/mnt/q_nfs/speedtest --size=2G --numjobs=8 --rw=write --bs=1000M --ioengine=libaio \
-    --fdatasync=1 --runtime=60 --time_based --group_reporting --eta-newline=1s
+# verify these modules are in the conf to load auto
+cat /etc/rdma/modules/rdma.conf
 
-# The write speed was able to max out the 10G network card (1078MiB/s), and no traffic was visible on the network card
-# during the test via iftop, indicating that NFS traffic was being directly transmitted over RDMA
+# mount
+sudo mkdir -p /mnt/tmp
+sudo mount -t nfs 192.168.1.142:/tmp /mnt/tmp -o proto=rdma,port=20049,async,noatime,nodiratime -vvvv
 
-# WRITE: bw=1871MiB/s
-# network speed like 15 Gb/s
-# I saw traffic on network on btm
-# traffic also shows on iftop
+# client fstab mount
+sudo nano /etc/fstab
+192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+
+# testing: we expect to see little to no traffic on the server, using iftop or btm
+
+# res: 24 Gigabit/s write accross network to /tmp (ramdisk) on 66 Gigabit/s connection
+sudo mkdir -p /mnt/tmp/speedtest
+sudo fio --name=testfile --directory=/mnt/tmp/speedtest --size=2G --numjobs=8 --rw=write --bs=1000M --ioengine=libaio \
+    --fdatasync=1 --runtime=30 --time_based --group_reporting --eta-newline=1s
+
+# res: 20 gigabit/s write
+sudo fio --name=testfile --directory=/mnt/q/speedtest --size=2G --numjobs=8 --rw=write --bs=1000M --ioengine=libaio \
+    --fdatasync=1 --runtime=30 --time_based --group_reporting --eta-newline=1s
+

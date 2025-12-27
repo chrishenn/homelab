@@ -123,11 +123,11 @@ rm pkg.tar.gz
 sudo apt install -y cifs-utils
 sudo mkdir -p /mnt/h /mnt/k /mnt/m /mnt/f
 
->sudo nano /etc/fstab
-//192.168.1.142/k /mnt/k cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
+sudo nano /etc/fstab
 //192.168.1.142/h /mnt/h cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
-//192.168.1.142/m /mnt/m cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
+//192.168.1.142/k /mnt/k cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
 //192.168.1.142/f /mnt/f cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
+//192.168.1.142/q /mnt/q cifs uid=1000,gid=1000,user= <user >,pass= <pass >,vers=3,noatime,auto,nobrl,noperm
 
 sudo systemctl daemon-reload
 sudo mount -a
