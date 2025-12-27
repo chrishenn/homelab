@@ -1,12 +1,13 @@
 #!/bin/bash
 
+# shares
 sudo nano /etc/exports
 /tmp 192.168.1.0/24(rw,async,insecure,no_root_squash)
 /mnt/h 192.168.1.0/24(rw,async,insecure,no_root_squash)
 /mnt/k 192.168.1.0/24(rw,async,insecure,no_root_squash)
 /mnt/f 192.168.1.0/24(rw,async,insecure,no_root_squash)
 
-# nfs share zfs
+# shares: zfs
 sudo zfs set sharenfs="rw=@192.168.1.0/24,async,insecure,no_root_squash" pool1
 
 sudo exportfs -a
@@ -15,10 +16,7 @@ sudo systemctl restart nfs-kernel-server
 # verify
 sudo exportfs -v
 
-# client
-sudo apt install -y nfs-common
-sudo modprobe rpcrdma
-
+# client mounts
 sudo mkdir -p /mnt/h /mnt/k /mnt/f /mnt/q
 
 sudo nano /etc/fstab

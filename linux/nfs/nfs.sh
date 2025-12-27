@@ -8,68 +8,42 @@
 
 # ---
 
+# requirements
+# - The rpcrdma kernel module must be loaded on both the server and the client
+#     - add rpcrdma to /etc/modules-load.d/rdma.conf
+#     - lsmod | grep rpcrdma
+echo 'rpcrdma' | sudo tee /etc/modules-load.d/rdma.conf
+sudo modprobe rpcrdma
+lsmod | grep rpcrdma
+# - on server: rdma associated with some port (doesn't matter which one) must appear in /proc/fs/nfsd/portlist
+echo 'RPCNFSDOPTS="--rdma=20049"' | sudo tee -a /etc/default/nfs-kernel-server
+cat /proc/fs/nfsd/portlist
+
 # server
 
-sudo apt install nfs-kernel-server
+# not sure if these were necessary for either server or client
+sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev \
+    rdmacm-utils librdmacm1 ibacm libibmad-dev libibmad5 libibumad-dev libibumad3 \
+    ibverbs-utils libibverbs-dev libibverbs1 mstflint rdma-core opensm fio librbd1 \
+    librados2 libibnetdisc5 ibverbs-providers
+
+sudo apt install -y nfs-kernel-server
 sudo systemctl enable --now nfs-kernel-server
-
-sudo modprobe rpcrdma
-echo 'rdma 20049' | sudo tee /proc/fs/nfsd/portlist
-
-sudo nano /lib/systemd/system/nfs-kernel-server.service
-
-# add
-# ExecStartPre=/sbin/modprobe rpcrdma
-# ExecStartPost=/bin/bash -c "sleep 3 && echo 'rdma 20049' | tee /proc/fs/nfsd/portlist"
-
-# ...
-# [Service]
-# Type=oneshot
-# RemainAfterExit=yes
-# ExecStartPre=-/usr/sbin/exportfs -r
-# ExecStartPre=/sbin/modprobe rpcrdma
-# ExecStart=/usr/sbin/rpc.nfsd
-# ExecStartPost=/bin/bash -c "sleep 3 && echo 'rdma 20049' | tee /proc/fs/nfsd/portlist"
-# ExecStop=/usr/sbin/rpc.nfsd 0
-# ExecStopPost=/usr/sbin/exportfs -au
-# ExecStopPost=/usr/sbin/exportfs -f
-# ...
-
-sudo systemctl daemon-reload
-sudo systemctl restart nfs-kernel-server
-
-cat /proc/fs/nfsd/portlist
-# rdma 20049
-# rdma 20049
-# tcp 2049
-# tcp 2049
-
-# ??
-# echo 'rdma=nfsrdma' | sudo tee -a /etc/nfs.conf
 
 # server: shares (tmpfs should be a ramdisk)
 mount | grep /tmp
 
+# regular
 echo '/tmp *(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
-echo '/mnt/q *(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
+echo '/tmp 192.168.1.0/24(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
+# zfs
+sudo zfs set sharenfs="rw=@192.168.1.0/24,no_root_squash,insecure,async" pool1
 
 sudo exportfs -a
 sudo systemctl restart nfs-kernel-server
 
-# or, if using a ZFS filesystem
-sudo zfs set sharenfs="rw=@192.168.1.0/24,no_root_squash,insecure,async" pool1
-
 # client
 sudo apt install -y nfs-common
-sudo modprobe rpcrdma
-
-# verify that these modules are present
-lsmod | grep xprtrdma
-lsmod | grep svcrdma
-lsmod | grep rpcrdma
-
-# verify these modules are in the conf to load auto
-cat /etc/rdma/modules/rdma.conf
 
 # mount
 sudo mkdir -p /mnt/tmp
@@ -83,10 +57,13 @@ sudo nano /etc/fstab
 
 # res: 24 Gigabit/s write accross network to /tmp (ramdisk) on 66 Gigabit/s connection
 sudo mkdir -p /mnt/tmp/speedtest
-sudo fio --name=testfile --directory=/mnt/tmp/speedtest --size=2G --numjobs=8 --rw=write --bs=1000M --ioengine=libaio \
+sudo fio --name=testfile --directory=/mnt/tmp/speedtest --size=2G --numjobs=10 --rw=write --bs=1000M --ioengine=libaio \
     --fdatasync=1 --runtime=30 --time_based --group_reporting --eta-newline=1s
 
 # res: 20 gigabit/s write
-sudo fio --name=testfile --directory=/mnt/q/speedtest --size=2G --numjobs=8 --rw=write --bs=1000M --ioengine=libaio \
+sudo mkdir -p /mnt/q/speedtest
+sudo fio --name=testfile --directory=/mnt/q/speedtest --size=2G --numjobs=10 --rw=write --bs=1000M --ioengine=libaio \
     --fdatasync=1 --runtime=30 --time_based --group_reporting --eta-newline=1s
+
+
 
