@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# consts
 owner='chrishenn'
 host='github.com'
 dst='/mnt/h/backup/github'
@@ -13,25 +12,16 @@ function repo_update {
 
 	# find name of default branch using github api
 	dbr=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
-	if [ -z "$dbr" ]; then
-	    echo 'variable {dbr} is empty or unset'
-	    return
-    fi
+	[ -z "$dbr" ] && echo 'error: variable {dbr} is empty or unset'; return
 
 	# find the name of the remote (probably origin)
 	drm=$(git remote -v | head -n1 | awk '{print $1}')
-	if [ -z "$drm" ]; then
-	    echo 'variable {drm} is empty or unset'
-	    return
-    fi
+	[ -z "$drm" ] && echo 'error: variable {drm} is empty or unset'; return
 
 	# latest commit hash on origin/main
 	git fetch
 	hash=$(git log -n 1 $drm/$dbr --pretty=format:"%H")
-	if [ -z "$hash" ]; then
-	    echo 'variable {hash} is empty or unset'
-	    return
-    fi
+	[ -z "$hash" ] && echo 'error: variable {hash} is empty or unset'; return
 
 	git reset --hard $hash
 }
@@ -66,8 +56,6 @@ fd '.pixi' $dst --fixed-strings -H -I -x rm -rf {}
 
 # bump this limit -L if you have over 1000 repos
 repos=($(gh repo list -L 1000 --json name | jq '.[].name' | tr -d '"' | sort))
-nrepos=${#repos[@]}
-
 i=0
 for repo in "${repos[@]}"; do
     echo "syncing: $repo"
@@ -90,5 +78,5 @@ chown -R 1000:1000 $dst
 # succ
 echo ''
 echo ''
-echo "counted success: $i / $nrepos"
+echo "counted success: $i / ${#repos[@]}"
 echo ''
