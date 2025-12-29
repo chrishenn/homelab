@@ -99,3 +99,4 @@ include:
   - apps/gitlab.yml
   - apps/gitlab_runner.yml
   - apps/nginx.yml
+  - apps/newt.yml

@@ -1,0 +1,3 @@
+[env]
+SSH_ROOT = "ssh root@{{env.HOSTINGERIP}}"
+SSH_CHRIS = "ssh chris@{{env.HOSTINGERIP}} -p 2200"

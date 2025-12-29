@@ -22,29 +22,29 @@ fd '.venv' $dir --fixed-strings -H -I -x rm -rf {}
 fd '.pixi' $dir --fixed-strings -H -I -x rm -rf {}
 
 function repo_update {
-    # todo: try to ff first, then fall back to this hard reset
+	# todo: try to ff first, then fall back to this hard reset
 
 	# find name of default branch using github api
 	dbr=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
 	if [ -z "$dbr" ]; then
-	    echo 'vaiable {dbr} is empty or unset'
-	    return
-    fi
+		echo 'vaiable {dbr} is empty or unset'
+		return
+	fi
 
 	# find the name of the remote (probably origin)
 	drm=$(git remote -v | head -n1 | awk '{print $1}')
 	if [ -z "$drm" ]; then
-	    echo 'vaiable {drm} is empty or unset'
-	    return
-    fi
+		echo 'vaiable {drm} is empty or unset'
+		return
+	fi
 
 	# latest commit hash on origin/main
 	git fetch
 	hash=$(git log -n 1 $drm/$dbr --pretty=format:"%H")
 	if [ -z "$hash" ]; then
-	    echo 'variable {hash} is empty or unset'
-	    return
-    fi
+		echo 'variable {hash} is empty or unset'
+		return
+	fi
 
 	git reset --hard $hash
 }

@@ -52,3 +52,4 @@ services:
     environment:
       JELLYFIN_SERVER_URL: https://jellyfin.henn.dev
       CACHE_DURATION: 12
+      HTTP_PORT: 7359

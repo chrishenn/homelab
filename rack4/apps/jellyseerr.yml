@@ -22,7 +22,3 @@ services:
       homepage.icon: jellyseerr.png
       homepage.href: https://jellyseerr.henn.dev
       homepage.description: Media Requests
-#  jellyseerr_imdb_test:
-#    image: alpine
-#    restart: no
-#    command: sh -c "apk update && apk add curl && curl -L https://api.themoviedb.org"

@@ -1,5 +1,3 @@
-# todo: keygen command that reads ssh pass from secrets.env file
-
 boot:
     op run --env-file .env.secrets -- uv run pyinfra src/traefik/infra/boot_inv.py src/traefik/infra/boot_deploy.py -y
 push:

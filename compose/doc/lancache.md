@@ -1,3 +1,8 @@
+# lancache
+
+Prefill the lancache
+https://tpill90.github.io/steam-lancache-prefill/
+
 Test the lancache dns setup. Dig/nslookup should find LANCACHE_IP from .env
 
 ```bash

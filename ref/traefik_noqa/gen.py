@@ -165,7 +165,7 @@ def render() -> None:
     LocalPath.rules.v.mkdir(parents=True, exist_ok=True)
 
     # env = Environment(loader=PackageLoader("gen"), autoescape=True)
-    env = Environment(loader=PackageLoader("gen"))
+    env = Environment(loader=PackageLoader("gen"), autoescape=True)
     secrets = secrets_empty | dotenv.dotenv_values(LocalPath.secrets.v)
     # render_dynamic(env)
     # render_static(env, secrets)

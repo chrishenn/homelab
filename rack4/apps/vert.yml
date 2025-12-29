@@ -2,7 +2,6 @@
 services:
   vert:
     profiles: [vert]
-    # vert ignores PUB_VERTD_URL even when supplied as a build arg - so no point building a custom image
     image: ghcr.io/vert-sh/vert:latest
     container_name: vert
     restart: unless-stopped
@@ -21,10 +20,7 @@ services:
 
   vertd:
     profiles: [vert]
-    # they didn't bother publishing this image lmao
-    # image: ghcr.io/vert-sh/vertd:latest
-    image: ${REGISTRY}/vertd:latest
-    build: https://github.com/VERT-sh/vertd.git
+    image: ghcr.io/vert-sh/vertd:latest
     container_name: vertd
     restart: unless-stopped
     environment:

@@ -3,29 +3,29 @@
 repos:
   - repo: local
     hooks:
-      #      - id: trufflehog
-      #        name: trufflehog
-      #        description: Detect secrets in your repo before committing them
-      #        entry: bash -c 'trufflehog git file://. --since-commit HEAD --results=verified,unknown --fail --no-update'
-      #        language: system
-      #        stages: ["pre-commit"]
-      #      - id: git-secrets
-      #        name: git-secrets
-      #        description: git-secrets scans commits, commit messages, and --no-ff merges to prevent committing secrets
-      #        entry: bash -c 'git-secrets . --pre_commit_hook'
-      #        language: system
-      #        stages: ["pre-commit"]
-      #      - id: detect-secrets
-      #        name: detect-secrets
-      #        entry: bash -c "detect-secrets-hook --baseline .secrets.baseline"
-      #        exclude: package.lock.json
-      #        language: system
-      #        stages: ["pre-commit"]
-      #      - id: gitleaks
-      #        name: gitleaks
-      #        entry: bash -c 'mise x -- gitleaks git . --pre-commit'
-      #        language: system
-      #        stages: ["pre-commit"]
+#      - id: trufflehog
+#        name: trufflehog
+#        description: Detect secrets in your repo before committing them
+#        entry: bash -c 'trufflehog git file://. --since-commit HEAD --results=verified,unknown --fail --no-update'
+#        language: system
+#        stages: ["pre-commit"]
+#      - id: git-secrets
+#        name: git-secrets
+#        description: git-secrets scans commits, commit messages, and --no-ff merges to prevent committing secrets
+#        entry: bash -c 'git-secrets . --pre_commit_hook'
+#        language: system
+#        stages: ["pre-commit"]
+#      - id: detect-secrets
+#        name: detect-secrets
+#        entry: bash -c "detect-secrets-hook --baseline .secrets.baseline"
+#        exclude: package.lock.json
+#        language: system
+#        stages: ["pre-commit"]
+#      - id: gitleaks
+#        name: gitleaks
+#        entry: bash -c 'mise x -- gitleaks git . --pre-commit'
+#        language: system
+#        stages: ["pre-commit"]
 #      - id: sort-simple-yaml
 #      - id: detect-private-key
 #      - id: check-merge-conflict
