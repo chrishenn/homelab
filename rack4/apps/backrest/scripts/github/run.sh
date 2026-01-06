@@ -51,9 +51,6 @@ function main {
     op read "op://homelab/dkey/private key?ssh-format=openssh" -o $key -f
     chmod 600 $key
 
-    # remove accidental environment folders
-    fd '.venv' $dst --fixed-strings -H -I -x rm -rf {}
-
     # bump this limit -L if you have over 1000 repos
     repos=($(gh repo list -L 1000 --json name | jq '.[].name' | tr -d '"' | sort))
     i=0
