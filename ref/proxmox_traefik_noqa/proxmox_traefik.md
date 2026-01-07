@@ -1,4 +1,4 @@
-# Traefik
+# proxmox traefik
 
 Generate traefik config for bare-metal (or LXC) installation
 
