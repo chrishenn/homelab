@@ -1,0 +1,287 @@
+# documentation is AI slop?
+# what a nightmare. asinine environment vars, terrible slop documentation. couldn't get login to work reliably
+
+---
+x-appflowy_env: &appflowy_env
+  ADMIN_FRONTEND_REDIS_URL: redis://redis:6379
+  ADMIN_FRONTEND_GOTRUE_URL: http://gotrue:9999
+  ADMIN_FRONTEND_APPFLOWY_CLOUD_URL: http://appflowy_cloud:8000
+
+  APPFLOWY_BASE_URL: https://appflowy.henn.dev
+  APPFLOWY_WEB_URL: https://appflowy.henn.dev
+  APPFLOWY_WEBSOCKET_BASE_URL: wss://appflowy.henn.dev/ws/v2
+  APPFLOWY_WS_BASE_URL: wss://appflowy.henn.dev/ws/v2
+  APPFLOWY_GOTRUE_BASE_URL: https://appflowy.henn.dev/gotrue
+  #  APPFLOWY_GOTRUE_BASE_URL: http://gotrue:9999
+  API_EXTERNAL_URL: https://appflowy.henn.dev/gotrue
+
+  MINIO_BROWSER_REDIRECT_URL: https://appflowy.henn.dev/minio
+  MINIO_ROOT_USER: minioadmin
+  MINIO_ROOT_PASSWORD: minioadmin
+  POSTGRES_USER: postgres
+  POSTGRES_DB: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_HOST: postgres
+  PGPORT: 5432
+  POSTGRES_PORT: 5432
+
+  GOTRUE_ADMIN_EMAIL: ${EMAIL}
+  GOTRUE_ADMIN_PASSWORD: f0xable!
+  GOTRUE_DISABLE_SIGNUP: false
+  GOTRUE_SITE_URL: appflowy-flutter://
+  GOTRUE_URI_ALLOW_LIST: '**'
+  GOTRUE_JWT_EXP: 604800
+  GOTRUE_JWT_ADMIN_GROUP_NAME: supabase_admin
+  GOTRUE_DB_DRIVER: postgres
+
+  GOTRUE_SMTP_HOST: $SMTP_HOST
+  GOTRUE_SMTP_PORT: 465
+  GOTRUE_SMTP_USER: $SMTP_USER
+  GOTRUE_SMTP_PASS: $SMTP_TOKEN
+
+  GOTRUE_MAILER_URLPATHS_CONFIRMATION: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_INVITE: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_RECOVERY: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /gotrue/verify
+  GOTRUE_MAILER_TEMPLATES_MAGIC_LINK:
+  GOTRUE_SMTP_ADMIN_EMAIL: $SMTP_USER
+  GOTRUE_SMTP_MAX_FREQUENCY: 1ns
+  GOTRUE_RATE_LIMIT_EMAIL_SENT: 100
+  GOTRUE_MAILER_AUTOCONFIRM: true
+
+  APPFLOWY_GOTRUE_JWT_SECRET: hello456
+  GOTRUE_JWT_SECRET: hello456
+
+  RUST_LOG: info
+  CLOUDFLARE_TUNNEL_TOKEN:
+  AI_TEST_ENABLED: false
+
+  APPFLOWY_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+  APPFLOWY_REDIS_URI: redis://redis:6379
+
+  APPFLOWY_S3_MINIO_URL: http://minio:9000
+  APPFLOWY_S3_CREATE_BUCKET: true
+  APPFLOWY_S3_USE_MINIO: true
+  APPFLOWY_ENVIRONMENT: production
+
+  APPFLOWY_S3_ACCESS_KEY: minioadmin
+  APPFLOWY_S3_SECRET_KEY: minioadmin
+  APPFLOWY_S3_BUCKET: appflowy
+  APPFLOWY_S3_REGION:
+
+  APPFLOWY_ACCESS_CONTROL: true
+  APPFLOWY_DATABASE_MAX_CONNECTIONS: 40
+
+  AI_SERVER_HOST:
+  AI_SERVER_PORT:
+  AI_OPENAI_API_KEY:
+  ASSEMBLYAI_API_KEY:
+  ASSEMBLYAI_API_BASE:
+  ASSEMBLYAI_STREAMING_API_BASE:
+
+  APPFLOWY_S3_PRESIGNED_URL_ENDPOINT:
+  APPFLOWY_MAILER_SMTP_HOST: $SMTP_HOST
+  APPFLOWY_MAILER_SMTP_PORT: 465
+  APPFLOWY_MAILER_SMTP_USERNAME: $SMTP_USER
+  APPFLOWY_MAILER_SMTP_EMAIL: $SMTP_USER
+  APPFLOWY_MAILER_SMTP_PASSWORD: $SMTP_TOKEN
+  # "none" "wrapper" "required" "opportunistic"
+  APPFLOWY_MAILER_SMTP_TLS_KIND: wrapper
+
+  APPFLOWY_WORKER_REDIS_URL: redis://redis:6379
+  APPFLOWY_WORKER_ENVIRONMENT: production
+  APPFLOWY_WORKER_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+  APPFLOWY_WORKER_DATABASE_NAME: postgres
+  APPFLOWY_WORKER_IMPORT_TICK_INTERVAL: 30
+
+  APPFLOWY_INDEXER_ENABLED: true
+  APPFLOWY_INDEXER_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+  APPFLOWY_INDEXER_REDIS_URL: redis://redis:6379
+  APPFLOWY_INDEXER_EMBEDDING_BUFFER_SIZE: 5000
+
+  APPFLOWY_COLLABORATE_MULTI_THREAD: true
+  APPFLOWY_COLLABORATE_REMOVE_BATCH_SIZE: 100
+
+  PGADMIN_DEFAULT_EMAIL: ${EMAIL}
+  PGADMIN_DEFAULT_PASSWORD: ${PASS}
+
+services:
+  appflowy_web:
+    image: appflowyinc/appflowy_web:latest
+    container_name: appflowy_web
+    restart: on-failure
+    depends_on:
+      appflowy_cloud:
+        condition: service_healthy
+    environment:
+      <<: *appflowy_env
+    networks: [traefik, appflowy]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.appflowy.rule: Host(`appflowy.henn.dev`)
+      traefik.http.routers.appflowy.entrypoints: websecure
+      traefik.http.routers.appflowy.tls.certresolver: cf
+      traefik.http.routers.appflowy.middlewares: hdrs@file
+      traefik.http.services.appflowy.loadbalancer.server.port: 80
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: on-failure
+    environment:
+      <<: *appflowy_env
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - $DATA/appflowy/minio:/data
+    networks: [appflowy]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: postgres
+    restart: on-failure
+    environment:
+      <<: *appflowy_env
+    command: ['postgres', '-c', 'port=5432']
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres', '-d', 'postgres', '-p', '5432']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - $DATA/appflowy/postgres:/var/lib/postgresql/data
+    networks: [appflowy]
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: on-failure
+    networks: [appflowy]
+
+  gotrue:
+    image: appflowyinc/gotrue:latest
+    container_name: gotrue
+    restart: on-failure
+    healthcheck:
+      test: 'curl --fail http://127.0.0.1:9999/health || exit 1'
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    environment:
+      <<: *appflowy_env
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres?search_path=auth
+      PORT: 9999
+    networks: [traefik, appflowy]
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.gotrue_strip.stripprefix.prefixes: /gotrue
+      traefik.http.routers.gotrue.rule: Host(`appflowy.henn.dev`) && PathPrefix(`/gotrue`)
+      traefik.http.routers.gotrue.entrypoints: websecure
+      traefik.http.routers.gotrue.tls.certresolver: cf
+      traefik.http.routers.gotrue.middlewares: gotrue_strip
+      traefik.http.services.gotrue.loadbalancer.server.port: 9999
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  appflowy_cloud:
+    image: appflowyinc/appflowy_cloud:latest
+    container_name: appflowy_cloud
+    restart: on-failure
+    environment:
+      <<: *appflowy_env
+    healthcheck:
+      test: 'curl --fail http://127.0.0.1:8000/api/health || exit 1'
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks: [traefik, appflowy]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.appflowy_api.rule: Host(`appflowy.henn.dev`) && PathPrefix(`/api`)
+      traefik.http.routers.appflowy_api.entrypoints: websecure
+      traefik.http.routers.appflowy_api.tls.certresolver: cf
+      traefik.http.routers.appflowy_api.middlewares: hdrs@file
+      traefik.http.services.appflowy_api.loadbalancer.server.port: 8000
+    depends_on:
+      gotrue:
+        condition: service_healthy
+
+  admin_frontend:
+    image: appflowyinc/admin_frontend:latest
+    container_name: admin_frontend
+    restart: on-failure
+    environment:
+      <<: *appflowy_env
+      # seems like a bug
+      APPFLOWY_GOTRUE_BASE_URL: https://appflowy.henn.dev/gotrue
+    networks: [traefik, appflowy]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.appflowy_admin.rule: Host(`appflowy.henn.dev`) && PathPrefix(`/console`)
+      traefik.http.routers.appflowy_admin.entrypoints: websecure
+      traefik.http.routers.appflowy_admin.tls.certresolver: cf
+      traefik.http.routers.appflowy_admin.middlewares: hdrs@file
+      traefik.http.services.appflowy_admin.loadbalancer.server.port: 3000
+    depends_on:
+      gotrue:
+        condition: service_healthy
+      appflowy_cloud:
+        condition: service_healthy
+
+  appflowy_worker:
+    image: appflowyinc/appflowy_worker:latest
+    container_name: appflowy_worker
+    restart: on-failure
+    environment:
+      <<: *appflowy_env
+    networks: [appflowy]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      appflowy_cloud:
+        condition: service_healthy
+
+#  ai:
+#    image: appflowyinc/appflowy_ai:latest
+#    container_name: ai
+#    restart: on-failure
+#    environment:
+#      <<: *appflowy_env
+#
+#      AI_SERVER_PORT: ${AI_SERVER_PORT}
+#      OPENAI_API_KEY: ${AI_OPENAI_API_KEY}
+#      DEFAULT_AI_MODEL: gpt-4.1-mini
+#      DEFAULT_AI_COMPLETION_MODEL: gpt-4.1-mini
+#      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY-}
+#      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT-}
+#      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION-}
+#
+#      APPFLOWY_S3_ACCESS_KEY: ${APPFLOWY_S3_ACCESS_KEY}
+#      APPFLOWY_S3_SECRET_KEY: ${APPFLOWY_S3_SECRET_KEY}
+#      APPFLOWY_S3_BUCKET: ${APPFLOWY_S3_BUCKET}
+#      APPFLOWY_S3_REGION: ${APPFLOWY_S3_REGION-}
+#
+#      AI_DATABASE_URL: ${APPFLOWY_DATABASE_URL}
+#      AI_REDIS_URL: ${APPFLOWY_REDIS_URI}
+#      AI_USE_MINIO: ${APPFLOWY_S3_USE_MINIO}
+#      AI_MINIO_URL: ${APPFLOWY_S3_MINIO_URL}
+#      AI_APPFLOWY_HOST: ${APPFLOWY_BASE_URL}
+#
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:5001/health" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#      start_period: 40s
+#    networks: [appflowy]
+
+networks:
+  appflowy:
+  traefik:
+    external: true

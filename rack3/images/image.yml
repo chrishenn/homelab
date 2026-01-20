@@ -1,0 +1,8 @@
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/amd-ucode
+      - siderolabs/iscsi-tools
+      - siderolabs/mellanox-mstflint
+      - siderolabs/util-linux-tools
+  bootloader: sd-boot

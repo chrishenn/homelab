@@ -1,0 +1,11 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
+
+PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/rack3/pangolin_endpoint" }
+NEWT_ID = { provider = "onepass", value = "op://homelab/rack3/newt_id" }
+NEWT_SECRET = { provider = "onepass", value = "op://homelab/rack3/newt_secret" }

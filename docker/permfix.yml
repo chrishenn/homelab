@@ -3,8 +3,8 @@
 
 x-configs:
   volumes:
-    my-named-volume: &volume-my-named-volume "my-named-volume:/whatever/path/i/need"
-    my-other-named-volume: &volume-my-other-named-volume "my-other-named-volume:/whatever/other/path/i/need"
+    my-named-volume: &volume-my-named-volume 'my-named-volume:/whatever/path/i/need'
+    my-other-named-volume: &volume-my-other-named-volume 'my-other-named-volume:/whatever/other/path/i/need'
 
 services:
   myapp:

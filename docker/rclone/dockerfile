@@ -1,0 +1,13 @@
+FROM rclone/rclone
+
+ARG PUID
+ARG PGID
+
+RUN apk add --no-cache fuse && \
+    mkdir -p /mnt/fuse
+
+RUN addgroup -g $PGID appgroup && \
+    adduser -D -u $PUID -G appgroup appuser
+RUN mkdir -p /home/appuser/mnt
+
+RUN mkdir -p /dev/fuse && chmod 666 /dev/fuse

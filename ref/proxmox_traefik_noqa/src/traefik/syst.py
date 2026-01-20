@@ -1,15 +1,8 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 from data import ServerPath, server_ip, ssh_keyfile, ssh_port, ssh_user
+from fabric import Connection
 from infra.cnnt import OsType, Remote, connect, connect_call, remote_exec
 from infra.env import env_secret
 from typer import Typer
-
-
-if TYPE_CHECKING:
-    from fabric import Connection
 
 
 app = Typer()

@@ -26,7 +26,8 @@ Samba client permissions issue (esp docker).
 I'm gonna try mounting without spec file mode, and see how perms appear on client machine.
 Yeah they match the perms on the server machine. So, the server still owns the files, and will need to set the perms.
 But then they will be visible to the client mount as-is.
-I assume because I'm spec uid/gid 1000/1000, I can never access a file with perm 600 on the server, even if the container
+I assume because I'm spec uid/gid 1000/1000, I can never access a file with perm 600 on the server, even if the
+container
 is running as root on the client.
 
 alternatively, you can make a file to hold credentials

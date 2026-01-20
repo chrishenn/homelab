@@ -1,0 +1,174 @@
+# Collection of Traefik middleware configurations for common use cases
+---
+# middleware-chain.yaml
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: secure-chain
+  namespace: default
+spec:
+  chain:
+    middlewares:
+      - name: rate-limit
+      - name: security-headers
+      - name: compress
+
+---
+# Rate limiting middleware - prevents abuse and protects backend services
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-ratelimit
+  namespace: default
+spec:
+  rateLimit:
+    # Average number of requests allowed per second
+    average: 100
+    # Maximum burst of requests above the average
+    burst: 200
+    # Time period for rate calculation
+    period: 1s
+    # Rate limit is applied per source IP
+    sourceCriterion:
+      ipStrategy:
+        # Depth of 0 means use the direct client IP
+        # Increase if behind additional proxies
+        depth: 0
+
+---
+# Custom headers middleware - adds security and custom headers
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-headers
+  namespace: default
+spec:
+  headers:
+    # Security headers to protect against common attacks
+    frameDeny: true
+    browserXssFilter: true
+    contentTypeNosniff: true
+    # HSTS configuration (use with HTTPS)
+    stsSeconds: 31536000
+    stsIncludeSubdomains: true
+    stsPreload: true
+    # Custom headers for backend identification
+    customRequestHeaders:
+      X-Forwarded-Proto: 'https'
+      X-Custom-Header: 'traefik-processed'
+    # Remove headers that expose server internals
+    customResponseHeaders:
+      X-Powered-By: ''
+      Server: ''
+
+---
+# Basic authentication middleware - simple username/password protection
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: basic-auth
+  namespace: default
+spec:
+  basicAuth:
+    # Secret containing htpasswd-formatted credentials
+    secret: auth-secret
+    # Realm shown in the authentication dialog
+    realm: 'Traefik Dashboard'
+    # Remove the Authorization header before forwarding
+    removeHeader: true
+
+---
+# Retry middleware - automatic retry on failure
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: retry-middleware
+  namespace: default
+spec:
+  retry:
+    # Number of retry attempts
+    attempts: 3
+    # Initial interval between retries (exponential backoff)
+    initialInterval: 100ms
+
+---
+# Circuit breaker middleware - prevents cascade failures
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: circuit-breaker
+  namespace: default
+spec:
+  circuitBreaker:
+    # Open circuit when 50% of requests fail within the check period
+    expression: 'NetworkErrorRatio() > 0.50 || ResponseCodeRatio(500, 600, 0, 600) > 0.50'
+    # Time to wait before attempting to close the circuit
+    checkPeriod: 10s
+    # Time circuit stays open before half-open state
+    fallbackDuration: 30s
+    # Number of requests to try in half-open state
+    recoveryDuration: 60s
+
+---
+# Compress middleware - enables gzip compression for responses
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: compress-response
+  namespace: default
+spec:
+  compress:
+    # Exclude file types that are already compressed
+    excludedContentTypes:
+      - 'image/png'
+      - 'image/jpeg'
+      - 'image/gif'
+
+---
+# IP allowlist middleware - restrict access to specific IPs
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ip-allowlist
+  namespace: default
+spec:
+  ipAllowList:
+    # Only allow requests from these IP ranges
+    sourceRange:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+    # Strategy for determining client IP
+    ipStrategy:
+      depth: 0
+
+---
+# Strip prefix middleware - removes path prefix before forwarding
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-v1-prefix
+  namespace: default
+spec:
+  stripPrefix:
+    # Prefixes to remove from the request path
+    prefixes:
+      - '/v1'
+    # Force the slash if the resulting path is empty
+    forceSlash: true
+
+---
+# Redirect regex middleware - URL rewriting and redirects
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-www
+  namespace: default
+spec:
+  redirectRegex:
+    # Match the www subdomain
+    regex: "^https?://www\\.(.+)"
+    # Redirect to the non-www version
+    replacement: 'https://${1}'
+    # Use permanent redirect (301)
+    permanent: true

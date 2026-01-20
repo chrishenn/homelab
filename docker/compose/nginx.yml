@@ -1,0 +1,29 @@
+services:
+  nginx:
+    profiles: [nginx]
+    image: 'uozi/nginx-ui:latest'
+    container_name: nginx
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/nginx/data:/etc/nginx
+      - $DATA/nginx/ui:/etc/nginx-ui
+      - $DATA/nginx/web:/var/www
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Nginx
+      homepage.instance.private.icon: nginx.png
+      homepage.instance.private.href: https://nginx.henn.dev
+      homepage.instance.private.description: Reverse Proxy
+
+      traefik.enable: true
+      traefik.http.routers.nginx.rule: Host(`nginx.henn.dev`)
+      traefik.http.routers.nginx.entrypoints: websecure
+      traefik.http.routers.nginx.middlewares: hdrs@file
+      traefik.http.routers.nginx.tls.certresolver: cf
+      traefik.http.services.nginx.loadbalancer.server.port: 80

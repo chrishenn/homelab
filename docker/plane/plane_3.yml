@@ -1,0 +1,111 @@
+x-plane_env: &plane_env
+  DOMAIN_NAME: plane.henn.dev
+
+  DATABASE_URL: postgresql://plane:plane@plane-db/plane
+  REDIS_URL: redis://plane-redis:6379/
+  AMQP_URL: amqp://plane:plane@plane-mq:5672/plane
+  AWS_S3_ENDPOINT_URL: http://plane-minio:19000
+
+  POSTGRES_DB: plane
+  POSTGRES_USER: plane
+  POSTGRES_PASSWORD: plane
+  PGDATA: /var/lib/postgresql/data
+
+  RABBITMQ_DEFAULT_USER: plane
+  RABBITMQ_DEFAULT_PASS: plane
+  RABBITMQ_DEFAULT_VHOST: plane
+
+  MINIO_ROOT_USER: access-key
+  MINIO_ROOT_PASSWORD: secret-key
+
+  AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: access-key
+  AWS_SECRET_ACCESS_KEY: secret-key
+  AWS_S3_BUCKET_NAME: plane
+  FILE_SIZE_LIMIT: 10485760
+
+services:
+  plane:
+    profiles: [plane]
+    image: artifacts.plane.so/makeplane/plane-aio-commercial:stable
+    container_name: plane
+    restart: unless-stopped
+    environment:
+      <<: [*plane_env]
+    volumes:
+      - $DATA/plane/data:/app/data
+    networks: [traefik, plane]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane.rule: Host(`plane.henn.dev`)
+      traefik.http.routers.plane.entrypoints: websecure
+      traefik.http.routers.plane.middlewares: hdrs@file
+      traefik.http.routers.plane.tls.certresolver: cf
+      traefik.http.services.plane.loadbalancer.server.port: 80
+
+      traefik.http.services.plane.loadbalancer.responseForwarding.flushInterval: '100ms'
+      traefik.http.services.plane.loadbalancer.serversTransport.maxIdleConnsPerHost: 100
+      traefik.http.services.plane.loadbalancer.serversTransport.forwardingTimeouts.dialTimeout: 30s
+      traefik.http.services.plane.loadbalancer.serversTransport.forwardingTimeouts.responseHeaderTimeout: 30s
+      traefik.http.services.plane.loadbalancer.serversTransport.forwardingTimeouts.idleConnTimeout: 30s
+
+  plane-mq:
+    profiles: [plane]
+    image: rabbitmq:3.13.6-management-alpine
+    container_name: plane-mq
+    restart: unless-stopped
+    environment:
+      <<: [*plane_env]
+    volumes:
+      - $DATA/plane/plane-mq:/var/lib/rabbitmq
+    networks: [traefik, plane]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_mq.rule: Host(`rabbitmq.plane.henn.dev`)
+      traefik.http.routers.plane_mq.entrypoints: websecure
+      traefik.http.routers.plane_mq.middlewares: hdrs@file
+      traefik.http.routers.plane_mq.tls.certresolver: cf
+      traefik.http.services.plane_mq.loadbalancer.server.port: 15672
+
+  plane-minio:
+    profiles: [plane]
+    image: minio/minio:latest
+    container_name: plane-minio
+    restart: unless-stopped
+    command: server /export --address ":19000" --console-address ":19001"
+    environment:
+      <<: [*plane_env]
+    volumes:
+      - $DATA/plane/plane-minio:/export
+    networks: [traefik, plane]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_minio_ui.rule: Host(`minio.plane.henn.dev`)
+      traefik.http.routers.plane_minio_ui.entrypoints: websecure
+      traefik.http.routers.plane_minio_ui.middlewares: hdrs@file
+      traefik.http.routers.plane_minio_ui.tls.certresolver: cf
+      traefik.http.services.plane_minio_ui.loadbalancer.server.port: 19001
+
+  plane-db:
+    profiles: [plane]
+    image: postgres:15.7-alpine
+    container_name: plane-db
+    restart: unless-stopped
+    command: postgres -c 'max_connections=1000'
+    environment:
+      <<: [*plane_env]
+    volumes:
+      - $DATA/plane/plane-db:/var/lib/postgresql/data
+    networks: [plane]
+
+  plane-redis:
+    profiles: [plane]
+    image: valkey/valkey:7.2.11-alpine
+    container_name: plane-redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/plane/plane-redis:/data
+    networks: [plane]
+
+networks:
+  plane:

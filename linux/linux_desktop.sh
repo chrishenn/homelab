@@ -50,9 +50,9 @@ sudo nvidia-ctk runtime configure --runtime=docker --set-as-default
 
 # theme
 sudo apt install -y qt6-style-kvantum fonts-firacode
->nano /home/chris/.config/Kvantum/Utterly-Sweet/Utterly-Sweet.kvconfig
-base.color=#0a112401
-alt.base.color=#0a112401
+nano /home/chris/.config/Kvantum/Utterly-Sweet/Utterly-Sweet.kvconfig
+# base.color=#0a112401
+# alt.base.color=#0a112401
 
 # package managers
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

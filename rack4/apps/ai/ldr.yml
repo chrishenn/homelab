@@ -1,0 +1,34 @@
+# I think if you bounce this while you're logged in, you corrupt the user DB
+---
+services:
+  ldr:
+    profiles: [ldr]
+    image: localdeepresearch/local-deep-research:latest
+    container_name: ldr
+    restart: unless-stopped
+    environment:
+      LDR_LLM_OLLAMA_URL: http://ollama:11434
+      LDR_SEARCH_ENGINE_WEB_SEARXNG_DEFAULT_PARAMS_INSTANCE_URL: http://searx:8080
+      LDR_WEB_HOST: 0.0.0.0
+      LDR_WEB_PORT: 5000
+      LDR_DATA_DIR: /data
+    volumes:
+      - $DATA/ldr/data:/data
+      - $DATA/ldr/scripts:/scripts
+      - $DATA/ldr/rag_cache:/data/cache/rag_indices
+      # Mount your document directories here to search them with LDR.
+      - $DATA/ldr/local_collections:/local_collections/research_papers/
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Local Deep Research
+      homepage.instance.private.icon: https://github.com/LearningCircuit/local-deep-research/blob/main/src/local_deep_research/web/static/favicon.png?raw=true
+      homepage.instance.private.href: https://ldr.henn.dev
+      homepage.instance.private.description: ML Document Research
+
+      traefik.enable: true
+      traefik.http.routers.ldr.rule: Host(`ldr.henn.dev`)
+      traefik.http.routers.ldr.entrypoints: websecure
+      traefik.http.routers.ldr.middlewares: hdrs@file
+      traefik.http.routers.ldr.tls.certresolver: cf
+      traefik.http.services.ldr.loadbalancer.server.port: 5000

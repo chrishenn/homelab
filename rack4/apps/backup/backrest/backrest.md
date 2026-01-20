@@ -1,0 +1,53 @@
+# backrest
+
+You can just edit the config.json file manually
+
+- bring backrest down
+- Edit the cfg
+    - sudo chmod a+wr $DATA/backrest/config/config.json
+    - pycharm $DATA/backrest/config/config.json
+- If you're adding a repo
+    - remove the "guid" key
+    - set "autoInitialize": true
+
+If you're controlling docker from a remote and mounting the config file from a local path, don't forget to push changes
+to the local bind mount location.
+
+---
+
+backrest will launch backup hooks (scripts) in containers. So we have to install deps at runtime in run.sh
+The containers are reused for multiple backups if backrest is not bounced.
+
+- there is a place to define env vars for the restic command in the backrest gui, but those vars will not be available
+  to the hook script that runs inside the hook's container.
+- pass OP_SERVICE_ACCOUNT_TOKEN to the backrest container env, and then I believe it is inherited into the
+  container environment that the backup hook (script) runs in
+- 1password can then pull the github access token from the homelab account because it is running as the homelab
+  service account, thanks to OP_SERVICE_ACCOUNT_TOKEN.
+- If you get odd auth errors when connecting to the repo, make sure there are no newlines trailing the secrets in op.
+
+---
+
+backrest config file, flag on repo:
+this is 100 Mb/s in KiB/s
+--limit-upload 12000
+this is 150 Mb/s in KiB/s
+--limit-upload 18000
+
+flag on job:
+--skip-if-unchanged
+
+hook script example:
+
+```bash
+/scripts/github/run.sh
+echo {{ .ShellEscape .Summary }}
+```
+
+In the restic ui, to configure a repo
+
+```bash
+RESTIC_PASSWORD=${RESTIC_PASSWORD}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+```

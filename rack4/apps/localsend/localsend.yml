@@ -1,0 +1,8 @@
+---
+services:
+  localsend:
+    image: $REGISTRY/localsend:latest
+    profiles: [localsend]
+    build:
+      dockerfile: ./localsend/Dockerfile
+    container_name: localsend

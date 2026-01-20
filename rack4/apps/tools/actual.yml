@@ -1,0 +1,48 @@
+---
+services:
+  actual:
+    profiles: [actual]
+    image: docker.io/actualbudget/actual-server:latest
+    container_name: actual
+    restart: unless-stopped
+    environment:
+      ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB: 200
+      ACTUAL_UPLOAD_SYNC_ENCRYPTED_FILE_SYNC_SIZE_LIMIT_MB: 500
+      ACTUAL_UPLOAD_FILE_SIZE_LIMIT_MB: 200
+    volumes:
+      - $DATA/actualbudget:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'node src/scripts/health-check.js']
+    networks: [traefik]
+    labels:
+      docker-volume-backup.stop-during-backup: actual
+
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Actual Budget
+      homepage.instance.private.icon: actual-budget.png
+      homepage.instance.private.href: https://actual.henn.dev
+      homepage.instance.private.description: Budgeting
+
+      traefik.enable: true
+      traefik.http.routers.actual.rule: Host(`actual.henn.dev`)
+      traefik.http.routers.actual.entrypoints: websecure
+      traefik.http.routers.actual.middlewares: hdrs@file
+      traefik.http.routers.actual.tls.certresolver: cf
+      traefik.http.services.actual.loadbalancer.server.port: 5006
+
+  actual_backup:
+    profiles: [actual]
+    image: offen/docker-volume-backup:latest
+    container_name: actual_backup
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/actualbudget:/backup/actualbudget:ro
+      - $BACKUP/actualbudget:/archive
+    environment:
+      BACKUP_STOP_DURING_BACKUP_LABEL: actual
+      BACKUP_CRON_EXPRESSION: '@daily'
+      BACKUP_FILENAME: 'actual_server-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
+      BACKUP_PRUNING_PREFIX: 'actual_server-'
+      BACKUP_RETENTION_DAYS: 2

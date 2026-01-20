@@ -6,7 +6,7 @@ services:
     container_name: win-builder
     hostname: win-builder
     network_mode: nat
-    restart: "no"
+    restart: 'no'
     mem_limit: 32g
     cpus: 12
     working_dir: C:\project

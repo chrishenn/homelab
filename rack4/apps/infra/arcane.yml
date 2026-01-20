@@ -1,0 +1,70 @@
+# arcane/arcane-admin
+# openssl rand -base64 32
+# auto-update throwing error is a known bug; under heavy dev
+---
+services:
+  arcane:
+    profiles: [arcane]
+    image: ghcr.io/getarcaneapp/arcane:next
+    container_name: arcane
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      PUID: ${PUID}
+      PGID: ${PGID}
+      APP_URL: https://arcane.chenn.dev
+      ENCRYPTION_KEY: $ARCANE_ENCRYPTION_KEY
+      ANALYTICS_DISABLED: true
+      NVIDIA_VISIBLE_DEVICES: all
+      GPU_MONITORING_ENABLED: true
+      GPU_TYPE: nvidia
+
+      AUTH_LOCAL_ENABLED: false
+      OIDC_AUTO_REDIRECT_TO_PROVIDER: true
+      OIDC_MERGE_ACCOUNTS: true
+      OIDC_ENABLED: true
+      OIDC_PROVIDER_NAME: PocketID
+      OIDC_PROVIDER_LOGO_URL: https://pocketid.chenn.dev/api/application-images/logo?light=false
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: $ARCANE_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $ARCANE_OIDC_SECRET
+      OIDC_SCOPES: openid email profile groups
+      OIDC_ADMIN_CLAIM: groups
+      OIDC_ADMIN_VALUE: admin
+    volumes:
+      - $DATA/arcane:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3552/api/health']
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Arcane
+      homepage.icon: arcane.png
+      homepage.href: https://arcane.chenn.dev
+      homepage.description: Docker Manager (Rack 4)
+
+      pangolin.public-resources.arcane.name: arcane
+      pangolin.public-resources.arcane.protocol: http
+      pangolin.public-resources.arcane.full-domain: arcane.chenn.dev
+      pangolin.public-resources.arcane.ssl: true
+      pangolin.public-resources.arcane.targets[0].method: http
+      pangolin.public-resources.arcane.targets[0].port: 3552
+
+      pangolin.public-resources.arcane.auth.sso-enabled: true
+      pangolin.public-resources.arcane.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.arcane.rules[0].action: pass
+      pangolin.public-resources.arcane.rules[0].match: country
+      pangolin.public-resources.arcane.rules[0].value: US
+      pangolin.public-resources.arcane.rules[0].priority: 0
+      pangolin.public-resources.arcane.rules[1].action: deny
+      pangolin.public-resources.arcane.rules[1].match: country
+      pangolin.public-resources.arcane.rules[1].value: ALL
+      pangolin.public-resources.arcane.rules[1].priority: 10

@@ -1,0 +1,133 @@
+additionalArguments:
+  - '--log.level=INFO'
+  - '--serversTransport.insecureSkipVerify=true'
+
+deployment:
+  replicas: 2
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+          topologyKey: kubernetes.io/hostname
+
+#podDisruptionBudget:
+#  enabled: true
+#  minAvailable: 1
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: traefik
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik-k8s.chenn.io`)
+    entryPoints:
+      - websecure
+    middlewares:
+      - name: hdr
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+  kubernetesGateway:
+    enabled: true
+
+gateway:
+  listeners:
+    web:
+      namespacePolicy:
+        from: All
+
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.1.200
+  spec:
+    externalTrafficPolicy: Local
+
+ports:
+  web:
+    port: 8000
+    exposedPort: 80
+    expose:
+      default: true
+    protocol: TCP
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+  websecure:
+    port: 8443
+    exposedPort: 443
+    expose:
+      default: true
+    protocol: TCP
+    http3:
+      enabled: true
+    http:
+      encodedCharacters:
+        allowEncodedSlash: true
+        allowEncodedBackSlash: true
+        allowEncodedNullCharacter: true
+        allowEncodedSemicolon: true
+        allowEncodedPercent: true
+        allowEncodedQuestionMark: true
+        allowEncodedHash: true
+      tls:
+        enabled: true
+
+#metrics:
+#  prometheus:
+#  prometheus:
+#    entryPoint: traefik
+#    service:
+#      enabled: true
+#    serviceMonitor:
+#      enabled: true
+#      interval: 30s
+#      additionalLabels:
+#        release: prometheus
+
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: hdr
+    spec:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: 'noindex,nofollow'
+          X-Forwarded-Proto: 'https'
+          server: ''
+          X-Powered-By: ''
+        customRequestHeaders:
+          X-Forwarded-Proto: 'https'
+          Strict-Transport-Security: 'max-age: 63072000'
+        sslProxyHeaders:
+          X-Forwarded-Proto: 'https'
+        hostsProxyHeaders:
+          - 'X-Forwarded-Host'
+        referrerPolicy: 'same-origin'
+        contentTypeNosniff: true
+        browserXssFilter: true
+        customFrameOptionsValue: 'SAMEORIGIN'
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 63072000
+        stsPreload: true

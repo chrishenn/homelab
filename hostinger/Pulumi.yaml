@@ -1,0 +1,6 @@
+name: dns_cf
+main: hostinger.py
+runtime:
+  name: python
+  options:
+    toolchain: uv

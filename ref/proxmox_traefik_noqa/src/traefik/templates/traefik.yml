@@ -35,11 +35,11 @@ entryPoints:
       middlewares:
         - securityHeaders@file
   traefik:
-    address: ":8080"
+    address: ':8080'
   spice:
-    address: ":3128"
+    address: ':3128'
   spice-tls:
-    address: ":61001"
+    address: ':61001'
 
 certificatesResolvers:
   letsencrypt:
@@ -48,8 +48,8 @@ certificatesResolvers:
       dnsChallenge:
         provider: cloudflare
         resolvers:
-          - "1.1.1.1:53"
-          - "1.0.0.1:53"
+          - '1.1.1.1:53'
+          - '1.0.0.1:53'
 
 api:
   debug: true
@@ -64,10 +64,10 @@ accessLog:
   filePath: /logs/traefik-access.log
   filters:
     statusCodes:
-      - "200"
-      - "400-599"
+      - '200'
+      - '400-599'
     retryAttempts: true
-    minDuration: "10ms"
+    minDuration: '10ms'
   bufferingSize: 0
   fields:
     headers:

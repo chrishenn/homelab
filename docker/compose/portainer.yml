@@ -1,0 +1,26 @@
+---
+services:
+  portainer:
+    profiles: [portainer]
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - $DATA/portainer:/data
+    environment:
+      TZ: $TZ
+      DOCKER_HOST: tcp://socket-proxy:2375
+    command: -H tcp://socket-proxy:2375
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.portainer.rule: Host(`portainer.henn.dev`)
+      traefik.http.routers.portainer.entrypoints: websecure
+      traefik.http.routers.portainer.middlewares: hdrs@file
+      traefik.http.routers.portainer.tls.certresolver: cf
+      traefik.http.services.portainer.loadbalancer.server.port: 9000
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Portainer
+      homepage.instance.private.icon: portainer.png
+      homepage.instance.private.href: https://portainer.henn.dev
+      homepage.instance.private.description: Docker Gui (Rack 4)

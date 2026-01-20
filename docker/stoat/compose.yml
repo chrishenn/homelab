@@ -1,0 +1,135 @@
+---
+x-stoat_env: &stoat_env
+  HOSTNAME: https://stoat.henn.dev
+  REVOLT_PUBLIC_URL: https://stoat.henn.dev/api
+
+services:
+  database:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - $DATA/stoat/db:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: eqalpha/keydb
+    restart: unless-stopped
+
+  rabbit:
+    image: rabbitmq:4
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbituser
+      RABBITMQ_DEFAULT_PASS: rabbitpass
+    volumes:
+      - $DATA/stoat/rabbit:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    command: server /data
+    volumes:
+      - $DATA/stoat/minio:/data
+    environment:
+      MINIO_ROOT_USER: minioautumn
+      MINIO_ROOT_PASSWORD: minioautumn
+      MINIO_DOMAIN: minio
+    networks:
+      default:
+        aliases:
+          - revolt-uploads.minio
+          # legacy support:
+          - attachments.minio
+          - avatars.minio
+          - backgrounds.minio
+          - icons.minio
+          - banners.minio
+          - emojis.minio
+
+  caddy:
+    image: caddybuilds/caddy-cloudflare:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    environment:
+      <<: *stoat_env
+      CF_DNS_API_TOKEN: $CF_DNS_API_TOKEN
+    ports:
+      - '$SVCIP:80:80'
+      - '$SVCIP:443:443/tcp'
+      - '$SVCIP:443:443/udp'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - $DATA/stoat/caddy-data:/data
+      - $DATA/stoat/caddy-config:/config
+
+  api:
+    image: ghcr.io/revoltchat/server:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  events:
+    image: ghcr.io/revoltchat/bonfire:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  web:
+    image: ghcr.io/revoltchat/client:master
+    restart: unless-stopped
+    environment:
+      <<: *stoat_env
+
+  autumn:
+    image: ghcr.io/revoltchat/autumn:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  january:
+    image: ghcr.io/revoltchat/january:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  gifbox:
+    image: ghcr.io/revoltchat/gifbox:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  crond:
+    image: ghcr.io/revoltchat/crond:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  pushd:
+    image: ghcr.io/revoltchat/pushd:20250930-2
+    restart: unless-stopped
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
+
+  createbuckets:
+    image: minio/mc
+    entrypoint: >
+      /bin/sh -c "
+      while ! /usr/bin/mc ready minio; do
+        /usr/bin/mc alias set minio http://minio:9000 minioautumn minioautumn;
+        echo 'Waiting minio...' && sleep 1;
+      done;
+      /usr/bin/mc mb minio/revolt-uploads;
+      exit 0;
+      "

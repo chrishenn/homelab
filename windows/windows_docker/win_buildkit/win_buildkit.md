@@ -247,7 +247,8 @@ buildctl build
 docker load --input my-image.tar
 ```
 
-It looks like you can either export as tar, then docker load, or you can push to registry. I don't have a local registry set up
+It looks like you can either export as tar, then docker load, or you can push to registry. I don't have a local registry
+set up
 
 quoth he:
 The resulting image is in the `buildkit` namespace. You should be able to see it by running:

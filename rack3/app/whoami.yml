@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+  namespace: default
+  labels:
+    app: whoami
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: '10m'
+              memory: '32Mi'
+            limits:
+              cpu: '100m'
+              memory: '64Mi'
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+  namespace: default
+spec:
+  selector:
+    app: whoami
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-tls
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`whoami.chenn.io`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: whoami
+          port: 80
+      middlewares:
+        - name: shdr
+    - match: Host(`whoami.chenn.io`) && PathPrefix(`/api`)
+      kind: Rule
+      priority: 20
+      services:
+        - name: whoami
+          port: 80
+      middlewares:
+        - name: shdr
+  tls:
+    secretName: chennio-cert

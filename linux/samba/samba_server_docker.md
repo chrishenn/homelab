@@ -74,29 +74,30 @@ suggested smb.conf
 
 ```bash
 [global]
-	server string = samba
-	idmap config * : range = 3000-7999
-	security = user
-	server min protocol = SMB2
+    server string = samba
+    idmap config * : range = 3000-7999
+    security = user
+    server min protocol = SMB2
 
-	# disable printing services
-	load printers = no
-	printing = bsd
-	printcap name = /dev/null
-	disable spoolss = yes
+    # disable printing services
+    load printers = no
+    printing = bsd
+    printcap name = /dev/null
+    disable spoolss = yes
 
 [Data]
-	path = /storage
-	comment = Shared
-	valid users = @smb
-	browseable = yes
-	writable = yes
-	read only = no
-	force user = root
-	force group = root
+    path = /storage
+    comment = Shared
+    valid users = @smb
+    browseable = yes
+    writable = yes
+    read only = no
+    force user = root
+    force group = root
 ```
 
-second try, both shares in one container/service. The bash script that runs the user-creation logic in the container may not be able to handle this
+second try, both shares in one container/service. The bash script that runs the user-creation logic in the container may
+not be able to handle this
 
 ```bash
 services:
@@ -117,16 +118,16 @@ services:
 
 ```bash
 [global]
-	server string = samba
-	idmap config * : range = 3000-7999
-	security = user
-	server min protocol = SMB2
+    server string = samba
+    idmap config * : range = 3000-7999
+    security = user
+    server min protocol = SMB2
 
-	# disable printing services
-	load printers = no
-	printing = bsd
-	printcap name = /dev/null
-	disable spoolss = yes
+    # disable printing services
+    load printers = no
+    printing = bsd
+    printcap name = /dev/null
+    disable spoolss = yes
 
 [m]
 path = /pool0

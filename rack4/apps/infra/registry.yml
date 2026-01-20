@@ -1,0 +1,65 @@
+---
+services:
+  registry_docker:
+    profiles: [registry]
+    image: registry:2
+    container_name: registry_docker
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registry_docker.rule: Host(`registry_docker.henn.dev`)
+      traefik.http.routers.registry_docker.entrypoints: websecure
+      traefik.http.routers.registry_docker.middlewares: hdrs@file
+      traefik.http.routers.registry_docker.tls.certresolver: cf
+      traefik.http.services.registry_docker.loadbalancer.server.port: 5000
+
+  registry_k8s:
+    profiles: [registry]
+    image: registry:2
+    container_name: registry_k8s
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry.k8s.io
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registry_k8s.rule: Host(`registry_k8s.henn.dev`)
+      traefik.http.routers.registry_k8s.entrypoints: websecure
+      traefik.http.routers.registry_k8s.middlewares: hdrs@file
+      traefik.http.routers.registry_k8s.tls.certresolver: cf
+      traefik.http.services.registry_k8s.loadbalancer.server.port: 5000
+
+  registry_gcr:
+    profiles: [registry]
+    image: registry:2
+    container_name: registry_gcr
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://gcr.io
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registry_gcr.rule: Host(`registry_gcr.henn.dev`)
+      traefik.http.routers.registry_gcr.entrypoints: websecure
+      traefik.http.routers.registry_gcr.middlewares: hdrs@file
+      traefik.http.routers.registry_gcr.tls.certresolver: cf
+      traefik.http.services.registry_gcr.loadbalancer.server.port: 5000
+
+  registry_ghcr:
+    profiles: [registry]
+    image: registry:2
+    container_name: registry_ghcr
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://ghcr.io
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.registry_ghcr.rule: Host(`registry_ghcr.henn.dev`)
+      traefik.http.routers.registry_ghcr.entrypoints: websecure
+      traefik.http.routers.registry_ghcr.middlewares: hdrs@file
+      traefik.http.routers.registry_ghcr.tls.certresolver: cf
+      traefik.http.services.registry_ghcr.loadbalancer.server.port: 5000

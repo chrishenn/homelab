@@ -1,0 +1,6 @@
+name: protonmail
+main: protonmail.py
+runtime:
+  name: python
+  options:
+    toolchain: uv

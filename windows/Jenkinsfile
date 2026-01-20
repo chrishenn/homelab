@@ -43,4 +43,3 @@ node {
         powershell "Copy-Item -Path ${wrk_artifact} -Destination ${proj_src}\\build\\src -Force"
     }
 }
-

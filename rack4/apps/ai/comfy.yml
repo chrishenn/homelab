@@ -1,0 +1,64 @@
+---
+services:
+  comfy:
+    profiles: [comfy]
+    image: docker.io/yanwk/comfyui-boot:cu130-slim
+    container_name: comfy
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      CLI_ARGS: '--fast --listen 0.0.0.0'
+    volumes:
+      - $DATA/comfy/root:/root
+      - $DATA/comfy/custom_nodes:/root/ComfyUI/custom_nodes
+      - $DATA/comfy/models:/root/ComfyUI/models
+      - $DATA/comfy/hf-hub:/root/.cache/huggingface/hub
+      - $DATA/comfy/torch-hub:/root/.cache/torch/hub
+      - $DATA/comfy/input:/root/ComfyUI/input
+      - $DATA/comfy/output:/root/ComfyUI/output
+      - $DATA/comfy/workflows:/root/ComfyUI/user/default/workflows
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8188']
+    networks: [traefik]
+    labels:
+      homepage.group: AI
+      homepage.name: ComfyUI
+      homepage.icon: comfy-ui.png
+      homepage.href: https://comfy.chenn.dev
+      homepage.description: Image Gen
+
+      traefik.enable: true
+      traefik.http.routers.comfy.rule: Host(`comfy.henn.dev`)
+      traefik.http.routers.comfy.entrypoints: websecure
+      traefik.http.routers.comfy.middlewares: hdrs@file
+      traefik.http.routers.comfy.tls.certresolver: cf
+      traefik.http.services.comfy.loadbalancer.server.port: 8188
+
+      pangolin.public-resources.comfy.name: comfy
+      pangolin.public-resources.comfy.protocol: http
+      pangolin.public-resources.comfy.full-domain: comfy.chenn.dev
+      pangolin.public-resources.comfy.ssl: true
+      pangolin.public-resources.comfy.targets[0].method: http
+      pangolin.public-resources.comfy.targets[0].port: 8188
+
+      pangolin.public-resources.comfy.auth.sso-enabled: true
+      pangolin.public-resources.comfy.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.comfy.auth.sso-users[1]: ${USER1}
+
+      pangolin.public-resources.comfy.rules[0].action: pass
+      pangolin.public-resources.comfy.rules[0].match: country
+      pangolin.public-resources.comfy.rules[0].value: US
+      pangolin.public-resources.comfy.rules[0].priority: 0
+      pangolin.public-resources.comfy.rules[1].action: deny
+      pangolin.public-resources.comfy.rules[1].match: country
+      pangolin.public-resources.comfy.rules[1].value: ALL
+      pangolin.public-resources.comfy.rules[1].priority: 10

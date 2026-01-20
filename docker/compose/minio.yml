@@ -1,0 +1,27 @@
+---
+services:
+  minio:
+    profiles: [minio]
+    image: minio/minio
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: 12341234
+      MINIO_DEFAULT_BUCKETS:
+    volumes:
+      - $DATA/minio:/data
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Minio
+      homepage.instance.private.icon: minio.png
+      homepage.instance.private.href: https://minio.henn.dev
+      homepage.instance.private.description: S3 Object Store
+
+      traefik.enable: true
+      traefik.http.routers.minio.rule: Host(`minio.henn.dev`)
+      traefik.http.routers.minio.middlewares: hdrs@file
+      traefik.http.routers.minio.tls.certresolver: cf
+      traefik.http.services.minio.loadbalancer.server.port: 9001

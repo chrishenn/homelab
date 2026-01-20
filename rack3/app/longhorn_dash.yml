@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: longhorn-dash-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`longhorn.chenn.io`)
+      kind: Rule
+      services:
+        - name: longhorn-frontend
+          namespace: longhorn-system
+          port: 80
+      middlewares:
+        - name: shdr
+  tls:
+    secretName: chennio-cert

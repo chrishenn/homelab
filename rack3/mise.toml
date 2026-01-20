@@ -1,0 +1,14 @@
+[tools]
+helm = "latest"
+k9s = "latest"
+kubectl = "latest"
+pulumi = "latest"
+talosctl = "latest"
+uv = "latest"
+
+[env]
+rack3 = "192.168.1.29"
+rack2 = "192.168.1.30"
+
+KUBECONFIG = "{{'./.secrets/dev/kubeconfig' | absolute}}"
+TALOSCONFIG = "{{'./.secrets/dev/talosconfig' | absolute}}"

@@ -1,0 +1,25 @@
+# traefik-dashboard.yaml
+ingressRoute:
+  dashboard:
+    enabled: true
+    # Secure with middleware
+    middlewares:
+      - name: traefik-auth
+        namespace: traefik
+    # Match rule
+    matchRule: Host(`traefik.example.com`)
+    entryPoints:
+      - websecure
+    tls:
+      secretName: traefik-tls
+
+# Create auth middleware
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-auth
+      namespace: traefik
+    spec:
+      basicAuth:
+        secret: traefik-dashboard-auth

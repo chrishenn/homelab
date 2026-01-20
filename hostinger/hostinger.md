@@ -1,4 +1,4 @@
-# hostinger
+# Hostinger Server Setup (Pangolin)
 
 sshd config
 
@@ -8,8 +8,8 @@ sudo apt install -y sd
 function sshd_cfg_clean {
     # file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
-	shift
-	
+    shift
+
     # remove comments
     sudo sd -f gm '^#(.*)\n*' '' "$file"
     # remove lines containing just a newline
@@ -19,15 +19,15 @@ function sshd_cfg_clean {
 function replace_or_append_line {
     # match on this string
     declare match=${1}
-	shift
-	# replace with this string
-	declare replace=${1}
-	shift
-	# file to operate on
+    shift
+    # replace with this string
+    declare replace=${1}
+    shift
+    # file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
-	shift
-	
-	if ! grep -q "$match" "$file"; then
+    shift
+
+    if ! grep -q "$match" "$file"; then
         echo "$replace" | sudo tee -a "$file"
     else
         sudo sd -f gm -n 1 "^(.*)$match(.*)$" "$replace" "$file"
@@ -41,11 +41,11 @@ server setup
 # add the hostinger ssh public key into server /home/chris/.ssh/authorized_keys
 echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
     $SSH_ROOT "mkdir -p /home/chris/.ssh && cat >> /home/chris/.ssh/authorized_keys"
-    
+
 # adduser chris (untested)
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
 $SSH_ROOT "sudo usermod -aG docker chris"
-echo "chris:$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/chris_pass')" | \
+echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | \
     $SSH_ROOT "chpasswd"
 
 # login as root
@@ -61,10 +61,11 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 51820/udp
 sudo ufw allow 21820/udp
+sudo ufw allow 10000/udp
 sudo ufw enable -y
 # sudo ufw status verbose
 
-# sshd config 
+# sshd config
 sshd_cfg_clean
 replace_or_append_line 'Port' 'Port 2200'
 replace_or_append_line 'PermitRootLogin' 'PermitRootLogin no'
@@ -78,7 +79,7 @@ exit
 
 # login as chris
 $SSH_CHRIS
-        
+
 # fail2ban
 sudo apt install -y fail2ban
 # sudo systemctl status fail2ban
@@ -101,16 +102,39 @@ END
 sudo sysctl -p /etc/sysctl.d/99-sysctl.conf
 ```
 
-pangolin
+sync dotfiles
 
 ```bash
-# in the hostinger web console, open firewall ports:
-# 80 (TCP), 443 (TCP), 51820 (UDP), and 21820 (UDP for clients)
+# mise
+sudo apt update -y && sudo apt install -y curl
+sudo install -dm 755 /etc/apt/keyrings
+curl -fSs https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.asc 1> /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.asc] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+sudo apt update -y && sudo apt install -y mise
 
-# in the cloudflare web console, add a DNS A record to point to pangolin VPS
+# mise should be on path already when installed via apt
+eval "$(mise activate bash)"
 
-# pangolin installer
-mkdir -p ~/pangolin && cd pangolin
-curl -fsSL https://static.pangolin.net/get-installer.sh | bash
-sudo ./installer
+# opcli
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+sudo tee /etc/apt/sources.list.d/1password.list && \
+sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/ && \
+curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | \
+sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
+sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22 && \
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
+sudo apt update && sudo apt install 1password-cli
+
+# chezmoi (promptDefaults defaults to machine type 'server')
+sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+$(op read op://homelab/svc/bash) \
+    ; chezmoi init chrishenn -a --force --promptDefaults \
+    ; chezmoi update -a --force
+
+mise i
+sudo rm /usr/local/bin/chezmoi
 ```

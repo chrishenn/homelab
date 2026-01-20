@@ -1,0 +1,23 @@
+# Weighted routing for canary deployments
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: canary-deployment
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`app.example.com`)
+      kind: Rule
+      services:
+        # Stable version receives 90% of traffic
+        - name: app-stable
+          port: 80
+          weight: 90
+        # Canary version receives 10% of traffic
+        - name: app-canary
+          port: 80
+          weight: 10
+  tls:
+    certResolver: letsencrypt

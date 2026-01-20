@@ -7,7 +7,7 @@ export CPUS="$cpus"
 mounted_boxfile="/boxes/$VM_NAME.box"
 vagrant_boxpath="default/$VM_NAME"
 
-vagrant_boxpath_esc=$(echo $vagrant_boxpath | sed 's|/|-VAGRANTSLASH-|g')
+vagrant_boxpath_esc=$(echo "$vagrant_boxpath" | sed 's|/|-VAGRANTSLASH-|g')
 uploaded_box="$HOME/.vagrant.d/boxes/$vagrant_boxpath_esc"
 
 if test -e "$uploaded_box"; then

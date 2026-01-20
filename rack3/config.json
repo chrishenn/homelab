@@ -1,0 +1,42 @@
+{
+  "clusters": [
+    {
+      "name": "dev",
+      "cfg_secrets": ".secrets/dev",
+      "domain": "dev.henn.dev",
+      "enpt": "https://dev.henn.dev:6443",
+      "zoneid": "3d4f45e9c52c4c8a080a696c29f3d224",
+      "secrets": null,
+      "nodes": [
+        {
+          "disk": "/dev/nvme0n1",
+          "image": "factory.talos.dev/metal-installer/4e2d8806d9ee1965e2e3513c36a65fed1964cfcc41f2e482aa158af9fe851f2b:v1.12.4",
+          "i": 0,
+          "ifc": "enp10s0np0",
+          "ip": "192.168.1.29",
+          "nodetype": "controlplane",
+          "newt": {
+            "pangolin_endpoint": "https://pangolin.chenn.dev",
+            "newt_id": null,
+            "newt_secret": null
+          },
+          "dhcp": true
+        },
+        {
+          "disk": "/dev/nvme0n1",
+          "image": "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.4",
+          "i": 1,
+          "ifc": "enp9s0f1np1",
+          "ip": "192.168.1.30",
+          "nodetype": "worker",
+          "newt": {
+            "pangolin_endpoint": "https://pangolin.chenn.dev",
+            "newt_id": null,
+            "newt_secret": null
+          },
+          "dhcp": true
+        }
+      ]
+    }
+  ]
+}

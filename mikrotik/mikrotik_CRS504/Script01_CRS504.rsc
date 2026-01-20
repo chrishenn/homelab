@@ -1,9 +1,5 @@
-########################################################################################################################
 :log info "Starting Script01_CRS504.rsc";
-
-
-########################################################################################################################
-#### Default from defconf script
+# Default from defconf script
 
 # wait for interfaces
 :local count 0;
@@ -35,24 +31,15 @@ add name=bridge disabled=no auto-mac=yes protocol-mode=rstp comment=Script01_CRS
     }
 }
 
-
-########################################################################################################################
-#### Script01_CRS504 quirks
-
+# Script01_CRS504 quirks
 # interface 1 is the QSFP28-to-SFP+ adapter - autonegotiation fails, set speed manually
 # flow control to allow proper 100G to 10G probably needed?
 /interface ethernet set [ find default-name=qsfp28-1-1 ] auto-negotiation=no speed=10G-baseCR tx-flow-control=on rx-flow-control=on
 
-
-########################################################################################################################
-#### Script01_CRS504 IP address
-
+# Script01_CRS504 IP address
 /ip address add address=192.168.1.2/24 interface=bridge comment="Script01_CRS504"
 /ip route add gateway=192.168.1.1
 
-
-########################################################################################################################
-#### user
-
+# user
 /user add name="$USER" password="$PASS" group=full
 /user remove admin

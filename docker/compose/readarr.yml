@@ -1,0 +1,17 @@
+# do not use; project is dead
+---
+services:
+  readarr:
+    profiles: [readarr]
+    image: lscr.io/linuxserver/readarr:amd64-develop
+    container_name: readarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/readarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library

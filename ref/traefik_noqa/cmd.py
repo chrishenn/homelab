@@ -1,17 +1,11 @@
-from __future__ import annotations
-
 from pathlib import Path
-from typing import TYPE_CHECKING
 
+from fabric import Connection
 from traefik_lxc.cnnt import _crun, _mcall
 from traefik_lxc.data import LocalPath, ServerPath, cct, localcct
 from traefik_lxc.gen import clean, genall
 from traefik_lxc.sys import creload, cstop
 from typer import Typer
-
-
-if TYPE_CHECKING:
-    from fabric import Connection
 
 
 app = Typer()

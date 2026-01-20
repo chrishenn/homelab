@@ -3,16 +3,16 @@ http:
     securityHeaders:
       headers:
         customResponseHeaders:
-          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
-          X-Forwarded-Proto: "https"
-          server: ""
+          X-Robots-Tag: 'none,noarchive,nosnippet,notranslate,noimageindex'
+          X-Forwarded-Proto: 'https'
+          server: ''
         customRequestHeaders:
-          X-Forwarded-Proto: "https"
+          X-Forwarded-Proto: 'https'
         sslProxyHeaders:
-          X-Forwarded-Proto: "https"
-        referrerPolicy: "same-origin"
+          X-Forwarded-Proto: 'https'
+        referrerPolicy: 'same-origin'
         hostsProxyHeaders:
-          - "X-Forwarded-Host"
+          - 'X-Forwarded-Host'
         contentTypeNosniff: true
         browserXssFilter: true
         forceSTSHeader: true

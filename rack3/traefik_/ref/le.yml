@@ -1,0 +1,57 @@
+# native letsencrypt integration means only one traefik replica is allowed in FOSS traefik
+env:
+  - name: CF_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-credentials
+        key: token
+
+additionalArguments:
+  - '--accesslog=true'
+  - '--log.level=INFO'
+
+  - '--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json'
+  - '--certificatesresolvers.letsencrypt.acme.dnschallenge=true'
+  - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare'
+  - '--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53'
+
+persistence:
+  enabled: true
+  name: data
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  path: /data
+
+securityContext:
+  readOnlyRootFilesystem: false
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+
+podSecurityContext:
+  fsGroup: 65532
+
+gateway:
+  listeners:
+    web:
+      namespacePolicy:
+        from: All
+
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.1.200
+  spec:
+    externalTrafficPolicy: Local
+
+ports:
+  websecure:
+    tls:
+      enabled: true
+      options:
+      certResolver: letsencrypt
+      domains:
+        - main: 'chenn.io'
+          sans:
+            - '*.chenn.io'

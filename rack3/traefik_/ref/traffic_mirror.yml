@@ -1,0 +1,35 @@
+# Traffic mirroring for shadow testing
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: mirrored-service
+  namespace: default
+spec:
+  mirroring:
+    # Primary service that returns responses
+    name: app-production
+    port: 80
+    mirrors:
+      # Mirror traffic to the test service
+      - name: app-test
+        port: 80
+        # Mirror 100% of requests
+        percent: 100
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mirror-route
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`app.example.com`)
+      kind: Rule
+      services:
+        # Reference the TraefikService instead of a Kubernetes Service
+        - name: mirrored-service
+          kind: TraefikService
+  tls:
+    certResolver: letsencrypt
