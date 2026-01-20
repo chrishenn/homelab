@@ -9,7 +9,7 @@ function sshd_cfg_clean {
     # file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
 	shift
-	
+
     # remove comments
     sudo sd -f gm '^#(.*)\n*' '' "$file"
     # remove lines containing just a newline
@@ -26,7 +26,7 @@ function replace_or_append_line {
 	# file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
 	shift
-	
+
 	if ! grep -q "$match" "$file"; then
         echo "$replace" | sudo tee -a "$file"
     else
@@ -41,7 +41,7 @@ server setup
 # add the hostinger ssh public key into server /home/chris/.ssh/authorized_keys
 echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
     $SSH_ROOT "mkdir -p /home/chris/.ssh && cat >> /home/chris/.ssh/authorized_keys"
-    
+
 # adduser chris (untested)
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
 $SSH_ROOT "sudo usermod -aG docker chris"
@@ -64,7 +64,7 @@ sudo ufw allow 21820/udp
 sudo ufw enable -y
 # sudo ufw status verbose
 
-# sshd config 
+# sshd config
 sshd_cfg_clean
 replace_or_append_line 'Port' 'Port 2200'
 replace_or_append_line 'PermitRootLogin' 'PermitRootLogin no'
@@ -78,7 +78,7 @@ exit
 
 # login as chris
 $SSH_CHRIS
-        
+
 # fail2ban
 sudo apt install -y fail2ban
 # sudo systemctl status fail2ban

@@ -9,7 +9,7 @@ services:
       - $DATA/ollama/webui:/app/backend/data
     environment:
       OLLAMA_BASE_URLS: http://ollama:11434
-      WEBUI_AUTH: False
+      WEBUI_AUTH: True
       WEBUI_NAME: Chicken AI
       WEBUI_URL: https://ollama.henn.dev
 

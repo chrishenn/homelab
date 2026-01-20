@@ -2,7 +2,7 @@
 services:
   comfy:
     profiles: [comfy]
-    image: yanwk/comfyui-boot:cu130-slim
+    image: docker.io/yanwk/comfyui-boot:cu130-slim
     container_name: comfy
     restart: unless-stopped
     stdin_open: true
@@ -15,8 +15,17 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+    environment:
+      CLI_ARGS: "--fast --listen 0.0.0.0"
     volumes:
-      - $DATA/comfy:/root
+      - $DATA/comfy/root:/root
+      - $DATA/comfy/custom_nodes:/root/ComfyUI/custom_nodes
+      - $DATA/comfy/models:/root/ComfyUI/models
+      - $DATA/comfy/hf-hub:/root/.cache/huggingface/hub
+      - $DATA/comfy/torch-hub:/root/.cache/torch/hub
+      - $DATA/comfy/input:/root/ComfyUI/input
+      - $DATA/comfy/output:/root/ComfyUI/output
+      - $DATA/comfy/workflows:/root/ComfyUI/user/default/workflows
     networks: [traefik]
     labels:
       traefik.enable: true

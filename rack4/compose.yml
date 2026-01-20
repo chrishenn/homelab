@@ -100,3 +100,4 @@ include:
   - apps/gitlab_runner.yml
   - apps/nginx.yml
   - apps/newt.yml
+  - apps/ldr.yml

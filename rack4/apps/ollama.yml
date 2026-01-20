@@ -13,6 +13,9 @@ services:
             - driver: nvidia
               capabilities: [gpu]
               count: all
+    environment:
+      OLLAMA_CONTEXT_LENGTH: 32000
+      OLLAMA_FLASH_ATTENTION: 1
     volumes:
       - $DATA/ollama/ollama:/root/.ollama
     networks: [traefik]
