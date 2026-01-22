@@ -1,5 +1,5 @@
+# broken and I don't feel like fixing it
 # private frontend for youtube
-# broken. I think I need to regen tokens
 # generate tokens, from the same public ip address as you'll use invidious from
 # docker run --rm quay.io/invidious/youtube-trusted-session-generator
 ---

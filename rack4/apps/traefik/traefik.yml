@@ -80,9 +80,6 @@ entryPoints:
           - main: henn.dev
             sans:
               - "*.henn.dev"
-          - main: zulip.henn.dev
-            sans:
-              - "*.zulip.henn.dev"
       middlewares:
         - securityHeaders@file
   tcp22:

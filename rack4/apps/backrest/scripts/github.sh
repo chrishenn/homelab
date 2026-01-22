@@ -2,7 +2,7 @@
 
 owner='chrishenn'
 host='github.com'
-dst='/mnt/h/backup/github'
+dst='/mnt/h/github'
 
 function repo_update {
 	git pull
@@ -30,15 +30,6 @@ function repo_update {
 }
 
 function main {
-	# 1password
-	if ! grep -qF "https://downloads.1password.com/linux/alpinelinux/stable/" /etc/apk/repositories; then
-		sh -c 'echo https://downloads.1password.com/linux/alpinelinux/stable/ >> /etc/apk/repositories'
-	fi
-	if [ ! -f /etc/apk/keys/support@1password.com-61ddfc31.rsa.pub ]; then
-		wget https://downloads.1password.com/linux/keys/alpinelinux/support@1password.com-61ddfc31.rsa.pub -P /etc/apk/keys
-		apk update && apk add 1password-cli libc6-compat github-cli jq fd
-	fi
-
 	# git and ssh setup
 	mkdir -p "$HOME/.ssh"
 	git config --global --add safe.directory '*'
@@ -48,7 +39,9 @@ function main {
 	# gh login. Ensure OP_SERVICE_ACCOUNT_TOKEN is set or this will fail
 	echo $(op read "op://homelab/github/credential") | gh auth login -h $host -p ssh --with-token --skip-ssh-key
 
-	# github ssh key
+	# github ssh key - needed for git commands
+	# You can't run the op ssh agent without the gui:
+	# https://www.1password.community/discussions/developers/how-do-i-use-the-ssh-agent-in-headless-linux/159260
 	key="$HOME/.ssh/id_ed25519"
 	op read "op://homelab/dkey/public key" -o "$key.pub" -f
 	op read "op://homelab/dkey/private key?ssh-format=openssh" -o $key -f

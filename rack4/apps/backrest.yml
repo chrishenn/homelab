@@ -9,7 +9,6 @@ services:
     container_name: backrest
     restart: unless-stopped
     volumes:
-      # backrest runs hooks in containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/backrest/data:/data
       - $DATA/backrest/cache:/cache
@@ -23,8 +22,28 @@ services:
       WASABI_ACCESS_KEY: ${WASABI_ACCESS_KEY}
       WASABI_SECRET_KEY: ${WASABI_SECRET_KEY}
       WASABI_RESTIC_PASSWORD: ${WASABI_RESTIC_PASSWORD}
+      PDRIVE_RCLONE: |
+        rclone sync
+        --min-size 1b
+        --protondrive-username '${PDRIVE_USER}'
+        --protondrive-password '${PDRIVE_PASS_OBSC}'
+        --protondrive-otp-secret-key '${PDRIVE_OTP_OBSC}'
+        :protondrive:/
+        /mnt/h/pdrive
+        && chown -R 1000:1000 /mnt/h/pdrive
+      GDRIVE_RCLONE: |
+        rclone sync -P --fast-list --transfers=32
+        --drive-scope 'drive'
+        --drive-export-formats 'txt,docx,ods,odt,odp'
+        --drive-client-id '${GDRIVE_CLIENT_ID}'
+        --drive-client-secret '${GDRIVE_CLIENT_SECRET}'
+        --drive-token '${GDRIVE_ACCESS_TOKEN}'
+        :drive:/
+        /mnt/h/gdrive
+        && chown -R 1000:1000 /mnt/h/gdrive
     networks: [traefik, docker]
     labels:
+      com.centurylinklabs.watchtower.enable: false
       traefik.enable: true
       traefik.http.routers.backrest.rule: Host(`backrest.henn.dev`)
       traefik.http.routers.backrest.entrypoints: websecure

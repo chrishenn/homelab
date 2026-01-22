@@ -1,13 +1,31 @@
+# initial login: admin/stirling
 ---
 services:
   stirling:
     profiles: [stirling]
-    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    image: stirlingtools/stirling-pdf:latest-fat
     container_name: stirling
     restart: unless-stopped
     environment:
-      - DOCKER_ENABLE_SECURITY=false
-      - LANGS=en_US
+      SECURITY_ENABLELOGIN: true
+      MODE: BOTH
+      LANGS: en_GB
+      DISABLE_ADDITIONAL_FEATURES: false
+      UI_LOGOSTYLE: modern
+      MAIL_ENABLED: true
+      MAIL_ENABLEINVITES: true
+      MAIL_HOST: ${SMTP_HOST}
+      MAIL_PORT: 587
+      MAIL_USERNAME: ${SMTP_USER}
+      MAIL_PASSWORD: ${SMTP_TOKEN}
+      MAIL_FROM: ${SMTP_USER}
+      MAIL_TLS_ENABLED: true
+    volumes:
+      - $DATA/stirling/tessdata:/usr/share/tessdata
+      - $DATA/stirling/configs:/configs
+      - $DATA/stirling/logs:/logs
+      - $DATA/stirling/customFiles:/customFiles:rw
+      - $DATA/stirling/pipeline:/pipeline
     networks: [traefik]
     labels:
       traefik.enable: true

@@ -53,14 +53,14 @@ services:
     networks: [traefik]
 
   immich_redis:
-    profiles: [ immich ]
+    profiles: [immich]
     image: docker.io/valkey/valkey:9
     container_name: immich_redis
     restart: always
     env_file: ./immich/.env
     healthcheck:
       test: redis-cli ping || exit 1
-    networks: [ traefik ]
+    networks: [traefik]
 
   immich_db:
     profiles: [immich]
@@ -72,4 +72,3 @@ services:
       # NETWORK SHARES ARE NOT SUPPORTED FOR DATABASE STORAGE
       - $DATA/immich/postgres:/var/lib/postgresql/data
     networks: [traefik]
-

@@ -2,8 +2,13 @@
 
 You can just edit the config/config.json file manually
 
-- then bounce the service. It'll pick up the new config.
-- open the gui in a new tab, to show the new config.
+- Bring backrest down
+- Edit the cfg
+- If you're adding a repo
+  - remove the "guid" key
+  - set "autoInitialize": true
+- Bring backrest up
+- Refresh the gui
 
 If you're controlling docker from a remote and mounting the config file from a local path, don't forget to push changes
 to the local bind mount location.

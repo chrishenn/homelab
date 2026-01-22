@@ -4,7 +4,7 @@ sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
 cd "$sdir"
 
 # backup destination
-dst="/mnt/h/backup/github"
+dst="/mnt/h/github"
 gitbkp="https://github.com/ChappIO/git-backup/releases/download/v1.6.1/git-backup-linux-x64"
 
 # 1password

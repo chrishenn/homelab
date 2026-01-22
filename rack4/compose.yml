@@ -81,7 +81,6 @@ include:
   - apps/paperless.yml
   - apps/perplexica.yml
   - apps/qbit.yml
-  - apps/redlib.yml
   - apps/sab.yml
   - apps/searx.yml
   - apps/speach.yml
