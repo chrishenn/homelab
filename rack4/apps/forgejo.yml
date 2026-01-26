@@ -78,9 +78,9 @@ services:
     environment:
       TZ: $TZ
       BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
-      BACKUP_CRON_EXPRESSION: "@daily"
-      BACKUP_FILENAME: "forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}"
-      BACKUP_PRUNING_PREFIX: "forgejo-"
+      BACKUP_CRON_EXPRESSION: '@daily'
+      BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
+      BACKUP_PRUNING_PREFIX: 'forgejo-'
       BACKUP_RETENTION_DAYS: 2
     networks: [traefik, docker]
     labels:

@@ -10,7 +10,7 @@ pkl = "latest"
 shfmt = "latest"
 shellcheck = "latest"
 eza = "latest"
-#prettier = "latest"
+prettier = "latest"
 
 [hooks.enter]
 shell = "bash"

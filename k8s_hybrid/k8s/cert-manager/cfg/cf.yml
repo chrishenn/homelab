@@ -6,4 +6,4 @@ metadata:
   namespace: cert-manager
 type: Opaque
 stringData:
-  cloudflare-token: "{{ op://homelab/cloudflare_token/credential }}"
+  cloudflare-token: '{{ op://homelab/cloudflare_token/credential }}'

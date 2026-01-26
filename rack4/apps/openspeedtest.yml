@@ -17,4 +17,4 @@ services:
       homepage.href: http://$SVC_IP:3030
       homepage.description: Internet Speed test
     ports:
-      - "$SVC_IP:3030:3000"
+      - '$SVC_IP:3030:3000'

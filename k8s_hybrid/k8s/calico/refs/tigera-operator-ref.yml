@@ -26,7 +26,7 @@ metadata:
     k8s-app: tigera-operator
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - secrets
     verbs:
@@ -104,7 +104,7 @@ rules:
       - adminnetworkpolicies.policy.networking.k8s.io
       - baselineadminnetworkpolicies.policy.networking.k8s.io
   - apiGroups:
-      - ""
+      - ''
     resources:
       - namespaces
       - pods
@@ -122,7 +122,7 @@ rules:
       - delete
       - watch
   - apiGroups:
-      - ""
+      - ''
     resources:
       - resourcequotas
       - secrets
@@ -131,7 +131,7 @@ rules:
       - get
       - watch
   - apiGroups:
-      - ""
+      - ''
     resources:
       - resourcequotas
     verbs:
@@ -145,7 +145,7 @@ rules:
       - calico-critical-pods
       - tigera-critical-pods
   - apiGroups:
-      - ""
+      - ''
     resources:
       - nodes
     verbs:
@@ -570,13 +570,13 @@ spec:
               mountPath: /var/lib/calico
           env:
             - name: WATCH_NAMESPACE
-              value: ""
+              value: ''
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "tigera-operator"
+              value: 'tigera-operator'
             - name: TIGERA_OPERATOR_INIT_IMAGE_VERSION
               value: v1.38.3
           envFrom:

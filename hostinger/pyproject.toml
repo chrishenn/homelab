@@ -1,0 +1,15 @@
+[project]
+name = "hostinger"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "pulumi>=3.217.0",
+    "pulumi-cloudflare>=6.13.0",
+    "python-dotenv>=1.2.1",
+]
+
+[dependency-groups]
+dev = [
+    "types-pyyaml>=6.0.12.20250915",
+]

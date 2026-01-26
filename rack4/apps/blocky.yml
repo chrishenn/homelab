@@ -17,7 +17,7 @@ services:
       - $DATA/blocky/logs:/logs
       - ./blocky/config.yml:/app/config.yml
     ports:
-      - "${SVC_IP}:53:53/tcp"
-      - "${SVC_IP}:53:53/udp"
-      - "${DNS_VIP}:53:53/tcp"
-      - "${DNS_VIP}:53:53/udp"
+      - '${SVC_IP}:53:53/tcp'
+      - '${SVC_IP}:53:53/udp'
+      - '${DNS_VIP}:53:53/tcp'
+      - '${DNS_VIP}:53:53/udp'

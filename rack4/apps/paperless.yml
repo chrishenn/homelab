@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
     environment:
       OLLAMA_API_URL: http://ollama:11434
-      OLLAMA_MODEL: "deepseek-r1:14b"
+      OLLAMA_MODEL: 'deepseek-r1:14b'
     volumes:
       - $DATA/paperless/paperless_ai:/app/data
     networks: [traefik]

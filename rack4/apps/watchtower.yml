@@ -13,7 +13,7 @@ services:
       TZ: $TZ
       DOCKER_HOST: tcp://socket-proxy:2375
       # 6-element cron expression. first one is seconds.
-      WATCHTOWER_SCHEDULE: "0 0 12 * * *"
+      WATCHTOWER_SCHEDULE: '0 0 12 * * *'
       WATCHTOWER_LIFECYCLE_HOOKS: true
       WATCHTOWER_CLEANUP: true
       WATCHTOWER_REMOVE_VOLUMES: true

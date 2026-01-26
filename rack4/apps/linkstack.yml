@@ -9,10 +9,10 @@ services:
     environment:
       TZ: $TZ
       SERVER_ADMIN: ${EMAIL}
-      HTTP_SERVER_NAME: "linkstack.henn.dev"
-      HTTPS_SERVER_NAME: "linkstack.henn.dev"
-      PHP_MEMORY_LIMIT: "2000M"
-      UPLOAD_MAX_FILESIZE: "2000M"
+      HTTP_SERVER_NAME: 'linkstack.henn.dev'
+      HTTPS_SERVER_NAME: 'linkstack.henn.dev'
+      PHP_MEMORY_LIMIT: '2000M'
+      UPLOAD_MAX_FILESIZE: '2000M'
     volumes:
       - linkstack:/htdocs
     networks: [traefik]

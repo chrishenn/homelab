@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: $TZ
-      FILEBROWSER_CONFIG: "data/config.yaml"
+      FILEBROWSER_CONFIG: 'data/config.yaml'
     volumes:
       - ./files/config.yaml:/home/filebrowser/data/config.yaml
       - /mnt/k:/mnt/k

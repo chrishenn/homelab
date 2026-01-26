@@ -1,0 +1,5 @@
+name: dns
+runtime:
+  name: python
+  options:
+    toolchain: uv

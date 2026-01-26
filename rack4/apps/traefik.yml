@@ -34,21 +34,21 @@ services:
       homepage.widget.type: traefik
       homepage.widget.url: https://docker-traefik.henn.dev
     ports:
-      - "${SVC_IP}:80:80" # http
-      - "${SVC_IP}:8080:8080" # traefik internal entrypoint
-      - "${SVC_IP}:443:443" # https
-      - "${SVC_IP}:22:22" # ssh
-      - "${SVC_IP}:2222:2222" # ssh
-      - "${SVC_IP}:2424:2424" # ssh
-      - "${SVC_IP}:1935:1935" # rtmp
-      - "${SVC_IP}:3128:3128" # spice
-      - "${SVC_IP}:61001:61001" # spice-tls
-      - "${TRAEFIK_VIP}:80:80" # http
-      - "${TRAEFIK_VIP}:8080:8080" # traefik internal entrypoint
-      - "${TRAEFIK_VIP}:443:443" # https
-      - "${TRAEFIK_VIP}:22:22" # ssh
-      - "${TRAEFIK_VIP}:2222:2222" # ssh
-      - "${TRAEFIK_VIP}:2424:2424" # ssh
-      - "${TRAEFIK_VIP}:1935:1935" # rtmp
-      - "${TRAEFIK_VIP}:3128:3128" # spice
-      - "${TRAEFIK_VIP}:61001:61001" # spice-tls
+      - '${SVC_IP}:80:80' # http
+      - '${SVC_IP}:8080:8080' # traefik internal entrypoint
+      - '${SVC_IP}:443:443' # https
+      - '${SVC_IP}:22:22' # ssh
+      - '${SVC_IP}:2222:2222' # ssh
+      - '${SVC_IP}:2424:2424' # ssh
+      - '${SVC_IP}:1935:1935' # rtmp
+      - '${SVC_IP}:3128:3128' # spice
+      - '${SVC_IP}:61001:61001' # spice-tls
+      - '${TRAEFIK_VIP}:80:80' # http
+      - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
+      - '${TRAEFIK_VIP}:443:443' # https
+      - '${TRAEFIK_VIP}:22:22' # ssh
+      - '${TRAEFIK_VIP}:2222:2222' # ssh
+      - '${TRAEFIK_VIP}:2424:2424' # ssh
+      - '${TRAEFIK_VIP}:1935:1935' # rtmp
+      - '${TRAEFIK_VIP}:3128:3128' # spice
+      - '${TRAEFIK_VIP}:61001:61001' # spice-tls

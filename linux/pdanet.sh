@@ -7,21 +7,21 @@ if_default=$(ip route | grep default | awk '{print $5}')
 rt_default=$(ip route show | grep "^default" | head -n 1)
 
 cleanup() {
-    echo "CTRL + C detected. Running cleanup..."
+	echo "CTRL + C detected. Running cleanup..."
 
-    killall tun2socks 2>/dev/null
-    ip route del default via 192.168.1.1 dev tun0 metric 1 2>/dev/null
-    ip route del default via 192.168.49.1 dev $if_default metric 10 2>/dev/null
+	killall tun2socks 2>/dev/null
+	ip route del default via 192.168.1.1 dev tun0 metric 1 2>/dev/null
+	ip route del default via 192.168.49.1 dev $if_default metric 10 2>/dev/null
 
-    # 3. Restore your original default route dynamically
-    ip route add $rt_default
+	# 3. Restore your original default route dynamically
+	ip route add $rt_default
 
-    # 4. Disable (and remove) the tunnel interface
-    ip link set dev tun0 down 2>/dev/null
-    ip tuntap del mode tun dev tun0 2>/dev/null
+	# 4. Disable (and remove) the tunnel interface
+	ip link set dev tun0 down 2>/dev/null
+	ip tuntap del mode tun dev tun0 2>/dev/null
 
-    # 5. Revert rp_filter to its default (usually 1)
-    sysctl -w net.ipv4.conf.all.rp_filter=1
+	# 5. Revert rp_filter to its default (usually 1)
+	sysctl -w net.ipv4.conf.all.rp_filter=1
 }
 
 # Trap SIGINT and call the cleanup function

@@ -19,7 +19,7 @@ services:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
-      CRON_SCHEDULE: "0 */1 * * *"
+      CRON_SCHEDULE: '0 */1 * * *'
       CRON_RUN_ON_START: true
       NVIDIA_DRIVER_CAPABILITIES: all
       NVIDIA_VISIBLE_DEVICES: all

@@ -1,11 +1,11 @@
 delete_runs_after_days: 7
 healthcheck:
-  type: POST
+    type: POST
 jobs: []
 log_level: info
 server:
-  address: 0.0.0.0
-  port: 8156
+    address: 0.0.0.0
+    port: 8156
 terminal:
-  allow_all_commands: true
+    allow_all_commands: true
 time_zone: America/Chicago

@@ -12,7 +12,7 @@ spec:
       args:
         - powershell.exe
         - -Command
-        - "Start-Sleep 360000"
+        - 'Start-Sleep 360000'
       imagePullPolicy: IfNotPresent
   nodeSelector:
     kubernetes.io/os: windows

@@ -22,5 +22,5 @@ services:
       HUB_URL: https://beszel.henn.dev
     network_mode: host
     healthcheck:
-      test: ["CMD", "/agent", "health"]
+      test: ['CMD', '/agent', 'health']
       interval: 120s

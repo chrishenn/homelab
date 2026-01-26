@@ -39,9 +39,9 @@ services:
       homepage.widget.type: traefik
       homepage.widget.url: https://rack0-traefik.henn.dev
     ports:
-      - "${SVC_IP}:80:80"
-      - "${SVC_IP}:443:443"
-      - "${SVC_IP}:8080:8080"
-      - "${TRAEFIK_VIP}:80:80"
-      - "${TRAEFIK_VIP}:443:443"
-      - "${TRAEFIK_VIP}:8080:8080"
+      - '${SVC_IP}:80:80'
+      - '${SVC_IP}:443:443'
+      - '${SVC_IP}:8080:8080'
+      - '${TRAEFIK_VIP}:80:80'
+      - '${TRAEFIK_VIP}:443:443'
+      - '${TRAEFIK_VIP}:8080:8080'

@@ -1,3 +1,17 @@
 [env]
 SSH_ROOT = "ssh root@{{env.HOSTINGERIP}}"
 SSH_CHRIS = "ssh chris@{{env.HOSTINGERIP}} -p 2200"
+
+[tools]
+fnox = "latest"
+pulumi = "latest"
+uv = "latest"
+
+[hooks.enter]
+shell = "bash"
+script = """
+    mise i -q \
+    && [ -d .venv ] || uv venv --allow-existing \
+    && [ ! -z ${VIRTUAL_ENV+x} ] || source .venv/bin/activate \
+    && uv sync
+    """

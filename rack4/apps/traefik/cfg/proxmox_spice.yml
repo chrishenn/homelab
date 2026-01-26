@@ -15,8 +15,8 @@ tcp:
     spice:
       loadbalancer:
         servers:
-          - address: "192.168.1.42:3128"
+          - address: '192.168.1.42:3128'
     spice-tls:
       loadBalancer:
         servers:
-          - address: "192.168.1.42:61001"
+          - address: '192.168.1.42:61001'

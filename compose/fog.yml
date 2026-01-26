@@ -10,15 +10,15 @@ services:
         condition: service_healthy
     privileged: true
     ports:
-      - "${FOG_APACHE_EXPOSED_PORT:-80}:${FOG_APACHE_PORT:-80}"
-      - "${FOG_APACHE_EXPOSED_SSL_PORT:-443}:${FOG_APACHE_SSL_PORT:-443}"
-      - "69:69/udp"
-      - "2049:2049"
-      - "111:111"
-      - "32765:32765"
-      - "32767:32767"
-      - "21:21"
-      - "${FOG_FTP_PASV_MIN_PORT:-21100}-${FOG_FTP_PASV_MAX_PORT:-21110}:${FOG_FTP_PASV_MIN_PORT:-21100}-${FOG_FTP_PASV_MAX_PORT:-21110}"
+      - '${FOG_APACHE_EXPOSED_PORT:-80}:${FOG_APACHE_PORT:-80}'
+      - '${FOG_APACHE_EXPOSED_SSL_PORT:-443}:${FOG_APACHE_SSL_PORT:-443}'
+      - '69:69/udp'
+      - '2049:2049'
+      - '111:111'
+      - '32765:32765'
+      - '32767:32767'
+      - '21:21'
+      - '${FOG_FTP_PASV_MIN_PORT:-21100}-${FOG_FTP_PASV_MAX_PORT:-21110}:${FOG_FTP_PASV_MIN_PORT:-21100}-${FOG_FTP_PASV_MAX_PORT:-21110}'
     volumes:
       - $DATA/fog/fog_server/images:/images
       - $DATA/fog/fog_server/tftpboot:/tftpboot
@@ -36,40 +36,40 @@ services:
       FOG_DB_PASS: fogmaster123
 
       # Database Migration Configuration
-      FOG_DB_MIGRATION_ENABLED: "${FOG_DB_MIGRATION_ENABLED:-false}"
-      FOG_DB_MIGRATION_FORCE: "${FOG_DB_MIGRATION_FORCE:-false}"
+      FOG_DB_MIGRATION_ENABLED: '${FOG_DB_MIGRATION_ENABLED:-false}'
+      FOG_DB_MIGRATION_FORCE: '${FOG_DB_MIGRATION_FORCE:-false}'
 
       # Web Configuration
-      FOG_WEB_HOST: "${FOG_WEB_HOST}"
-      FOG_WEB_ROOT: "${FOG_WEB_ROOT:-/fog}"
-      FOG_APACHE_PORT: "${FOG_APACHE_PORT:-80}"
-      FOG_APACHE_SSL_PORT: "${FOG_APACHE_SSL_PORT:-443}"
+      FOG_WEB_HOST: '${FOG_WEB_HOST}'
+      FOG_WEB_ROOT: '${FOG_WEB_ROOT:-/fog}'
+      FOG_APACHE_PORT: '${FOG_APACHE_PORT:-80}'
+      FOG_APACHE_SSL_PORT: '${FOG_APACHE_SSL_PORT:-443}'
 
       # SSL Configuration
-      FOG_INTERNAL_HTTPS_ENABLED: "${FOG_INTERNAL_HTTPS_ENABLED:-false}"
-      FOG_HTTP_PROTOCOL: "${FOG_HTTP_PROTOCOL:-https}"
-      FOG_APACHE_SSL_CERT_FILE: "${FOG_APACHE_SSL_CERT_FILE:-server.crt}"
-      FOG_APACHE_SSL_KEY_FILE: "${FOG_APACHE_SSL_KEY_FILE:-server.key}"
-      FOG_APACHE_SSL_CN: "${FOG_APACHE_SSL_CN:-}"
-      FOG_APACHE_SSL_SAN: "${FOG_APACHE_SSL_SAN:-}"
+      FOG_INTERNAL_HTTPS_ENABLED: '${FOG_INTERNAL_HTTPS_ENABLED:-false}'
+      FOG_HTTP_PROTOCOL: '${FOG_HTTP_PROTOCOL:-https}'
+      FOG_APACHE_SSL_CERT_FILE: '${FOG_APACHE_SSL_CERT_FILE:-server.crt}'
+      FOG_APACHE_SSL_KEY_FILE: '${FOG_APACHE_SSL_KEY_FILE:-server.key}'
+      FOG_APACHE_SSL_CN: '${FOG_APACHE_SSL_CN:-}'
+      FOG_APACHE_SSL_SAN: '${FOG_APACHE_SSL_SAN:-}'
 
       # Network Configuration
-      FOG_STORAGE_HOST: "${FOG_STORAGE_HOST:-${FOG_WEB_HOST}}"
-      FOG_WOL_HOST: "${FOG_WOL_HOST:-localhost}"
-      FOG_MULTICAST_INTERFACE: "${FOG_MULTICAST_INTERFACE:-eth0}"
+      FOG_STORAGE_HOST: '${FOG_STORAGE_HOST:-${FOG_WEB_HOST}}'
+      FOG_WOL_HOST: '${FOG_WOL_HOST:-localhost}'
+      FOG_MULTICAST_INTERFACE: '${FOG_MULTICAST_INTERFACE:-eth0}'
 
       # FTP Configuration
-      FOG_USER: "${FOG_USER:-fogproject}"
-      FOG_PASS: "${FOG_PASS:-fogftp123}"
-      FOG_FTP_PASV_MIN_PORT: "${FOG_FTP_PASV_MIN_PORT:-21100}"
-      FOG_FTP_PASV_MAX_PORT: "${FOG_FTP_PASV_MAX_PORT:-21110}"
+      FOG_USER: '${FOG_USER:-fogproject}'
+      FOG_PASS: '${FOG_PASS:-fogftp123}'
+      FOG_FTP_PASV_MIN_PORT: '${FOG_FTP_PASV_MIN_PORT:-21100}'
+      FOG_FTP_PASV_MAX_PORT: '${FOG_FTP_PASV_MAX_PORT:-21110}'
 
       # Secure Boot Configuration
-      FOG_SECURE_BOOT_ENABLED: "${FOG_SECURE_BOOT_ENABLED:-false}"
-      FOG_SECURE_BOOT_KEYS_DIR: "${FOG_SECURE_BOOT_KEYS_DIR:-/opt/fog/secure-boot/keys}"
-      FOG_SECURE_BOOT_CERT_DIR: "${FOG_SECURE_BOOT_CERT_DIR:-/opt/fog/secure-boot/certs}"
-      FOG_SECURE_BOOT_SHIM_DIR: "${FOG_SECURE_BOOT_SHIM_DIR:-/opt/fog/secure-boot/shim}"
-      FOG_SECURE_BOOT_MOK_IMG: "${FOG_SECURE_BOOT_MOK_IMG:-/opt/fog/secure-boot/mok-certs.img}"
+      FOG_SECURE_BOOT_ENABLED: '${FOG_SECURE_BOOT_ENABLED:-false}'
+      FOG_SECURE_BOOT_KEYS_DIR: '${FOG_SECURE_BOOT_KEYS_DIR:-/opt/fog/secure-boot/keys}'
+      FOG_SECURE_BOOT_CERT_DIR: '${FOG_SECURE_BOOT_CERT_DIR:-/opt/fog/secure-boot/certs}'
+      FOG_SECURE_BOOT_SHIM_DIR: '${FOG_SECURE_BOOT_SHIM_DIR:-/opt/fog/secure-boot/shim}'
+      FOG_SECURE_BOOT_MOK_IMG: '${FOG_SECURE_BOOT_MOK_IMG:-/opt/fog/secure-boot/mok-certs.img}'
 
       # DHCP Configuration
       FOG_DHCP_ENABLED: false
@@ -88,11 +88,11 @@ services:
       FOG_DHCP_BOOTFILE_ARM64: arm64.efi
       FOG_DHCP_HTTPBOOT_ENABLED: false
       FOG_DHCP_DNS: 8.8.8.8
-      FOG_TFTP_HOST: "${FOG_TFTP_HOST}"
+      FOG_TFTP_HOST: '${FOG_TFTP_HOST}'
 
-      TZ: "$TZ"
-      DEBUG: "${DEBUG:-false}"
-      FORCE_FIRST_START_INIT: "${FORCE_FIRST_START_INIT:-false}"
+      TZ: '$TZ'
+      DEBUG: '${DEBUG:-false}'
+      FORCE_FIRST_START_INIT: '${FORCE_FIRST_START_INIT:-false}'
 
     networks: [traefik]
     labels:
@@ -119,17 +119,7 @@ services:
     volumes:
       - $DATA/fog/fog_db:/var/lib/mysql
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-pfogmaster123",
-        ]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-pfogmaster123']
       timeout: 20s
       retries: 10
     networks: [traefik]

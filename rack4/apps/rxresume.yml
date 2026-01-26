@@ -47,13 +47,13 @@ services:
     restart: unless-stopped
     container_name: rxresume_chrome
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     environment:
       TIMEOUT: 10000
       CONCURRENT: 10
       TOKEN: chrome_token
-      EXIT_ON_HEALTH_FAILURE: "true"
-      PRE_REQUEST_HEALTH_CHECK: "true"
+      EXIT_ON_HEALTH_FAILURE: 'true'
+      PRE_REQUEST_HEALTH_CHECK: 'true'
     networks: [traefik]
 
   rxresume_pg:
@@ -68,7 +68,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
       start_period: 15s
       interval: 10s
       timeout: 5s

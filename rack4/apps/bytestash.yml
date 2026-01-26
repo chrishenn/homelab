@@ -8,7 +8,7 @@ services:
     volumes:
       - $DATA/bytestash:/data/snippets
     environment:
-      BASE_PATH: ""
+      BASE_PATH: ''
       JWT_SECRET: your-secret
       TOKEN_EXPIRY: 24h
       ALLOW_NEW_ACCOUNTS: true
@@ -16,11 +16,11 @@ services:
       DISABLE_ACCOUNTS: true
       DISABLE_INTERNAL_ACCOUNTS: false
       OIDC_ENABLED: false
-      OIDC_DISPLAY_NAME: ""
-      OIDC_ISSUER_URL: ""
-      OIDC_CLIENT_ID: ""
-      OIDC_CLIENT_SECRET: ""
-      OIDC_SCOPES: ""
+      OIDC_DISPLAY_NAME: ''
+      OIDC_ISSUER_URL: ''
+      OIDC_CLIENT_ID: ''
+      OIDC_CLIENT_SECRET: ''
+      OIDC_SCOPES: ''
     networks: [traefik]
     labels:
       traefik.enable: true

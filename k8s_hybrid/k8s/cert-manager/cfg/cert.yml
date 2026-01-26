@@ -9,7 +9,7 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.henn.dev"
+  commonName: '*.henn.dev'
   dnsNames:
-    - "henn.dev"
-    - "*.henn.dev"
+    - 'henn.dev'
+    - '*.henn.dev'

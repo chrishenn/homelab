@@ -16,7 +16,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CLI_ARGS: "--fast --listen 0.0.0.0"
+      CLI_ARGS: '--fast --listen 0.0.0.0'
     volumes:
       - $DATA/comfy/root:/root
       - $DATA/comfy/custom_nodes:/root/ComfyUI/custom_nodes

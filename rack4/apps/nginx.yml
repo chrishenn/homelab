@@ -1,7 +1,7 @@
 services:
   nginx:
     profiles: [nginx]
-    image: "uozi/nginx-ui:latest"
+    image: 'uozi/nginx-ui:latest'
     container_name: nginx
     stdin_open: true
     tty: true

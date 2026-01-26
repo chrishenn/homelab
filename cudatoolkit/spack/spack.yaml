@@ -1,11 +1,11 @@
 spack:
-  specs:
-    # note: cuda 12.6 and earlier require gcc13 or earlier
-    - cuda@12.9
-  view: true
-  concretizer:
-    unify: true
-  modules:
-    prefix_inspections:
-      lib: [LD_LIBRARY_PATH]
-      lib64: [LD_LIBRARY_PATH]
+    specs:
+        # note: cuda 12.6 and earlier require gcc13 or earlier
+        - cuda@12.9
+    view: true
+    concretizer:
+        unify: true
+    modules:
+        prefix_inspections:
+            lib: [LD_LIBRARY_PATH]
+            lib64: [LD_LIBRARY_PATH]

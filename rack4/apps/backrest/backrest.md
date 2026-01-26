@@ -5,8 +5,8 @@ You can just edit the config/config.json file manually
 - Bring backrest down
 - Edit the cfg
 - If you're adding a repo
-  - remove the "guid" key
-  - set "autoInitialize": true
+    - remove the "guid" key
+    - set "autoInitialize": true
 - Bring backrest up
 - Refresh the gui
 

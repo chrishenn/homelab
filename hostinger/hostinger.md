@@ -1,4 +1,4 @@
-# hostinger
+# Hostinger Server Setup (Pangolin)
 
 sshd config
 

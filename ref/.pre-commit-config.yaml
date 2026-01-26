@@ -1,8 +1,8 @@
 # note that these are only scanning for _new_ secrets on commit - there are still secrets in the git history
 # note that you can just choose one of these to scan for secrets before commit
 repos:
-  - repo: local
-    hooks:
+    - repo: local
+      hooks:
 #      - id: trufflehog
 #        name: trufflehog
 #        description: Detect secrets in your repo before committing them

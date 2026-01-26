@@ -1,45 +1,45 @@
 server:
-  port: 80
-  baseURL: "/"
-  logging:
-    - levels: "info|warning|error"
-  sources:
-    - path: "/mnt/k/"
-      name: k
-      config:
-        defaultEnabled: true
-    - path: "/mnt/h/"
-      name: h
-      config:
-        defaultEnabled: true
-    - path: "/mnt/q/"
-      name: q
-      config:
-        defaultEnabled: true
-    - path: "/mnt/f/"
-      name: f
-      config:
-        defaultEnabled: true
+    port: 80
+    baseURL: '/'
+    logging:
+        - levels: 'info|warning|error'
+    sources:
+        - path: '/mnt/k/'
+          name: k
+          config:
+              defaultEnabled: true
+        - path: '/mnt/h/'
+          name: h
+          config:
+              defaultEnabled: true
+        - path: '/mnt/q/'
+          name: q
+          config:
+              defaultEnabled: true
+        - path: '/mnt/f/'
+          name: f
+          config:
+              defaultEnabled: true
 
 auth:
-  methods:
-    noauth: true
+    methods:
+        noauth: true
 
 frontend:
-  name: "Chicken Files"
+    name: 'Chicken Files'
 
 userDefaults:
-  preview:
-    image: true
-    popup: true
-    video: true
-    office: false
-    highQuality: true
-  darkMode: true
-  disableSettings: false
-  singleClick: false
-  permissions:
-    admin: true
-    modify: true
-    share: true
-    api: true
+    preview:
+        image: true
+        popup: true
+        video: true
+        office: false
+        highQuality: true
+    darkMode: true
+    disableSettings: false
+    singleClick: false
+    permissions:
+        admin: true
+        modify: true
+        share: true
+        api: true

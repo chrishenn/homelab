@@ -48,5 +48,5 @@ services:
       homepage.href: https://novpn.qbit.henn.dev
       homepage.description: Non-Vpn Torrents
     ports:
-      - "6881:6881/tcp"
-      - "6881:6881/udp"
+      - '6881:6881/tcp'
+      - '6881:6881/udp'

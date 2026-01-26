@@ -9,12 +9,12 @@ services:
     environment:
       # configure the cron task
       TZ: $TZ
-      CRON_SCHEDULE: "0 0 * * 0"
-      CRON_CMD: "/run.sh"
+      CRON_SCHEDULE: '0 0 * * 0'
+      CRON_CMD: '/run.sh'
       RUN_NOW: 1
 
       # these are used by the rebuild.sh script
-      SVCS: "vertd, rsync"
+      SVCS: 'vertd, rsync'
       REPO_MACHINE: ${REPO_MACHINE}
       OP_SERVICE_ACCOUNT_TOKEN: ${OP_SERVICE_ACCOUNT_TOKEN}
 

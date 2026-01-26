@@ -36,8 +36,8 @@ services:
       retries: 2
     logging:
       options:
-        max-size: "1G"
-        max-file: "4"
+        max-size: '1G'
+        max-file: '4'
     depends_on:
       - invidious_db
     networks: [traefik]
@@ -59,7 +59,7 @@ services:
     container_name: inv_sig_helper
     restart: unless-stopped
     init: true
-    command: ["--tcp", "0.0.0.0:12999"]
+    command: ['--tcp', '0.0.0.0:12999']
     environment:
       - RUST_LOG=info
     cap_drop:
@@ -83,7 +83,7 @@ services:
       POSTGRES_USER: invidious
       POSTGRES_PASSWORD: invidious
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
     networks: [traefik]
 
 volumes:

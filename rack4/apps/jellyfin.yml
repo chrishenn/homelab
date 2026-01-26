@@ -26,7 +26,7 @@ services:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
-      JELLYFIN_PublishedServerUrl: "https://jellyfin.henn.dev"
+      JELLYFIN_PublishedServerUrl: 'https://jellyfin.henn.dev'
     networks: [traefik]
     labels:
       traefik.enable: true
@@ -40,7 +40,7 @@ services:
       homepage.href: https://jellyfin.henn.dev
       homepage.description: Media Server
     ports:
-      - "1900:1900/udp"
+      - '1900:1900/udp'
   #      - "7359:7359/udp" # jellyfin-discovery uses 7359
 
   jellyfin-discovery:

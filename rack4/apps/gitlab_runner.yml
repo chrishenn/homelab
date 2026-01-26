@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
     privileged: true
     environment:
-      DOCKER_TLS_CERTDIR: ""
+      DOCKER_TLS_CERTDIR: ''
     command:
       - --storage-driver=overlay2
     volumes:

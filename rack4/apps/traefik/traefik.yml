@@ -17,7 +17,7 @@ providers:
   docker:
     watch: true
     network: traefik
-    endpoint: "unix:///var/run/docker.sock"
+    endpoint: 'unix:///var/run/docker.sock'
     exposedByDefault: false
 
 tls:
@@ -25,9 +25,9 @@ tls:
     default:
       minVersion: VersionTLS13
       curvePreferences:
-        - "X25519"
-        - "CurveP256"
-        - "CurveP384"
+        - 'X25519'
+        - 'CurveP256'
+        - 'CurveP384'
 
 entryPoints:
   web:
@@ -68,9 +68,9 @@ entryPoints:
     address: :443
     transport:
       respondingTimeouts:
-        readTimeout: "600"
-        writeTimeout: "600"
-        idleTimeout: "600"
+        readTimeout: '600'
+        writeTimeout: '600'
+        idleTimeout: '600'
     forwardedHeaders:
       trustedIPs: *trustedIps
     http:
@@ -79,21 +79,21 @@ entryPoints:
         domains:
           - main: henn.dev
             sans:
-              - "*.henn.dev"
+              - '*.henn.dev'
       middlewares:
         - securityHeaders@file
   tcp22:
-    address: ":22"
+    address: ':22'
   tcp2222:
-    address: ":2222"
+    address: ':2222'
   tcp2424:
-    address: ":2424"
+    address: ':2424'
   rtmp:
-    address: ":1935"
+    address: ':1935'
   spice:
-    address: ":3128"
+    address: ':3128'
   spice-tls:
-    address: ":61001"
+    address: ':61001'
 
 certificatesResolvers:
   cf:
@@ -102,8 +102,8 @@ certificatesResolvers:
       dnsChallenge:
         provider: cloudflare
         resolvers:
-          - "1.1.1.1:53"
-          - "1.0.0.1:53"
+          - '1.1.1.1:53'
+          - '1.0.0.1:53'
 
 log:
   filePath: /logs/server.log
@@ -113,10 +113,10 @@ accessLog:
   filePath: /logs/access.log
   filters:
     statusCodes:
-      - "200"
-      - "400-599"
+      - '200'
+      - '400-599'
     retryAttempts: true
-    minDuration: "10ms"
+    minDuration: '10ms'
   bufferingSize: 0
   fields:
     headers:

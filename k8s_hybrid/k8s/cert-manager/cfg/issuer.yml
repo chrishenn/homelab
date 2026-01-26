@@ -6,16 +6,16 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: { { "op://homelab/cloudflare_token/username" } }
+    email: { { 'op://homelab/cloudflare_token/username' } }
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
       - dns01:
           cloudflare:
-            email: { { "op://homelab/cloudflare_token/username" } }
+            email: { { 'op://homelab/cloudflare_token/username' } }
             apiTokenSecretRef:
               name: cloudflare-token-secret
               key: cloudflare-token
         selector:
           dnsZones:
-            - "henn.dev"
+            - 'henn.dev'

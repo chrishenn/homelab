@@ -4,22 +4,22 @@ http:
     securityHeaders:
       headers:
         customResponseHeaders:
-          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
-          X-Forwarded-Proto: "https"
-          server: ""
-          X-Powered-By: ""
+          X-Robots-Tag: 'none,noarchive,nosnippet,notranslate,noimageindex'
+          X-Forwarded-Proto: 'https'
+          server: ''
+          X-Powered-By: ''
         customRequestHeaders:
-          X-Forwarded-Proto: "https"
-          Strict-Transport-Security: "max-age=63072000"
+          X-Forwarded-Proto: 'https'
+          Strict-Transport-Security: 'max-age=63072000'
         sslProxyHeaders:
-          X-Forwarded-Proto: "https"
+          X-Forwarded-Proto: 'https'
         hostsProxyHeaders:
-          - "X-Forwarded-Host"
-        referrerPolicy: "same-origin"
+          - 'X-Forwarded-Host'
+        referrerPolicy: 'same-origin'
         contentTypeNosniff: true
         browserXssFilter: true
         frameDeny: true
-        customFrameOptionsValue: "SAMEORIGIN"
+        customFrameOptionsValue: 'SAMEORIGIN'
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsSeconds: 63072000

@@ -16,6 +16,6 @@ services:
       - /mnt/q:/mnt/q
     environment:
       TZ: $TZ
-      CRON_SCHEDULE: "0 5 * * *"
-      CRON_CMD: "/run.sh"
+      CRON_SCHEDULE: '0 5 * * *'
+      CRON_CMD: '/run.sh'
       RUN_NOW: 1

@@ -1,0 +1,30 @@
+{
+    "0": {
+        "domain": "henn.dev",
+        "zoneid": "op://homelab/proton/henn.dev/zoneid",
+        "records": [
+            ["TXT", "@", "\"op://homelab/proton/henn.dev/verification\"", null],
+            ["TXT", "@", "\"v=spf1 include:_spf.protonmail.ch ~all\"", null],
+            ["TXT", "_dmarc", "\"v=DMARC1; p=quarantine\"", null],
+            ["MX", "@", "mail.protonmail.ch", 10],
+            ["MX", "@", "mailsec.protonmail.ch", 20],
+            ["CNAME", "protonmail._domainkey", "op://homelab/proton/henn.dev/domainkey", null],
+            ["CNAME", "protonmail2._domainkey", "op://homelab/proton/henn.dev/domainkey2", null],
+            ["CNAME", "protonmail3._domainkey", "op://homelab/proton/henn.dev/domainkey3", null]
+        ]
+    },
+    "1": {
+        "domain": "chenn.dev",
+        "zoneid": "op://homelab/proton/chenn.dev/zoneid",
+        "records": [
+            ["TXT", "@", "\"op://homelab/proton/chenn.dev/verification\"", null],
+            ["TXT", "@", "\"v=spf1 include:_spf.protonmail.ch ~all\"", null],
+            ["TXT", "_dmarc", "\"v=DMARC1; p=quarantine\"", null],
+            ["MX", "@", "mail.protonmail.ch", 10],
+            ["MX", "@", "mailsec.protonmail.ch", 20],
+            ["CNAME", "protonmail._domainkey", "op://homelab/proton/chenn.dev/domainkey", null],
+            ["CNAME", "protonmail2._domainkey", "op://homelab/proton/chenn.dev/domainkey2", null],
+            ["CNAME", "protonmail3._domainkey", "op://homelab/proton/chenn.dev/domainkey3", null]
+        ]
+    }
+}

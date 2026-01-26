@@ -19,7 +19,7 @@ base-url: https://ntfy.henn.dev
 # To listen on all interfaces, you may omit the IP address, e.g. ":443".
 # To disable HTTP, set "listen-http" to "-".
 #
-listen-http: ":80"
+listen-http: ':80'
 # listen-https:
 
 # Listen on a Unix socket, e.g. /var/lib/ntfy/ntfy.sock
@@ -121,8 +121,8 @@ listen-http: ":80"
 #   the forwarded header.
 
 behind-proxy: true
-proxy-forwarded-header: "X-Forwarded-For"
-proxy-trusted-hosts: "192.168.100.0/24"
+proxy-forwarded-header: 'X-Forwarded-For'
+proxy-trusted-hosts: '192.168.100.0/24'
 
 # If enabled, clients can attach files to notifications as attachments. Minimum settings to enable attachments
 # are "attachment-cache-dir" and "base-url".
@@ -133,9 +133,9 @@ proxy-trusted-hosts: "192.168.100.0/24"
 # - attachment-expiry-duration is the duration after which uploaded attachments will be deleted (e.g. 3h, 20h)
 
 attachment-cache-dir: /attachments
-attachment-total-size-limit: "1000G"
-attachment-file-size-limit: "10G"
-attachment-expiry-duration: "48h"
+attachment-total-size-limit: '1000G'
+attachment-file-size-limit: '10G'
+attachment-expiry-duration: '48h'
 
 # Template directory for message templates.
 #
@@ -341,8 +341,8 @@ attachment-expiry-duration: "48h"
 # - visitor-attachment-total-size-limit is the total storage limit used for attachments per visitor
 # - visitor-attachment-daily-bandwidth-limit is the total daily attachment download/upload traffic limit per visitor
 #
-visitor-attachment-total-size-limit: "1000G"
-visitor-attachment-daily-bandwidth-limit: "1000G"
+visitor-attachment-total-size-limit: '1000G'
+visitor-attachment-daily-bandwidth-limit: '1000G'
 # Rate limiting: Enable subscriber-based rate limiting (mostly used for UnifiedPush)
 #
 # If subscriber-based rate limiting is enabled, messages published on UnifiedPush topics** (topics starting with "up")

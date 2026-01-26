@@ -4,7 +4,7 @@ services:
     container_name: test-al2023
     hostname: test-al2023
     privileged: true
-    restart: "no"
+    restart: 'no'
     build:
       context: .
       dockerfile: al2023.docker
@@ -14,7 +14,7 @@ services:
     container_name: test-alma
     hostname: test-alma
     privileged: true
-    restart: "no"
+    restart: 'no'
     build:
       context: .
       dockerfile: alma.docker
@@ -24,7 +24,7 @@ services:
     container_name: test-rhel
     hostname: test-rhel
     privileged: true
-    restart: "no"
+    restart: 'no'
     build:
       context: .
       dockerfile: rhel.docker
@@ -35,7 +35,7 @@ services:
     container_name: test-debian
     hostname: test-debian
     privileged: true
-    restart: "no"
+    restart: 'no'
     build:
       context: .
       dockerfile: debian.docker
@@ -51,7 +51,7 @@ services:
     container_name: test-ubuntu
     hostname: test-ubuntu
     privileged: true
-    restart: "no"
+    restart: 'no'
     build:
       context: .
       dockerfile: ubuntu.docker

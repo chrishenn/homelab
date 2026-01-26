@@ -1,14 +1,14 @@
 # AI audio: noise filtering on windows
 
 - Reaper is too heavy to also play csgo
-  - on intel 8700k with a GTX 1080
+    - on intel 8700k with a GTX 1080
 - Probably figure out a better way to host the VST plugin that's lighter-weight
-  - there is some "VST Server" plugin that I had tried at some point
+    - there is some "VST Server" plugin that I had tried at some point
 - SAR is super janky and bad for device routing
 - Probably figure out a better way to route virtual audio devices
-  - voicemeeter ?
-  - equalizerapo ?
-  - is there no graphical router like there is on linux? I'd like an FL-studio style frontend for creating and routing virtual devices
+    - voicemeeter ?
+    - equalizerapo ?
+    - is there no graphical router like there is on linux? I'd like an FL-studio style frontend for creating and routing virtual devices
 
 ---
 

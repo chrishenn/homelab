@@ -10,4 +10,4 @@ services:
     volumes:
       - $DATA/aptcache:/var/cache/apt-cacher-ng
     ports:
-      - "3142:3142"
+      - '3142:3142'

@@ -54,7 +54,7 @@ function setup_ssh_agent() {
 
 	if [[ $pid -eq 0 ]]; then
 		echo "Starting ssh-agent..."
-		eval "$(ssh-agent -s)" > /dev/null
+		eval "$(ssh-agent -s)" >/dev/null
 		export SSH_AGENT_PID
 		export SSH_AUTH_SOCK
 	fi
@@ -63,10 +63,10 @@ function setup_ssh_agent() {
 		local session_file="$HOME/.op-session"
 		if [[ -f $session_file ]]; then
 			if ! grep SSH_AGENT_PID $session_file >/dev/null; then
-				echo "export SSH_AGENT_PID=\"$SSH_AGENT_PID\"" >> "$session_file"
+				echo "export SSH_AGENT_PID=\"$SSH_AGENT_PID\"" >>"$session_file"
 			fi
 			if ! grep SSH_AUTH_SOCK $session_file >/dev/null; then
-				echo "export SSH_AUTH_SOCK=\"$SSH_AUTH_SOCK\"" >> "$session_file"
+				echo "export SSH_AUTH_SOCK=\"$SSH_AUTH_SOCK\"" >>"$session_file"
 			fi
 		fi
 	fi
@@ -91,8 +91,8 @@ function connect_to_1password() {
 	local session_file="$HOME/.op-session"
 	# Check if the session token exists and is valid
 	if [[ -f "$session_file" ]]; then
-		source "$session_file" > /dev/null
-		if op vault list &> /dev/null; then
+		source "$session_file" >/dev/null
+		if op vault list &>/dev/null; then
 			return
 		else
 			if [[ "$(env | grep ${session_token_var}=)" != "" ]]; then
@@ -119,7 +119,7 @@ function connect_to_1password() {
 	fi
 
 	# Save the session token in a sourceable format
-	echo "export OP_SESSION_$userid=\"$session_token\"" > "$session_file"
+	echo "export OP_SESSION_$userid=\"$session_token\"" >"$session_file"
 	chmod 600 "$session_file"
 
 	echo "1Password session established and saved."
@@ -175,7 +175,7 @@ function add_key_to_agent() {
 		exit 1
 	fi
 
-	ssh-add <(echo "$ssh_key") > /dev/null 2>&1
+	ssh-add <(echo "$ssh_key") >/dev/null 2>&1
 	if [[ $? -ne 0 ]]; then
 		echo "Error: Failed to add the SSH key to the agent." >/dev/stderr
 		exit 1
@@ -201,10 +201,10 @@ function extract_key() {
 
 function lock_and_logout() {
 	echo "Stopping ssh-agent..."
-	ssh-agent -k > /dev/null 2>&1 || echo "No active SSH agent found."
+	ssh-agent -k >/dev/null 2>&1 || echo "No active SSH agent found."
 
 	echo "Signing out from 1Password..."
-	op signout > /dev/null 2>&1 || echo "No active 1Password session found."
+	op signout >/dev/null 2>&1 || echo "No active 1Password session found."
 
 	rm -f $HOME/.op-session
 
@@ -235,72 +235,72 @@ shift
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
-		--id)
-			id=$2
-			shift
-			;;
-		--all)
-			all_flag=1
-			shift
-			;;
-		--field)
-			field=$2
-			shift
-			;;
-		--help)
-			print_help
-			exit 0
-			;;
-		*)
-			echo "Unknown argument: $1" >/dev/stderr
-			exit 1
-			;;
+	--id)
+		id=$2
+		shift
+		;;
+	--all)
+		all_flag=1
+		shift
+		;;
+	--field)
+		field=$2
+		shift
+		;;
+	--help)
+		print_help
+		exit 0
+		;;
+	*)
+		echo "Unknown argument: $1" >/dev/stderr
+		exit 1
+		;;
 	esac
 	shift
 done
 
 case $action in
-	list)
+list)
+	connect_to_1password
+
+	id=""
+	title=""
+	while IFS= read -r line; do
+		id="$(echo "$line" | cut -d' ' -f1)"
+		title="$(echo "$line" | cut -d' ' -f2-)"
+		echo "$title (ID: $id)"
+	done <<<"$(list_keys)"
+	;;
+add)
+	if [[ $all_flag -eq 1 ]]; then
 		connect_to_1password
 
-		id=""
-		title=""
 		while IFS= read -r line; do
-			id="$(echo "$line" | cut -d' ' -f1)"
-			title="$(echo "$line" | cut -d' ' -f2-)"
-			echo "$title (ID: $id)"
-		done <<< "$(list_keys)"
-		;;
-	add)
-		if [[ $all_flag -eq 1 ]]; then
-			connect_to_1password
-
-			while IFS= read -r line; do
-				add_key_to_agent "$(echo "$line" | cut -d' ' -f1)"
-			done <<< "$(list_keys)"
-		else
-			if [[ -z $id ]]; then
-				echo "Error: --id (or --all) is required for the add action." >/dev/stderr
-				exit 1
-			fi
-			add_key_to_agent "$id"
-		fi
-		;;
-	extract)
-		if [[ -z $id || -z $field ]]; then
-			echo "Error: --id and --field are required for the extract action." >/dev/stderr
+			add_key_to_agent "$(echo "$line" | cut -d' ' -f1)"
+		done <<<"$(list_keys)"
+	else
+		if [[ -z $id ]]; then
+			echo "Error: --id (or --all) is required for the add action." >/dev/stderr
 			exit 1
 		fi
-		extract_key "$id" "$field"
-		;;
-	lock|logout|signout)
-		lock_and_logout
-		;;
-	--help)
-		print_help
-		;;
-	*)
-		echo "Unknown action: $action" >/dev/stderr
+		add_key_to_agent "$id"
+	fi
+	;;
+extract)
+	if [[ -z $id || -z $field ]]; then
+		echo "Error: --id and --field are required for the extract action." >/dev/stderr
 		exit 1
-		;;
+	fi
+	extract_key "$id" "$field"
+	;;
+lock | logout | signout)
+	lock_and_logout
+	;;
+--help)
+	print_help
+	;;
+*)
+	echo "Unknown action: $action" >/dev/stderr
+	exit 1
+	;;
 esac

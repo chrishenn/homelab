@@ -10,7 +10,7 @@ services:
       PGID: ${PGID}
       TZ: ${TZ}
       SITE_ROOT: https://healthchecks.henn.dev
-      SITE_NAME: "Chicken Vibes"
+      SITE_NAME: 'Chicken Vibes'
       DEFAULT_FROM_EMAIL: ${EMAIL}
     volumes:
       - $DATA/healthchecks/config:/config

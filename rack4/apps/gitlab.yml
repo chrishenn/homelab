@@ -86,7 +86,7 @@ services:
       - $DATA/gitlab/logs:/var/log/gitlab
       - $DATA/gitlab/config:/etc/gitlab
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
       interval: 10s
       timeout: 5s
       retries: 3
