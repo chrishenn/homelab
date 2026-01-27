@@ -5,7 +5,11 @@ tabWidth: 4
 printWidth: 120
 
 overrides:
-- files: '*.yml'
+- files: ['*.yml', '*.yaml']
   options:
     tabWidth: 2
-    printWidth: 360
+    printWidth: 240
+- files: ['*.conf']
+  options:
+    tabWidth: 4
+    printWidth: 240

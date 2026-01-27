@@ -14,5 +14,5 @@ While there are two existing Mikrotik pulumi providers, and one Terraform provid
 provider, none of these include all the config types that I typically use in even my baseline router config.
 
 At the moment, I'd have to split configuration between mikrotik scripts and pulumi code - and not in logical chunks of
-functionality. I don't think it's worth the effort (yet) to translate some of the scripts and juggle both config 
+functionality. I don't think it's worth the effort (yet) to translate some of the scripts and juggle both config
 sources.

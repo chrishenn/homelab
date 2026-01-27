@@ -20,14 +20,17 @@ PS> .\PrepareNode.ps1 -KubernetesVersion v1.25.3
 #>
 
 Param(
-    [parameter(Mandatory = $true, HelpMessage="Kubernetes version to use")]
+    [parameter(Mandatory = $true, HelpMessage = "Kubernetes version to use")]
     [string] $KubernetesVersion,
-    [parameter(HelpMessage="Hostname override for kubeadm")]
+    [parameter(HelpMessage = "Hostname override for kubeadm")]
     [string] $HostnameOverride = "$(hostname)"
 )
 $ErrorActionPreference = 'Stop'
 
-function DownloadFile($destination, $source) {
+function DownloadFile (
+    $destination,
+    $source
+) {
     Write-Host("Downloading $source to $destination")
     curl.exe --silent --fail -Lo $destination $source
 
@@ -37,7 +40,7 @@ function DownloadFile($destination, $source) {
     }
 }
 
-if (-not(Test-Path "//./pipe/containerd-containerd")) {
+if (-not (Test-Path "//./pipe/containerd-containerd")) {
     Write-Error "ContainerD service was not detected - please install and start containerD before calling PrepareNode.ps1 with -ContainerRuntime containerD"
     exit 1
 }
@@ -70,7 +73,7 @@ New-Item -path C:\var\lib\kubelet\etc\kubernetes\pki -type SymbolicLink -value C
 # dockershim related flags (--image-pull-progress-deadline=20m and --network-plugin=cni)  are removed in k8s v1.24
 # Link to changelog: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md
 
-$cmd_commands=@("C:\k\kubelet.exe ", '$global:KubeletArgs ', '--cert-dir=$env:SYSTEMDRIVE\var\lib\kubelet\pki ', "--config=/var/lib/kubelet/config.yaml ", "--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf ", "--kubeconfig=/etc/kubernetes/kubelet.conf ", "--hostname-override=$HostnameOverride ", '--pod-infra-container-image=`"mcr.microsoft.com/oss/kubernetes/pause:3.6`" ', "--enable-debugging-handlers ", "--cgroups-per-qos=false ", '--enforce-node-allocatable=`"`" ', '--resolv-conf=`"`" ')
+$cmd_commands = @("C:\k\kubelet.exe ", '$global:KubeletArgs ', '--cert-dir=$env:SYSTEMDRIVE\var\lib\kubelet\pki ', "--config=/var/lib/kubelet/config.yaml ", "--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf ", "--kubeconfig=/etc/kubernetes/kubelet.conf ", "--hostname-override=$HostnameOverride ", '--pod-infra-container-image=`"mcr.microsoft.com/oss/kubernetes/pause:3.6`" ', "--enable-debugging-handlers ", "--cgroups-per-qos=false ", '--enforce-node-allocatable=`"`" ', '--resolv-conf=`"`" ')
 [version]$CurrentVersion = $($KubernetesVersion.Split("v") | Select -Index 1)
 [version]$V1_24_Version = '1.24'
 if ($CurrentVersion -lt $V1_24_Version) {
@@ -101,7 +104,7 @@ Remove-Item -Force .\nssm.zip
 
 $env:path += ";$global:NssmInstallDirectory"
 $newPath = "$global:NssmInstallDirectory;" +
-[Environment]::GetEnvironmentVariable("PATH", [EnvironmentVariableTarget]::Machine)
+    [Environment]::GetEnvironmentVariable("PATH", [EnvironmentVariableTarget]::Machine)
 
 [Environment]::SetEnvironmentVariable("PATH", $newPath, [EnvironmentVariableTarget]::Machine)
 
@@ -122,7 +125,7 @@ nssm set kubelet DependOnService containerd
 
 New-NetFirewallRule -Name kubelet -DisplayName 'kubelet' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 10250
 
-$repoUrl='https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools/master'
+$repoUrl = 'https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools/master'
 
 Write-Output "Please remember that after you have joined the node to the cluster, that you have to apply the cni daemonset/service and the kube-proxy"
 Write-Output "Also remember that for kube-proxy you have to change the its version from the name of the image in the kube-proxy.yml to that of your kubernetes version `n"

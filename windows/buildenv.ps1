@@ -2,21 +2,27 @@ $repo = "$PSScriptRoot"
 $ErrorActionPreference = 'Stop';
 $ProgressPreference = 'SilentlyContinue';
 
-function direxist ([Parameter(Mandatory = $true)][string] $dir) {
+function direxist (
+    [Parameter(Mandatory = $true)][string] $dir
+) {
     return Test-Path -Path "$dir" -PathType Container
 }
 
-function fexist ([Parameter(Mandatory = $true)][string] $file) {
+function fexist (
+    [Parameter(Mandatory = $true)][string] $file
+) {
     return Test-Path -Path "$file" -PathType Leaf
 }
 
-function pause ($message) {
+function pause (
+    $message
+) {
     Write-Host "$message" -ForegroundColor Yellow
     $x = $host.ui.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 function mode_build {
-    if( $env:UserName -eq "ContainerAdministrator" ) {
+    if ($env:UserName -eq "ContainerAdministrator") {
         write-host "currently in a container. Will not proceed"
         exit 1
     }
@@ -24,7 +30,7 @@ function mode_build {
 }
 
 function mode_attach {
-    if( $env:UserName -eq "ContainerAdministrator" ) {
+    if ($env:UserName -eq "ContainerAdministrator") {
         write-host "currently in a container. Will not proceed"
         exit 1
     }
@@ -37,7 +43,7 @@ function mode_compile {
     $deps = direxist "$repo/deps"
     $windows = direxist "$repo/windows"
     $cmake = fexist "$repo/CMakeLists.txt"
-    if (! ($src -and $deps -and $windows -and $cmake )) {
+    if (!($src -and $deps -and $windows -and $cmake)) {
         write-host "error: compile: required files missing from repo: src=$src deps=$deps windows=$windows cmakelists.txt=$cmake"
         exit 1
     }
@@ -83,7 +89,7 @@ function mode_pkg {
 
 function mode_install {
     $msi = Get-ChildItem *.msi | ForEach-Object {$_.Name}
-    if (! (Test-Path "$msi" -PathType Leaf )) {
+    if (!(Test-Path "$msi" -PathType Leaf)) {
         throw 'FAILED: msi installer not found'
     }
     Write-Output "found installer msi: $msi"
@@ -95,15 +101,28 @@ function mode_install {
     write-host "SUCCESS: msi installed`n"
 }
 
-switch ($args[0])
-{
-    "build" {mode_build; break}
-    "attach" {mode_attach; break}
-    "compile" {mode_compile; break}
-    "pkg" {mode_pkg; break}
-    "install" {mode_install; break}
-    "compile_pkg" {mode_compile; mode_pkg; break}
-    "compile_pkg_install" {mode_compile; mode_pkg; mode_install; break}
+switch ($args[0]) {
+    "build" {
+        mode_build; break
+    }
+    "attach" {
+        mode_attach; break
+    }
+    "compile" {
+        mode_compile; break
+    }
+    "pkg" {
+        mode_pkg; break
+    }
+    "install" {
+        mode_install; break
+    }
+    "compile_pkg" {
+        mode_compile; mode_pkg; break
+    }
+    "compile_pkg_install" {
+        mode_compile; mode_pkg; mode_install; break
+    }
     default {
         write-host "skill issue. bad arg to script"
     }

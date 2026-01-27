@@ -13,5 +13,6 @@ failed services that I deleted
 - sist2 / elasticsearch: very heavy fuzzy search over files. not much use
 - webcord: unneeded
 - whisper: big mess. doesn't unload models reliably, which poses a danger of crashing your system
-- scriberr: has hardcoded dependencies on docker services having certain names, db users having certain names. Don't bother
+- scriberr: has hardcoded dependencies on docker services having certain names, db users having certain names. Don't
+  bother
 - squirrel: janky, unstable, hardcoded deps on docker svcs. don't bother

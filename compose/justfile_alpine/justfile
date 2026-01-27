@@ -16,12 +16,12 @@ run:
     # download the git-backup binary
     if [[ ! -f gitbackup ]]; then
         echo "downloading gitbackup binary"
-        sudo curl -Lo gitbackup {{BIN}}
+        sudo curl -Lo gitbackup {{ BIN }}
         sudo chmod +x gitbackup
     else
         echo "using existing gitbackup binary"
     fi
 
     op inject -i config.yml -o secrets.yml -f
-    ./gitbackup -backup.path {{TGT}} -config.file secrets.yml -backup.fail-at-end
+    ./gitbackup -backup.path {{ TGT }} -config.file secrets.yml -backup.fail-at-end
     rm secrets.yml

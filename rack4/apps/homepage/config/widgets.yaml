@@ -1,15 +1,15 @@
 # https://gethomepage.dev/configs/info-widgets/
 ---
 - resources:
-      cpu: true
-      memory: true
-      disk: /mnt/k
+    cpu: true
+    memory: true
+    disk: /mnt/k
 
 - openmeteo:
-      timezone: America/Chicago
-      latitude: 42.038588
-      longitude: -87.702809
-      units: imperial
-      cache: 5
-      format:
-          maximumFractionDigits: 1
+    timezone: America/Chicago
+    latitude: 42.038588
+    longitude: -87.702809
+    units: imperial
+    cache: 5
+    format:
+      maximumFractionDigits: 1

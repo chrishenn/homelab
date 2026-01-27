@@ -11,7 +11,6 @@ from typer import Typer
 if TYPE_CHECKING:
     from fabric import Connection
 
-
 app = Typer()
 
 

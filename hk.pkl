@@ -6,9 +6,9 @@ local formatters = new Mapping<String, Step> {
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-//     ["mypy"] = (Builtins.mypy) {
-//         exclude = "*noqa*"
-//     }
+    //     ["mypy"] = (Builtins.mypy) {
+    //         exclude = "*noqa*"
+    //     }
     ["prettier"] = (Builtins.prettier) {
         batch = false
     }
@@ -43,18 +43,18 @@ local linters = new Mapping<String, Step> {
         check = "detect-secrets-hook -n --disable-plugin KeywordDetector --baseline ds.json {{files}}"
         batch = true
     }
-//     ["shellcheck"] = Builtins.shellcheck
+    //     ["shellcheck"] = Builtins.shellcheck
 }
 
 hooks {
     ["pre-commit"] {
         fix = true
         stash = "git"
-        steps = new Mapping<String, Step> {...formatters ...linters}
+        steps = new Mapping<String, Step> { ...formatters ...linters }
     }
     ["check"] {
-      fix = false
-      steps = new Mapping<String, Step> {...formatters ...linters}
+        fix = false
+        steps = new Mapping<String, Step> { ...formatters ...linters }
     }
     ["fix"] {
         fix = true

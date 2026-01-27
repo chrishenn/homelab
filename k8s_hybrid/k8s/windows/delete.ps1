@@ -1,4 +1,7 @@
-function sdo ([string] $cmd, $print = $False) {
+function sdo (
+    [string] $cmd,
+    $print = $False
+) {
     write-host $cmd
     if ($print) {
         Invoke-Expression $cmd
@@ -7,13 +10,18 @@ function sdo ([string] $cmd, $print = $False) {
     }
 }
 
-function rm_svc ([string] $svcname, $print = $False) {
+function rm_svc (
+    [string] $svcname,
+    $print = $False
+) {
     sdo "& sc.exe stop $svcname" $print
     sdo "& sc.exe delete $svcname" $print
     sdo "& sc.exe query $svcname" $print
 }
 
-function rm_takeown ([string] $dir) {
+function rm_takeown (
+    [string] $dir
+) {
     if (Test-Path $dir) {
         sdo "takeown.exe /F '$dir' /R /A /D Y"
         sdo "icacls.exe     '$dir' /T /C /grant Administrators:F"
@@ -21,7 +29,10 @@ function rm_takeown ([string] $dir) {
     }
 }
 
-function srm ([string] $path, $print = $False) {
+function srm (
+    [string] $path,
+    $print = $False
+) {
     sdo "rm -r -force -ea 0 '$path'" $print
 }
 

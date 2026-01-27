@@ -96,7 +96,8 @@ suggested smb.conf
 	force group = root
 ```
 
-second try, both shares in one container/service. The bash script that runs the user-creation logic in the container may not be able to handle this
+second try, both shares in one container/service. The bash script that runs the user-creation logic in the container may
+not be able to handle this
 
 ```bash
 services:
