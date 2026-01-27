@@ -30,6 +30,11 @@ def pangolin_public_resources() -> None:
         "ollama",
         "pangolin",
         "stirling",
+        "nextcloud",
+        "collabora",
+        "beszel",
+        "perplexica",
+        "documenso",
     ]
     for name in rsc_names:
         # ttl=1 means "auto" ttl

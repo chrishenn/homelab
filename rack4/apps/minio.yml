@@ -17,6 +17,7 @@ services:
       traefik.enable: true
       traefik.http.routers.minio.rule: Host(`minio.henn.dev`)
       traefik.http.routers.minio.entrypoints: websecure
+      traefik.http.routers.minio.middlewares: hdrs@file
       traefik.http.routers.minio.tls.certresolver: cf
       traefik.http.services.minio.loadbalancer.server.port: 9001
       homepage.group: Infra

@@ -80,8 +80,9 @@ entryPoints:
           - main: henn.dev
             sans:
               - '*.henn.dev'
-      middlewares:
-        - securityHeaders@file
+          - main: plane.henn.dev
+            sans:
+              - '*.plane.henn.dev'
   tcp22:
     address: ':22'
   tcp2222:
@@ -107,7 +108,7 @@ certificatesResolvers:
 
 log:
   filePath: /logs/server.log
-  level: DEBUG
+  level: INFO
 
 accessLog:
   filePath: /logs/access.log

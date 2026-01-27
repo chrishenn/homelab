@@ -6,6 +6,13 @@
 pulumi package add terraform-provider ddelnano/mikrotik
 ```
 
-# Todo
+# Shelved
 
-Implement firewall rules in pulumi code rather than mt scripts
+- Implement firewall rules in pulumi code rather than mt scripts
+
+While there are two existing Mikrotik pulumi providers, and one Terraform provider that could be wrapped into a pulumi
+provider, none of these include all the config types that I typically use in even my baseline router config.
+
+At the moment, I'd have to split configuration between mikrotik scripts and pulumi code - and not in logical chunks of
+functionality. I don't think it's worth the effort (yet) to translate some of the scripts and juggle both config
+sources.

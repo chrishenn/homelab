@@ -11,9 +11,11 @@ in my case it worked out. if not, see
 
 ACS Override Patch (Optional):
 
-For most linux distributions, the ACS Override Patch requires you to download the kernel source code, manually insert the ACS patch, compile + install the kernel, and then boot directly from the newly patched kernel.8
+For most linux distributions, the ACS Override Patch requires you to download the kernel source code, manually insert
+the ACS patch, compile + install the kernel, and then boot directly from the newly patched kernel.8
 
-Since I'm running a Debian-based distribution, I can use one of the pre-compiled kernels with the ACS patch already applied. After extracting the package contents, install the kernel and headers:
+Since I'm running a Debian-based distribution, I can use one of the pre-compiled kernels with the ACS patch already
+applied. After extracting the package contents, install the kernel and headers:
 
 $ sudo dpkg -i linux-headers-5.3.0-acso_5.3.0-acso-1_amd64.deb
 $ sudo dpkg -i linux-image-5.3.0-acso_5.3.0-acso-1_amd64.deb
@@ -28,7 +30,8 @@ efi initrd.img.old vmlinuz-5.3.0-acso
 initrd.img System.map-5.3.0-7625-generic vmlinuz.old
 initrd.img-5.3.0-24-generic System.map-5.3.0-acso
 
-We still have to copy the current kernel and initramfs image onto the ESP so that they are automatically loaded by EFI. We check the current configuration with kernelstub:
+We still have to copy the current kernel and initramfs image onto the ESP so that they are automatically loaded by EFI.
+We check the current configuration with kernelstub:
 
 $ sudo kernelstub --print-config
 kernelstub.Config : INFO Looking for configuration...
@@ -54,7 +57,8 @@ Management Mode:...............True
 Install Loader configuration:..True
 Configuration version:.........3
 
-You can see that the "Kernel Image Path" and the "Initrd Image Path" are symbolic links that point to the old kernel and initrd.
+You can see that the "Kernel Image Path" and the "Initrd Image Path" are symbolic links that point to the old kernel and
+initrd.
 
 $ ls -l /boot
 total 235488
@@ -106,7 +110,8 @@ $ sudo kernelstub --add-options "pcie_acs_override=downstream"
 Reboot and verify that the IOMMU groups for your graphics cards are different:
 
 ...
-IOMMU Group 30 0c:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT] [1002:731f] (rev c4)
+IOMMU Group 30 0c:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Navi
+10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT] [1002:731f] (rev c4)
 IOMMU Group 31 0c:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 HDMI Audio [1002:ab38]
 IOMMU Group 32 0d:00.0 VGA compatible controller [0300]: NVIDIA Corporation Device [10de:2206] (rev a1)
 IOMMU Group 32 0d:00.1 Audio device [0403]: NVIDIA Corporation Device [10de:1aef] (rev a1)

@@ -54,6 +54,7 @@ services:
       traefik.enable: true
       traefik.http.routers.littlelink.rule: Host(`littlelink.henn.dev`)
       traefik.http.routers.littlelink.entrypoints: websecure
+      traefik.http.routers.littlelink.middlewares: hdrs@file
       traefik.http.routers.littlelink.tls.certresolver: cf
       traefik.http.services.littlelink.loadbalancer.server.port: 3000
       homepage.group: Tools

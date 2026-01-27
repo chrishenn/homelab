@@ -35,6 +35,7 @@ services:
       traefik.enable: true
       traefik.http.routers.matrix.rule: (Host(`matrix.henn.dev`) || (Host(`henn.dev`) && PathPrefix(`/.well-known/matrix`)))
       traefik.http.routers.matrix.entrypoints: websecure
+      traefik.http.routers.matrix.middlewares: hdrs@file
       traefik.http.routers.matrix.tls.certresolver: cf
       traefik.http.services.matrix.loadbalancer.server.port: 6167
       homepage.group: Tools

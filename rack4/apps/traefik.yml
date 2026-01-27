@@ -24,8 +24,9 @@ services:
       traefik.enable: true
       traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
       traefik.http.routers.dash.entrypoints: websecure
-      traefik.http.routers.dash.service: api@internal
+      traefik.http.routers.dash.middlewares: hdrs@file
       traefik.http.routers.dash.tls.certresolver: cf
+      traefik.http.routers.dash.service: api@internal
       homepage.group: Infra
       homepage.name: Traefik-Docker
       homepage.icon: traefik.png

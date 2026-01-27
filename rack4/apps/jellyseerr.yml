@@ -15,6 +15,7 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.henn.dev`)
       traefik.http.routers.jellyseerr.entrypoints: websecure
+      traefik.http.routers.jellyseerr.middlewares: hdrs@file
       traefik.http.routers.jellyseerr.tls.certresolver: cf
       traefik.http.services.jellyseerr.loadbalancer.server.port: 5055
       homepage.group: Media

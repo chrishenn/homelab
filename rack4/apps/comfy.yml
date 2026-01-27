@@ -31,6 +31,7 @@ services:
       traefik.enable: true
       traefik.http.routers.comfy.rule: Host(`comfy.henn.dev`)
       traefik.http.routers.comfy.entrypoints: websecure
+      traefik.http.routers.comfy.middlewares: hdrs@file
       traefik.http.routers.comfy.tls.certresolver: cf
       traefik.http.services.comfy.loadbalancer.server.port: 8188
       homepage.group: AI

@@ -1,5 +1,5 @@
 name: protonmail
 runtime:
-    name: python
-    options:
-        toolchain: uv
+  name: python
+  options:
+    toolchain: uv

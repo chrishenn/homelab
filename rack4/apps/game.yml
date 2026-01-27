@@ -10,6 +10,7 @@ services:
       traefik.enable: true
       traefik.http.routers.wordle.rule: Host(`wordle.henn.dev`)
       traefik.http.routers.wordle.entrypoints: websecure
+      traefik.http.routers.wordle.middlewares: hdrs@file
       traefik.http.routers.wordle.tls.certresolver: cf
       traefik.http.services.wordle.loadbalancer.server.port: 80
       homepage.group: Games

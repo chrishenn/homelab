@@ -12,6 +12,7 @@ services:
       traefik.enable: true
       traefik.http.routers.metube.rule: Host(`metube.henn.dev`)
       traefik.http.routers.metube.entrypoints: websecure
+      traefik.http.routers.metube.middlewares: hdrs@file
       traefik.http.routers.metube.tls.certresolver: cf
       traefik.http.services.metube.loadbalancer.server.port: 8081
       homepage.group: Media

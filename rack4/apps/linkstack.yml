@@ -20,6 +20,7 @@ services:
       traefik.enable: true
       traefik.http.routers.linkstack.rule: Host(`linkstack.henn.dev`)
       traefik.http.routers.linkstack.entrypoints: websecure
+      traefik.http.routers.linkstack.middlewares: hdrs@file
       traefik.http.routers.linkstack.tls.certresolver: cf
       traefik.http.services.linkstack.loadbalancer.server.port: 443
       traefik.http.services.linkstack.loadbalancer.server.scheme: https

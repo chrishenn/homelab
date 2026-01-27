@@ -58,6 +58,7 @@ restart-computer
 New-SmbShare -Name C -Path "C:\" -FullAccess "Everyone"
 
 # enable smbdirect
+# https://enterprise-support.nvidia.com/s/article/howto-configure-smb-direct--roce--over-pfc-on-windows-2012-server
 enable-windowsoptionalfeature -online -featurename smbdirect -all -norestart
 Set-SmbServerConfiguration -EnableMultiChannel $true
 Set-SmbClientConfiguration -EnableMultiChannel $true -force

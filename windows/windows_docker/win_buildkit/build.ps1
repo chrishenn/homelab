@@ -1,4 +1,3 @@
-
 function build_image {
     buildctl build `
         --output type=image,name=192.168.1.11:5000/chocotools-img:latest,registry.insecure=true,push=true `

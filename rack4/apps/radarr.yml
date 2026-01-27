@@ -19,6 +19,7 @@ services:
       traefik.enable: true
       traefik.http.routers.radarr.rule: Host(`radarr.henn.dev`)
       traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.middlewares: hdrs@file
       traefik.http.routers.radarr.tls.certresolver: cf
       traefik.http.services.radarr.loadbalancer.server.port: 7878
       homepage.group: Media

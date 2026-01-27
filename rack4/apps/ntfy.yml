@@ -23,6 +23,7 @@ services:
       traefik.enable: true
       traefik.http.routers.ntfy.rule: Host(`ntfy.henn.dev`)
       traefik.http.routers.ntfy.entrypoints: websecure
+      traefik.http.routers.ntfy.middlewares: hdrs@file
       traefik.http.routers.ntfy.tls.certresolver: cf
       traefik.http.services.ntfy.loadbalancer.server.port: 80
       homepage.group: Infra

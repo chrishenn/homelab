@@ -32,6 +32,7 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyfin.rule: Host(`jellyfin.henn.dev`)
       traefik.http.routers.jellyfin.entrypoints: websecure
+      traefik.http.routers.jellyfin.middlewares: hdrs@file
       traefik.http.routers.jellyfin.tls.certresolver: cf
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
       homepage.group: Media

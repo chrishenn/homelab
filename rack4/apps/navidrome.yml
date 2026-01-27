@@ -13,6 +13,7 @@ services:
       traefik.enable: true
       traefik.http.routers.navidrome.rule: Host(`navidrome.henn.dev`)
       traefik.http.routers.navidrome.entrypoints: websecure
+      traefik.http.routers.navidrome.middlewares: hdrs@file
       traefik.http.routers.navidrome.tls.certresolver: cf
       traefik.http.services.navidrome.loadbalancer.server.port: 4533
       homepage.group: Media

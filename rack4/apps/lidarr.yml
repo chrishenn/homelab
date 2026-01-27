@@ -19,6 +19,7 @@ services:
       traefik.enable: true
       traefik.http.routers.lidarr.rule: Host(`lidarr.henn.dev`)
       traefik.http.routers.lidarr.entrypoints: websecure
+      traefik.http.routers.lidarr.middlewares: hdrs@file
       traefik.http.routers.lidarr.tls.certresolver: cf
       traefik.http.services.lidarr.loadbalancer.server.port: 8686
       homepage.group: Media

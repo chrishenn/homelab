@@ -30,6 +30,7 @@ services:
       traefik.enable: true
       traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)
       traefik.http.routers.forgejo.entrypoints: websecure
+      traefik.http.routers.forgejo.middlewares: hdrs@file
       traefik.http.routers.forgejo.tls.certresolver: cf
       traefik.http.routers.forgejo.service: forgejo
       traefik.http.services.forgejo.loadbalancer.server.port: 3000

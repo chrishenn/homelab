@@ -8,4 +8,7 @@ services:
       PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT}
       NEWT_ID: ${NEWT_ID}
       NEWT_SECRET: ${NEWT_SECRET}
-    networks: [traefik]
+    networks: [traefik, newt]
+
+networks:
+  newt:

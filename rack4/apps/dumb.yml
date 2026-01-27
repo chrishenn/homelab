@@ -20,6 +20,7 @@ services:
       traefik.enable: true
       traefik.http.routers.do.rule: Host(`do.henn.dev`)
       traefik.http.routers.do.entrypoints: websecure
+      traefik.http.routers.do.middlewares: hdrs@file
       traefik.http.routers.do.tls.certresolver: cf
       traefik.http.services.do.loadbalancer.server.port: 3000
       homepage.group: Tools
@@ -40,6 +41,7 @@ services:
       traefik.enable: true
       traefik.http.routers.kan.rule: Host(`kan.henn.dev`)
       traefik.http.routers.kan.entrypoints: websecure
+      traefik.http.routers.kan.middlewares: hdrs@file
       traefik.http.routers.kan.tls.certresolver: cf
       traefik.http.services.kan.loadbalancer.server.port: 3000
       homepage.group: Tools
@@ -60,6 +62,7 @@ services:
       traefik.enable: true
       traefik.http.routers.drop.rule: Host(`drop.henn.dev`)
       traefik.http.routers.drop.entrypoints: websecure
+      traefik.http.routers.drop.middlewares: hdrs@file
       traefik.http.routers.drop.tls.certresolver: cf
       traefik.http.services.drop.loadbalancer.server.port: 3000
       homepage.group: Tools
@@ -80,6 +83,7 @@ services:
       traefik.enable: true
       traefik.http.routers.whois.rule: Host(`whois.henn.dev`)
       traefik.http.routers.whois.entrypoints: websecure
+      traefik.http.routers.whois.middlewares: hdrs@file
       traefik.http.routers.whois.tls.certresolver: cf
       traefik.http.services.whois.loadbalancer.server.port: 3000
       homepage.group: Tools

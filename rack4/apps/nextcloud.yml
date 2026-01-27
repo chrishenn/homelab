@@ -1,0 +1,140 @@
+# pycharm $DATA/nextcloud/config/www/nextcloud/config/config.php
+
+# docker exec nextcloud occ maintenance:repair --include-expensive
+# docker exec nextcloud occ db:add-missing-indices
+# docker exec nextcloud occ config:system:set default_phone_region --value="US"
+# docker exec nextcloud occ config:system:set maintenance_window_start --value="1" --type=integer
+# docker exec nextcloud occ config:system:set mail_smtpmode --value=smtp
+# docker exec nextcloud occ config:system:set mail_sendmailmode --value=smtp
+# docker exec nextcloud occ config:system:set mail_smtpsecure --value=ssl
+# docker exec nextcloud occ config:system:set mail_from_address --value=chris
+# docker exec nextcloud occ config:system:set mail_domain --value=henn.dev
+# docker exec nextcloud occ config:system:set mail_smtphost --value=${SMTP_HOST}
+# docker exec nextcloud occ config:system:set mail_smtpport --value=465
+# docker exec nextcloud occ config:system:set mail_smtpauth --value=true
+# docker exec nextcloud occ config:system:set mail_smtpname --value=${SMTP_USER}
+# docker exec nextcloud occ config:system:set mail_smtppassword --value=${SMTP_TOKEN}
+# docker exec nextcloud occ config:system:set redis host --value=nextcloud_redis
+# docker exec nextcloud occ config:system:set overwritehost --value=nextcloud.henn.dev
+# docker exec nextcloud occ config:system:set overwriteprotocol --value=https
+# docker exec nextcloud occ config:system:set overwrite.cli.url --value=http://nextcloud.henn.dev
+# docker exec nextcloud truncate /data/nextcloud.log --size 0
+
+---
+services:
+  nextcloud:
+    profiles: [nextcloud]
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    volumes:
+      - $DATA/nextcloud/config:/config
+      - $DATA/nextcloud/data:/data
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    networks: [nextcloud, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.nc_reg1.redirectregex.regex: https?://([^/]*)/.well-known/(card|cal)dav
+      traefik.http.middlewares.nc_reg1.redirectregex.replacement: https://$${1}/remote.php/dav/
+      traefik.http.middlewares.nc_reg1.redirectregex.permanent: true
+      traefik.http.middlewares.nc_reg2.redirectregex.regex: https?://([^/]*)(/.well-known[^#]*)
+      traefik.http.middlewares.nc_reg2.redirectregex.replacement: https://$${1}/index.php$${2}
+      traefik.http.middlewares.nc_reg2.redirectregex.permanent: true
+      traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
+      traefik.http.routers.nextcloud.entrypoints: websecure
+      traefik.http.routers.nextcloud.tls.certresolver: cf
+      traefik.http.routers.nextcloud.middlewares: nc_reg1,nc_reg2,hdrs@file
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+
+  # https://collabora.henn.dev/hosting/discovery
+  # https://collabora.henn.dev//browser/dist/admin/admin.html
+  collabora:
+    profiles: [nextcloud]
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+    privileged: true
+    environment:
+      TZ: ${TZ}
+      DONT_GEN_SSL_CERT: YES
+      LC_CTYPE: C.UTF-8
+      dictionaries: en_US
+      username: ${USER}
+      password: ${PASS}
+      aliasgroup1: https://nextcloud.henn.dev
+      server_name: collabora.henn.dev
+      extra_params: |
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+    networks: [nextcloud, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.collabora.rule: Host(`collabora.henn.dev`)
+      traefik.http.routers.collabora.entrypoints: websecure
+      traefik.http.routers.collabora.middlewares: hdrs@file
+      traefik.http.routers.collabora.tls.certresolver: cf
+      traefik.http.services.collabora.loadbalancer.server.port: 9980
+
+  nextcloud_db:
+    profiles: [nextcloud]
+    image: postgres:16
+    container_name: nextcloud_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud
+    volumes:
+      - $DATA/nextcloud/nextcloud_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-q', '-d', 'nextcloud', '-U', 'nextcloud']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks: [nextcloud]
+
+  nextcloud_redis:
+    profiles: [nextcloud]
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: nextcloud_redis
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks: [nextcloud]
+
+  nextcloud_cron:
+    profiles: [nextcloud]
+    image: rcdailey/nextcloud-cronjob
+    container_name: nextcloud_cron
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      NEXTCLOUD_CONTAINER_NAME: nextcloud
+      NEXTCLOUD_CRON_MINUTE_INTERVAL: 5
+      NEXTCLOUD_EXEC_SHELL: bash
+      NEXTCLOUD_EXEC_SHELL_ARGS: -c
+      NEXTCLOUD_EXEC_USER: www-data
+    networks: [nextcloud]
+
+networks:
+  nextcloud:

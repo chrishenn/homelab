@@ -6,9 +6,9 @@ local formatters = new Mapping<String, Step> {
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-//     ["mypy"] = (Builtins.mypy) {
-//         exclude = "*noqa*"
-//     }
+    //     ["mypy"] = (Builtins.mypy) {
+    //         exclude = "*noqa*"
+    //     }
     ["prettier"] = (Builtins.prettier) {
         batch = false
     }
@@ -33,16 +33,17 @@ local linters = new Mapping<String, Step> {
         workspace_indicator = "hk.pkl"
         check = "gitleaks git {{workspace}} --no-banner --pre-commit --log-level=fatal"
     }
-    ["trufflehog"] {
-        glob = List("*")
-        check = "trufflehog filesystem --fail --no-update --no-verification --log-level=-1 {{files}}"
-        output_summary = "hide"
-    }
-    ["detect-secrets"] {
-        glob = List("*")
-        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --baseline ds.json {{files}}"
-        batch = true
-    }
+//     ["trufflehog"] {
+//         glob = List("*")
+//         check = "trufflehog filesystem --fail --no-update --no-verification --log-level=-1 {{files}}"
+//         output_summary = "hide"
+//         batch = false
+//     }
+//     ["detect-secrets"] {
+//         glob = List("*")
+//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
+//         batch = false
+//     }
 //     ["shellcheck"] = Builtins.shellcheck
 }
 
@@ -50,11 +51,11 @@ hooks {
     ["pre-commit"] {
         fix = true
         stash = "git"
-        steps = new Mapping<String, Step> {...formatters ...linters}
+        steps = new Mapping<String, Step> { ...formatters ...linters }
     }
     ["check"] {
-      fix = false
-      steps = new Mapping<String, Step> {...formatters ...linters}
+        fix = false
+        steps = new Mapping<String, Step> { ...formatters ...linters }
     }
     ["fix"] {
         fix = true

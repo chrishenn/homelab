@@ -1,0 +1,8 @@
+[hooks.enter]
+shell = "bash"
+script = """
+    mise i -q \
+    && [ -d .venv ] || uv venv --allow-existing \
+    && [ ! -z ${VIRTUAL_ENV+x} ] || source .venv/bin/activate --active \
+    && uv sync
+    """

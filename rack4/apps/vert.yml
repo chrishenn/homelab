@@ -10,6 +10,7 @@ services:
       traefik.enable: true
       traefik.http.routers.vert.rule: Host(`vert.henn.dev`)
       traefik.http.routers.vert.entrypoints: websecure
+      traefik.http.routers.vert.middlewares: hdrs@file
       traefik.http.routers.vert.tls.certresolver: cf
       traefik.http.services.vert.loadbalancer.server.port: 80
       homepage.group: File Edit, Convert
@@ -40,5 +41,6 @@ services:
       traefik.enable: true
       traefik.http.routers.vertd.rule: Host(`vertd.henn.dev`)
       traefik.http.routers.vertd.entrypoints: websecure
+      traefik.http.routers.vertd.middlewares: hdrs@file
       traefik.http.routers.vertd.tls.certresolver: cf
       traefik.http.services.vertd.loadbalancer.server.port: 24153

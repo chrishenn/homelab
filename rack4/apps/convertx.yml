@@ -14,6 +14,7 @@ services:
       traefik.enable: true
       traefik.http.routers.convertx.rule: Host(`convertx.henn.dev`)
       traefik.http.routers.convertx.entrypoints: websecure
+      traefik.http.routers.convertx.middlewares: hdrs@file
       traefik.http.routers.convertx.tls.certresolver: cf
       traefik.http.services.convertx.loadbalancer.server.port: 3000
       homepage.group: File Edit, Convert

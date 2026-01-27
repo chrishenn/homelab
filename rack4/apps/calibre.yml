@@ -22,6 +22,7 @@ services:
       traefik.enable: true
       traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
       traefik.http.routers.calibre.entrypoints: websecure
+      traefik.http.routers.calibre.middlewares: hdrs@file
       traefik.http.routers.calibre.tls.certresolver: cf
       traefik.http.services.calibre.loadbalancer.server.port: 8083
       homepage.group: Media
@@ -53,6 +54,7 @@ services:
       traefik.enable: true
       traefik.http.routers.calibre_dl.rule: Host(`calibre_dl.henn.dev`)
       traefik.http.routers.calibre_dl.entrypoints: websecure
+      traefik.http.routers.calibre_dl.middlewares: hdrs@file
       traefik.http.routers.calibre_dl.tls.certresolver: cf
       traefik.http.services.calibre_dl.loadbalancer.server.port: 8084
       homepage.group: Media

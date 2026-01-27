@@ -97,7 +97,8 @@ Get-HNSENdpoint
 
 $sharepath = "/var/lib/kube-proxy/kubeconfig.conf"
 $Acl = Get-ACL $SharePath
-$AccessRule= New-Object System.Security.AccessControl.FileSystemAccessRule("everyone","FullControl","ContainerInherit,Objectinherit","none","Allow")
+$AccessRule= New-Object System.Security.AccessControl.FileSystemAccessRule("everyone","FullControl","
+ContainerInherit,Objectinherit","none","Allow")
 $Acl.AddAccessRule($AccessRule)
 Set-Acl $SharePath $Acl
 

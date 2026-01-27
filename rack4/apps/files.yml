@@ -19,6 +19,7 @@ services:
       traefik.enable: true
       traefik.http.routers.files.rule: Host(`files.henn.dev`)
       traefik.http.routers.files.entrypoints: websecure
+      traefik.http.routers.files.middlewares: hdrs@file
       traefik.http.routers.files.tls.certresolver: cf
       traefik.http.services.files.loadbalancer.server.port: 80
       homepage.group: Infra

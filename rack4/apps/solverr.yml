@@ -17,6 +17,7 @@ services:
       traefik.enable: true
       traefik.http.routers.solverr.rule: Host(`solverr.henn.dev`)
       traefik.http.routers.solverr.entrypoints: websecure
+      traefik.http.routers.solverr.middlewares: hdrs@file
       traefik.http.routers.solverr.tls.certresolver: cf
       traefik.http.services.solverr.loadbalancer.server.port: 8191
       homepage.group: Infra

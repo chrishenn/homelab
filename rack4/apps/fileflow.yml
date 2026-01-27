@@ -22,6 +22,7 @@ services:
       traefik.enable: true
       traefik.http.routers.fileflow.rule: Host(`fileflow.henn.dev`)
       traefik.http.routers.fileflow.entrypoints: websecure
+      traefik.http.routers.fileflow.middlewares: hdrs@file
       traefik.http.routers.fileflow.tls.certresolver: cf
       traefik.http.services.fileflow.loadbalancer.server.port: 5000
       homepage.group: File Edit, Convert

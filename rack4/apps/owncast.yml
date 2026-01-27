@@ -13,6 +13,7 @@ services:
       traefik.enable: true
       traefik.http.routers.owncast.rule: Host(`owncast.henn.dev`)
       traefik.http.routers.owncast.entrypoints: websecure
+      traefik.http.routers.owncast.middlewares: hdrs@file
       traefik.http.routers.owncast.tls.certresolver: cf
       traefik.http.routers.owncast.service: owncast
       traefik.http.services.owncast.loadbalancer.server.port: 8080

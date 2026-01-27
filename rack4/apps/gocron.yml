@@ -21,6 +21,7 @@ services:
       traefik.enable: true
       traefik.http.routers.cron.rule: Host(`cron.henn.dev`)
       traefik.http.routers.cron.entrypoints: websecure
+      traefik.http.routers.cron.middlewares: hdrs@file
       traefik.http.routers.cron.tls.certresolver: cf
       traefik.http.services.cron.loadbalancer.server.port: 8156
       homepage.group: Infra

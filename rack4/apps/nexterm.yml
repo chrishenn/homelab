@@ -14,6 +14,7 @@ services:
       traefik.enable: true
       traefik.http.routers.nexterm.rule: Host(`nexterm.henn.dev`)
       traefik.http.routers.nexterm.entrypoints: websecure
+      traefik.http.routers.nexterm.middlewares: hdrs@file
       traefik.http.routers.nexterm.tls.certresolver: cf
       traefik.http.services.nexterm.loadbalancer.server.port: 6989
       homepage.group: Infra

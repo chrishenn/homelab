@@ -23,6 +23,7 @@ services:
       docker-volume-backup.stop-during-backup: actual
       traefik.http.routers.actual.rule: Host(`actual.henn.dev`)
       traefik.http.routers.actual.entrypoints: websecure
+      traefik.http.routers.actual.middlewares: hdrs@file
       traefik.http.routers.actual.tls.certresolver: cf
       traefik.http.services.actual.loadbalancer.server.port: 5006
       homepage.group: Tools

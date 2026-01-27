@@ -31,6 +31,7 @@ services:
       traefik.enable: true
       traefik.http.routers.stirling.rule: Host(`stirling.henn.dev`)
       traefik.http.routers.stirling.entrypoints: websecure
+      traefik.http.routers.stirling.middlewares: hdrs@file
       traefik.http.routers.stirling.tls.certresolver: cf
       traefik.http.services.stirling.loadbalancer.server.port: 8080
       homepage.group: File Edit, Convert

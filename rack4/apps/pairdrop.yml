@@ -18,6 +18,7 @@ services:
       traefik.enable: true
       traefik.http.routers.pairdrop.rule: Host(`pairdrop.henn.dev`)
       traefik.http.routers.pairdrop.entrypoints: websecure
+      traefik.http.routers.pairdrop.middlewares: hdrs@file
       traefik.http.routers.pairdrop.tls.certresolver: cf
       traefik.http.services.pairdrop.loadbalancer.server.port: 3000
       homepage.group: Tools

@@ -1,0 +1,107 @@
+# generate secrets with `openssl rand -base64 32`
+
+#  j attach documenso
+#  mkdir -p /app/certs && \
+#  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#    -keyout /tmp/private.key \
+#    -out /tmp/certificate.crt \
+#    -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost' && \
+#  openssl pkcs12 -export -out /app/certs/cert.p12 \
+#    -inkey /tmp/private.key -in /tmp/certificate.crt \
+#    -passout env:NEXT_PRIVATE_SIGNING_PASSPHRASE && \
+#  rm /tmp/private.key /tmp/certificate.crt
+
+# on rack4:
+# sudo chmod 777 $DATA/documenso
+# docker compose cp documenso:/app/certs/cert.p12 $DATA/documenso/cert.p12
+# sudo chmod 644 $DATA/documenso/cert.p12
+# sudo chown 1001:1001 $DATA/documenso/cert.p12
+
+---
+services:
+  documenso_db:
+    profiles: [documenso]
+    image: postgres:15
+    container_name: documenso_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: documenso
+    volumes:
+      - $DATA/documenso/documenso_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [traefik]
+
+  documenso:
+    profiles: [documenso]
+    image: documenso/documenso:latest
+    container_name: documenso
+    environment:
+      PORT: 3000
+      NEXTAUTH_SECRET: ${DOCU_SECRET}
+      NEXT_PUBLIC_WEBAPP_URL: https://documenso.chenn.dev
+      NEXT_PRIVATE_INTERNAL_WEBAPP_URL: http://documenso:3000
+      NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH: /opt/documenso/cert.p12
+      NEXT_PRIVATE_SIGNING_PASSPHRASE: ${DOCU_SIGNING_PASS}
+      NEXT_PRIVATE_ENCRYPTION_KEY: ${DOCU_ENCRYPTION_KEY}
+      NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: ${DOCU_ENCRYPTION_SECOND_KEY}
+
+      DOCUMENSO_DISABLE_TELEMETRY: true
+      NEXT_PRIVATE_DATABASE_URL: postgresql://postgres:postgres@documenso_db:5432/documenso
+      NEXT_PRIVATE_DIRECT_DATABASE_URL: postgresql://postgres:postgres@documenso_db:5432/documenso
+
+      NEXT_PRIVATE_GOOGLE_CLIENT_ID:
+      NEXT_PRIVATE_GOOGLE_CLIENT_SECRET:
+
+      NEXT_PRIVATE_UPLOAD_ENDPOINT:
+      NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE:
+      NEXT_PRIVATE_UPLOAD_REGION:
+      NEXT_PRIVATE_UPLOAD_BUCKET:
+      NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID:
+      NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY:
+
+      NEXT_PRIVATE_SMTP_TRANSPORT: smtp-auth
+      NEXT_PRIVATE_SMTP_HOST: ${SMTP_HOST}
+      NEXT_PRIVATE_SMTP_PORT: 465
+      NEXT_PRIVATE_SMTP_USERNAME: ${SMTP_USER}
+      NEXT_PRIVATE_SMTP_PASSWORD: ${SMTP_TOKEN}
+      NEXT_PRIVATE_SMTP_APIKEY_USER:
+      NEXT_PRIVATE_SMTP_APIKEY:
+      NEXT_PRIVATE_SMTP_SECURE: true
+      NEXT_PRIVATE_SMTP_UNSAFE_IGNORE_TLS: false
+      NEXT_PRIVATE_SMTP_FROM_NAME: ${SMTP_USER}
+      NEXT_PRIVATE_SMTP_FROM_ADDRESS: ${SMTP_USER}
+      NEXT_PRIVATE_SMTP_SERVICE:
+
+      NEXT_PRIVATE_RESEND_API_KEY:
+      NEXT_PRIVATE_MAILCHANNELS_API_KEY:
+      NEXT_PRIVATE_MAILCHANNELS_ENDPOINT:
+      NEXT_PRIVATE_MAILCHANNELS_DKIM_DOMAIN:
+      NEXT_PRIVATE_MAILCHANNELS_DKIM_SELECTOR:
+      NEXT_PRIVATE_MAILCHANNELS_DKIM_PRIVATE_KEY:
+
+      NEXT_PUBLIC_UPLOAD_TRANSPORT: database
+      NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT: 50
+      NEXT_PUBLIC_POSTHOG_KEY:
+      NEXT_PUBLIC_DISABLE_SIGNUP: false
+      NEXT_PUBLIC_USE_INTERNAL_URL_BROWSERLESS:
+    volumes:
+      - $DATA/documenso/cert.p12:/opt/documenso/cert.p12:ro
+
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.documenso.rule: Host(`documenso.henn.dev`)
+      traefik.http.routers.documenso.entrypoints: websecure
+      traefik.http.routers.documenso.middlewares: hdrs@file
+      traefik.http.routers.documenso.tls.certresolver: cf
+      traefik.http.services.documenso.loadbalancer.server.port: 3000
+      homepage.group: File Edit, Convert
+      homepage.name: Documenso
+      homepage.icon: documenso.png
+      homepage.href: https://documenso.chenn.dev
+      homepage.description: Free Docusign

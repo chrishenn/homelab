@@ -15,6 +15,7 @@ services:
       traefik.enable: true
       traefik.http.routers.cognito.rule: Host(`cognito.henn.dev`)
       traefik.http.routers.cognito.entrypoints: websecure
+      traefik.http.routers.cognito.middlewares: hdrs@file
       traefik.http.routers.cognito.tls.certresolver: cf
       traefik.http.services.cognito.loadbalancer.server.port: 3000
       homepage.group: AI

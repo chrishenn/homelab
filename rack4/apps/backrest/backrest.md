@@ -2,13 +2,13 @@
 
 You can just edit the config/config.json file manually
 
-- Bring backrest down
+- bring backrest down
 - Edit the cfg
+    - sudo chmod a+wr $DATA/backrest/config/config.json
+    - pycharm $DATA/backrest/config/config.json
 - If you're adding a repo
     - remove the "guid" key
     - set "autoInitialize": true
-- Bring backrest up
-- Refresh the gui
 
 If you're controlling docker from a remote and mounting the config file from a local path, don't forget to push changes
 to the local bind mount location.
@@ -42,4 +42,12 @@ hook script example:
 ```bash
 /scripts/github/run.sh
 echo {{ .ShellEscape .Summary }}
+```
+
+In the restic ui, to configure a repo
+
+```bash
+RESTIC_PASSWORD=${RESTIC_PASSWORD}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 ```

@@ -1,0 +1,22 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+INVIDIOUS_VISITOR = { provider = "onepass", value = "op://homelab/invidious/visitor" }
+INVIDIOUS_TOKEN = { provider = "onepass", value = "op://homelab/invidious/token" }
+
+TWINGATE_NETWORK = { provider = "onepass", value = "op://homelab/twingate/network" }
+TWINGATE_ACCESS_TOKEN = { provider = "onepass", value = "op://homelab/twingate/access_token_2" }
+TWINGATE_REFRESH_TOKEN = { provider = "onepass", value = "op://homelab/twingate/refresh_token_2" }
+TWINGATE_LABEL_HOSTNAME = { provider = "onepass", value = "op://homelab/twingate/label_hostname" }
+TWINGATE_LABEL_DEPLOYED_BY = { provider = "onepass", value = "op://homelab/twingate/deployed_by" }
+
+SHLINK_SERVER_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
+SHLINK_GEOLITE_LICENSE_KEY = { provider = "onepass", value = "op://homelab/shlink/maxmind" }
+
+CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
+
+OPENSIGN_PFX = { provider = "onepass", value = "op://homelab/Opensign/pfx"}
+OPENSIGN_PFX_PASS = { provider = "onepass", value = "op://homelab/Opensign/pfx_pass"}

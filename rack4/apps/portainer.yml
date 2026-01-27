@@ -16,6 +16,7 @@ services:
       traefik.enable: true
       traefik.http.routers.portainer.rule: Host(`portainer.henn.dev`)
       traefik.http.routers.portainer.entrypoints: websecure
+      traefik.http.routers.portainer.middlewares: hdrs@file
       traefik.http.routers.portainer.tls.certresolver: cf
       traefik.http.services.portainer.loadbalancer.server.port: 9000
       homepage.group: Infra

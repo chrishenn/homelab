@@ -10,6 +10,7 @@ services:
       traefik.enable: true
       traefik.http.routers.chartdb.rule: Host(`chartdb.henn.dev`)
       traefik.http.routers.chartdb.entrypoints: websecure
+      traefik.http.routers.chartdb.middlewares: hdrs@file
       traefik.http.routers.chartdb.tls.certresolver: cf
       traefik.http.services.chartdb.loadbalancer.server.port: 80
       homepage.group: Code

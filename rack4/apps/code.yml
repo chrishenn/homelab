@@ -22,6 +22,7 @@ services:
       traefik.enable: true
       traefik.http.routers.code.rule: Host(`code.henn.dev`)
       traefik.http.routers.code.entrypoints: websecure
+      traefik.http.routers.code.middlewares: hdrs@file
       traefik.http.routers.code.tls.certresolver: cf
       traefik.http.services.code.loadbalancer.server.port: 8443
       homepage.group: Code

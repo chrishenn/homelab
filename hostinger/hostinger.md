@@ -8,7 +8,7 @@ sudo apt install -y sd
 function sshd_cfg_clean {
     # file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
-	shift
+    shift
 
     # remove comments
     sudo sd -f gm '^#(.*)\n*' '' "$file"
@@ -19,15 +19,15 @@ function sshd_cfg_clean {
 function replace_or_append_line {
     # match on this string
     declare match=${1}
-	shift
-	# replace with this string
-	declare replace=${1}
-	shift
-	# file to operate on
+    shift
+    # replace with this string
+    declare replace=${1}
+    shift
+    # file to operate on
     declare file=${1:-'/etc/ssh/sshd_config'}
-	shift
+    shift
 
-	if ! grep -q "$match" "$file"; then
+    if ! grep -q "$match" "$file"; then
         echo "$replace" | sudo tee -a "$file"
     else
         sudo sd -f gm -n 1 "^(.*)$match(.*)$" "$replace" "$file"

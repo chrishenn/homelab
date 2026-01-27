@@ -16,6 +16,7 @@ services:
       traefik.enable: true
       traefik.http.routers.audiobookshelf.rule: Host(`audiobookshelf.henn.dev`)
       traefik.http.routers.audiobookshelf.entrypoints: websecure
+      traefik.http.routers.audiobookshelf.middlewares: hdrs@file
       traefik.http.routers.audiobookshelf.tls.certresolver: cf
       traefik.http.services.audiobookshelf.loadbalancer.server.port: 80
       homepage.group: Media

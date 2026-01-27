@@ -98,12 +98,14 @@ services:
       traefik.enable: true
       traefik.http.routers.gitlab.rule: Host(`gitlab.henn.dev`)
       traefik.http.routers.gitlab.entrypoints: websecure
+      traefik.http.routers.gitlab.middlewares: hdrs@file
       traefik.http.routers.gitlab.tls.certresolver: cf
       traefik.http.routers.gitlab.service: gitlab
       traefik.http.services.gitlab.loadbalancer.server.port: 80
 
       traefik.http.routers.gitlab_registry.rule: Host(`registry.gitlab.henn.dev`)
       traefik.http.routers.gitlab_registry.entrypoints: websecure
+      traefik.http.routers.gitlab_registry.middlewares: hdrs@file
       traefik.http.routers.gitlab_registry.tls.certresolver: cf
       traefik.http.routers.gitlab_registry.service: gitlab_registry
       traefik.http.services.gitlab_registry.loadbalancer.server.port: 5050

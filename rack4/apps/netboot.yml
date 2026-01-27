@@ -18,12 +18,14 @@ services:
 
       traefik.http.routers.netboot.rule: Host(`netboot.henn.dev`)
       traefik.http.routers.netboot.entrypoints: websecure
+      traefik.http.routers.netboot.middlewares: hdrs@file
       traefik.http.routers.netboot.tls.certresolver: cf
       traefik.http.routers.netboot.service: netboot
       traefik.http.services.netboot.loadbalancer.server.port: 3000
 
       traefik.http.routers.netboot-assets.rule: Host(`netboot-assets.henn.dev`)
       traefik.http.routers.netboot-assets.entrypoints: websecure
+      traefik.http.routers.netboot-assets.middlewares: hdrs@file
       traefik.http.routers.netboot-assets.tls.certresolver: cf
       traefik.http.routers.netboot-assets.service: netboot-assets
       traefik.http.services.netboot-assets.loadbalancer.server.port: 80

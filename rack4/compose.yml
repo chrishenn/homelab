@@ -100,3 +100,5 @@ include:
   - apps/nginx.yml
   - apps/newt.yml
   - apps/ldr.yml
+  - apps/nextcloud.yml
+  - apps/documenso.yml

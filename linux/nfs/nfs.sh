@@ -21,31 +21,65 @@
 # server
 sudo apt install -y nfs-kernel-server
 sudo systemctl enable --now nfs-kernel-server
+# sudo systemctl status nfs-kernel-server
 
 echo 'rpcrdma' | sudo tee /etc/modules-load.d/rdma.conf
 sudo modprobe rpcrdma
-lsmod | grep rpcrdma
+# lsmod | grep rpcrdma
 
 echo 'RPCNFSDOPTS="--rdma=20049"' | sudo tee -a /etc/default/nfs-kernel-server
-cat /proc/fs/nfsd/portlist
 
 # not sure if these were necessary for either server or client
 sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev \
 	rdmacm-utils librdmacm1 ibacm libibmad-dev libibmad5 libibumad-dev libibumad3 \
 	ibverbs-utils libibverbs-dev libibverbs1 mstflint rdma-core opensm fio librbd1 \
-	librados2 libibnetdisc5 ibverbs-providers
+	librados2 libibnetdisc5 ibverbs-providers nfs-kernel-server
 
-# server: shares (tmpfs should be a ramdisk)
-mount | grep /tmp
+# Client
+# verify rdma link status
+rdma link
+# Verify RDMA device information. Ensure the device state is PORT_ACTIVE and link layer is Ethernet
+ibv_devinfo
+# mount an nfs share, then verify the mount uses RDMA. Look for 'proto=rdma,port=20049' in the output
+nfsstat -m
 
-# regular
-echo '/tmp *(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
-echo '/tmp 192.168.1.0/24(rw,async,insecure,no_root_squash)' | sudo tee -a /etc/exports
-# zfs
-sudo zfs set sharenfs="rw=@192.168.1.0/24,no_root_squash,insecure,async" pool1
+# what is this for?
+# cat /proc/fs/nfsd/portlist
+# sudo ibstat
+# sudo iblinkinfo
+# sudo apt install nfstest -y
+# nfstest_rdma --server 192.168.1.142
+# rpc.nfsd --rdma=20049
 
+sudo nano /etc/nfs.conf
+rdma=on
+rdma-port=20049
+
+sudo systemctl restart nfs-kernel-server
+
+sudo cat /proc/fs/nfsd/portlist
+>rdma 20049
+>rdma 20049
+>tcp 2049
+>tcp 2049
+
+# regular share
+echo '/tmp *(rw,async,insecure,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports
+echo '/tmp 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports
+# zfs share
+sudo zfs set sharenfs="rw=@192.168.1.0/24,async,insecure,no_subtree_check,no_root_squash" pool1
+
+# reload exports
 sudo exportfs -a
 sudo systemctl restart nfs-kernel-server
+
+# systemctl status nfs-server
+# should show "exited with code0". There is no userspace daemon
+# to find kernel threads running nfs, do
+# sudo cat /proc/fs/nfsd/threads
+# sudo cat /proc/fs/nfsd/versions
+# ps axf | grep nfsd
+# ps axf | grep lockd
 
 # client
 sudo apt install -y nfs-common
@@ -60,9 +94,14 @@ sudo mount -t nfs 192.168.1.142:/tmp /mnt/tmp -o proto=rdma,port=20049,async,noa
 
 # client fstab mount
 sudo nano /etc/fstab
-192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
+
+# ***
+# ***NOTE*** I had to re-run this manually after a reboot
+# ***
 
 # set up PFC on mellanox nics
+# https://enterprise-support.nvidia.com/s/article/lossless-roce-configuration-for-linux-drivers-in-dscp-based-qos-mode
 # assumes that the switch is using pfc on prio3 traffic
 git clone https://github.com/Mellanox/mlnx-tools.git
 cd mlnx-tools
@@ -71,12 +110,10 @@ cd mlnx-tools
 # workstation
 export ifname=enp15s0np0
 export dev=rocep15s0
-export mstdev=/dev/mst/mt4119_pciconf0
 
 # rack4 server
 export ifname=nic0
-export dev=mlx5_0
-export mstdev=/dev/mst/mt4119_pciconf0
+export dev=rocep1s0
 
 # fix broken python import
 cp -r ./python/Python/* ./python
@@ -103,7 +140,8 @@ ethtool -S $ifname | grep prio3
 sudo ./sbin/cma_roce_mode -d $dev
 
 # find cable length. note: it did not know how long the cable is lmao nvm
-sudo mlxlink -d $mstdev -m -c -e | grep -i "distance"
+# mstdev=/dev/mst/mt4119_pciconf0
+# sudo mlxlink -d $mstdev -m -c -e | grep -i "distance"
 
 # transciever length in meters
 sudo ./python/mlnx_qos -i $ifname --cable_len=100 # workstation

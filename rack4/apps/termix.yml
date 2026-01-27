@@ -14,6 +14,7 @@ services:
       traefik.enable: true
       traefik.http.routers.termix.rule: Host(`termix.henn.dev`)
       traefik.http.routers.termix.entrypoints: websecure
+      traefik.http.routers.termix.middlewares: hdrs@file
       traefik.http.routers.termix.tls.certresolver: cf
       traefik.http.services.termix.loadbalancer.server.port: 8080
       homepage.group: Infra

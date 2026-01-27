@@ -10,6 +10,7 @@ services:
       traefik.enable: true
       traefik.http.routers.wastebin.rule: Host(`wastebin.henn.dev`)
       traefik.http.routers.wastebin.entrypoints: websecure
+      traefik.http.routers.wastebin.middlewares: hdrs@file
       traefik.http.routers.wastebin.tls.certresolver: cf
       traefik.http.services.wastebin.loadbalancer.server.port: 8088
       homepage.group: Code

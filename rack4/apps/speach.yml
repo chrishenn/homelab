@@ -25,6 +25,7 @@ services:
       traefik.enable: true
       traefik.http.routers.speach.rule: Host(`speach.henn.dev`)
       traefik.http.routers.speach.entrypoints: websecure
+      traefik.http.routers.speach.middlewares: hdrs@file
       traefik.http.routers.speach.tls.certresolver: cf
       traefik.http.services.speach.loadbalancer.server.port: 8000
       homepage.group: AI

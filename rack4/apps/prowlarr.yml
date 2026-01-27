@@ -16,6 +16,7 @@ services:
       traefik.enable: true
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)
       traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.middlewares: hdrs@file
       traefik.http.routers.prowlarr.tls.certresolver: cf
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
       homepage.group: Media

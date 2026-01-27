@@ -1,0 +1,196 @@
+# This feels like an amazing project with a rich ecosystem ... from a bygone era.
+# VERY difficult to configure, deploy; extremely touchy, manual, inflexible.
+
+# username: www-data
+# most settings just don't listen to env vars, even on first boot; you must manually edit the config.php file
+# sudo chmod -R a+rw $DATA/nextcloud/html/config
+# pycharm $DATA/nextcloud/html/config/config.php
+
+# 'trusted_domains' => array(
+# 0 => 'localhost',
+# 1 => 'nextcloud.chenn.dev',
+# ),
+# 'overwritehost' => 'nextcloud.chenn.dev',
+# 'overwriteprotocol' => 'https',
+# 'overwrite.cli.url' => 'https://nextcloud.chenn.dev',
+
+# docker exec -u 33 nextcloud php occ maintenance:repair --include-expensive
+# docker exec -u 33 nextcloud php occ db:add-missing-indices
+# docker exec -u 33 nextcloud php occ config:system:set default_phone_region --value="US"
+# docker exec -u 33 nextcloud php occ config:system:set maintenance_window_start --value="1" --type=integer
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtpmode --value=smtp
+# docker exec -u 33 nextcloud php occ config:system:set mail_sendmailmode --value=smtp
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtpsecure --value=ssl
+# docker exec -u 33 nextcloud php occ config:system:set mail_from_address --value=chris
+# docker exec -u 33 nextcloud php occ config:system:set mail_domain --value=henn.dev
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtphost --value=${SMTP_HOST}
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtpport --value=465
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtpauth --value=true
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtpname --value=${SMTP_USER}
+# docker exec -u 33 nextcloud php occ config:system:set mail_smtppassword --value=${SMTP_TOKEN}
+
+# clear the logfile
+# docker exec -u 33 nextcloud truncate /var/www/html/data/nextcloud.log --size 0
+
+# NOTE: the plugin collabora CODE server appears to be completely unusable, breaking admin options on failure PERMANENTLY
+
+---
+services:
+  # collabora can't communicate with nextcloud if nc has any pangolin auth in front :/
+  nextcloud:
+    profiles: [nextcloud]
+    image: nextcloud
+    container_name: nextcloud
+    hostname: nextcloud
+    restart: unless-stopped
+    volumes:
+      - $DATA/nextcloud/html:/var/www/html
+      - $DATA_LOCAL/filen:/var/www/filen:shared
+    environment:
+      # only read once before _initial_ boot
+      NEXTCLOUD_ADMIN_USER: ${USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${PASS}
+
+      mail_smtpmode: smtp
+      mail_smtpsecure: ssl
+      mail_sendmailmode: smtp
+      mail_from_address: ${SMTP_USER}
+      mail_domain: henn.dev
+      mail_smtphost: ${SMTP_HOST}
+      mail_smtpport: 465
+      mail_smtpauth: true
+      mail_smtpname: ${SMTP_USER}
+      mail_smtppassword: ${SMTP_TOKEN}
+
+      DEFAULT_PHONE_REGION: US
+      MAINTENANCE_WINDOW_START: 1
+
+      REDIS_HOST: nextcloud_redis
+      POSTGRES_HOST: nextcloud_db
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    networks: [newt, nextcloud]
+  #    labels:
+  #      traefik.enable: true
+  #      traefik.http.middlewares.nc_reg.redirectregex.permanent: true
+  #      traefik.http.middlewares.nc_reg.redirectregex.regex: https://(.*)/.well-known/(?:card|cal)dav
+  #      traefik.http.middlewares.nc_reg.redirectregex.replacement: https://$${1}/remote.php/dav
+  #      traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
+  #      traefik.http.routers.nextcloud.entrypoints: websecure
+  #      traefik.http.routers.nextcloud.tls.certresolver: cf
+  #      traefik.http.routers.nextcloud.middlewares: nc_reg,hdrs@file
+  #      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+
+  # In the pangolin gui, put basic auth ("header auth") on collabora using $COLLABORA_AUTH_USER, $COLLABORA_AUTH_PASS
+  #   Then, tell nextcloud office to use: https://$COLLABORA_AUTH_USER:$COLLABORA_AUTH_PASS@collabora.chenn.dev
+  # admin dash: https://collabora.chenn.dev//browser/dist/admin/admin.html (broken with pangolin basic auth. needs a rule)
+  collabora:
+    profiles: [nextcloud]
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+    privileged: true
+    environment:
+      TZ: ${TZ}
+      DONT_GEN_SSL_CERT: YES
+      LC_CTYPE: C.UTF-8
+      dictionaries: en_US
+      username: ${USER}
+      password: ${PASS}
+      aliasgroup1: https://nextcloud.chenn.dev
+      server_name: collabora.chenn.dev
+      extra_params: |
+        --o:ssl.enable=false
+        --o:ssl.ssl_verification=true
+        --o:ssl.termination=true
+        --o:welcome.enable=false
+        --o:net.proto=IPv4
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+    networks: [newt]
+  #    labels:
+  #      traefik.enable: true
+  #      traefik.http.routers.collabora.rule: Host(`collabora.henn.dev`)
+  #      traefik.http.routers.collabora.entrypoints: websecure
+  #      traefik.http.routers.collabora.middlewares: hdrs@file
+  #      traefik.http.routers.collabora.tls.certresolver: cf
+  #      traefik.http.services.collabora.loadbalancer.server.port: 9980
+
+  nextcloud_db:
+    profiles: [nextcloud]
+    image: postgres:16
+    container_name: nextcloud_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud
+    volumes:
+      - $DATA/nextcloud/nextcloud_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-q', '-d', 'nextcloud', '-U', 'nextcloud']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks: [nextcloud]
+
+  nextcloud_redis:
+    profiles: [nextcloud]
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: nextcloud_redis
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks: [nextcloud]
+
+  nextcloud_cron:
+    profiles: [nextcloud]
+    image: rcdailey/nextcloud-cronjob
+    container_name: nextcloud_cron
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      NEXTCLOUD_CONTAINER_NAME: nextcloud
+      NEXTCLOUD_CRON_MINUTE_INTERVAL: 5
+      NEXTCLOUD_EXEC_SHELL: bash
+      NEXTCLOUD_EXEC_SHELL_ARGS: -c
+      NEXTCLOUD_EXEC_USER: www-data
+    networks: [nextcloud]
+
+  #  harp:
+  #    profiles: [nextcloud]
+  #    image: ghcr.io/nextcloud/nextcloud-appapi-harp:release
+  #    container_name: harp
+  #    restart: unless-stopped
+  #    hostname: harp
+  #    environment:
+  #      HP_SHARED_KEY: ${NEXTCLOUD_HARP_KEY}
+  #      NC_INSTANCE_URL: https://nextcloud.chenn.dev
+  #    volumes:
+  #      - /var/run/docker.sock:/var/run/docker.sock
+  #      - $DATA/nextcloud/harp:/certs
+  #    networks: [traefik]
+  #    labels:
+  #      traefik.enable: true
+  #      traefik.http.routers.exapps.rule: Host(`nextcloud.henn.dev`) && PathPrefix(`/exapps/`)
+  #      traefik.http.routers.exapps.entrypoints: websecure
+  #      traefik.http.routers.exapps.tls.certresolver: cf
+  #      traefik.http.routers.exapps.middlewares: hdrs@file
+  #      traefik.http.services.exapps.loadbalancer.server.port: 8780
+
+networks:
+  nextcloud:

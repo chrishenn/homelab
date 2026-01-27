@@ -1,3 +1,5 @@
+# mkdir -p $DATA/paperless/data $DATA/paperless/media $DATA/paperless/export $DATA/paperless/consume \
+# $DATA/paperless/paperless_ai $DATA/paperless/paperless_gpt $DATA/paperless/paperless_postgres $DATA/paperless/paperless_redis
 ---
 services:
   paperless:
@@ -5,25 +7,34 @@ services:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
     restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      PAPERLESS_TIME_ZONE: ${TZ}
+
+      PAPERLESS_URL: https://paperless.henn.dev
+      PAPERLESS_REDIS: redis://paperless_redis:6379
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_OCR_LANGUAGE: eng
+
+      PAPERLESS_DBHOST: paperless_postgres
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: paperless
+
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://paperless_tika:9998
     volumes:
       - $DATA/paperless/data:/usr/src/paperless/data
       - $DATA/paperless/media:/usr/src/paperless/media
       - $DATA/paperless/export:/usr/src/paperless/export
       - $DATA/paperless/consume:/usr/src/paperless/consume
-
-    environment:
-      PAPERLESS_TIME_ZONE: ${TZ}
-      USERMAP_UID: ${PUID}
-      USERMAP_GID: ${PGID}
-      PAPERLESS_URL: https://paperless.henn.dev
-      PAPERLESS_REDIS: redis://paperless_redis:6379
-      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
-      PAPERLESS_OCR_LANGUAGE: eng
     networks: [traefik, paperless]
     labels:
       traefik.enable: true
       traefik.http.routers.paperless.rule: Host(`paperless.henn.dev`)
       traefik.http.routers.paperless.entrypoints: websecure
+      traefik.http.routers.paperless.middlewares: hdrs@file
       traefik.http.routers.paperless.tls.certresolver: cf
       traefik.http.services.paperless.loadbalancer.server.port: 8000
       homepage.group: AI
@@ -31,17 +42,6 @@ services:
       homepage.icon: paperless.png
       homepage.href: https://paperless.henn.dev
       homepage.description: Document Organization
-    depends_on:
-      - paperless_redis
-
-  paperless_redis:
-    profiles: [paperless]
-    image: docker.io/library/redis:8
-    container_name: paperless_redis
-    restart: unless-stopped
-    volumes:
-      - $DATA/paperless/redis:/data
-    networks: [paperless]
 
   paperless_ai:
     profiles: [paperless]
@@ -49,15 +49,28 @@ services:
     container_name: paperless_ai
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
+
+      AI_PROVIDER: ollama
       OLLAMA_API_URL: http://ollama:11434
-      OLLAMA_MODEL: 'deepseek-r1:14b'
+      OLLAMA_MODEL: deepseek-r1:14b
+
+      PAPERLESS_URL: http://paperless:8000
+      PAPERLESS_API_TOKEN: ${PAPERLESS_TOKEN}
+      PAPERLESS_USERNAME: ${USER}
+
+      RAG_SERVICE_URL: http://localhost:8000
+      RAG_SERVICE_ENABLED: true
+      SCAN_INTERVAL: '*/30 * * * *'
+
     volumes:
       - $DATA/paperless/paperless_ai:/app/data
-    networks: [traefik]
+    networks: [traefik, paperless]
     labels:
       traefik.enable: true
       traefik.http.routers.paperless_ai.rule: Host(`paperless_ai.henn.dev`)
       traefik.http.routers.paperless_ai.entrypoints: websecure
+      traefik.http.routers.paperless_ai.middlewares: hdrs@file
       traefik.http.routers.paperless_ai.tls.certresolver: cf
       traefik.http.services.paperless_ai.loadbalancer.server.port: 3000
       homepage.group: AI
@@ -65,6 +78,96 @@ services:
       homepage.icon: paperless.png
       homepage.href: https://paperless_ai.henn.dev
       homepage.description: AI Document Processing
+
+  paperless_gpt:
+    profiles: [paperless]
+    image: icereed/paperless-gpt:latest
+    container_name: paperless_gpt
+    restart: unless-stopped
+    environment:
+      PAPERLESS_BASE_URL: http://paperless:8000
+      PAPERLESS_API_TOKEN: ${PAPERLESS_TOKEN}
+      PAPERLESS_PUBLIC_URL: https://paperless.henn.dev
+      PDF_UPLOAD: false
+      LOG_LEVEL: DEBUG
+
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_CONTEXT_LENGTH: 8192
+      TOKEN_LIMIT: 1000
+
+      LLM_PROVIDER: ollama
+      LLM_MODEL: deepseek-r1:14b
+      LLM_LANGUAGE: English
+      OCR_PROVIDER: llm
+
+      VISION_LLM_PROVIDER: ollama
+      VISION_LLM_MODEL: minicpm-v:8b
+
+      AUTO_OCR_TAG: ocr
+      AUTO_TAG: ai
+      MANUAL_TAG: ai_manual
+      PDF_OCR_TAGGING: true
+      PDF_OCR_COMPLETE_TAG: paperless-gpt-ocr-complete
+    volumes:
+      - $DATA/paperless/paperless_gpt:/app/prompts
+    networks: [traefik, paperless]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.paperless_gpt.rule: Host(`paperless_gpt.henn.dev`)
+      traefik.http.routers.paperless_gpt.entrypoints: websecure
+      traefik.http.routers.paperless_gpt.middlewares: hdrs@file
+      traefik.http.routers.paperless_gpt.tls.certresolver: cf
+      traefik.http.services.paperless_gpt.loadbalancer.server.port: 8080
+      homepage.group: AI
+      homepage.name: Paperless GPT
+      homepage.icon: paperless.png
+      homepage.href: https://paperless_gpt.henn.dev
+      homepage.description: AI Document Processing
+
+  paperless_postgres:
+    profiles: [paperless]
+    image: postgres:18
+    restart: unless-stopped
+    container_name: paperless_postgres
+    environment:
+      TZ: ${TZ}
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless
+    volumes:
+      - $DATA/paperless/paperless_postgres:/var/lib/postgresql
+    networks: [paperless]
+
+  paperless_redis:
+    profiles: [paperless]
+    image: docker.io/library/redis:8
+    container_name: paperless_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/paperless/paperless_redis:/data
+    networks: [paperless]
+
+  paperless_tika:
+    profiles: [paperless]
+    image: docker.io/apache/tika:latest
+    container_name: paperless_tika
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    networks: [paperless]
+
+  paperless_gotenberg:
+    profiles: [paperless]
+    image: docker.io/gotenberg/gotenberg:8.25
+    container_name: paperless_gotenberg
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    command:
+      - 'gotenberg'
+      - '--chromium-disable-javascript=true'
+      - '--chromium-allow-list=file:///tmp/.*'
+    networks: [paperless]
 
 networks:
   paperless:

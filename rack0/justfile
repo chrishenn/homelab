@@ -3,31 +3,35 @@
 profile := "'*'"
 
 up profile=profile *svcs:
-    docker compose --profile {{profile}} up -d --remove-orphans --pull missing {{svcs}}
+    docker compose --profile {{ profile }} up -d --remove-orphans --pull missing {{ svcs }}
+
+pullup profile=profile *svcs:
+    docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
 
 down profile=profile *svcs:
-    docker compose --profile {{profile}} down {{svcs}}
+    docker compose --profile {{ profile }} down {{ svcs }}
 
 bounce profile=profile *svcs:
     #!/bin/bash
-    docker compose --profile {{profile}} down {{svcs}} && \
-    docker compose --profile {{profile}} up -d --remove-orphans {{svcs}}
+    docker compose --profile {{ profile }} down {{ svcs }} && \
+    docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
 build *svcs:
-    docker compose build --push {{svcs}}
+    docker compose build --push {{ svcs }}
 
 run *svcs:
-    docker compose run --rm -it {{svcs}}
+    docker compose run --rm -it {{ svcs }}
 
 log *args:
-    docker compose logs {{args}}
+    docker compose logs {{ args }}
 
 alias f := follow
+
 follow *args:
-    just log --follow {{args}}
+    just log --follow {{ args }}
 
 attach svc cmd="/bin/sh":
-    docker compose exec -it {{svc}} {{cmd}}
+    docker compose exec -it {{ svc }} {{ cmd }}
 
 ps:
     docker compose ps
@@ -37,14 +41,14 @@ watch:
 
 bbounce profile=profile *svcs:
     #!/bin/bash
-    docker compose --profile {{profile}} down {{svcs}} || true \
-    && docker compose build --push {{svcs}} \
-    && docker compose --profile {{profile}} up -d --remove-orphans --pull always {{svcs}}
+    docker compose --profile {{ profile }} down {{ svcs }} || true \
+    && docker compose build --push {{ svcs }} \
+    && docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
 
 pbounce profile=profile *svcs:
     #!/bin/bash
     docker compose pull && \
-    just bounce "{{profile}}" {{svcs}}
+    just bounce "{{ profile }}" {{ svcs }}
 
 # logins, keys, helpers
 
@@ -62,13 +66,14 @@ rlogin:
     $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
 
 alias s := sync
+
 sync message="sync":
-    git commit -a -m "{{message}}" || true && git pull && git push
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
+    git commit -a -m "{{ message }}" || true && git pull && git push
+    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
 
 rsync message="sync":
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{message}}' || true && git pull && git push"
-    git commit -a -m "{{message}}" || true && git pull && git push
+    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    git commit -a -m "{{ message }}" || true && git pull && git push
 
 reset:
     $DHOST_SSH -At "cd ${REPO} && git fetch origin"

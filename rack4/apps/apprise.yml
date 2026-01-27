@@ -21,6 +21,7 @@ services:
       traefik.enable: true
       traefik.http.routers.apprise.rule: Host(`apprise.henn.dev`)
       traefik.http.routers.apprise.entrypoints: websecure
+      traefik.http.routers.apprise.middlewares: hdrs@file
       traefik.http.routers.apprise.tls.certresolver: cf
       traefik.http.services.apprise.loadbalancer.server.port: 8000
       homepage.group: Infra

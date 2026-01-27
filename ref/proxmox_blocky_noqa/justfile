@@ -6,4 +6,3 @@ boot:
 
 push:
     uv run pyinfra src/blocky/infra/inventory.py src/blocky/deploy.py -y
-

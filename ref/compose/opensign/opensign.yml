@@ -1,0 +1,80 @@
+# bring up the profile
+# wait on the server to run migrations (takes a minute and is silent)
+# attempt login AFTER migrations are donw - will redirect to first-time login screen
+---
+x-opensign-env: &opensign-env
+  PUBLIC_URL: https://opensign.henn.dev
+  SERVER_URL: https://opensign.henn.dev/api/app
+  REACT_APP_SERVERURL: https://opensign.henn.dev/api/app
+  MONGODB_URI: mongodb://opensign_mongo:27017/OpenSignDB
+
+  appName: ChickenCoops_OpenSign
+  MASTER_KEY: XnWadeKxxsyMr
+  PARSE_MOUNT: /app
+  USE_LOCAL: true
+  NODE_ENV: production
+  GENERATE_SOURCEMAP: false
+  REACT_APP_APPID: opensign
+  APP_ID: opensign
+
+  SMTP_ENABLE: true
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: 465
+  SMTP_USER_EMAIL: ${SMTP_USER}
+  SMTP_USERNAME: ${SMTP_USER}
+  SMTP_USER_NAME: ${SMTP_USER}
+  SMTP_PASS: ${SMTP_TOKEN}
+  PFX_BASE64: ${OPENSIGN_PFX}
+  PASS_PHRASE: ${OPENSIGN_PFX_PASS}
+
+services:
+  opensign:
+    profiles: [opensign]
+    image: opensign/opensignserver:main
+    container_name: opensign
+    environment:
+      <<: [*opensign-env]
+    volumes:
+      - $DATA/opensign/opensign_server:/usr/src/app/files
+    networks: [traefik, opensign]
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.strip_api.stripprefix.prefixes: /api
+
+      traefik.http.routers.opensign_server.rule: Host(`opensign.henn.dev`) && PathPrefix(`/api`)
+      traefik.http.routers.opensign_server.entrypoints: websecure
+      #      traefik.http.routers.opensign_server.middlewares: hdrs@file,strip_api@docker
+      traefik.http.routers.opensign_server.middlewares: strip_api@docker
+      traefik.http.routers.opensign_server.tls.certresolver: cf
+      traefik.http.services.opensign_server.loadbalancer.server.port: 8080
+
+  opensign_frontend:
+    profiles: [opensign]
+    image: opensign/opensign:main
+    container_name: opensign_frontend
+    environment:
+      <<: [*opensign-env]
+    networks: [traefik, opensign]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.opensign.rule: Host(`opensign.henn.dev`)
+      traefik.http.routers.opensign.entrypoints: websecure
+      traefik.http.routers.opensign.middlewares: hdrs@file
+      traefik.http.routers.opensign.tls.certresolver: cf
+      traefik.http.services.opensign.loadbalancer.server.port: 3000
+      homepage.group: File Edit, Convert
+      homepage.name: OpenSign
+      homepage.icon: docuseal.png
+      homepage.href: https://opensign.henn.dev
+      homepage.description: Free Docusign
+
+  opensign_mongo:
+    profiles: [opensign]
+    image: mongo:latest
+    container_name: opensign_mongo
+    volumes:
+      - $DATA/opensign/opensign_mongo:/data/db
+    networks: [opensign]
+
+networks:
+  opensign:

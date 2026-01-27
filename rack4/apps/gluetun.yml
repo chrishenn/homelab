@@ -28,12 +28,14 @@ services:
       traefik.enable: true
       traefik.http.routers.gluetun.rule: Host(`gluetun.henn.dev`)
       traefik.http.routers.gluetun.entrypoints: websecure
+      traefik.http.routers.gluetun.middlewares: hdrs@file
       traefik.http.routers.gluetun.tls.certresolver: cf
       traefik.http.routers.gluetun.service: gluetun
       traefik.http.services.gluetun.loadbalancer.server.port: 8000
 
       traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
       traefik.http.routers.qbit.entrypoints: websecure
+      traefik.http.routers.qbit.middlewares: hdrs@file
       traefik.http.routers.qbit.tls.certresolver: cf
       traefik.http.routers.qbit.service: qbit
       traefik.http.services.qbit.loadbalancer.server.port: 8080

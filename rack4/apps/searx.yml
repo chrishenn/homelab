@@ -24,6 +24,7 @@ services:
       traefik.enable: true
       traefik.http.routers.sear.rule: Host(`searx.henn.dev`)
       traefik.http.routers.sear.entrypoints: websecure
+      traefik.http.routers.sear.middlewares: hdrs@file
       traefik.http.routers.sear.tls.certresolver: cf
       traefik.http.services.sear.loadbalancer.server.port: 8080
       homepage.group: AI

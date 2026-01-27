@@ -1,5 +1,5 @@
 name: dns_cf
 runtime:
-    name: python
-    options:
-        toolchain: uv
+  name: python
+  options:
+    toolchain: uv

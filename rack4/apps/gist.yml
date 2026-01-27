@@ -12,6 +12,7 @@ services:
       traefik.enable: true
       traefik.http.routers.gist.rule: Host(`gist.henn.dev`)
       traefik.http.routers.gist.entrypoints: websecure
+      traefik.http.routers.gist.middlewares: hdrs@file
       traefik.http.routers.gist.tls.certresolver: cf
       traefik.http.services.gist.loadbalancer.server.port: 6157
       traefik.tcp.routers.gist-ssh.rule: HostSNI(`*`)

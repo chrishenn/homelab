@@ -10,6 +10,7 @@ services:
       traefik.enable: true
       traefik.http.routers.excalidraw.rule: Host(`excalidraw.henn.dev`)
       traefik.http.routers.excalidraw.entrypoints: websecure
+      traefik.http.routers.excalidraw.middlewares: hdrs@file
       traefik.http.routers.excalidraw.tls.certresolver: cf
       traefik.http.services.excalidraw.loadbalancer.server.port: 80
       homepage.group: File Edit, Convert

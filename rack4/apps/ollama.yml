@@ -23,5 +23,6 @@ services:
       traefik.enable: true
       traefik.http.routers.ollama_api.rule: Host(`ollama-api.henn.dev`)
       traefik.http.routers.ollama_api.entrypoints: websecure
+      traefik.http.routers.ollama_api.middlewares: hdrs@file
       traefik.http.routers.ollama_api.tls.certresolver: cf
       traefik.http.services.ollama_api.loadbalancer.server.port: 11434

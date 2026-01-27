@@ -17,6 +17,7 @@ services:
       traefik.enable: true
       traefik.http.routers.bazarr.rule: Host(`bazarr.henn.dev`)
       traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.middlewares: hdrs@file
       traefik.http.routers.bazarr.tls.certresolver: cf
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
       homepage.group: Media

@@ -1,14 +1,14 @@
 # merge into ~/.spack/packages.yaml
 packages:
-    cuda:
-        externals:
-            - spec: cuda@12.4
-              prefix: /home/chris/cuda/cuda-12.4
-            - spec: cuda@12.6
-              prefix: /home/chris/cuda/cuda-12.6
-            - spec: cuda@12.8
-              prefix: /home/chris/cuda/cuda-12.8
-            - spec: cuda@12.9
-              prefix: /home/chris/cuda/cuda-12.9
-            - spec: cuda@13.0
-              prefix: /home/chris/cuda/cuda-13.0
+  cuda:
+    externals:
+      - spec: cuda@12.4
+        prefix: /home/chris/cuda/cuda-12.4
+      - spec: cuda@12.6
+        prefix: /home/chris/cuda/cuda-12.6
+      - spec: cuda@12.8
+        prefix: /home/chris/cuda/cuda-12.8
+      - spec: cuda@12.9
+        prefix: /home/chris/cuda/cuda-12.9
+      - spec: cuda@13.0
+        prefix: /home/chris/cuda/cuda-13.0
