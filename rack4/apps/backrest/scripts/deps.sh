@@ -7,4 +7,4 @@ fi
 if [ ! -f /etc/apk/keys/support@1password.com-61ddfc31.rsa.pub ]; then
 	wget https://downloads.1password.com/linux/keys/alpinelinux/support@1password.com-61ddfc31.rsa.pub -P /etc/apk/keys
 fi
-apk update && apk add 1password-cli rclone libc6-compat github-cli jq fd
+apk update && apk add git git-lfs 1password-cli rclone libc6-compat github-cli jq fd
