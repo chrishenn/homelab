@@ -1,4 +1,4 @@
-# Cuda Driver
+# Nvidia Driver
 
 NOTE: latest open drivers are too new for older gpus like the GTX 1080
 
@@ -37,7 +37,7 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 
 ## Install (ubuntu-drivers)
 
-#note: not recommended
+note: not recommended
 
 ```bash
 sudo ubuntu-drivers list

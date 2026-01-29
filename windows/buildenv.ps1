@@ -68,13 +68,9 @@ function mode_pkg {
     cp "$build_tgt/src/*.exe" "$build_tgt/src/Release/"
     cp "$build_tgt/src/*.dll" "$build_tgt/src/Release/"
 
-    # cd to .\windows\installer for pkg deps installs
+    # cd to .\windows\installer for pkg deps installs; build msi
     Set-Location -Path "$repo\windows\installer"
-
-    # build msi installer
     msbuild project.sln -p:Configuration=Release -p:Platform=x64 -p:RestorePackagesConfig=true -restore
-
-    # return shell to script launch location
     Set-Location -Path "$repo"
 
     # copy built installer out to project root
