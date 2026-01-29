@@ -38,8 +38,10 @@ NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/c
 DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
 SEARXNG_SECRET = { provider = "onepass", value = "op://homelab/searxng/credential" }
-PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
 WIREGUARD_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/proton/VPN/wireguard_private_key" }
+
+PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
+PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
 
 PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/Pangolin-Hostinger/PANGOLIN_ENDPOINT" }
 NEWT_ID = { provider = "onepass", value = "op://homelab/Pangolin-Hostinger/NEWT_ID" }
