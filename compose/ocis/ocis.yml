@@ -1,3 +1,7 @@
+# android app can only view text files, no native editing
+# generally less featureful than nextcloud
+# web editing autosave is set to 120 seconds. What is this, 2002? no thanks
+# default user: "admin"
 # mkdir -p $DATA/ocis/config $DATA/ocis/data
 ---
 services:
@@ -60,10 +64,10 @@ services:
     restart: unless-stopped
     networks: [traefik]
 
-  collaboration:
+  ocis_collab:
     profiles: [ocis]
     image: owncloud/ocis:latest
-    container_name: collaboration
+    container_name: ocis_collab
     restart: unless-stopped
     command: ["collaboration", "server"]
     environment:
@@ -71,7 +75,7 @@ services:
       COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
       MICRO_REGISTRY: "nats-js-kv"
       MICRO_REGISTRY_ADDRESS: "ocis:9233"
-      COLLABORATION_WOPI_SRC: http://collaboration:9300
+      COLLABORATION_WOPI_SRC: http://ocis_collab:9300
       COLLABORATION_APP_NAME: "CollaboraOnline"
       COLLABORATION_APP_PRODUCT: "Collabora"
       COLLABORATION_APP_ADDR: https://collabora.henn.dev

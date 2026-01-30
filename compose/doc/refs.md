@@ -8,7 +8,6 @@ failed services that I deleted
 - jitsi: just a big damn mess. not ported to docker well
 - 13 foot ladder: nonworking when I tried it (medium nor nyt)
 - localai: janky and terrible.
-- nextcloud: just terribly slow. maybe my db config was the issue, but probs not worth it
 - pihole: using blocky and it's find
 - sist2 / elasticsearch: very heavy fuzzy search over files. not much use
 - webcord: unneeded

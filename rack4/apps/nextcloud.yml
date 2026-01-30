@@ -1,10 +1,18 @@
+# plenty of jank - feels like bones from 2010 with makeup from 2024
+# documentation is not great
+# couldn't get the HARP thing to work - documentation AND ui are utterly indecipherable
+# otherwise, kind of miraculous
+
 # mkdir -p $DATA/nextcloud/nextcloud_db $DATA/nextcloud/html
 # docker exec -u 33 nextcloud php occ maintenance:repair --include-expensive
 # docker exec -u 33 nextcloud php occ db:add-missing-indices
 # docker exec -u 33 nextcloud php occ config:system:set default_phone_region --value="US"
+# docker exec -u 33 nextcloud php occ config:system:set maintenance_window_start --value="1" --type=integer
+
+# clear the logfile
+# docker exec -u 33 nextcloud truncate /var/www/html/data/nextcloud.log --size 0
 ---
 services:
-
   nextcloud:
     profiles: [nextcloud]
     image: nextcloud

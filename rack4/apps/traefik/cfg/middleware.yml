@@ -15,8 +15,8 @@ http:
           X-Forwarded-Proto: 'https'
         hostsProxyHeaders:
           - 'X-Forwarded-Host'
-#        referrerPolicy: 'same-origin'
-        referrerPolicy: 'no-referrer'
+        referrerPolicy: 'same-origin'
+#        referrerPolicy: 'no-referrer'
         contentTypeNosniff: true
         browserXssFilter: true
         frameDeny: true
