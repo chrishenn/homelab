@@ -66,6 +66,7 @@ entryPoints:
           scheme: https
   websecure:
     address: :443
+    reusePort: true
     transport:
       respondingTimeouts:
         readTimeout: '600'
@@ -84,6 +85,7 @@ entryPoints:
         - securityHeaders@file
   websecure2:
     address: :443
+    reusePort: true
     transport:
       respondingTimeouts:
         readTimeout: '600'
