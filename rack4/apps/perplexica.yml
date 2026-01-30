@@ -20,6 +20,6 @@ services:
       traefik.http.services.perplexica.loadbalancer.server.port: 3000
       homepage.group: AI
       homepage.name: Perplexica
-      homepage.icon: perplexity-book-dark.png
+      homepage.icon: perplexity-dark.png
       homepage.href: https://perplexica.henn.dev
       homepage.description: AI Search
