@@ -9,7 +9,7 @@ services:
       TZ: $TZ
       APP_URL: https://docmost.henn.dev
       APP_SECRET: ${DOCMOST_SECRET}
-      DATABASE_URL: postgresql://docmost:DB_PASSWORD@docmost_pg:5432/docmost?schema=public # trufflehog:ignore
+      DATABASE_URL: ${DOCMOST_DBURL}
       REDIS_URL: redis://docmost_redis:6379
     volumes:
       - $DATA/docmost/docmost:/app/data/storage

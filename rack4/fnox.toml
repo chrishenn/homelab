@@ -35,10 +35,15 @@ GL_RUNNER_TOKEN2 = { provider = "onepass", value = "op://homelab/Gitlab/runner_t
 
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
-DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
 SEARXNG_SECRET = { provider = "onepass", value = "op://homelab/searxng/credential" }
 WIREGUARD_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/proton/VPN/wireguard_private_key" }
+
+DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
+DOCMOST_DBURL = { provider = "onepass", value = "op://homelab/docmost/dburl" }
+
+RXRESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/rxresume/credential" }
+RXRESUME_PGURL = { provider = "onepass", value = "op://homelab/rxresume/pgurl" }
 
 NEXTCLOUD_HARP_KEY = { provider = "onepass", value = "op://homelab/Nextcloud/harp_key" }
 
