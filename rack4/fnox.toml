@@ -40,6 +40,8 @@ TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential"
 SEARXNG_SECRET = { provider = "onepass", value = "op://homelab/searxng/credential" }
 WIREGUARD_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/proton/VPN/wireguard_private_key" }
 
+NEXTCLOUD_HARP_KEY = { provider = "onepass", value = "op://homelab/Nextcloud/harp_key" }
+
 PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
 PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
 

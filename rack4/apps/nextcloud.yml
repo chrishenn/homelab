@@ -1,9 +1,12 @@
 # mkdir -p $DATA/nextcloud/nextcloud_db $DATA/nextcloud/html
+# docker exec -u 33 nextcloud php occ maintenance:repair --include-expensive
+# docker exec -u 33 nextcloud php occ db:add-missing-indices
+# docker exec -u 33 nextcloud php occ config:system:set default_phone_region --value="US"
 ---
 services:
 
   nextcloud:
-    profiles: [ nextcloud ]
+    profiles: [nextcloud]
     image: nextcloud
     container_name: nextcloud
     hostname: nextcloud
@@ -16,7 +19,6 @@ services:
       NEXTCLOUD_ADMIN_PASSWORD: ${PASS}
       NEXTCLOUD_PUBLIC_URL: https://nextcloud.chenn.dev
       NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.henn.dev, nextcloud.chenn.dev"
-      NEXTCLOUD_DEFAULT_PHONE_REGION: US
       NEXTCLOUD_HOSTNAME: nextcloud.henn.dev
       NEXTCLOUD_DOMAIN: nextcloud.henn.dev
 
@@ -36,27 +38,26 @@ services:
       timeout: 5s
       retries: 3
       start_period: 90s
-    networks: [ traefik ]
+    networks: [ traefik, docker ]
     labels:
       traefik.enable: true
-      traefik.http.services.nextcloud.loadbalancer.server.port: 80
-
+      traefik.http.middlewares.nc_reg.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
+      traefik.http.middlewares.nc_reg.redirectregex.replacement: https://$$1/remote.php/dav/
+      traefik.http.middlewares.nc_reg.redirectregex.permanent: true
       traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
       traefik.http.routers.nextcloud.entrypoints: websecure
       traefik.http.routers.nextcloud.tls.certresolver: cf
+      traefik.http.routers.nextcloud.middlewares: nc_reg
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
 
-      traefik.http.routers.nextcloud.middlewares: nextcloud_redirectregex
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: https://$$1/remote.php/dav/
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.permanent: true
-
-  #      homepage.group: AI
-  #      homepage.name: Local Deep Research
-  #      homepage.icon: https://github.com/LearningCircuit/local-deep-research/blob/main/src/local_deep_research/web/static/favicon.png?raw=true
-  #      homepage.href: https://ldr.henn.dev
-  #      homepage.description: ML Document Research
+      homepage.group: File Edit, Convert
+      homepage.name: NextCloud
+      homepage.icon: nextcloud.png
+      homepage.href: https://nextcloud.henn.dev
+      homepage.description: Google Drive
 
   nextcloud_db:
+    profiles: [nextcloud]
     image: postgres:16
     container_name: nextcloud_db
     restart: unless-stopped

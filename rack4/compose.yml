@@ -101,3 +101,4 @@ include:
   - apps/newt.yml
   - apps/ldr.yml
   - apps/nextcloud.yml
+  - apps/ocis.yml
