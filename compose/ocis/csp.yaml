@@ -1,20 +1,20 @@
 directives:
   child-src:
-    - '''self'''
+    - "'self'"
   connect-src:
-    - '''self'''
+    - "'self'"
     - 'blob:'
     - 'https://${COMPANION_DOMAIN|companion.owncloud.test}/'
     - 'wss://${COMPANION_DOMAIN|companion.owncloud.test}/'
     - 'https://raw.githubusercontent.com/owncloud/awesome-ocis/'
   default-src:
-    - '''none'''
+    - "'none'"
   font-src:
-    - '''self'''
+    - "'self'"
   frame-ancestors:
-    - '''self'''
+    - "'self'"
   frame-src:
-    - '''self'''
+    - "'self'"
     - 'blob:'
     - 'https://embed.diagrams.net/'
     # In contrary to bash and docker the default is given after the | character
@@ -23,7 +23,7 @@ directives:
     # This is needed for the external-sites web extension when embedding sites
     - 'https://owncloud.dev'
   img-src:
-    - '''self'''
+    - "'self'"
     - 'data:'
     - 'blob:'
     - 'https://raw.githubusercontent.com/owncloud/awesome-ocis/'
@@ -31,15 +31,15 @@ directives:
     - 'https://${ONLYOFFICE_DOMAIN|onlyoffice.owncloud.test}/'
     - 'https://${COLLABORA_DOMAIN|collabora.owncloud.test}/'
   manifest-src:
-    - '''self'''
+    - "'self'"
   media-src:
-    - '''self'''
+    - "'self'"
   object-src:
-    - '''self'''
+    - "'self'"
     - 'blob:'
   script-src:
-    - '''self'''
-    - '''unsafe-inline'''
+    - "'self'"
+    - "'unsafe-inline'"
   style-src:
-    - '''self'''
-    - '''unsafe-inline'''
+    - "'self'"
+    - "'unsafe-inline'"

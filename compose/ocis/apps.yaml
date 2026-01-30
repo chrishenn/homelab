@@ -10,14 +10,14 @@ external-sites:
     sites:
       # For settings see: https://github.com/owncloud/web-extensions/tree/main/packages/web-app-external-sites
       - name: ownCloud
-        url: "https://owncloud.dev"
+        url: 'https://owncloud.dev'
         target: embedded
-        color: "#0D856F"
+        color: '#0D856F'
         icon: cloud
         priority: 50
       - name: Wikipedia
-        url: "https://www.wikipedia.org"
+        url: 'https://www.wikipedia.org'
         target: external
-        color: "#0D856F"
+        color: '#0D856F'
         icon: book
         priority: 51
