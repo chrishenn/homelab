@@ -82,6 +82,22 @@ entryPoints:
               - '*.henn.dev'
       middlewares:
         - securityHeaders@file
+  websecure2:
+    address: :443
+    transport:
+      respondingTimeouts:
+        readTimeout: '600'
+        writeTimeout: '600'
+        idleTimeout: '600'
+    forwardedHeaders:
+      trustedIPs: *trustedIps
+    http:
+      tls:
+        certResolver: cf
+        domains:
+          - main: henn.dev
+            sans:
+              - '*.henn.dev'
   tcp22:
     address: ':22'
   tcp2222:

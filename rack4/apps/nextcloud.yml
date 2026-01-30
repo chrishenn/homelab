@@ -48,21 +48,48 @@ services:
       start_period: 90s
     networks: [ traefik, docker ]
     labels:
-      traefik.enable: true
-      traefik.http.middlewares.nc_reg.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
-      traefik.http.middlewares.nc_reg.redirectregex.replacement: https://$$1/remote.php/dav/
-      traefik.http.middlewares.nc_reg.redirectregex.permanent: true
-      traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
-      traefik.http.routers.nextcloud.entrypoints: websecure
-      traefik.http.routers.nextcloud.tls.certresolver: cf
-      traefik.http.routers.nextcloud.middlewares: nc_reg
-      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+#      traefik.enable: true
+#      traefik.http.middlewares.nc_reg.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
+#      traefik.http.middlewares.nc_reg.redirectregex.replacement: https://$$1/remote.php/dav/
+#      traefik.http.middlewares.nc_reg.redirectregex.permanent: true
+#      traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
+#      traefik.http.routers.nextcloud.entrypoints: websecure
+#      traefik.http.routers.nextcloud.tls.certresolver: cf
+#      traefik.http.routers.nextcloud.middlewares: nc_reg
+#      traefik.http.services.nextcloud.loadbalancer.server.port: 80
 
       homepage.group: File Edit, Convert
       homepage.name: NextCloud
       homepage.icon: nextcloud.png
       homepage.href: https://nextcloud.henn.dev
       homepage.description: Google Drive
+
+      traefik.enable: true
+      traefik.http.middlewares.https-redirect.redirectscheme.scheme: https
+
+      traefik.http.routers.nextcloud.entrypoints: web
+      traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
+      traefik.http.routers.nextcloud.middlewares: https-redirect
+
+      traefik.http.middlewares.nc-rep.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
+      traefik.http.middlewares.nc-rep.redirectregex.replacement: https://$$1/remote.php/dav/
+      traefik.http.middlewares.nc-rep.redirectregex.permanent: true
+      traefik.http.middlewares.nc-header.headers.referrerPolicy: no-referrer
+      traefik.http.middlewares.nc-header.headers.stsSeconds: 31536000
+      traefik.http.middlewares.nc-header.headers.forceSTSHeader: true
+      traefik.http.middlewares.nc-header.headers.stsPreload: true
+      traefik.http.middlewares.nc-header.headers.stsIncludeSubdomains: true
+      traefik.http.middlewares.nc-header.headers.browserXssFilter: true
+      traefik.http.middlewares.nc-header.headers.customRequestHeaders.X-Forwarded-Proto: https
+
+      traefik.http.routers.nextcloud-secure.entrypoints: websecure2
+      traefik.http.routers.nextcloud-secure.rule: Host(`nextcloud.henn.dev`)
+      traefik.http.routers.nextcloud-secure.middlewares: nc-rep,nc-header
+      traefik.http.routers.nextcloud-secure.tls: true
+      traefik.http.routers.nextcloud-secure.tls.certresolver: cf
+      traefik.http.routers.nextcloud-secure.service: nextcloud
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+
 
   nextcloud_db:
     profiles: [nextcloud]
