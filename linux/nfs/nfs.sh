@@ -63,6 +63,7 @@ sudo nano /etc/fstab
 192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
 
 # set up PFC on mellanox nics
+# https://enterprise-support.nvidia.com/s/article/lossless-roce-configuration-for-linux-drivers-in-dscp-based-qos-mode
 # assumes that the switch is using pfc on prio3 traffic
 git clone https://github.com/Mellanox/mlnx-tools.git
 cd mlnx-tools
