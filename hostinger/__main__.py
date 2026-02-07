@@ -30,8 +30,6 @@ def pangolin_public_resources() -> None:
         "ollama",
         "pangolin",
         "stirling",
-        "nextcloud",
-        "collabora",
         "beszel",
         "perplexica",
         "documenso",
