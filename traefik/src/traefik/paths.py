@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import shutil
 from dataclasses import dataclass
 from enum import Enum
@@ -9,21 +10,11 @@ from typing import Never
 import yaml
 from yaml import SafeLoader
 
-
-def project_pkgs() -> Path:
-    trav = Path.cwd()
-    while trav != Path.cwd().root:
-        if (attempt := trav / "packages").exists():
-            return attempt
-        trav = trav.parent
-    msg = "failed to find repo/packages"
-    raise FileNotFoundError(msg)
-
+envrepo = os.environ["REPO"]
 
 @dataclass(frozen=True)
 class PATHS:
-    pkgs: Path = project_pkgs()
-    repo: Path = pkgs.parent
+    repo: Path = Path(envrepo)
 
 
 class YamlPath(Enum):

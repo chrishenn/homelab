@@ -14,14 +14,12 @@ prettier = "latest"
 
 [hooks.enter]
 shell = "bash"
-script = """
-    mise i -q
-#    [ -d .venv ] || uv venv --allow-existing \
-#    && [ ! -z ${VIRTUAL_ENV+x} ] || source .venv/bin/activate --active \
-#    && uv sync
-    """
+script = "mise i -q"
 
 [env]
+REPO = "{{ config_root | absolute }}"
+REPO_NAME = "{{ config_root | basename }}"
+
 HK_MISE = 1
 HK_LIBGIT2 = 0
 MISE_NPM_BUN = 1

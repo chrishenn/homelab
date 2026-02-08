@@ -1,12 +1,17 @@
-# Mikrotik Terraform Provider (use from pulumi bindings)
+# Mikrotik Config
+
+Configuration scripts for my 10GBe backbone and 100GBe subnet
+
+---
+
+# Shelved: Mikrotik Terraform Provider used from pulumi bindings
+
 
 ```bash
 # there's a newer terraform provider for mikrotik, but pulumi will only pull from opentofu registry, which doesn't have it
 # https://search.opentofu.org/provider/ddelnano/mikrotik/latest
 pulumi package add terraform-provider ddelnano/mikrotik
 ```
-
-# Shelved
 
 - Implement firewall rules in pulumi code rather than mt scripts
 
