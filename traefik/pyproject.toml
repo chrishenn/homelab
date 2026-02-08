@@ -3,7 +3,7 @@ name = "traefik"
 version = "0.1.0"
 description = ""
 readme = "readme.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "cytoolz>=1.0.1",
     "more-itertools>=10.7.0",

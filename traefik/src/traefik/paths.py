@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import os
 import shutil
 from dataclasses import dataclass
@@ -10,7 +8,9 @@ from typing import Never
 import yaml
 from yaml import SafeLoader
 
+
 envrepo = os.environ["REPO"]
+
 
 @dataclass(frozen=True)
 class PATHS:

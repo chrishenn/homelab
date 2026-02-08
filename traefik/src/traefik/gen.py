@@ -1,11 +1,9 @@
-from __future__ import annotations
-
 from cytoolz import first, merge
 from more_itertools import all_unique
 from rich import print
 from slugify import slugify
 
-from traefik.data import LocalPaths, certresolver, https_entrypoint, root_domains, svc_map
+from .data import LocalPaths, certresolver, https_entrypoint, root_domains, svc_map
 
 
 def render_dyncfg(domain_addr: dict[str, str]) -> dict:
