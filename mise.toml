@@ -11,6 +11,7 @@ shfmt = "latest"
 shellcheck = "latest"
 eza = "latest"
 prettier = "latest"
+ty = "latest"
 
 [hooks.enter]
 shell = "bash"

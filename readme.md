@@ -2,7 +2,13 @@
 
 Homelab: my configurations, snippets, and small deployments
 
-Note: Python env will not build when cifs-mounted
+Top-level folders contain configs/snippets that meet one of these criteria:
+
+- deploys to a specific machine
+- restricted to one OS
+- requires a python env
+
+---
 
 Docker compose stacks for:
 
@@ -18,7 +24,15 @@ Docker compose stacks for:
 # dev
 
 ```bash
+# mypy is not available from mise registry
+# this may be on its way out; probably replace with astra/ty soon (https://docs.astral.sh/ty)
 uv tool install mypy
+
+# run `hk fix`: lint/format
+just f
+
+# run `hk check`: lint
+just c
 ```
 
 ---

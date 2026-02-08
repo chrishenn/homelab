@@ -2,6 +2,8 @@
 
 Configuration scripts for my 10GBe backbone and 100GBe subnet
 
+Deploys to platform: mikrotik
+
 ---
 
 # Shelved: Mikrotik Terraform Provider used from pulumi bindings

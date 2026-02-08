@@ -10,6 +10,8 @@ dependencies = [
     "rich>=14.0.0",
     "python-slugify>=8.0.4",
     "pyyaml>=6.0.3",
+    "pre-commit-hooks>=4.5.0",
+    "types-pyyaml>=6.0.12.20250915",
 ]
 
 [build-system]
@@ -20,11 +22,6 @@ build-backend = "uv_build"
 gen = "traefik.gen:gen"
 clean = "traefik.gen:clean"
 genclean = "traefik.gen:genclean"
-
-[tool.mypy]
-packages = ["traefik"]
-exclude = ["deprecated"]
-ignore_missing_imports = true
 
 [tool.ty.environment]
 root = ["./src"]

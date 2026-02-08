@@ -1,14 +1,14 @@
-amends "package://github.com/jdx/hk/releases/download/v1.24.1/hk@1.24.1#/Config.pkl"
-import "package://github.com/jdx/hk/releases/download/v1.24.1/hk@1.24.1#/Builtins.pkl"
+amends "package://github.com/jdx/hk/releases/download/v1.35.0/hk@1.35.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.35.0/hk@1.35.0#/Builtins.pkl"
 
 local formatters = new Mapping<String, Step> {
     ["ruff"] = Builtins.ruff
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-    //     ["mypy"] = (Builtins.mypy) {
-    //         exclude = "*noqa*"
-    //     }
+//     ["ty"] = (Builtins.ty) {
+//         exclude = "*noqa*"
+//     }
     ["prettier"] = (Builtins.prettier) {
         batch = false
     }

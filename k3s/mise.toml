@@ -2,7 +2,4 @@
 python.uv_venv_auto = "create|source"
 
 [tools]
-fnox = "latest"
-pulumi = "latest"
-ty = "latest"
 uv = "latest"
