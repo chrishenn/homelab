@@ -1,0 +1,66 @@
+# logout has a known bug right now https://github.com/jordan-dalby/ByteStash/issues/325
+---
+services:
+  bytestash:
+    profiles: [bytestash]
+    image: ghcr.io/jordan-dalby/bytestash:latest
+    container_name: bytestash
+    restart: unless-stopped
+    volumes:
+      - $DATA/bytestash:/data/snippets
+    environment:
+      ALLOWED_HOSTS: localhost,stash.chenn.dev,stash.henn.dev
+      BASE_PATH: ''
+      JWT_SECRET: ${BYTESTASH_JWT_SECRET}
+      TOKEN_EXPIRY: 24h
+      NODE_ENV: production
+      DEBUG: false
+
+      ALLOW_NEW_ACCOUNTS: true
+      DISABLE_ACCOUNTS: false
+      DISABLE_INTERNAL_ACCOUNTS: false
+
+      OIDC_ENABLED: true
+      OIDC_DISPLAY_NAME: PocketID
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: $BYTESTASH_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $BYTESTASH_OIDC_SECRET
+
+    networks: [traefik]
+    labels:
+      homepage.group: Code
+      homepage.name: ByteStash
+      homepage.icon: bytestash.png
+      homepage.href: https://stash.chenn.dev
+      homepage.description: Code Snippets
+
+      traefik.enable: true
+      traefik.http.routers.stash.rule: Host(`stash.henn.dev`)
+      traefik.http.routers.stash.entrypoints: websecure
+      traefik.http.routers.stash.middlewares: hdrs@file
+      traefik.http.routers.stash.tls.certresolver: cf
+      traefik.http.services.stash.loadbalancer.server.port: 5000
+
+      pangolin.public-resources.stash.name: stash
+      pangolin.public-resources.stash.protocol: http
+      pangolin.public-resources.stash.full-domain: stash.chenn.dev
+      pangolin.public-resources.stash.ssl: true
+      pangolin.public-resources.stash.targets[0].method: http
+      pangolin.public-resources.stash.targets[0].port: 5000
+      pangolin.public-resources.stash.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.stash.targets[0].healthcheck.hostname: bytestash
+      pangolin.public-resources.stash.targets[0].healthcheck.port: 5000
+      pangolin.public-resources.stash.targets[0].healthcheck.path: /
+      pangolin.public-resources.stash.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.stash.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.stash.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.stash.auth.sso-enabled: true
+      pangolin.public-resources.stash.auth.sso-roles[0]: Member
+      pangolin.public-resources.stash.rules[0].action: pass
+      pangolin.public-resources.stash.rules[0].match: country
+      pangolin.public-resources.stash.rules[0].value: US
+      pangolin.public-resources.stash.rules[0].priority: 0
+      pangolin.public-resources.stash.rules[1].action: deny
+      pangolin.public-resources.stash.rules[1].match: country
+      pangolin.public-resources.stash.rules[1].value: ALL
+      pangolin.public-resources.stash.rules[1].priority: 10

@@ -26,16 +26,42 @@ services:
       - $DATA/comfy/input:/root/ComfyUI/input
       - $DATA/comfy/output:/root/ComfyUI/output
       - $DATA/comfy/workflows:/root/ComfyUI/user/default/workflows
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8188']
     networks: [traefik]
     labels:
+      homepage.group: AI
+      homepage.name: ComfyUI
+      homepage.icon: comfy-ui.png
+      homepage.href: https://comfy.chenn.dev
+      homepage.description: Image Gen
+
       traefik.enable: true
       traefik.http.routers.comfy.rule: Host(`comfy.henn.dev`)
       traefik.http.routers.comfy.entrypoints: websecure
       traefik.http.routers.comfy.middlewares: hdrs@file
       traefik.http.routers.comfy.tls.certresolver: cf
       traefik.http.services.comfy.loadbalancer.server.port: 8188
-      homepage.group: AI
-      homepage.name: ComfyUI
-      homepage.icon: comfy-ui.png
-      homepage.href: https://comfy.henn.dev
-      homepage.description: Image Gen
+
+      pangolin.public-resources.comfy.name: comfy
+      pangolin.public-resources.comfy.protocol: http
+      pangolin.public-resources.comfy.full-domain: comfy.chenn.dev
+      pangolin.public-resources.comfy.ssl: true
+      pangolin.public-resources.comfy.targets[0].method: http
+      pangolin.public-resources.comfy.targets[0].port: 8188
+      pangolin.public-resources.comfy.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.comfy.targets[0].healthcheck.hostname: comfy
+      pangolin.public-resources.comfy.targets[0].healthcheck.port: 8188
+      pangolin.public-resources.comfy.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.comfy.targets[0].healthcheck.path: /
+      pangolin.public-resources.comfy.auth.sso-enabled: true
+      pangolin.public-resources.comfy.auth.sso-roles[0]: Member
+      pangolin.public-resources.comfy.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.comfy.rules[0].action: pass
+      pangolin.public-resources.comfy.rules[0].match: country
+      pangolin.public-resources.comfy.rules[0].value: US
+      pangolin.public-resources.comfy.rules[0].priority: 0
+      pangolin.public-resources.comfy.rules[1].action: deny
+      pangolin.public-resources.comfy.rules[1].match: country
+      pangolin.public-resources.comfy.rules[1].value: ALL
+      pangolin.public-resources.comfy.rules[1].priority: 10

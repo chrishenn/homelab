@@ -8,32 +8,65 @@ services:
     volumes:
       - $DATA/ollama/webui:/app/backend/data
     environment:
-      OLLAMA_BASE_URLS: http://ollama:11434
+      ENABLE_PERSISTENT_CONFIG: false
+      WEBUI_URL: https://ollama.chenn.dev
       WEBUI_AUTH: True
       WEBUI_NAME: Chicken AI
-      WEBUI_URL: https://ollama.henn.dev
+      OLLAMA_BASE_URLS: http://ollama:11434
 
       AUDIO_STT_ENGINE: openai
       AUDIO_STT_OPENAI_API_BASE_URL: http://speach:8000/v1
-      AUDIO_STT_OPENAI_API_KEY: 'super_secure_key'
-      AUDIO_STT_MODEL: 'Systran/faster-whisper-large-v3'
+      AUDIO_STT_OPENAI_API_KEY: super_secure_key
+      AUDIO_STT_MODEL: Systran/faster-whisper-large-v3
 
       AUDIO_TTS_ENGINE: openai
       AUDIO_TTS_OPENAI_API_BASE_URL: http://speach:8000/v1
-      AUDIO_TTS_OPENAI_API_KEY: 'super_secure_key'
-      AUDIO_TTS_MODEL: 'speaches-ai/Kokoro-82M-v1.0-ONNX'
+      AUDIO_TTS_OPENAI_API_KEY: super_secure_key
+      AUDIO_TTS_MODEL: speaches-ai/Kokoro-82M-v1.0-ONNX
       AUDIO_TTS_VOICE: bf_isabella
 
+      OPENID_PROVIDER_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+      OAUTH_CLIENT_ID: $OLLAMA_OIDC_CLIENT
+      OAUTH_CLIENT_SECRET: $OLLAMA_OIDC_SECRET
+      OAUTH_PROVIDER_NAME: PocketID
+      OAUTH_SCOPES: openid email profile
+      OAUTH_CODE_CHALLENGE_METHOD: S256
+      OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
+
+      ENABLE_OAUTH_ID_TOKEN_COOKIE: false
+      ENABLE_OAUTH_PERSISTENT_CONFIG: false
+      ENABLE_OAUTH_SIGNUP: true
+      ENABLE_LOGIN_FORM: true
+      ENABLE_PASSWORD_AUTH: true
+
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8080']
     networks: [traefik]
     labels:
-      traefik.enable: true
-      traefik.http.routers.ollama.rule: Host(`ollama.henn.dev`)
-      traefik.http.routers.ollama.entrypoints: websecure
-      traefik.http.routers.ollama.middlewares: hdrs@file
-      traefik.http.routers.ollama.tls.certresolver: cf
-      traefik.http.services.ollama.loadbalancer.server.port: 8080
       homepage.group: AI
       homepage.name: Ollama
       homepage.icon: ollama.png
-      homepage.href: https://ollama.henn.dev
+      homepage.href: https://ollama.chenn.dev
       homepage.description: AI Chat
+
+      pangolin.public-resources.ollama.name: ollama
+      pangolin.public-resources.ollama.protocol: http
+      pangolin.public-resources.ollama.full-domain: ollama.chenn.dev
+      pangolin.public-resources.ollama.ssl: true
+      pangolin.public-resources.ollama.targets[0].method: http
+      pangolin.public-resources.ollama.targets[0].port: 8080
+      pangolin.public-resources.ollama.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.ollama.targets[0].healthcheck.hostname: openwebui
+      pangolin.public-resources.ollama.targets[0].healthcheck.port: 8080
+      pangolin.public-resources.ollama.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.ollama.targets[0].healthcheck.path: /
+      pangolin.public-resources.ollama.auth.sso-enabled: true
+      pangolin.public-resources.ollama.auth.sso-roles[0]: Member
+      pangolin.public-resources.ollama.rules[0].action: pass
+      pangolin.public-resources.ollama.rules[0].match: country
+      pangolin.public-resources.ollama.rules[0].value: US
+      pangolin.public-resources.ollama.rules[0].priority: 0
+      pangolin.public-resources.ollama.rules[1].action: deny
+      pangolin.public-resources.ollama.rules[1].match: country
+      pangolin.public-resources.ollama.rules[1].value: ALL
+      pangolin.public-resources.ollama.rules[1].priority: 10

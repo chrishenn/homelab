@@ -1,3 +1,5 @@
+"""see: https://go-acme.github.io/lego/dns/cloudflare/"""
+
 from enum import Enum, StrEnum
 from pathlib import Path
 from shutil import copy2
@@ -92,11 +94,10 @@ prefix_srcurl = {
 
 class SecretVars(StrEnum):
     # ruff: noqa: S105
-    CF_API_EMAIL = "CF_API_EMAIL"
     CF_DNS_API_TOKEN = "CF_DNS_API_TOKEN"
 
 
-secrets_empty = {SecretVars.CF_API_EMAIL: None, SecretVars.CF_DNS_API_TOKEN: None}
+secrets_empty = {SecretVars.CF_DNS_API_TOKEN: None}
 
 
 def render_dynamic(env: Environment) -> None:
@@ -115,12 +116,8 @@ def render_static(env: Environment, secrets: dict[str, str]) -> None:
     template = env.get_template("static.yml")
     outf = LocalPath.sync.v / "traefik.yml"
 
-    cf_email = secrets.get(SecretVars.CF_API_EMAIL)
-    assert cf_email, "cloudflare email missing. Is there a secrets.env with CF_API_EMAIL defined?"
-
     var = {
         "server_dyncfg": ServerPath.rules.p,
-        "cf_email": cf_email,
         "server_cert": ServerPath.cert.p,
         "server_log": ServerPath.log.p,
         "server_acclog": ServerPath.acclog.p,
@@ -139,9 +136,7 @@ def d2envsecretslist(secretsd: dict[str, str]) -> list[str]:
 
 
 def render_unit(env: Environment, secrets: dict[str, str]) -> None:
-    cf_email, cf_dns_api_token = secrets.get(SecretVars.CF_API_EMAIL), secrets.get(SecretVars.CF_DNS_API_TOKEN)
-
-    assert cf_email, f"cloudflare email missing. Is there a secrets.env with {list(SecretVars)} defined?"
+    cf_dns_api_token = secrets.get(SecretVars.CF_DNS_API_TOKEN)
     assert cf_dns_api_token, f"cloudflare dns token missing. Is there a secrets.env with {list(SecretVars)} defined?"
 
     template = env.get_template("traefik.service")

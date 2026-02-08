@@ -1,0 +1,66 @@
+# yes you really have to do this manually
+# sudo mkdir -p $DATA/vikunja/files
+# sudo mkdir -p $DATA/vikunja/db
+# sudo sudo chown -R 1000:1000 $DATA/vikunja
+# note: image contains no shell, so healthcheck is not possible
+
+---
+services:
+  vikunja:
+    profiles: [vikunja]
+    image: vikunja/vikunja
+    container_name: vikunja
+    restart: unless-stopped
+    user: $PUID:$PGID
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.chenn.dev/
+      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+      VIKUNJA_SERVICE_JWTSECRET: $VIKUNJA_SECRET
+
+      VIKUNJA_AUTH_OPENID_ENABLED: true
+      VIKUNJA_AUTH_OPENID_PROVIDERS_POCKETID_AUTHURL: $OIDC
+      VIKUNJA_AUTH_OPENID_PROVIDERS_POCKETID_CLIENTID: $VIKUNJA_OIDC_CLIENT
+      VIKUNJA_AUTH_OPENID_PROVIDERS_POCKETID_CLIENTSECRET: $VIKUNJA_OIDC_SECRET
+      VIKUNJA_AUTH_OPENID_PROVIDERS_POCKETID_NAME: PocketID
+      VIKUNJA_AUTH_OPENID_PROVIDERS_POCKETID_SCOPE: openid profile email
+    volumes:
+      - $DATA/vikunja/files:/app/vikunja/files
+      - $DATA/vikunja/db:/db
+    networks: [traefik]
+    labels:
+      homepage.group: Tools
+      homepage.name: Vikunja
+      homepage.icon: vikunja.png
+      homepage.href: https://vikunja.chenn.dev
+      homepage.description: Project Planner
+
+      traefik.enable: true
+      traefik.http.routers.vikunja.rule: Host(`vikunja.henn.dev`)
+      traefik.http.routers.vikunja.entrypoints: websecure
+      traefik.http.routers.vikunja.middlewares: hdrs@file
+      traefik.http.routers.vikunja.tls.certresolver: cf
+      traefik.http.services.vikunja.loadbalancer.server.port: 3456
+
+      pangolin.public-resources.vikunja.name: vikunja
+      pangolin.public-resources.vikunja.protocol: http
+      pangolin.public-resources.vikunja.full-domain: vikunja.chenn.dev
+      pangolin.public-resources.vikunja.ssl: true
+      pangolin.public-resources.vikunja.targets[0].method: http
+      pangolin.public-resources.vikunja.targets[0].port: 3456
+      pangolin.public-resources.vikunja.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.vikunja.targets[0].healthcheck.hostname: vikunja
+      pangolin.public-resources.vikunja.targets[0].healthcheck.port: 3456
+      pangolin.public-resources.vikunja.targets[0].healthcheck.path: /
+      pangolin.public-resources.vikunja.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.vikunja.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.vikunja.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.vikunja.auth.sso-enabled: true
+      pangolin.public-resources.vikunja.auth.sso-roles[0]: Member
+      pangolin.public-resources.vikunja.rules[0].action: pass
+      pangolin.public-resources.vikunja.rules[0].match: country
+      pangolin.public-resources.vikunja.rules[0].value: US
+      pangolin.public-resources.vikunja.rules[0].priority: 0
+      pangolin.public-resources.vikunja.rules[1].action: deny
+      pangolin.public-resources.vikunja.rules[1].match: country
+      pangolin.public-resources.vikunja.rules[1].value: ALL
+      pangolin.public-resources.vikunja.rules[1].priority: 10

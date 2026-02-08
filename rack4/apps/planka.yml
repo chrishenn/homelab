@@ -10,32 +10,55 @@ services:
       - $DATA/planka/background-images:/app/public/background-images
       - $DATA/planka/attachments:/app/private/attachments
     environment:
-      BASE_URL: https://planka.henn.dev
+      BASE_URL: https://planka.chenn.dev
       DATABASE_URL: postgresql://postgres@planka_db/planka
       SECRET_KEY: notsecretkey
       TRUST_PROXY: true
       MAX_UPLOAD_FILE_SIZE: 10G
       DEFAULT_LANGUAGE: en-US
+
       DEFAULT_ADMIN_USERNAME: ${USER}
       DEFAULT_ADMIN_PASSWORD: ${PASS}
       DEFAULT_ADMIN_EMAIL: ${EMAIL}
       DEFAULT_ADMIN_NAME: ${USER}
-    depends_on:
-      planka_db:
-        condition: service_healthy
+
+      OIDC_ISSUER: $OIDC
+      OIDC_CLIENT_ID: $PLANKA_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $PLANKA_OIDC_SECRET
+      OIDC_SCOPES: openid profile email groups
+      OIDC_ROLES_ATTRIBUTE: groups
+      OIDC_ADMIN_ROLES: admin
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO --no-verbose http://127.0.0.1:1337']
     networks: [traefik]
     labels:
-      traefik.enable: true
-      traefik.http.routers.planka.rule: Host(`planka.henn.dev`)
-      traefik.http.routers.planka.entrypoints: websecure
-      traefik.http.routers.planka.middlewares: hdrs@file
-      traefik.http.routers.planka.tls.certresolver: cf
-      traefik.http.services.planka.loadbalancer.server.port: 1337
       homepage.group: Tools
       homepage.name: Planka
       homepage.icon: planka.png
-      homepage.href: https://planka.henn.dev
+      homepage.href: https://planka.chenn.dev
       homepage.description: Private Trello
+
+      pangolin.public-resources.planka.name: planka
+      pangolin.public-resources.planka.protocol: http
+      pangolin.public-resources.planka.full-domain: planka.chenn.dev
+      pangolin.public-resources.planka.ssl: true
+      pangolin.public-resources.planka.targets[0].method: http
+      pangolin.public-resources.planka.targets[0].port: 1337
+      pangolin.public-resources.planka.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.planka.targets[0].healthcheck.hostname: planka
+      pangolin.public-resources.planka.targets[0].healthcheck.port: 1337
+      pangolin.public-resources.planka.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.planka.targets[0].healthcheck.path: /
+      pangolin.public-resources.planka.auth.sso-enabled: true
+      pangolin.public-resources.planka.auth.sso-roles[0]: Member
+      pangolin.public-resources.planka.rules[0].action: pass
+      pangolin.public-resources.planka.rules[0].match: country
+      pangolin.public-resources.planka.rules[0].value: US
+      pangolin.public-resources.planka.rules[0].priority: 0
+      pangolin.public-resources.planka.rules[1].action: deny
+      pangolin.public-resources.planka.rules[1].match: country
+      pangolin.public-resources.planka.rules[1].value: ALL
+      pangolin.public-resources.planka.rules[1].priority: 10
 
   planka_db:
     profiles: [planka]
@@ -49,7 +72,4 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d planka']
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks: [traefik]

@@ -1,0 +1,79 @@
+# pocketid passkeys only work with one domain (can't find a way to enable ROR). This instance is public only
+# initial login: https://pocketid.chenn.dev/setup
+# dc exec pocketid ./pocket-id export --path - > ./pocketid.zip
+# cat ./pocketid.zip | dc run pocketid ./pocket-id import --yes --path -
+---
+x-pid_env: &pid_env
+  APP_NAME: Chicken ID
+  APP_URL: https://pocketid.chenn.dev
+  ENCRYPTION_KEY: $POCKETID_SECRET
+  PUID: $PUID
+  PGID: $PGID
+  TRUST_PROXY: true
+  MAXMIND_LICENSE_KEY: $MAXMIND_LICENSE
+
+  UI_CONFIG_DISABLED: true
+  SMTP_HOST: $SMTP_HOST
+  SMTP_PORT: 465
+  SMTP_FROM: $SMTP_USER
+  SMTP_USER: $SMTP_USER
+  SMTP_PASSWORD: $SMTP_TOKEN
+  SMTP_TLS: tls
+
+  EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: true
+  EMAIL_VERIFICATION_ENABLED: true
+  EMAILS_VERIFIED: false
+  SESSION_DURATION: 360
+  DISABLE_ANIMATIONS: true
+
+services:
+  pocketid:
+    profiles: [pocketid]
+    image: ghcr.io/pocket-id/pocket-id:v2
+    container_name: pocketid
+    restart: unless-stopped
+    environment:
+      <<: *pid_env
+    volumes:
+      - $DATA/pocketid/data:/app/data
+    healthcheck:
+      test: ['CMD', '/app/pocket-id', 'healthcheck']
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: PocketID
+      homepage.icon: pocket-id.png
+      homepage.href: https://pocketid.chenn.dev
+      homepage.description: OIDC Server
+
+      pangolin.public-resources.pocketid.name: pocketid
+      pangolin.public-resources.pocketid.protocol: http
+      pangolin.public-resources.pocketid.full-domain: pocketid.chenn.dev
+      pangolin.public-resources.pocketid.ssl: true
+      pangolin.public-resources.pocketid.targets[0].method: http
+      pangolin.public-resources.pocketid.targets[0].port: 1411
+      pangolin.public-resources.pocketid.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.pocketid.targets[0].healthcheck.hostname: pocketid
+      pangolin.public-resources.pocketid.targets[0].healthcheck.port: 1411
+      pangolin.public-resources.pocketid.targets[0].healthcheck.path: /
+      pangolin.public-resources.pocketid.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.pocketid.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.pocketid.targets[0].healthcheck.timeout: 5
+
+      pangolin.public-resources.pocketid.auth.sso-enabled: true
+      pangolin.public-resources.pocketid.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.pocketid.rules[0].action: pass
+      pangolin.public-resources.pocketid.rules[0].match: path
+      pangolin.public-resources.pocketid.rules[0].value: /login
+      pangolin.public-resources.pocketid.rules[0].priority: 0
+
+      pangolin.public-resources.pocketid.rules[1].action: pass
+      pangolin.public-resources.pocketid.rules[1].match: path
+      pangolin.public-resources.pocketid.rules[1].value: /settings
+      pangolin.public-resources.pocketid.rules[1].priority: 5
+
+      pangolin.public-resources.pocketid.rules[2].action: allow
+      pangolin.public-resources.pocketid.rules[2].match: path
+      pangolin.public-resources.pocketid.rules[2].value: '*'
+      pangolin.public-resources.pocketid.rules[2].priority: 10

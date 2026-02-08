@@ -1,0 +1,84 @@
+---
+services:
+  docmost:
+    profiles: [docmost]
+    image: docmost/docmost:latest
+    container_name: docmost
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      APP_URL: https://docmost.chenn.dev
+      APP_SECRET: ${DOCMOST_SECRET}
+      DATABASE_URL: ${DOCMOST_DBURL}
+      REDIS_URL: redis://docmost_redis:6379
+
+      MAIL_DRIVER: smtp
+      SMTP_HOST: $SMTP_HOST
+      SMTP_PORT: 465
+      SMTP_USERNAME: $SMTP_USER
+      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_SECURE: true
+      MAIL_FROM_ADDRESS: $SMTP_USER
+    volumes:
+      - $DATA/docmost/docmost:/app/data/storage
+    networks: [traefik, docmost]
+    labels:
+      homepage.group: File Edit, Convert
+      homepage.name: Docmost
+      homepage.icon: docmost.png
+      homepage.href: https://docmost.chenn.dev
+      homepage.description: Document Collaboration
+
+      traefik.enable: true
+      traefik.http.routers.docmost.rule: Host(`docmost.henn.dev`)
+      traefik.http.routers.docmost.entrypoints: websecure
+      traefik.http.routers.docmost.middlewares: hdrs@file
+      traefik.http.routers.docmost.tls.certresolver: cf
+      traefik.http.services.docmost.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.docmost.name: docmost
+      pangolin.public-resources.docmost.protocol: http
+      pangolin.public-resources.docmost.full-domain: docmost.chenn.dev
+      pangolin.public-resources.docmost.ssl: true
+      pangolin.public-resources.docmost.targets[0].method: http
+      pangolin.public-resources.docmost.targets[0].port: 3000
+      pangolin.public-resources.docmost.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.docmost.targets[0].healthcheck.hostname: docmost
+      pangolin.public-resources.docmost.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.docmost.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.docmost.targets[0].healthcheck.path: /
+      pangolin.public-resources.docmost.auth.sso-enabled: true
+      pangolin.public-resources.docmost.auth.sso-roles[0]: Member
+      pangolin.public-resources.docmost.rules[0].action: pass
+      pangolin.public-resources.docmost.rules[0].match: country
+      pangolin.public-resources.docmost.rules[0].value: US
+      pangolin.public-resources.docmost.rules[0].priority: 0
+      pangolin.public-resources.docmost.rules[1].action: deny
+      pangolin.public-resources.docmost.rules[1].match: country
+      pangolin.public-resources.docmost.rules[1].value: ALL
+      pangolin.public-resources.docmost.rules[1].priority: 10
+
+  docmost_pg:
+    profiles: [docmost]
+    image: postgres:16-alpine
+    container_name: docmost_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: docmost
+      POSTGRES_USER: docmost
+      POSTGRES_PASSWORD: DB_PASSWORD
+    volumes:
+      - $DATA/docmost/docmost_pg:/var/lib/postgresql/data
+    networks: [docmost]
+
+  docmost_redis:
+    profiles: [docmost]
+    image: redis:7.2-alpine
+    container_name: docmost_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/docmost/docmost_redis:/data
+    networks: [docmost]
+
+networks:
+  docmost:

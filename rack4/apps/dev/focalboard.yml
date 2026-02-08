@@ -1,0 +1,21 @@
+---
+services:
+  focalboard:
+    profiles: [focalboard]
+    image: mattermost/focalboard
+    container_name: focalboard
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Focalboard
+      homepage.instance.private.icon: focalboard.png
+      homepage.instance.private.href: https://focalboard.henn.dev
+      homepage.instance.private.description: Private Trello
+
+      traefik.enable: true
+      traefik.http.routers.focalboard.rule: Host(`focalboard.henn.dev`)
+      traefik.http.routers.focalboard.entrypoints: websecure
+      traefik.http.routers.focalboard.middlewares: hdrs@file
+      traefik.http.routers.focalboard.tls.certresolver: cf
+      traefik.http.services.focalboard.loadbalancer.server.port: 8000

@@ -1,0 +1,68 @@
+---
+services:
+  warden:
+    profiles: [warden]
+    image: vaultwarden/server:latest
+    container_name: warden
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      DOMAIN: https://warden.chenn.dev
+
+      SMTP_HOST: $SMTP_HOST
+      SMTP_FROM: $SMTP_USER
+      SMTP_PORT: 465
+      SMTP_SECURITY: force_tls
+      SMTP_USERNAME: $SMTP_USER
+      SMTP_PASSWORD: $SMTP_TOKEN
+
+      SSO_ENABLED: true
+      SSO_ONLY: true
+      SSO_SIGNUPS_MATCH_EMAIL: true
+      SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION: false
+
+      SSO_AUTHORITY: $OIDC
+      SSO_SCOPES: email profile groups
+      SSO_PKCE: true
+      SSO_CLIENT_ID: $WARDEN_OIDC_CLIENT
+      SSO_CLIENT_SECRET: $WARDEN_OIDC_SECRET
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - $DATA/warden/data:/data/
+
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Vaultwarden
+      homepage.icon: vaultwarden.png
+      homepage.href: https://warden.chenn.dev
+      homepage.description: Private Bitwarden
+
+      pangolin.public-resources.warden.name: warden
+      pangolin.public-resources.warden.protocol: http
+      pangolin.public-resources.warden.full-domain: warden.chenn.dev
+      pangolin.public-resources.warden.ssl: true
+      pangolin.public-resources.warden.targets[0].method: http
+      pangolin.public-resources.warden.targets[0].port: 80
+      pangolin.public-resources.warden.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.warden.targets[0].healthcheck.hostname: warden
+      pangolin.public-resources.warden.targets[0].healthcheck.port: 80
+      pangolin.public-resources.warden.targets[0].healthcheck.path: /
+      pangolin.public-resources.warden.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.warden.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.warden.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.warden.auth.sso-enabled: true
+      pangolin.public-resources.warden.auth.sso-roles[0]: Member
+      pangolin.public-resources.warden.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.warden.rules[0].action: pass
+      pangolin.public-resources.warden.rules[0].match: country
+      pangolin.public-resources.warden.rules[0].value: US
+      pangolin.public-resources.warden.rules[0].priority: 0
+      pangolin.public-resources.warden.rules[1].action: deny
+      pangolin.public-resources.warden.rules[1].match: country
+      pangolin.public-resources.warden.rules[1].value: ALL
+      pangolin.public-resources.warden.rules[1].priority: 10

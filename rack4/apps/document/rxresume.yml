@@ -1,0 +1,65 @@
+---
+services:
+  rxresume:
+    profiles: [rxresume]
+    image: amruthpillai/reactive-resume:latest
+    restart: unless-stopped
+    container_name: rxresume
+    environment:
+      TZ: $TZ
+      APP_URL: https://rxresume.henn.dev
+      PRINTER_ENDPOINT: http://rxresume_chrome:3000
+      DATABASE_URL: ${RXRESUME_PGURL}
+      AUTH_SECRET: ${RXRESUME_AUTH_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: 465
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_TOKEN}
+      SMTP_FROM: ${SMTP_USER}
+      SMTP_SECURE: true
+    volumes:
+      - $DATA/rxresume/data:/app/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: File Edit, Convert
+      homepage.instance.private.name: rxresume
+      homepage.instance.private.icon: reactive-resume.png
+      homepage.instance.private.href: https://rxresume.henn.dev
+      homepage.instance.private.description: Resume Editor
+
+      traefik.enable: true
+      traefik.http.routers.rxresume.rule: Host(`rxresume.henn.dev`)
+      traefik.http.routers.rxresume.entrypoints: websecure
+      traefik.http.routers.rxresume.middlewares: hdrs@file
+      traefik.http.routers.rxresume.tls.certresolver: cf
+      traefik.http.services.rxresume.loadbalancer.server.port: 3000
+
+  rxresume_chrome:
+    profiles: [rxresume]
+    image: ghcr.io/browserless/chromium:latest
+    restart: unless-stopped
+    container_name: rxresume_chrome
+    environment:
+      TIMEOUT: 120000
+      CONCURRENT: 10
+      HEALTH: true
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/pressure']
+    networks: [traefik]
+
+  rxresume_pg:
+    profiles: [rxresume]
+    image: postgres:16-alpine
+    container_name: rxresume_pg
+    restart: unless-stopped
+    volumes:
+      - $DATA/rxresume/rxresume_pg:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+    networks: [traefik]

@@ -7,14 +7,37 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
+      homepage.group: Games
+      homepage.name: Wordle
+      homepage.icon: microsoft-word.png
+      homepage.href: https://wordle.chenn.dev
+      homepage.description: Wordle Clone
+
       traefik.enable: true
       traefik.http.routers.wordle.rule: Host(`wordle.henn.dev`)
       traefik.http.routers.wordle.entrypoints: websecure
       traefik.http.routers.wordle.middlewares: hdrs@file
       traefik.http.routers.wordle.tls.certresolver: cf
       traefik.http.services.wordle.loadbalancer.server.port: 80
-      homepage.group: Games
-      homepage.name: Wordle
-      homepage.icon: microsoft-word.png
-      homepage.href: https://wordle.henn.dev
-      homepage.description: Wordle Clone
+
+      pangolin.public-resources.wordle.name: wordle
+      pangolin.public-resources.wordle.protocol: http
+      pangolin.public-resources.wordle.full-domain: wordle.chenn.dev
+      pangolin.public-resources.wordle.ssl: true
+      pangolin.public-resources.wordle.targets[0].method: http
+      pangolin.public-resources.wordle.targets[0].port: 80
+      pangolin.public-resources.wordle.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.wordle.targets[0].healthcheck.hostname: wordle
+      pangolin.public-resources.wordle.targets[0].healthcheck.port: 80
+      pangolin.public-resources.wordle.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.wordle.targets[0].healthcheck.path: /
+      pangolin.public-resources.wordle.auth.sso-enabled: true
+      pangolin.public-resources.wordle.auth.sso-roles[0]: Member
+      pangolin.public-resources.wordle.rules[0].action: pass
+      pangolin.public-resources.wordle.rules[0].match: country
+      pangolin.public-resources.wordle.rules[0].value: US
+      pangolin.public-resources.wordle.rules[0].priority: 0
+      pangolin.public-resources.wordle.rules[1].action: deny
+      pangolin.public-resources.wordle.rules[1].match: country
+      pangolin.public-resources.wordle.rules[1].value: ALL
+      pangolin.public-resources.wordle.rules[1].priority: 10

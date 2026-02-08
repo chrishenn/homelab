@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function certmanager_install() {
 	# https://github.com/cert-manager/cert-manager/releases/latest
 	ver="v1.18.2"

@@ -1,0 +1,14 @@
+# https://gethomepage.instance.private.dev/configs/info-widgets/
+---
+- resources:
+    cpu: true
+    memory: true
+
+- openmeteo:
+    timezone: America/Chicago
+    latitude: 42.038588
+    longitude: -87.702809
+    units: imperial
+    cache: 5
+    format:
+      maximumFractionDigits: 1

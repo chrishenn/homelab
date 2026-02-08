@@ -1,0 +1,54 @@
+---
+services:
+  gist:
+    profiles: [gist]
+    image: ghcr.io/thomiceli/opengist:1.10
+    container_name: gist
+    restart: unless-stopped
+    environment:
+      OG_OIDC_PROVIDER_NAME: PocketID
+      OG_OIDC_CLIENT_KEY: ${GIST_OIDC_CLIENT}
+      OG_OIDC_SECRET: ${GIST_OIDC_SECRET}
+      OG_OIDC_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+    volumes:
+      - $DATA/gist:/opengist
+    healthcheck:
+      test: ['CMD', 'curl', '-fs', 'http://localhost:6157/healthcheck']
+    networks: [traefik]
+    labels:
+      homepage.group: Code
+      homepage.name: OpenGist
+      homepage.icon: opengist.png
+      homepage.href: https://gist.chenn.dev
+      homepage.description: Private Gists
+
+      traefik.enable: true
+      traefik.http.routers.gist.rule: Host(`gist.henn.dev`)
+      traefik.http.routers.gist.entrypoints: websecure
+      traefik.http.routers.gist.middlewares: hdrs@file
+      traefik.http.routers.gist.tls.certresolver: cf
+      traefik.http.services.gist.loadbalancer.server.port: 6157
+
+      pangolin.public-resources.gist.name: gist
+      pangolin.public-resources.gist.protocol: http
+      pangolin.public-resources.gist.full-domain: gist.chenn.dev
+      pangolin.public-resources.gist.ssl: true
+      pangolin.public-resources.gist.targets[0].method: http
+      pangolin.public-resources.gist.targets[0].port: 6157
+      pangolin.public-resources.gist.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.gist.targets[0].healthcheck.hostname: gist
+      pangolin.public-resources.gist.targets[0].healthcheck.port: 6157
+      pangolin.public-resources.gist.targets[0].healthcheck.path: /healthcheck
+      pangolin.public-resources.gist.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.gist.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.gist.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.gist.auth.sso-enabled: true
+      pangolin.public-resources.gist.auth.sso-roles[0]: Member
+      pangolin.public-resources.gist.rules[0].action: pass
+      pangolin.public-resources.gist.rules[0].match: country
+      pangolin.public-resources.gist.rules[0].value: US
+      pangolin.public-resources.gist.rules[0].priority: 0
+      pangolin.public-resources.gist.rules[1].action: deny
+      pangolin.public-resources.gist.rules[1].match: country
+      pangolin.public-resources.gist.rules[1].value: ALL
+      pangolin.public-resources.gist.rules[1].priority: 10

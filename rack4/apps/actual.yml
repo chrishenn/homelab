@@ -13,12 +13,14 @@ services:
       - $DATA/actualbudget:/data
     healthcheck:
       test: ['CMD-SHELL', 'node src/scripts/health-check.js']
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Actual Budget
+      homepage.instance.private.icon: actual-budget.png
+      homepage.instance.private.href: https://actual.henn.dev
+      homepage.instance.private.description: Budgeting
+
       traefik.enable: true
       docker-volume-backup.stop-during-backup: actual
       traefik.http.routers.actual.rule: Host(`actual.henn.dev`)
@@ -26,11 +28,6 @@ services:
       traefik.http.routers.actual.middlewares: hdrs@file
       traefik.http.routers.actual.tls.certresolver: cf
       traefik.http.services.actual.loadbalancer.server.port: 5006
-      homepage.group: Tools
-      homepage.name: Actual Budget
-      homepage.icon: actual-budget.png
-      homepage.href: https://actual.henn.dev
-      homepage.description: Budgeting
 
   actual_backup:
     profiles: [actual]

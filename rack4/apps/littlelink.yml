@@ -51,14 +51,15 @@ services:
       FOOTER: Chris Henn © 2025
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Littlelink
+      homepage.instance.private.icon: littlelink-custom.png
+      homepage.instance.private.href: https://littlelink.henn.dev
+      homepage.instance.private.description: Linktree (simple)
+
       traefik.enable: true
       traefik.http.routers.littlelink.rule: Host(`littlelink.henn.dev`)
       traefik.http.routers.littlelink.entrypoints: websecure
       traefik.http.routers.littlelink.middlewares: hdrs@file
       traefik.http.routers.littlelink.tls.certresolver: cf
       traefik.http.services.littlelink.loadbalancer.server.port: 3000
-      homepage.group: Tools
-      homepage.name: Littlelink
-      homepage.icon: littlelink-custom.png
-      homepage.href: https://littlelink.henn.dev
-      homepage.description: Linktree (simple)

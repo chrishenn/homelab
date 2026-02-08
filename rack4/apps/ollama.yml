@@ -17,7 +17,7 @@ services:
       OLLAMA_CONTEXT_LENGTH: 32000
       OLLAMA_FLASH_ATTENTION: 1
     volumes:
-      - $DATA/ollama/ollama:/root/.ollama
+      - $DATA/ollama:/root/.ollama
     networks: [traefik]
     labels:
       traefik.enable: true
@@ -25,4 +25,4 @@ services:
       traefik.http.routers.ollama_api.entrypoints: websecure
       traefik.http.routers.ollama_api.middlewares: hdrs@file
       traefik.http.routers.ollama_api.tls.certresolver: cf
-      traefik.http.services.ollama_api.loadbalancer.server.port: 11434
+      traefik.http.services.ollama_api.loadbalancer.server.port:

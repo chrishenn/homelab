@@ -1,0 +1,89 @@
+---
+services:
+  hedge:
+    profiles: [hedge]
+    image: lscr.io/linuxserver/hedgedoc:latest
+    container_name: hedge
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+
+      CMD_DOMAIN: hedge.chenn.dev
+      CMD_ALLOW_ORIGIN: localhost,hedge.henn.dev,hedge.chenn.dev
+      CMD_URL_ADDPORT: false
+      CMD_PROTOCOL_USESSL: false
+
+      CMD_DB_DIALECT: postgres
+      DB_HOST: hedge_db
+      DB_PORT: 5432
+      DB_NAME: hedge
+      DB_USER: postgres
+      DB_PASS: postgres
+
+      CMD_OAUTH2_AUTHORIZATION_URL: https://pocketid.chenn.dev/authorize
+      CMD_OAUTH2_TOKEN_URL: https://pocketid.chenn.dev/api/oidc/token
+      CMD_OAUTH2_USER_PROFILE_URL: https://pocketid.chenn.dev/api/oidc/userinfo
+      CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR: sub
+      CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR: name
+      CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR: email
+      CMD_OAUTH2_CLIENT_ID: $HEDGE_OIDC_CLIENT
+      CMD_OAUTH2_CLIENT_SECRET: $HEDGE_OIDC_SECRET
+      CMD_OAUTH2_PROVIDERNAME: PocketID
+      CMD_OAUTH2_SCOPE: openid email profile
+      CMD_OAUTH2_PKCE: true
+
+    volumes:
+      - $DATA/hedge/config:/config
+    networks: [traefik]
+    labels:
+      homepage.group: File Edit, Convert
+      homepage.name: Hedge Doc
+      homepage.icon: hedgedoc.png
+      homepage.href: https://hedge.chenn.dev
+      homepage.description: Realtime Markdown Editing
+
+      #      traefik.enable: true
+      #      traefik.http.routers.hedge.rule: Host(`hedge.henn.dev`)
+      #      traefik.http.routers.hedge.entrypoints: websecure
+      #      traefik.http.routers.hedge.middlewares: hdrs@file
+      #      traefik.http.routers.hedge.tls.certresolver: cf
+      #      traefik.http.services.hedge.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.hedge.name: hedge
+      pangolin.public-resources.hedge.protocol: http
+      pangolin.public-resources.hedge.full-domain: hedge.chenn.dev
+      pangolin.public-resources.hedge.ssl: true
+      pangolin.public-resources.hedge.targets[0].method: http
+      pangolin.public-resources.hedge.targets[0].port: 3000
+      pangolin.public-resources.hedge.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.hedge.targets[0].healthcheck.hostname: hedge
+      pangolin.public-resources.hedge.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.hedge.targets[0].healthcheck.path: /
+      pangolin.public-resources.hedge.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.hedge.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.hedge.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.hedge.auth.sso-enabled: true
+      pangolin.public-resources.hedge.auth.sso-roles[0]: Member
+      pangolin.public-resources.hedge.rules[0].action: pass
+      pangolin.public-resources.hedge.rules[0].match: country
+      pangolin.public-resources.hedge.rules[0].value: US
+      pangolin.public-resources.hedge.rules[0].priority: 0
+      pangolin.public-resources.hedge.rules[1].action: deny
+      pangolin.public-resources.hedge.rules[1].match: country
+      pangolin.public-resources.hedge.rules[1].value: ALL
+      pangolin.public-resources.hedge.rules[1].priority: 10
+
+  hedge_db:
+    profiles: [hedge]
+    image: postgres:16-alpine
+    container_name: hedge_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hedge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - $DATA/hedge/db:/var/lib/postgresql/data
+    networks: [traefik]

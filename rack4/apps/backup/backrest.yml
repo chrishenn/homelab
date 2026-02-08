@@ -1,0 +1,88 @@
+# error when pruning: "unable to create lock in backend: repository is already locked by PID ..."
+# backrest will only clear "stale" locks that are over 30 minutes old
+# --> wait 30 minutes, then press the "unlock repo" button
+---
+services:
+  backrest:
+    profiles: [backrest]
+    image: garethgeorge/backrest:latest
+    container_name: backrest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/backrest/data:/data
+      - $DATA/backrest/cache:/cache
+      - $DATA/backrest/config:/config
+      - ./backrest/scripts:/scripts
+      - /mnt/k:/mnt/k
+      - /mnt/h:/mnt/h
+    environment:
+      # hooks run in the container env; only restic/S3 creds must be passed thru to restic via the UI/cfg file
+      TZ: $TZ
+      OP_SERVICE_ACCOUNT_TOKEN: ${OP_SERVICE_ACCOUNT_TOKEN}
+      AWS_ACCESS_KEY_ID: ${WASABI_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${WASABI_SECRET_KEY}
+      RESTIC_PASSWORD: ${WASABI_RESTIC_PASSWORD}
+      RCLONE_FILEN_EMAIL: ${RCLONE_FILEN_EMAIL}
+      RCLONE_FILEN_PASSWORD: ${RCLONE_FILEN_PASSWORD}
+      RCLONE_FILEN_API_KEY: ${RCLONE_FILEN_API_KEY}
+      RCLONE_DRIVE_CLIENT_ID: ${GDRIVE_CLIENT_ID}
+      RCLONE_DRIVE_CLIENT_SECRET: ${GDRIVE_CLIENT_SECRET}
+      RCLONE_DRIVE_TOKEN: ${GDRIVE_ACCESS_TOKEN}
+      RCLONE_FILEN: |
+        . /scripts/deps.sh
+        && rclone sync -P
+          :filen:/
+          /mnt/h/filen
+        && chown -R 1000:1000 /mnt/h/filen
+      RCLONE_GDRIVE: |
+        . /scripts/deps.sh
+        && rclone sync -P --fast-list
+          --drive-scope 'drive'
+          --drive-export-formats 'txt,docx,ods,odt,odp'
+          --drive-allow-import-name-change
+          --drive-acknowledge-abuse
+          :drive:/
+          /mnt/h/gdrive
+        && chown -R 1000:1000 /mnt/h/gdrive
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Backrest
+      homepage.icon: backrest.png
+      homepage.href: https://backrest.chenn.dev
+      homepage.description: Backup Automation Server
+
+      traefik.enable: true
+      traefik.http.routers.backrest.rule: Host(`backrest.henn.dev`)
+      traefik.http.routers.backrest.entrypoints: websecure
+      traefik.http.routers.backrest.middlewares: hdrs@file
+      traefik.http.routers.backrest.tls.certresolver: cf
+      traefik.http.services.backrest.loadbalancer.server.port: 9898
+
+      pangolin.public-resources.backrest.name: backrest
+      pangolin.public-resources.backrest.protocol: http
+      pangolin.public-resources.backrest.full-domain: backrest.chenn.dev
+      pangolin.public-resources.backrest.ssl: true
+      pangolin.public-resources.backrest.targets[0].method: http
+      pangolin.public-resources.backrest.targets[0].port: 9898
+      pangolin.public-resources.backrest.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.backrest.targets[0].healthcheck.hostname: backrest
+      pangolin.public-resources.backrest.targets[0].healthcheck.port: 9898
+      pangolin.public-resources.backrest.targets[0].healthcheck.path: /
+      pangolin.public-resources.backrest.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.backrest.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.backrest.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.backrest.auth.sso-enabled: true
+      pangolin.public-resources.backrest.auth.sso-roles[0]: Member
+      pangolin.public-resources.backrest.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.backrest.rules[0].action: pass
+      pangolin.public-resources.backrest.rules[0].match: country
+      pangolin.public-resources.backrest.rules[0].value: US
+      pangolin.public-resources.backrest.rules[0].priority: 0
+      pangolin.public-resources.backrest.rules[1].action: deny
+      pangolin.public-resources.backrest.rules[1].match: country
+      pangolin.public-resources.backrest.rules[1].value: ALL
+      pangolin.public-resources.backrest.rules[1].priority: 10

@@ -17,6 +17,12 @@ services:
       - linkstack:/htdocs
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Linkstack
+      homepage.instance.private.icon: linkstack.png
+      homepage.instance.private.href: https://linkstack.henn.dev
+      homepage.instance.private.description: Linktree
+
       traefik.enable: true
       traefik.http.routers.linkstack.rule: Host(`linkstack.henn.dev`)
       traefik.http.routers.linkstack.entrypoints: websecure
@@ -24,11 +30,6 @@ services:
       traefik.http.routers.linkstack.tls.certresolver: cf
       traefik.http.services.linkstack.loadbalancer.server.port: 443
       traefik.http.services.linkstack.loadbalancer.server.scheme: https
-      homepage.group: Tools
-      homepage.name: Linkstack
-      homepage.icon: linkstack.png
-      homepage.href: https://linkstack.henn.dev
-      homepage.description: Linktree
 
 volumes:
   linkstack:

@@ -29,11 +29,6 @@ spec:
         - name: traefik
           image: traefik:v3.4
           env:
-            - name: CF_API_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  key: email
-                  name: cloudflare-api-credentials
             - name: CF_DNS_API_TOKEN
               valueFrom:
                 secretKeyRef:

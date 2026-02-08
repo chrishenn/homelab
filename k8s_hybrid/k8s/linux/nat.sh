@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function nat_k3s {
 	# Add an "address" and corresponding "network" under /ip addresses
 	/ip address

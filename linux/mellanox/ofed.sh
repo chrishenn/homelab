@@ -33,7 +33,7 @@ OFED_PKGS=(libc6-dev
 	ibverbs-providers
 )
 
-apt install -y ${OFED_PKGS[@]}
+apt install -y "${OFED_PKGS[@]}"
 
 echo "configure ib devices ..."
 systemctl restart openibd

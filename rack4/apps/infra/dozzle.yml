@@ -1,0 +1,22 @@
+---
+services:
+  dozzle:
+    profiles: [dozzle]
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.dozzle.rule: Host(`dozzle.henn.dev`)
+      traefik.http.routers.dozzle.entrypoints: websecure
+      traefik.http.routers.dozzle.middlewares: hdrs@file
+      traefik.http.routers.dozzle.tls.certresolver: cf
+      traefik.http.services.dozzle.loadbalancer.server.port: 8080
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Dozzle
+      homepage.instance.private.icon: dozzle.png
+      homepage.instance.private.href: https://dozzle.henn.dev
+      homepage.instance.private.description: Docker Logs Viewer

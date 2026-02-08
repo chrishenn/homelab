@@ -1,0 +1,64 @@
+---
+services:
+  linkding:
+    profiles: [linkding]
+    container_name: linkding
+    image: sissbruecker/linkding:latest-plus
+    restart: unless-stopped
+    environment:
+      LD_SUPERUSER_NAME:
+      LD_SUPERUSER_PASSWORD:
+      LD_CSRF_TRUSTED_ORIGINS:
+
+      LD_DISABLE_LOGIN_FORM: true
+      LD_ENABLE_OIDC: true
+      OIDC_RP_CLIENT_ID: ${LINKDING_OIDC_CLIENT}
+      OIDC_RP_CLIENT_SECRET: ${LINKDING_OIDC_SECRET}
+      OIDC_OP_AUTHORIZATION_ENDPOINT: https://pocketid.chenn.dev/authorize
+      OIDC_OP_TOKEN_ENDPOINT: https://pocketid.chenn.dev/api/oidc/token
+      OIDC_OP_USER_ENDPOINT: https://pocketid.chenn.dev/api/oidc/userinfo
+      OIDC_OP_JWKS_ENDPOINT: https://pocketid.chenn.dev/.well-known/jwks.json
+      OIDC_USE_PKCE: true
+      OIDC_VERIFY_SSL: true
+    volumes:
+      - $DATA/linkding/data:/etc/linkding/data
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9090']
+    networks: [traefik]
+    labels:
+      homepage.group: Tools
+      homepage.name: Linkding
+      homepage.icon: linkding.png
+      homepage.href: https://linkding.chenn.dev
+      homepage.description: Bookmarks
+
+      traefik.enable: true
+      traefik.http.routers.linkding.rule: Host(`linkding.henn.dev`)
+      traefik.http.routers.linkding.entrypoints: websecure
+      traefik.http.routers.linkding.middlewares: hdrs@file
+      traefik.http.routers.linkding.tls.certresolver: cf
+      traefik.http.services.linkding.loadbalancer.server.port: 9090
+
+      pangolin.public-resources.linkding.name: linkding
+      pangolin.public-resources.linkding.protocol: http
+      pangolin.public-resources.linkding.full-domain: linkding.chenn.dev
+      pangolin.public-resources.linkding.ssl: true
+      pangolin.public-resources.linkding.targets[0].method: http
+      pangolin.public-resources.linkding.targets[0].port: 9090
+      pangolin.public-resources.linkding.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.linkding.targets[0].healthcheck.hostname: linkding
+      pangolin.public-resources.linkding.targets[0].healthcheck.port: 9090
+      pangolin.public-resources.linkding.targets[0].healthcheck.path: /
+      pangolin.public-resources.linkding.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.linkding.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.linkding.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.linkding.auth.sso-enabled: true
+      pangolin.public-resources.linkding.auth.sso-roles[0]: Member
+      pangolin.public-resources.linkding.rules[0].action: pass
+      pangolin.public-resources.linkding.rules[0].match: country
+      pangolin.public-resources.linkding.rules[0].value: US
+      pangolin.public-resources.linkding.rules[0].priority: 0
+      pangolin.public-resources.linkding.rules[1].action: deny
+      pangolin.public-resources.linkding.rules[1].match: country
+      pangolin.public-resources.linkding.rules[1].value: ALL
+      pangolin.public-resources.linkding.rules[1].priority: 10

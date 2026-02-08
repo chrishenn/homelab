@@ -1,0 +1,45 @@
+---
+services:
+  metube:
+    profiles: [metube]
+    image: ghcr.io/alexta69/metube
+    container_name: metube
+    restart: unless-stopped
+    volumes:
+      - $DATA/metube:/downloads
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Metube
+      homepage.icon: metube.png
+      homepage.href: https://metube.chenn.dev
+      homepage.description: Youtube Downloader
+
+      traefik.enable: true
+      traefik.http.routers.metube.rule: Host(`metube.henn.dev`)
+      traefik.http.routers.metube.entrypoints: websecure
+      traefik.http.routers.metube.middlewares: hdrs@file
+      traefik.http.routers.metube.tls.certresolver: cf
+      traefik.http.services.metube.loadbalancer.server.port: 8081
+
+      pangolin.public-resources.metube.name: metube
+      pangolin.public-resources.metube.protocol: http
+      pangolin.public-resources.metube.full-domain: metube.chenn.dev
+      pangolin.public-resources.metube.ssl: true
+      pangolin.public-resources.metube.targets[0].method: http
+      pangolin.public-resources.metube.targets[0].port: 8081
+      pangolin.public-resources.metube.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.metube.targets[0].healthcheck.hostname: metube
+      pangolin.public-resources.metube.targets[0].healthcheck.port: 8081
+      pangolin.public-resources.metube.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.metube.targets[0].healthcheck.path: /
+      pangolin.public-resources.metube.auth.sso-enabled: true
+      pangolin.public-resources.metube.auth.sso-roles[0]: Member
+      pangolin.public-resources.metube.rules[0].action: pass
+      pangolin.public-resources.metube.rules[0].match: country
+      pangolin.public-resources.metube.rules[0].value: US
+      pangolin.public-resources.metube.rules[0].priority: 0
+      pangolin.public-resources.metube.rules[1].action: deny
+      pangolin.public-resources.metube.rules[1].match: country
+      pangolin.public-resources.metube.rules[1].value: ALL
+      pangolin.public-resources.metube.rules[1].priority: 10

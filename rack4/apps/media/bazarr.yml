@@ -1,0 +1,52 @@
+---
+services:
+  bazarr:
+    profiles: [bazarr]
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/bazarr:/config
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Bazarr
+      homepage.icon: bazarr.png
+      homepage.href: https://bazarr.chenn.dev
+      homepage.description: Subtitle Manager
+
+      traefik.enable: true
+      traefik.http.routers.bazarr.rule: Host(`bazarr.chenn.dev`)
+      traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.middlewares: hdrs@file
+      traefik.http.routers.bazarr.tls.certresolver: cf
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
+
+      pangolin.public-resources.bazarr.name: bazarr
+      pangolin.public-resources.bazarr.protocol: http
+      pangolin.public-resources.bazarr.full-domain: bazarr.chenn.dev
+      pangolin.public-resources.bazarr.ssl: true
+      pangolin.public-resources.bazarr.targets[0].method: http
+      pangolin.public-resources.bazarr.targets[0].port: 6767
+      pangolin.public-resources.bazarr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.bazarr.targets[0].healthcheck.hostname: bazarr
+      pangolin.public-resources.bazarr.targets[0].healthcheck.port: 6767
+      pangolin.public-resources.bazarr.targets[0].healthcheck.path: /
+      pangolin.public-resources.bazarr.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.bazarr.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.bazarr.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.bazarr.auth.sso-enabled: true
+      pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.bazarr.rules[0].action: pass
+      pangolin.public-resources.bazarr.rules[0].match: country
+      pangolin.public-resources.bazarr.rules[0].value: US
+      pangolin.public-resources.bazarr.rules[0].priority: 0
+      pangolin.public-resources.bazarr.rules[1].action: deny
+      pangolin.public-resources.bazarr.rules[1].match: country
+      pangolin.public-resources.bazarr.rules[1].value: ALL
+      pangolin.public-resources.bazarr.rules[1].priority: 10

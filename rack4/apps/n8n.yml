@@ -38,17 +38,41 @@ services:
       GENERIC_TIMEZONE: $TZ
     networks: [traefik]
     labels:
+      homepage.group: AI
+      homepage.name: N8n
+      homepage.icon: n8n.png
+      homepage.href: https://n8n.chenn.dev
+      homepage.description: GUI Data Flow
+
       traefik.enable: true
       traefik.http.routers.n8n.rule: Host(`n8n.henn.dev`)
       traefik.http.routers.n8n.entrypoints: websecure
       traefik.http.routers.n8n.middlewares: hdrs@file
       traefik.http.routers.n8n.tls.certresolver: cf
       traefik.http.services.n8n.loadbalancer.server.port: 5678
-      homepage.group: AI
-      homepage.name: N8n
-      homepage.icon: n8n.png
-      homepage.href: https://n8n.henn.dev
-      homepage.description: GUI Data Flow
+
+      pangolin.public-resources.n8n.name: n8n
+      pangolin.public-resources.n8n.protocol: http
+      pangolin.public-resources.n8n.full-domain: n8n.chenn.dev
+      pangolin.public-resources.n8n.ssl: true
+      pangolin.public-resources.n8n.targets[0].method: http
+      pangolin.public-resources.n8n.targets[0].port: 5678
+      pangolin.public-resources.n8n.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.n8n.targets[0].healthcheck.hostname: n8n
+      pangolin.public-resources.n8n.targets[0].healthcheck.port: 5678
+      pangolin.public-resources.n8n.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.n8n.targets[0].healthcheck.path: /
+      pangolin.public-resources.n8n.auth.sso-enabled: true
+      pangolin.public-resources.n8n.auth.sso-roles[0]: Member
+      pangolin.public-resources.n8n.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.n8n.rules[0].action: pass
+      pangolin.public-resources.n8n.rules[0].match: country
+      pangolin.public-resources.n8n.rules[0].value: US
+      pangolin.public-resources.n8n.rules[0].priority: 0
+      pangolin.public-resources.n8n.rules[1].action: deny
+      pangolin.public-resources.n8n.rules[1].match: country
+      pangolin.public-resources.n8n.rules[1].value: ALL
+      pangolin.public-resources.n8n.rules[1].priority: 10
 
   n8n_worker:
     profiles: [n8n]
@@ -74,9 +98,6 @@ services:
       - $DATA/n8n/n8n_db:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -h localhost -U root -d n8n']
-      interval: 5s
-      timeout: 5s
-      retries: 10
     networks: [traefik]
 
   n8n_redis:
@@ -88,7 +109,4 @@ services:
       - $DATA/n8n/n8n_redis:/data
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
-      interval: 5s
-      timeout: 5s
-      retries: 10
     networks: [traefik]

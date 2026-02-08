@@ -30,18 +30,26 @@ local linters = new Mapping<String, Step> {
         workspace_indicator = "hk.pkl"
         check = "gitleaks git {{workspace}} --no-banner --pre-commit --log-level=fatal"
     }
-//     ["trufflehog"] {
-//         glob = List("*")
-//         check = "trufflehog filesystem --fail --no-update --no-verification --log-level=-1 {{files}}"
-//         output_summary = "hide"
-//         batch = false
-//     }
-//     ["detect-secrets"] {
-//         glob = List("*")
-//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
-//         batch = false
-//     }
-//     ["shellcheck"] = Builtins.shellcheck
+    ["shellcheck"] = (Builtins.shellcheck) {
+        check = "shellcheck --severity=error {{files}}"
+    }
+    ["trufflehog"] {
+        glob = List("*")
+        exclude = "*Revolt.toml*"
+        workspace_indicator = "hk.pkl"
+        check = """
+            trufflehog filesystem --fail --no-update --no-verification --log-level=-1 \\
+            --exclude-detectors=Postgres,RabbitMQ,JDBC \\
+            {{files}}
+        """
+        output_summary = "hide"
+        batch = false
+    }
+    // ["detect-secrets"] {
+    //     glob = List("*")
+    //     check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
+    //     batch = false
+    // }
 }
 
 hooks {

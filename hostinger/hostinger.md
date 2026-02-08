@@ -45,7 +45,7 @@ echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
 # adduser chris (untested)
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
 $SSH_ROOT "sudo usermod -aG docker chris"
-echo "chris:$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/chris_pass')" | \
+echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | \
     $SSH_ROOT "chpasswd"
 
 # login as root
@@ -61,6 +61,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 51820/udp
 sudo ufw allow 21820/udp
+sudo ufw allow 10000/udp
 sudo ufw enable -y
 # sudo ufw status verbose
 
@@ -101,16 +102,39 @@ END
 sudo sysctl -p /etc/sysctl.d/99-sysctl.conf
 ```
 
-pangolin
+sync dotfiles
 
 ```bash
-# in the hostinger web console, open firewall ports:
-# 80 (TCP), 443 (TCP), 51820 (UDP), and 21820 (UDP for clients)
+# mise
+sudo apt update -y && sudo apt install -y curl
+sudo install -dm 755 /etc/apt/keyrings
+curl -fSs https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.asc 1> /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.asc] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+sudo apt update -y && sudo apt install -y mise
 
-# in the cloudflare web console, add a DNS A record to point to pangolin VPS
+# mise should be on path already when installed via apt
+eval "$(mise activate bash)"
 
-# pangolin installer
-mkdir -p ~/pangolin && cd pangolin
-curl -fsSL https://static.pangolin.net/get-installer.sh | bash
-sudo ./installer
+# opcli
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+sudo tee /etc/apt/sources.list.d/1password.list && \
+sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/ && \
+curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | \
+sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
+sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22 && \
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
+sudo apt update && sudo apt install 1password-cli
+
+# chezmoi (promptDefaults defaults to machine type 'server')
+sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+$(op read op://homelab/svc/bash) \
+    ; chezmoi init chrishenn -a --force --promptDefaults \
+    ; chezmoi update -a --force
+
+mise i
+sudo rm /usr/local/bin/chezmoi
 ```

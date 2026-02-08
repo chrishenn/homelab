@@ -1,0 +1,76 @@
+# arcane/arcane-admin
+# openssl rand -base64 32
+# auto-update throwing error is a known bug; under heavy dev
+---
+services:
+  arcane:
+    profiles: [arcane]
+    image: ghcr.io/getarcaneapp/arcane:latest
+    container_name: arcane
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      APP_URL: https://arcane.chenn.dev
+      ENCRYPTION_KEY: $ARCANE_ENCRYPTION_KEY
+      ANALYTICS_DISABLED: true
+      NVIDIA_VISIBLE_DEVICES: all
+      GPU_MONITORING_ENABLED: true
+      GPU_TYPE: nvidia
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: $ARCANE_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $ARCANE_OIDC_SECRET
+      OIDC_SCOPES: openid email profile groups
+      OIDC_ADMIN_CLAIM: groups
+      OIDC_ADMIN_VALUE: admin
+    volumes:
+      - $DATA/arcane:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3552/api/health']
+    networks: [traefik, docker]
+    labels:
+      homepage.group: Infra
+      homepage.name: Arcane
+      homepage.icon: arcane.png
+      homepage.href: https://arcane.chenn.dev
+      homepage.description: Docker Manager (Rack 4)
+
+      traefik.enable: true
+      traefik.http.routers.arcane.rule: Host(`arcane.henn.dev`)
+      traefik.http.routers.arcane.entrypoints: websecure
+      traefik.http.routers.arcane.tls.certresolver: cf
+      traefik.http.routers.arcane.middlewares: hdrs@file
+      traefik.http.services.arcane.loadbalancer.server.port: 3552
+
+      pangolin.public-resources.arcane.name: arcane
+      pangolin.public-resources.arcane.protocol: http
+      pangolin.public-resources.arcane.full-domain: arcane.chenn.dev
+      pangolin.public-resources.arcane.ssl: true
+      pangolin.public-resources.arcane.targets[0].method: http
+      pangolin.public-resources.arcane.targets[0].port: 3552
+      pangolin.public-resources.arcane.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.arcane.targets[0].healthcheck.hostname: arcane
+      pangolin.public-resources.arcane.targets[0].healthcheck.port: 3552
+      pangolin.public-resources.arcane.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.arcane.targets[0].healthcheck.path: /api/health
+      pangolin.public-resources.arcane.auth.sso-enabled: true
+      pangolin.public-resources.arcane.auth.sso-roles[0]: Member
+      pangolin.public-resources.arcane.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.arcane.rules[0].action: pass
+      pangolin.public-resources.arcane.rules[0].match: country
+      pangolin.public-resources.arcane.rules[0].value: US
+      pangolin.public-resources.arcane.rules[0].priority: 0
+      pangolin.public-resources.arcane.rules[1].action: deny
+      pangolin.public-resources.arcane.rules[1].match: country
+      pangolin.public-resources.arcane.rules[1].value: ALL
+      pangolin.public-resources.arcane.rules[1].priority: 10

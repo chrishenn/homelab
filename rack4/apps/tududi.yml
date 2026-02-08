@@ -11,21 +11,45 @@ services:
       PGID: $PGID
       TUDUDI_USER_EMAIL: ${EMAIL}
       TUDUDI_USER_PASSWORD: ${PASS}
-      TUDUDI_ALLOWED_ORIGINS: https://tududi.henn.dev,http://tududi:3002
+      TUDUDI_ALLOWED_ORIGINS: https://tududi.chenn.dev,https://tududi.henn.dev,http://tududi:3002
       TUDUDI_SESSION_SECRET: ${TUDUDI_SECRET}
     volumes:
       - $DATA/tududi/db:/app/backend/db
       - $DATA/tududi/uploads:/app/backend/uploads
     networks: [traefik, docmost]
     labels:
+      homepage.group: Tools
+      homepage.name: Tududi
+      homepage.icon: atlassian.png
+      homepage.href: https://tududi.chenn.dev
+      homepage.description: Project Management
+
       traefik.enable: true
       traefik.http.routers.tududi.rule: Host(`tududi.henn.dev`)
       traefik.http.routers.tududi.entrypoints: websecure
       traefik.http.routers.tududi.middlewares: hdrs@file
       traefik.http.routers.tududi.tls.certresolver: cf
       traefik.http.services.tududi.loadbalancer.server.port: 3002
-      homepage.group: Tools
-      homepage.name: Tududi
-      homepage.icon: atlassian.png
-      homepage.href: https://tududi.henn.dev
-      homepage.description: Project Management
+
+      pangolin.public-resources.tududi.name: tududi
+      pangolin.public-resources.tududi.protocol: http
+      pangolin.public-resources.tududi.full-domain: tududi.chenn.dev
+      pangolin.public-resources.tududi.ssl: true
+      pangolin.public-resources.tududi.targets[0].method: http
+      pangolin.public-resources.tududi.targets[0].port: 3002
+      pangolin.public-resources.tududi.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.tududi.targets[0].healthcheck.hostname: tududi
+      pangolin.public-resources.tududi.targets[0].healthcheck.port: 3002
+      pangolin.public-resources.tududi.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.tududi.targets[0].healthcheck.path: /
+      pangolin.public-resources.tududi.auth.sso-enabled: true
+      pangolin.public-resources.tududi.auth.sso-roles[0]: Member
+      pangolin.public-resources.tududi.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.tududi.rules[0].action: pass
+      pangolin.public-resources.tududi.rules[0].match: country
+      pangolin.public-resources.tududi.rules[0].value: US
+      pangolin.public-resources.tududi.rules[0].priority: 0
+      pangolin.public-resources.tududi.rules[1].action: deny
+      pangolin.public-resources.tududi.rules[1].match: country
+      pangolin.public-resources.tududi.rules[1].value: ALL
+      pangolin.public-resources.tududi.rules[1].priority: 10

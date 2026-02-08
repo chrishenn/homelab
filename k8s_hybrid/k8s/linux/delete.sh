@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function iptables_reset {
 	# ip config
 	sudo iptables -F

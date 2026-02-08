@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function kubeadm_install() {
 	kube_ver=${1}
 

@@ -1,0 +1,58 @@
+---
+services:
+  qui:
+    profiles: [qui]
+    image: ghcr.io/autobrr/qui:latest
+    container_name: qui
+    restart: unless-stopped
+    environment:
+      QUI__OIDC_ISSUER: $OIDC
+      QUI__OIDC_ENABLED: true
+      QUI__OIDC_CLIENT_ID: $QUI_OIDC_CLIENT
+      QUI__OIDC_CLIENT_SECRET: $QUI_OIDC_SECRET
+      QUI__OIDC_REDIRECT_URL: https://qui.chenn.dev/api/auth/oidc/callback
+      QUI__OIDC_DISABLE_BUILT_IN_LOGIN: true
+    volumes:
+      - $DATA/qui/config:/config
+      - $DATA/qui/torrents:/data/torrents
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $DATA/qbit_novpn:/qbit_novpn/downloads
+    healthcheck:
+      test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
+    networks: [traefik]
+    labels:
+      homepage.group: Download
+      homepage.name: Qui
+      homepage.icon: qui.png
+      homepage.href: https://qui.chenn.dev
+      homepage.description: Bittorrent GUI
+
+      traefik.enable: true
+      traefik.http.routers.qui.rule: Host(`qui.henn.dev`)
+      traefik.http.routers.qui.entrypoints: websecure
+      traefik.http.routers.qui.middlewares: hdrs@file
+      traefik.http.routers.qui.tls.certresolver: cf
+      traefik.http.services.qui.loadbalancer.server.port: 7476
+
+      pangolin.public-resources.qui.name: qui
+      pangolin.public-resources.qui.protocol: http
+      pangolin.public-resources.qui.full-domain: qui.chenn.dev
+      pangolin.public-resources.qui.ssl: true
+      pangolin.public-resources.qui.targets[0].method: http
+      pangolin.public-resources.qui.targets[0].port: 7476
+      pangolin.public-resources.qui.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.qui.targets[0].healthcheck.hostname: qui
+      pangolin.public-resources.qui.targets[0].healthcheck.port: 7476
+      pangolin.public-resources.qui.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.qui.targets[0].healthcheck.path: /
+      pangolin.public-resources.qui.auth.sso-enabled: true
+      pangolin.public-resources.qui.auth.sso-roles[0]: Member
+      pangolin.public-resources.qui.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.qui.rules[0].action: pass
+      pangolin.public-resources.qui.rules[0].match: country
+      pangolin.public-resources.qui.rules[0].value: US
+      pangolin.public-resources.qui.rules[0].priority: 0
+      pangolin.public-resources.qui.rules[1].action: deny
+      pangolin.public-resources.qui.rules[1].match: country
+      pangolin.public-resources.qui.rules[1].value: ALL
+      pangolin.public-resources.qui.rules[1].priority: 10

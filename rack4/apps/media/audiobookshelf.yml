@@ -1,0 +1,51 @@
+---
+services:
+  audiobookshelf:
+    profiles: [audiobookshelf]
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: unless-stopped
+    volumes:
+      - $MEDIA:/media_library
+      - $DATA/audiobookshelf/config:/config
+      - $DATA/audiobookshelf/metadata:/metadata
+    environment:
+      TZ: $TZ
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: AudioBookshelf
+      homepage.icon: audiobookshelf.png
+      homepage.href: https://audiobookshelf.chenn.dev
+      homepage.description: AudioBook Server
+
+      traefik.enable: true
+      traefik.http.routers.audiobookshelf.rule: Host(`audiobookshelf.henn.dev`)
+      traefik.http.routers.audiobookshelf.entrypoints: websecure
+      traefik.http.routers.audiobookshelf.middlewares: hdrs@file
+      traefik.http.routers.audiobookshelf.tls.certresolver: cf
+      traefik.http.services.audiobookshelf.loadbalancer.server.port: 80
+
+      pangolin.public-resources.audiobookshelf.name: audiobookshelf
+      pangolin.public-resources.audiobookshelf.protocol: http
+      pangolin.public-resources.audiobookshelf.full-domain: audiobookshelf.chenn.dev
+      pangolin.public-resources.audiobookshelf.ssl: true
+      pangolin.public-resources.audiobookshelf.targets[0].method: http
+      pangolin.public-resources.audiobookshelf.targets[0].port: 80
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.hostname: audiobookshelf
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.port: 80
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.path: /
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.audiobookshelf.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.audiobookshelf.auth.sso-enabled: true
+      pangolin.public-resources.audiobookshelf.auth.sso-roles[0]: Member
+      pangolin.public-resources.audiobookshelf.rules[0].action: pass
+      pangolin.public-resources.audiobookshelf.rules[0].match: country
+      pangolin.public-resources.audiobookshelf.rules[0].value: US
+      pangolin.public-resources.audiobookshelf.rules[0].priority: 0
+      pangolin.public-resources.audiobookshelf.rules[1].action: deny
+      pangolin.public-resources.audiobookshelf.rules[1].match: country
+      pangolin.public-resources.audiobookshelf.rules[1].value: ALL
+      pangolin.public-resources.audiobookshelf.rules[1].priority: 10

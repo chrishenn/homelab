@@ -1,0 +1,15 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+USER = { provider = "onepass", value = "op://homelab/chris/username" }
+PASS = { provider = "onepass", value = "op://homelab/chris/password" }
+EMAIL = { provider = "onepass", value = "op://homelab/chris/email" }
+
+SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host" }
+SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }
+SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
+
+CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare_token/credential" }

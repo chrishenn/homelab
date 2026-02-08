@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function calicoctl_install {
 	ver=${1}
 

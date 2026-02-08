@@ -1,0 +1,115 @@
+---
+services:
+  # first login: admin/admin123
+  calibre:
+    profiles: [calibre]
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      HARDCOVER_TOKEN: ${HARDCOVER_TOKEN}
+      NETWORK_SHARE_MODE: false
+    volumes:
+      - $DATA/calibre/config:/config
+      - $DATA/calibre/ingest:/cwa-book-ingest
+      - $DATA/calibre/library:/calibre-library
+      - $DATA/calibre/plugins:/config/.config/calibre/plugins
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Calibre
+      homepage.icon: calibre.png
+      homepage.href: https://calibre.chenn.dev
+      homepage.description: Book Server
+
+      traefik.enable: true
+      traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
+      traefik.http.routers.calibre.entrypoints: websecure
+      traefik.http.routers.calibre.middlewares: hdrs@file
+      traefik.http.routers.calibre.tls.certresolver: cf
+      traefik.http.services.calibre.loadbalancer.server.port: 8083
+
+      pangolin.public-resources.calibre.name: calibre
+      pangolin.public-resources.calibre.protocol: http
+      pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
+      pangolin.public-resources.calibre.ssl: true
+      pangolin.public-resources.calibre.targets[0].method: http
+      pangolin.public-resources.calibre.targets[0].port: 8083
+      pangolin.public-resources.calibre.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.calibre.targets[0].healthcheck.hostname: calibre
+      pangolin.public-resources.calibre.targets[0].healthcheck.port: 8083
+      pangolin.public-resources.calibre.targets[0].healthcheck.path: /
+      pangolin.public-resources.calibre.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.calibre.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.calibre.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.calibre.auth.sso-enabled: true
+      pangolin.public-resources.calibre.auth.sso-roles[0]: Member
+      pangolin.public-resources.calibre.rules[0].action: pass
+      pangolin.public-resources.calibre.rules[0].match: country
+      pangolin.public-resources.calibre.rules[0].value: US
+      pangolin.public-resources.calibre.rules[0].priority: 0
+      pangolin.public-resources.calibre.rules[1].action: deny
+      pangolin.public-resources.calibre.rules[1].match: country
+      pangolin.public-resources.calibre.rules[1].value: ALL
+      pangolin.public-resources.calibre.rules[1].priority: 10
+
+  shelfmark:
+    profiles: [calibre]
+    image: ghcr.io/calibrain/shelfmark:latest
+    container_name: shelfmark
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      UID: $PUID
+      GID: $PGID
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en
+      USE_BOOK_TITLE: true
+      APP_ENV: prod
+      CWA_DB_PATH: /auth/app.db
+    volumes:
+      - $DATA/shelfmark/config:/config
+      - $DATA/calibre/ingest:/books
+      - $DATA/calibre/config/app.db:/auth/app.db:ro
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Shelfmark
+      homepage.icon: shelfmark.png
+      homepage.href: https://shelfmark.chenn.dev
+      homepage.description: Book Downloader
+
+      traefik.enable: true
+      traefik.http.routers.shelfmark.rule: Host(`shelfmark.henn.dev`)
+      traefik.http.routers.shelfmark.entrypoints: websecure
+      traefik.http.routers.shelfmark.middlewares: hdrs@file
+      traefik.http.routers.shelfmark.tls.certresolver: cf
+      traefik.http.services.shelfmark.loadbalancer.server.port: 8084
+
+      pangolin.public-resources.shelfmark.name: shelfmark
+      pangolin.public-resources.shelfmark.protocol: http
+      pangolin.public-resources.shelfmark.full-domain: shelfmark.chenn.dev
+      pangolin.public-resources.shelfmark.ssl: true
+      pangolin.public-resources.shelfmark.targets[0].method: http
+      pangolin.public-resources.shelfmark.targets[0].port: 8084
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.hostname: shelfmark
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.port: 8084
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.path: /api/health
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.shelfmark.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.shelfmark.auth.sso-enabled: true
+      pangolin.public-resources.shelfmark.auth.sso-roles[0]: Member
+      pangolin.public-resources.shelfmark.rules[0].action: pass
+      pangolin.public-resources.shelfmark.rules[0].match: country
+      pangolin.public-resources.shelfmark.rules[0].value: US
+      pangolin.public-resources.shelfmark.rules[0].priority: 0
+      pangolin.public-resources.shelfmark.rules[1].action: deny
+      pangolin.public-resources.shelfmark.rules[1].match: country
+      pangolin.public-resources.shelfmark.rules[1].value: ALL
+      pangolin.public-resources.shelfmark.rules[1].priority: 10

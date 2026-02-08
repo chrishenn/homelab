@@ -25,8 +25,8 @@ services:
       traefik.http.routers.fileflow.middlewares: hdrs@file
       traefik.http.routers.fileflow.tls.certresolver: cf
       traefik.http.services.fileflow.loadbalancer.server.port: 5000
-      homepage.group: File Edit, Convert
-      homepage.name: Fileflow
-      homepage.icon: fileflows.png
-      homepage.href: https://fileflow.henn.dev
-      homepage.description: Automatic File Flows
+      homepage.instance.private.group: File Edit, Convert
+      homepage.instance.private.name: Fileflow
+      homepage.instance.private.icon: fileflows.png
+      homepage.instance.private.href: https://fileflow.henn.dev
+      homepage.instance.private.description: Automatic File Flows

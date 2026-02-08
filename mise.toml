@@ -12,6 +12,8 @@ shellcheck = "latest"
 eza = "latest"
 prettier = "latest"
 ty = "latest"
+hk = "latest"
+trufflehog = "latest"
 
 [hooks.enter]
 shell = "bash"
@@ -24,6 +26,21 @@ REPO_NAME = "{{ config_root | basename }}"
 HK_MISE = 1
 HK_LIBGIT2 = 0
 MISE_NPM_BUN = 1
+
+RACK0_USR = "chris"
+RACK0_IP = "192.168.1.70"
+RACK0_PORT = "22"
+RACK0_REPO = "/home/chris/Projects/homelab/rack0"
+
+RACK4_USR = "chris"
+RACK4_IP = "192.168.1.142"
+RACK4_PORT = "2200"
+RACK4_REPO = "/home/chris/Projects/homelab/rack4"
+
+VPS0_USR = "chris"
+VPS0_IP = "76.13.30.83"
+VPS0_PORT = "2200"
+VPS0_REPO = "/home/chris/pangolin"
 
 [tasks.pre-commit]
 alias = "pc"

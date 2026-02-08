@@ -1,0 +1,77 @@
+---
+services:
+  airtrail:
+    profiles: [airtrail]
+    container_name: airtrail
+    image: johly/airtrail:latest
+    restart: unless-stopped
+    environment:
+      ORIGIN: https://airtrail.chenn.dev
+      DB_URL: postgres://airtrail:airtrail@airtrail_db:5432/airtrail
+      DB_DATABASE_NAME: airtrail
+      DB_USERNAME: airtrail
+      DB_PASSWORD: airtrail
+
+      OAUTH_ENABLED: true
+      OAUTH_ISSUER_URL: $OIDC
+      OAUTH_CLIENT_ID: $AIRTRAIL_OIDC_CLIENT
+      OAUTH_CLIENT_SECRET: $AIRTRAIL_OIDC_SECRET
+      OAUTH_SCOPE: openid profile email
+      OAUTH_AUTO_REGISTER: true
+      OAUTH_AUTO_LOGIN: true
+      OAUTH_HIDE_PASSWORD_FORM: true
+      OAUTH_BUTTON_TEXT: Log in with PocketID
+    networks: [traefik, airtrail]
+    labels:
+      homepage.group: Tools
+      homepage.name: Airtrail
+      homepage.icon: air-trail.png
+      homepage.href: https://airtrail.chenn.dev
+      homepage.description: Flight Mapper
+
+      traefik.enable: true
+      traefik.http.routers.airtrail.rule: Host(`airtrail.henn.dev`)
+      traefik.http.routers.airtrail.entrypoints: websecure
+      traefik.http.routers.airtrail.tls.certresolver: cf
+      traefik.http.routers.airtrail.middlewares: hdrs@file
+      traefik.http.services.airtrail.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.airtrail.name: airtrail
+      pangolin.public-resources.airtrail.protocol: http
+      pangolin.public-resources.airtrail.full-domain: airtrail.chenn.dev
+      pangolin.public-resources.airtrail.ssl: true
+      pangolin.public-resources.airtrail.targets[0].method: http
+      pangolin.public-resources.airtrail.targets[0].port: 3000
+      pangolin.public-resources.airtrail.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.airtrail.targets[0].healthcheck.hostname: airtrail
+      pangolin.public-resources.airtrail.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.airtrail.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.airtrail.targets[0].healthcheck.path: /
+      pangolin.public-resources.airtrail.auth.sso-enabled: true
+      pangolin.public-resources.airtrail.auth.sso-roles[0]: Member
+      pangolin.public-resources.airtrail.rules[0].action: pass
+      pangolin.public-resources.airtrail.rules[0].match: country
+      pangolin.public-resources.airtrail.rules[0].value: US
+      pangolin.public-resources.airtrail.rules[0].priority: 0
+      pangolin.public-resources.airtrail.rules[1].action: deny
+      pangolin.public-resources.airtrail.rules[1].match: country
+      pangolin.public-resources.airtrail.rules[1].value: ALL
+      pangolin.public-resources.airtrail.rules[1].priority: 10
+
+  airtrail_db:
+    profiles: [airtrail]
+    image: postgres:16-alpine
+    container_name: airtrail_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: airtrail
+      POSTGRES_USER: airtrail
+      POSTGRES_PASSWORD: airtrail
+    volumes:
+      - $DATA/airtrail/airtrail_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+    networks: [airtrail]
+
+networks:
+  airtrail:

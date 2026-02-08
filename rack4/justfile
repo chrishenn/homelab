@@ -1,5 +1,10 @@
 # compose operations over {profiles, svcs}
-
+alias b := bounce
+alias f := follow
+alias s := sync
+alias p := ps
+alias u := up
+alias d := down
 profile := "'*'"
 
 up profile=profile *svcs:
@@ -25,16 +30,14 @@ run *svcs:
 log *args:
     docker compose logs {{ args }}
 
-alias f := follow
-
 follow *args:
-    just log --follow {{ args }}
+    just log -f {{ args }}
 
 attach svc cmd="/bin/bash":
     docker compose exec -it {{ svc }} {{ cmd }}
 
-ps:
-    docker compose ps
+ps *svcs:
+    docker compose ps {{ svcs }}
 
 watch:
     watch -n 1 "docker compose ps"
@@ -65,8 +68,6 @@ rlogin:
     $DHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
     $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
 
-alias s := sync
-
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
     $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
@@ -80,10 +81,10 @@ reset:
     $DHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
 
 ssh:
-    $DHOST_SSH -At "cd ${REPO_MACHINE} && exec $SHELL"
+    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd ${REPO_MACHINE} && bash -l"
 
 cm:
-    $DHOST_SSH -At "$HOME/.local/share/mise/installs/chezmoi/latest/chezmoi init chrishenn --apply --force"
+    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && bash -i -c 'just cm'"
 
 # service-specific recipes
 

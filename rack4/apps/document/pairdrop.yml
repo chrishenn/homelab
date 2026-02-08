@@ -1,0 +1,51 @@
+---
+services:
+  pairdrop:
+    profiles: [pairdrop]
+    image: lscr.io/linuxserver/pairdrop:latest
+    container_name: pairdrop
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      RATE_LIMIT: false
+      WS_FALLBACK: false
+      RTC_CONFIG:
+      DEBUG_MODE: false
+    networks: [traefik]
+    labels:
+      homepage.group: Tools
+      homepage.name: Pairdrop
+      homepage.icon: pairdrop.png
+      homepage.href: https://pairdrop.chenn.dev
+      homepage.description: Private Airdrop
+
+      traefik.enable: true
+      traefik.http.routers.pairdrop.rule: Host(`pairdrop.henn.dev`)
+      traefik.http.routers.pairdrop.entrypoints: websecure
+      traefik.http.routers.pairdrop.middlewares: hdrs@file
+      traefik.http.routers.pairdrop.tls.certresolver: cf
+      traefik.http.services.pairdrop.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.pairdrop.name: pairdrop
+      pangolin.public-resources.pairdrop.protocol: http
+      pangolin.public-resources.pairdrop.full-domain: pairdrop.chenn.dev
+      pangolin.public-resources.pairdrop.ssl: true
+      pangolin.public-resources.pairdrop.targets[0].method: http
+      pangolin.public-resources.pairdrop.targets[0].port: 3000
+      pangolin.public-resources.pairdrop.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.pairdrop.targets[0].healthcheck.hostname: pairdrop
+      pangolin.public-resources.pairdrop.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.pairdrop.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.pairdrop.targets[0].healthcheck.path: /
+      pangolin.public-resources.pairdrop.auth.sso-enabled: true
+      pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
+      pangolin.public-resources.pairdrop.rules[0].action: pass
+      pangolin.public-resources.pairdrop.rules[0].match: country
+      pangolin.public-resources.pairdrop.rules[0].value: US
+      pangolin.public-resources.pairdrop.rules[0].priority: 0
+      pangolin.public-resources.pairdrop.rules[1].action: deny
+      pangolin.public-resources.pairdrop.rules[1].match: country
+      pangolin.public-resources.pairdrop.rules[1].value: ALL
+      pangolin.public-resources.pairdrop.rules[1].priority: 10

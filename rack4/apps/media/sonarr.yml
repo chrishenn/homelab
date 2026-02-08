@@ -1,0 +1,57 @@
+---
+services:
+  sonarr:
+    profiles: [sonarr]
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/sonarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Sonarr
+      homepage.icon: sonarr.png
+      homepage.href: https://sonarr.chenn.dev
+      homepage.description: TV
+
+      traefik.enable: true
+      traefik.http.routers.sonarr.rule: Host(`sonarr.henn.dev`)
+      traefik.http.routers.sonarr.entrypoints: websecure
+      traefik.http.routers.sonarr.middlewares: hdrs@file
+      traefik.http.routers.sonarr.tls.certresolver: cf
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+      pangolin.public-resources.sonarr.name: sonarr
+      pangolin.public-resources.sonarr.protocol: http
+      pangolin.public-resources.sonarr.full-domain: sonarr.chenn.dev
+      pangolin.public-resources.sonarr.ssl: true
+      pangolin.public-resources.sonarr.targets[0].method: http
+      pangolin.public-resources.sonarr.targets[0].port: 8989
+      pangolin.public-resources.sonarr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.sonarr.targets[0].healthcheck.hostname: sonarr
+      pangolin.public-resources.sonarr.targets[0].healthcheck.port: 8989
+      pangolin.public-resources.sonarr.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.sonarr.targets[0].healthcheck.path: /
+      pangolin.public-resources.sonarr.auth.sso-enabled: true
+      pangolin.public-resources.sonarr.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.sonarr.rules[0].action: allow
+      pangolin.public-resources.sonarr.rules[0].match: path
+      pangolin.public-resources.sonarr.rules[0].value: /api/*
+      pangolin.public-resources.sonarr.rules[0].priority: 0
+      pangolin.public-resources.sonarr.rules[1].action: pass
+      pangolin.public-resources.sonarr.rules[1].match: country
+      pangolin.public-resources.sonarr.rules[1].value: US
+      pangolin.public-resources.sonarr.rules[1].priority: 10
+      pangolin.public-resources.sonarr.rules[2].action: deny
+      pangolin.public-resources.sonarr.rules[2].match: country
+      pangolin.public-resources.sonarr.rules[2].value: ALL
+      pangolin.public-resources.sonarr.rules[2].priority: 20

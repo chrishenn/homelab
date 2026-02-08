@@ -11,94 +11,102 @@ networks:
           gateway: $FRONTEND
 
 include:
+  - apps/backup/backrest.yml
+  - apps/backup/rsync.yml
+
+  - apps/dev/bytestash.yml
+  - apps/dev/chartdb.yml
+  - apps/dev/code.yml
+  - apps/dev/cyberchef.yml
+  - apps/dev/dumb.yml
+  - apps/dev/excalidraw.yml
+  - apps/dev/focalboard.yml
+  - apps/dev/forgejo.yml
+  - apps/dev/gist.yml
+  - apps/dev/gitlab.yml
+  - apps/dev/ittools.yml
+
+  - apps/document/convertx.yml
+  - apps/document/docmost.yml
+  - apps/document/documenso.yml
+  - apps/document/filebrowser.yml
+  - apps/document/hedge.yml
+  - apps/document/nextcloud.yml
+  - apps/document/omni.yml
+  - apps/document/openresume.yml
+  - apps/document/pairdrop.yml
+  - apps/document/paperless.yml
+  - apps/document/rxresume.yml
+  - apps/document/stirling.yml
+  - apps/document/vert.yml
+
+  - apps/infra/apprise.yml
+  - apps/infra/aptcache.yml
+  - apps/infra/arcane.yml
+  - apps/infra/beszel.yml
+  - apps/infra/blocky.yml
+  - apps/infra/blocky_k.yml
+  - apps/infra/dozzle.yml
+  - apps/infra/gocron.yml
+  - apps/infra/gotify.yml
+  - apps/infra/homepage.yml
+  - apps/infra/kuma.yml
+  - apps/infra/lancache.yml
+  - apps/infra/librespeed.yml
+  - apps/infra/netboot.yml
+  - apps/infra/newt.yml
+  - apps/infra/nexterm.yml
+  - apps/infra/ntfy.yml
+  - apps/infra/openspeedtest.yml
+  - apps/infra/pocketid.yml
+  - apps/infra/socket-proxy.yml
+  - apps/infra/termix.yml
+  - apps/infra/traefik.yml
+  - apps/infra/traefik_k.yml
+
+  - apps/media/audiobookshelf.yml
+  - apps/media/bazarr.yml
+  - apps/media/calibre.yml
+  - apps/media/immich.yml
+  - apps/media/jellyfin.yml
+  - apps/media/seerr.yml
+  - apps/media/lidarr.yml
+  - apps/media/metube.yml
+  - apps/media/navidrome.yml
+  - apps/media/prowlarr.yml
+  - apps/media/qbit.yml
+  - apps/media/qui.yml
+  - apps/media/radarr.yml
+  - apps/media/recyclarr.yml
+  - apps/media/sab.yml
+  - apps/media/solverr.yml
+  - apps/media/sonarr.yml
+
   - apps/actual.yml
-  - apps/apprise.yml
-  - apps/backrest.yml
-  - apps/beszel.yml
-  - apps/bytestash.yml
-  - apps/calibre.yml
-  - apps/chartdb.yml
-  - apps/code.yml
+  - apps/airtrail.yml
   - apps/cognito.yml
   - apps/comfy.yml
-  - apps/convertx.yml
-  - apps/aptcache.yml
-  - apps/blocky.yml
-  - apps/blocky_k.yml
-  - apps/lancache.yml
-  - apps/portainer.yml
-  - apps/rebuild.yml
-  - apps/socket-proxy.yml
-  - apps/traefik.yml
-  - apps/traefik_k.yml
-  - apps/cyberchef.yml
-  - apps/docmost.yml
-  - apps/dozzle.yml
-  - apps/dumb.yml
-  - apps/excalidraw.yml
-  - apps/files.yml
-  - apps/ghrunner.yml
-  - apps/gist.yml
-  - apps/gluetun.yml
-  - apps/gocron.yml
-  - apps/gotify.yml
   - apps/fileflow.yml
-  - apps/hedge.yml
-  - apps/immich.yml
-  - apps/forgejo.yml
-  - apps/homepage.yml
-  - apps/kuma.yml
-  - apps/watchtower.yml
-  - apps/ittools.yml
+  - apps/game.yml
+  - apps/karakeep.yml
   - apps/kestra.yml
+  - apps/ldr.yml
+  - apps/linkding.yml
   - apps/linkstack.yml
   - apps/littlelink.yml
   - apps/matrix.yml
-  - apps/audiobookshelf.yml
-  - apps/bazarr.yml
-  - apps/jellyfin.yml
-  - apps/jellyseerr.yml
-  - apps/lidarr.yml
-  - apps/prowlarr.yml
-  - apps/radarr.yml
-  - apps/recyclarr.yml
-  - apps/solverr.yml
-  - apps/sonarr.yml
-  - apps/metube.yml
-  - apps/minio.yml
+  - apps/memos.yml
   - apps/n8n.yml
-  - apps/navidrome.yml
-  - apps/netboot.yml
-  - apps/nexterm.yml
-  - apps/ntfy.yml
   - apps/ollama.yml
-  - apps/omni.yml
-  - apps/openresume.yml
-  - apps/openspeedtest.yml
   - apps/openwebui.yml
   - apps/owncast.yml
-  - apps/pairdrop.yml
-  - apps/paperless.yml
   - apps/perplexica.yml
-  - apps/qbit.yml
-  - apps/sab.yml
+  - apps/planka.yml
+  - apps/rally.yml
   - apps/searx.yml
   - apps/speach.yml
-  - apps/stirling.yml
-  - apps/termix.yml
   - apps/tududi.yml
-  - apps/vert.yml
-  - apps/wastebin.yml
-  - apps/librespeed.yml
-  - apps/rxresume.yml
-  - apps/rsync.yml
-  - apps/focalboard.yml
-  - apps/planka.yml
-  - apps/game.yml
-  - apps/gitlab.yml
-  - apps/gitlab_runner.yml
-  - apps/nginx.yml
-  - apps/newt.yml
-  - apps/ldr.yml
-  - apps/nextcloud.yml
-  - apps/documenso.yml
+  - apps/vikunja.yml
+  - apps/warden.yml
+  - apps/zulip.yml
+  - apps/miro.yml

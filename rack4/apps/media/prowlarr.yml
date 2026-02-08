@@ -1,0 +1,52 @@
+---
+services:
+  prowlarr:
+    profiles: [prowlarr]
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/prowlarr:/config
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Prowlarr
+      homepage.icon: prowlarr.png
+      homepage.href: https://prowlarr.chenn.dev
+      homepage.description: Indexer Manager
+
+      traefik.enable: true
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.middlewares: hdrs@file
+      traefik.http.routers.prowlarr.tls.certresolver: cf
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+      pangolin.public-resources.prowlarr.name: prowlarr
+      pangolin.public-resources.prowlarr.protocol: http
+      pangolin.public-resources.prowlarr.full-domain: prowlarr.chenn.dev
+      pangolin.public-resources.prowlarr.ssl: true
+      pangolin.public-resources.prowlarr.targets[0].method: http
+      pangolin.public-resources.prowlarr.targets[0].port: 9696
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.hostname: prowlarr
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.port: 9696
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.path: /
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.prowlarr.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.prowlarr.auth.sso-enabled: true
+      pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.prowlarr.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.prowlarr.rules[0].action: pass
+      pangolin.public-resources.prowlarr.rules[0].match: country
+      pangolin.public-resources.prowlarr.rules[0].value: US
+      pangolin.public-resources.prowlarr.rules[0].priority: 0
+      pangolin.public-resources.prowlarr.rules[1].action: deny
+      pangolin.public-resources.prowlarr.rules[1].match: country
+      pangolin.public-resources.prowlarr.rules[1].value: ALL
+      pangolin.public-resources.prowlarr.rules[1].priority: 10

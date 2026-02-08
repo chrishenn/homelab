@@ -1,0 +1,100 @@
+# default user/pass: admin/{printed in the container logs}
+---
+services:
+  gluetun:
+    profiles: [gluetun]
+    image: ghcr.io/qdm12/gluetun:v3.41.1
+    container_name: gluetun
+    restart: unless-stopped
+    hostname: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      Timezone: $TZ
+      UPDATER_PERIOD: 24h
+      VPN_TYPE: wireguard
+      VPN_SERVICE_PROVIDER: protonvpn
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      SERVER_COUNTRIES: 'United States,Canada'
+    volumes:
+      - $DATA/gluetun:/gluetun
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Gluetun
+      homepage.instance.private.icon: gluetun.png
+      homepage.instance.private.description: Qbittorrent VPN Tunnel
+      homepage.instance.private.widget.type: gluetun
+      homepage.instance.private.widget.url: http://gluetun:8000
+
+      traefik.enable: true
+      traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
+      traefik.http.routers.qbit.entrypoints: websecure
+      traefik.http.routers.qbit.middlewares: hdrs@file
+      traefik.http.routers.qbit.tls.certresolver: cf
+      traefik.http.services.qbit.loadbalancer.server.port: 8080
+    ports:
+      - '6888:6888/tcp'
+      - '6888:6888/udp'
+      - '8388:8388/tcp'
+      - '8388:8388/udp'
+      - '8888:8888/tcp'
+      - '51413:51413/tcp'
+      - '51413:51413/udp'
+
+  qbit_vpn:
+    profiles: [gluetun]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_vpn
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit/config:/config
+      - $DATA/qbit/downloads:/qbit/downloads
+    network_mode: service:gluetun
+    labels:
+      homepage.instance.private.group: Download
+      homepage.instance.private.name: Qbittorrent (VPN)
+      homepage.instance.private.icon: qbittorrent.png
+      homepage.instance.private.href: https://vpn.qbit.henn.dev
+      homepage.instance.private.description: VPN Torrents
+
+  qbit_novpn:
+    profiles: [qbit_novpn]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_novpn
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit_novpn:/config
+      - $DATA/qbit_novpn:/qbit_novpn/downloads
+    ports:
+      - '6881:6881/tcp'
+      - '6881:6881/udp'
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Download
+      homepage.instance.private.name: QBittorrent (No VPN)
+      homepage.instance.private.icon: qbittorrent.png
+      homepage.instance.private.href: https://novpn.qbit.henn.dev
+      homepage.instance.private.description: Non-Vpn Torrents
+
+      traefik.enable: true
+      traefik.http.routers.qbit_novpn.rule: Host(`novpn.qbit.henn.dev`)
+      traefik.http.routers.qbit_novpn.entrypoints: websecure
+      traefik.http.routers.qbit_novpn.middlewares: hdrs@file
+      traefik.http.routers.qbit_novpn.tls.certresolver: cf
+      traefik.http.services.qbit_novpn.loadbalancer.server.port: 8080

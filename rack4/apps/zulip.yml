@@ -1,0 +1,165 @@
+# private slack. quite resource heavy, slow
+# clunky old-school configuration and server init, with poor ergonomics, useless logging
+# documentation is fragmented, incomplete, and nigh unusable
+
+# NOTE: OIDC is supported, but you will need to mount the settings file, rendering secrets to disk
+# NOTE: The server will crash if passwords on each memcache, rabbitmq, redis, pg are not used
+# NOTE: zulip does not sanitize env vars, so SOME are case-sensitive python-style literals, and quotes are required!
+# https://github.com/zulip/docker-zulip#configuration
+# https://github.com/zulip/zulip/blob/11.5/zproject/prod_settings_template.py
+# https://open.greenhost.net/varac/stackspin/-/blob/main/flux2/apps/zulip/zulip-values-configmap.yaml
+
+# dump server logs, settings file (yes settings are saved into a python file. it was a different time)
+# just attach zulip
+# cat /var/log/zulip/server.log
+# cat /etc/zulip/settings.py
+
+# create initial login link
+# docker exec -u zulip zulip /home/zulip/deployments/current/manage.py generate_realm_creation_link
+---
+services:
+  zulip:
+    profiles: [zulip]
+    image: zulip/docker-zulip:latest
+    container_name: zulip
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
+      SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev", "zulip.henn.dev"]'
+      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev", "https://zulip.henn.dev"]'
+
+      LOADBALANCER_IPS: '$FRONTEND_SUBNET'
+      SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
+      SSL_CERTIFICATE_GENERATION: 'self-signed'
+      SETTING_CERTIFICATES: 'self-signed'
+      DISABLE_HTTPS: 'True'
+      SETTING_USE_X_FORWARDED_HOST: 'True'
+
+      SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
+      SETTING_ZULIP_AUTH_BACKENDS: 'EmailAuthBackend,GenericOpenIdConnectBackend'
+
+      DB_HOST: 'zulip_pg'
+      DB_HOST_PORT: '5432'
+      DB_USER: 'zulip'
+
+      SETTING_REMOTE_POSTGRES_HOST: 'zulip_pg'
+      SETTING_MEMCACHED_LOCATION: 'zulip_memcached:11211'
+      SETTING_RABBITMQ_HOST: 'zulip_rabbitmq'
+      SETTING_REDIS_HOST: 'zulip_redis'
+      SETTING_JITSI_SERVER_URL: 'meet.jit.si'
+
+      SECRETS_rabbitmq_password: 'REPLACE_WITH_SECURE_RABBITMQ_PASSWORD'
+      SECRETS_postgres_password: 'REPLACE_WITH_SECURE_POSTGRES_PASSWORD'
+      SECRETS_memcached_password: 'REPLACE_WITH_SECURE_MEMCACHED_PASSWORD'
+      SECRETS_redis_password: 'REPLACE_WITH_SECURE_REDIS_PASSWORD'
+      SECRETS_secret_key: 'REPLACE_WITH_SECURE_SECRET_KEY'
+
+      SETTING_EMAIL_HOST: '$SMTP_HOST'
+      SETTING_EMAIL_HOST_USER: '$SMTP_USER'
+      SETTING_EMAIL_PORT: 465
+      SETTING_EMAIL_USE_SSL: 'False'
+      SETTING_EMAIL_USE_TLS: 'True'
+      SETTING_SEND_LOGIN_EMAILS: 'False'
+      SECRETS_email_password: '$SMTP_TOKEN'
+
+    volumes:
+      - $DATA/zulip/data:/data:rw
+    networks: [traefik, zulip]
+    labels:
+      homepage.group: Tools
+      homepage.name: Zulip
+      homepage.icon: zulip.png
+      homepage.href: https://zulip.chenn.dev
+      homepage.description: Private Slack
+
+      pangolin.public-resources.zulip.name: zulip
+      pangolin.public-resources.zulip.protocol: http
+      pangolin.public-resources.zulip.full-domain: zulip.chenn.dev
+      pangolin.public-resources.zulip.ssl: true
+      pangolin.public-resources.zulip.targets[0].method: http
+      pangolin.public-resources.zulip.targets[0].port: 80
+      pangolin.public-resources.zulip.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.zulip.targets[0].healthcheck.hostname: zulip
+      pangolin.public-resources.zulip.targets[0].healthcheck.port: 80
+      pangolin.public-resources.zulip.targets[0].healthcheck.path: /health
+      pangolin.public-resources.zulip.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].name: Host
+      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].value: zulip.chenn.dev
+      pangolin.public-resources.zulip.auth.sso-enabled: true
+      pangolin.public-resources.zulip.auth.sso-roles[0]: Member
+      pangolin.public-resources.zulip.rules[0].action: pass
+      pangolin.public-resources.zulip.rules[0].match: country
+      pangolin.public-resources.zulip.rules[0].value: US
+      pangolin.public-resources.zulip.rules[0].priority: 0
+      pangolin.public-resources.zulip.rules[1].action: deny
+      pangolin.public-resources.zulip.rules[1].match: country
+      pangolin.public-resources.zulip.rules[1].value: ALL
+      pangolin.public-resources.zulip.rules[1].priority: 10
+
+  zulip_pg:
+    profiles: [zulip]
+    image: postgres:17-alpine
+    container_name: zulip_pg
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      POSTGRES_DB: zulip
+      POSTGRES_USER: zulip
+      POSTGRES_PASSWORD: REPLACE_WITH_SECURE_POSTGRES_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_pg:/var/lib/postgresql/data:rw
+    networks: [zulip]
+
+  zulip_memcached:
+    profiles: [zulip]
+    image: memcached:alpine
+    container_name: zulip_memcached
+    restart: unless-stopped
+    command:
+      - 'sh'
+      - '-euc'
+      - |
+        echo 'mech_list: plain' > "$$SASL_CONF_PATH"
+        echo "zulip@$$HOSTNAME:$$MEMCACHED_PASSWORD" > "$$MEMCACHED_SASL_PWDB"
+        echo "zulip@localhost:$$MEMCACHED_PASSWORD" >> "$$MEMCACHED_SASL_PWDB"
+        exec memcached -S
+    environment:
+      SASL_CONF_PATH: '/home/memcache/memcached.conf'
+      MEMCACHED_SASL_PWDB: '/home/memcache/memcached-sasl-db'
+      MEMCACHED_PASSWORD: 'REPLACE_WITH_SECURE_MEMCACHED_PASSWORD'
+    networks: [zulip]
+
+  zulip_rabbitmq:
+    profiles: [zulip]
+    image: rabbitmq:4.0.7
+    container_name: zulip_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: zulip
+      RABBITMQ_DEFAULT_PASS: REPLACE_WITH_SECURE_RABBITMQ_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_rabbitmq:/var/lib/rabbitmq:rw
+    networks: [zulip]
+
+  zulip_redis:
+    profiles: [zulip]
+    image: redis:alpine
+    container_name: zulip_redis
+    restart: unless-stopped
+    command:
+      - 'sh'
+      - '-euc'
+      - |
+        echo "requirepass '$$REDIS_PASSWORD'" > /etc/redis.conf
+        exec redis-server /etc/redis.conf
+    environment:
+      REDIS_PASSWORD: REPLACE_WITH_SECURE_REDIS_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_redis:/data:rw
+    networks: [zulip]
+
+networks:
+  zulip:

@@ -1,0 +1,58 @@
+---
+services:
+  radarr:
+    profiles: [radarr]
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/radarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Radarr
+      homepage.icon: radarr.png
+      homepage.href: https://radarr.chenn.dev
+      homepage.description: Movies
+
+      traefik.enable: true
+      traefik.http.routers.radarr.rule: Host(`radarr.henn.dev`)
+      traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.middlewares: hdrs@file
+      traefik.http.routers.radarr.tls.certresolver: cf
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+      pangolin.public-resources.radarr.name: radarr
+      pangolin.public-resources.radarr.protocol: http
+      pangolin.public-resources.radarr.full-domain: radarr.chenn.dev
+      pangolin.public-resources.radarr.ssl: true
+      pangolin.public-resources.radarr.targets[0].method: http
+      pangolin.public-resources.radarr.targets[0].port: 7878
+      pangolin.public-resources.radarr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.radarr.targets[0].healthcheck.hostname: radarr
+      pangolin.public-resources.radarr.targets[0].healthcheck.port: 7878
+      pangolin.public-resources.radarr.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.radarr.targets[0].healthcheck.path: /
+
+      pangolin.public-resources.radarr.auth.sso-enabled: true
+      pangolin.public-resources.radarr.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.radarr.rules[0].action: allow
+      pangolin.public-resources.radarr.rules[0].match: path
+      pangolin.public-resources.radarr.rules[0].value: /api/*
+      pangolin.public-resources.radarr.rules[0].priority: 0
+      pangolin.public-resources.radarr.rules[1].action: pass
+      pangolin.public-resources.radarr.rules[1].match: country
+      pangolin.public-resources.radarr.rules[1].value: US
+      pangolin.public-resources.radarr.rules[1].priority: 10
+      pangolin.public-resources.radarr.rules[2].action: deny
+      pangolin.public-resources.radarr.rules[2].match: country
+      pangolin.public-resources.radarr.rules[2].value: ALL
+      pangolin.public-resources.radarr.rules[2].priority: 20

@@ -1,0 +1,59 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.instance.private.dev/configs/settings/
+
+instanceName: private
+title: 'Dancing Chicken: Private'
+theme: dark
+color: slate
+statusStyle: 'dot'
+fullWidth: true
+headerStyle: clean
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: true
+  hideVisitURL: false
+  provider: google
+
+background:
+  image: /images/penguin.png
+  blur: sm
+  saturate: 100
+  brightness: 50
+  opacity: 70
+
+layout:
+  Media:
+    style: row
+    columns: 5
+  Code:
+    style: row
+    columns: 5
+  File Edit, Convert:
+    style: row
+    columns: 5
+  AI:
+    style: row
+    columns: 5
+  Tools:
+    style: row
+    columns: 5
+  Download:
+    style: row
+    columns: 5
+  Hardware:
+    style: row
+    columns: 5
+  Webtop:
+    style: row
+    columns: 5
+  Infra:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Games:
+    useEqualHeights: true
+    style: row
+    columns: 5

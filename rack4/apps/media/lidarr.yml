@@ -1,0 +1,57 @@
+---
+services:
+  lidarr:
+    profiles: [lidarr]
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/lidarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Lidarr
+      homepage.icon: lidarr.png
+      homepage.href: https://lidarr.chenn.dev
+      homepage.description: Music Manager
+
+      traefik.enable: true
+      traefik.http.routers.lidarr.rule: Host(`lidarr.henn.dev`)
+      traefik.http.routers.lidarr.entrypoints: websecure
+      traefik.http.routers.lidarr.middlewares: hdrs@file
+      traefik.http.routers.lidarr.tls.certresolver: cf
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+
+      pangolin.public-resources.lidarr.name: lidarr
+      pangolin.public-resources.lidarr.protocol: http
+      pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev
+      pangolin.public-resources.lidarr.ssl: true
+      pangolin.public-resources.lidarr.targets[0].method: http
+      pangolin.public-resources.lidarr.targets[0].port: 8686
+      pangolin.public-resources.lidarr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.lidarr.targets[0].healthcheck.hostname: lidarr
+      pangolin.public-resources.lidarr.targets[0].healthcheck.port: 8686
+      pangolin.public-resources.lidarr.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.lidarr.targets[0].healthcheck.path: /
+      pangolin.public-resources.lidarr.auth.sso-enabled: true
+      pangolin.public-resources.lidarr.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.lidarr.rules[0].action: allow
+      pangolin.public-resources.lidarr.rules[0].match: path
+      pangolin.public-resources.lidarr.rules[0].value: /api/*
+      pangolin.public-resources.lidarr.rules[0].priority: 0
+      pangolin.public-resources.lidarr.rules[1].action: pass
+      pangolin.public-resources.lidarr.rules[1].match: country
+      pangolin.public-resources.lidarr.rules[1].value: US
+      pangolin.public-resources.lidarr.rules[1].priority: 10
+      pangolin.public-resources.lidarr.rules[2].action: deny
+      pangolin.public-resources.lidarr.rules[2].match: country
+      pangolin.public-resources.lidarr.rules[2].value: ALL
+      pangolin.public-resources.lidarr.rules[2].priority: 20

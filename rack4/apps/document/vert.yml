@@ -1,0 +1,92 @@
+---
+services:
+  vert:
+    profiles: [vert]
+    image: ghcr.io/vert-sh/vert:latest
+    container_name: vert
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
+    networks: [traefik]
+    labels:
+      homepage.group: File Edit, Convert
+      homepage.name: Vert
+      homepage.icon: converse-light.png
+      homepage.href: https://vert.chenn.dev
+      homepage.description: Image + Video Converter
+
+      traefik.enable: true
+      traefik.http.routers.vert.rule: Host(`vert.henn.dev`)
+      traefik.http.routers.vert.entrypoints: websecure
+      traefik.http.routers.vert.middlewares: hdrs@file
+      traefik.http.routers.vert.tls.certresolver: cf
+      traefik.http.services.vert.loadbalancer.server.port: 80
+
+      pangolin.public-resources.vert.name: vert
+      pangolin.public-resources.vert.protocol: http
+      pangolin.public-resources.vert.full-domain: vert.chenn.dev
+      pangolin.public-resources.vert.ssl: true
+      pangolin.public-resources.vert.targets[0].method: http
+      pangolin.public-resources.vert.targets[0].port: 80
+      pangolin.public-resources.vert.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.vert.targets[0].healthcheck.hostname: vert
+      pangolin.public-resources.vert.targets[0].healthcheck.port: 80
+      pangolin.public-resources.vert.targets[0].healthcheck.path: /
+      pangolin.public-resources.vert.auth.sso-enabled: true
+      pangolin.public-resources.vert.auth.sso-roles[0]: Member
+      pangolin.public-resources.vert.rules[0].action: pass
+      pangolin.public-resources.vert.rules[0].match: country
+      pangolin.public-resources.vert.rules[0].value: US
+      pangolin.public-resources.vert.rules[0].priority: 0
+      pangolin.public-resources.vert.rules[1].action: deny
+      pangolin.public-resources.vert.rules[1].match: country
+      pangolin.public-resources.vert.rules[1].value: ALL
+      pangolin.public-resources.vert.rules[1].priority: 10
+
+  vertd:
+    profiles: [vert]
+    image: ghcr.io/vert-sh/vertd:latest
+    container_name: vertd
+    restart: unless-stopped
+    environment:
+      PORT: 24153
+      WEBHOOK_URL:
+      WEBHOOK_PINGS:
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu, video, compute]
+              count: all
+    healthcheck:
+      test: ['CMD', 'curl', 'http://localhost:24153/api/version']
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.vertd.rule: Host(`vertd.henn.dev`)
+      traefik.http.routers.vertd.entrypoints: websecure
+      traefik.http.routers.vertd.middlewares: hdrs@file
+      traefik.http.routers.vertd.tls.certresolver: cf
+      traefik.http.services.vertd.loadbalancer.server.port: 24153
+
+      pangolin.public-resources.vertd.name: vertd
+      pangolin.public-resources.vertd.protocol: http
+      pangolin.public-resources.vertd.full-domain: vertd.chenn.dev
+      pangolin.public-resources.vertd.ssl: true
+      pangolin.public-resources.vertd.targets[0].method: http
+      pangolin.public-resources.vertd.targets[0].port: 24153
+      pangolin.public-resources.vertd.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.vertd.targets[0].healthcheck.hostname: vertd
+      pangolin.public-resources.vertd.targets[0].healthcheck.port: 24153
+      pangolin.public-resources.vertd.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.vertd.targets[0].healthcheck.path: /api/version
+      pangolin.public-resources.vertd.rules[0].action: pass
+      pangolin.public-resources.vertd.rules[0].match: country
+      pangolin.public-resources.vertd.rules[0].value: US
+      pangolin.public-resources.vertd.rules[0].priority: 0
+      pangolin.public-resources.vertd.rules[1].action: deny
+      pangolin.public-resources.vertd.rules[1].match: country
+      pangolin.public-resources.vertd.rules[1].value: ALL
+      pangolin.public-resources.vertd.rules[1].priority: 10

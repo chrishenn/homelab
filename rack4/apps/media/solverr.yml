@@ -1,0 +1,53 @@
+---
+services:
+  solverr:
+    profiles: [solverr]
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: solverr
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      LOG_LEVEL: info
+      LOG_HTML: false
+      CAPTCHA_SOLVER: none
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Solverr
+      homepage.icon: flaresolverr.png
+      homepage.href: https://solverr.chenn.dev
+      homepage.description: Cloudflare Captcha Solver
+
+      traefik.enable: true
+      traefik.http.routers.solverr.rule: Host(`solverr.henn.dev`)
+      traefik.http.routers.solverr.entrypoints: websecure
+      traefik.http.routers.solverr.middlewares: hdrs@file
+      traefik.http.routers.solverr.tls.certresolver: cf
+      traefik.http.services.solverr.loadbalancer.server.port: 8191
+
+      pangolin.public-resources.solverr.name: solverr
+      pangolin.public-resources.solverr.protocol: http
+      pangolin.public-resources.solverr.full-domain: solverr.chenn.dev
+      pangolin.public-resources.solverr.ssl: true
+      pangolin.public-resources.solverr.targets[0].method: http
+      pangolin.public-resources.solverr.targets[0].port: 8191
+      pangolin.public-resources.solverr.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.solverr.targets[0].healthcheck.hostname: solverr
+      pangolin.public-resources.solverr.targets[0].healthcheck.port: 8191
+      pangolin.public-resources.solverr.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.solverr.targets[0].healthcheck.path: /
+      pangolin.public-resources.solverr.auth.sso-enabled: true
+      pangolin.public-resources.solverr.auth.sso-roles[0]: Member
+      pangolin.public-resources.solverr.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.solverr.rules[0].action: pass
+      pangolin.public-resources.solverr.rules[0].match: country
+      pangolin.public-resources.solverr.rules[0].value: US
+      pangolin.public-resources.solverr.rules[0].priority: 0
+      pangolin.public-resources.solverr.rules[1].action: deny
+      pangolin.public-resources.solverr.rules[1].match: country
+      pangolin.public-resources.solverr.rules[1].value: ALL
+      pangolin.public-resources.solverr.rules[1].priority: 10

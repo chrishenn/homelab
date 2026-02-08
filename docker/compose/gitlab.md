@@ -1,0 +1,142 @@
+# Gitlab Config Reference
+
+standalone postgres, redis
+
+```bash
+# postgres
+postgresql['enable'] = false
+gitlab_rails['db_host'] = "gitlab_pg"
+gitlab_rails['db_adapter'] = "postgresql"
+gitlab_rails['db_encoding'] = "unicode"
+gitlab_rails['db_database'] = "gitlab"
+gitlab_rails['db_username'] = "gitlab"
+gitlab_rails['db_password'] = "gitlab"
+
+# redis
+redis['enable'] = false
+gitlab_rails['redis_host'] = 'gitlab_redis'
+gitlab_rails['redis_port'] = 6379
+```
+
+```yml
+gitlab_pg:
+    profiles: [gitlab]
+    image: postgres:16
+    container_name: gitlab_pg
+    restart: unless-stopped
+    volumes:
+        - $DATA/gitlab/gitlab_pg:/var/lib/postgresql/data
+    environment:
+        POSTGRES_DB: gitlab
+        POSTGRES_USER: gitlab
+        POSTGRES_PASSWORD: gitlab
+    healthcheck:
+        test: ['CMD', 'pg_isready', '-q', '-d', 'gitlab', '-U', 'gitlab']
+    networks: [traefik]
+
+gitlab_redis:
+    profiles: [gitlab]
+    image: redis:7
+    container_name: gitlab_redis
+    restart: unless-stopped
+    volumes:
+        - $DATA/gitlab/gitlab_redis:/data
+    networks: [traefik]
+```
+
+local traefik proxy
+
+```yml
+traefik.enable: true
+traefik.http.routers.gitlab.rule: Host(`gitlab.henn.dev`)
+traefik.http.routers.gitlab.entrypoints: websecure
+traefik.http.routers.gitlab.middlewares: hdrs@file
+traefik.http.routers.gitlab.tls.certresolver: cf
+traefik.http.routers.gitlab.service: gitlab
+traefik.http.services.gitlab.loadbalancer.server.port: 80
+
+traefik.http.routers.gitlab_registry.rule: Host(`registry.gitlab.henn.dev`)
+traefik.http.routers.gitlab_registry.entrypoints: websecure
+traefik.http.routers.gitlab_registry.middlewares: hdrs@file
+traefik.http.routers.gitlab_registry.tls.certresolver: cf
+traefik.http.routers.gitlab_registry.service: gitlab_registry
+traefik.http.services.gitlab_registry.loadbalancer.server.port: 5050
+
+traefik.tcp.routers.gitlab_ssh.rule: HostSNI(`*`)
+traefik.tcp.routers.gitlab_ssh.entrypoints: tcp-2222
+traefik.tcp.routers.gitlab_ssh.service: gitlab_ssh
+traefik.tcp.services.gitlab_ssh.loadbalancer.server.port: 22
+```
+
+gitlab runner
+
+```yml
+ghrunner:
+    profiles: [ghrunner]
+    image: myoung34/github-runner:latest
+    container_name: ghrunner
+    restart: unless-stopped
+    environment:
+        RUNNER_NAME: docker_rack4
+        ACCESS_TOKEN: ${GHRUNNER_PAT}
+        RUNNER_SCOPE: org
+        ORG_NAME: chrishenn-org
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - $DATA/runner:/runner/data
+        - /tmp/runner:/tmp/runner
+```
+
+permissions fixup
+
+```yml
+# docker compose run --rm -it gitlab_perm
+gitlab_perm:
+    profiles: [gitlab_help]
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab_perm
+    restart: no
+    command: /bin/sh -c "update-permissions"
+    volumes:
+        - $DATA/gitlab/config:/etc/gitlab
+        - $DATA/gitlab/logs:/var/log/gitlab
+        - $DATA/gitlab/data:/var/opt/gitlab
+```
+
+read the initial root password
+
+```yml
+# docker compose run --rm -it gitlab_pass
+gitlab_pass:
+    profiles: [gitlab_help]
+    image: alpine
+    container_name: gitlab_pass
+    restart: no
+    command: /bin/sh -c "grep 'Password:' /etc/gitlab/initial_root_password"
+    volumes:
+        - $DATA/gitlab/config:/etc/gitlab
+```
+
+standalone backup container
+
+```yml
+gitlab_backup:
+    profiles: [gitlab_help]
+    image: offen/docker-volume-backup:latest
+    container_name: gitlab_backup
+    restart: unless-stopped
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - /etc/localtime:/etc/localtime:ro
+        # source data to backup
+        - $DATA/gitlab:/backup/gitlab:ro
+        # backup destination
+        - $BACKUP/gitlab:/archive
+    environment:
+        BACKUP_STOP_DURING_BACKUP_LABEL: gitlab
+        BACKUP_CRON_EXPRESSION: '@daily'
+        BACKUP_FILENAME: 'gitlab-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
+        BACKUP_PRUNING_PREFIX: 'gitlab-'
+        BACKUP_RETENTION_DAYS: 2
+    networks: [traefik, docker]
+```

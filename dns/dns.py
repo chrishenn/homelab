@@ -70,4 +70,4 @@ def local_arecords():
 
 if __name__ == "__main__":
     local_dns()
-    local_arecords()
+    # local_arecords()

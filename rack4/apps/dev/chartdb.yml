@@ -1,0 +1,43 @@
+---
+services:
+  chartdb:
+    profiles: [chartdb]
+    image: ghcr.io/chartdb/chartdb:latest
+    container_name: chartdb
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      homepage.group: Code
+      homepage.name: Chartdb
+      homepage.icon: chart-db.png
+      homepage.href: https://chart.chenn.dev
+      homepage.description: Database Doodler
+
+      traefik.enable: true
+      traefik.http.routers.chartdb.rule: Host(`chart.henn.dev`)
+      traefik.http.routers.chartdb.entrypoints: websecure
+      traefik.http.routers.chartdb.middlewares: hdrs@file
+      traefik.http.routers.chartdb.tls.certresolver: cf
+      traefik.http.services.chartdb.loadbalancer.server.port: 80
+
+      pangolin.public-resources.chartdb.name: chartdb
+      pangolin.public-resources.chartdb.protocol: http
+      pangolin.public-resources.chartdb.full-domain: chart.chenn.dev
+      pangolin.public-resources.chartdb.ssl: true
+      pangolin.public-resources.chartdb.targets[0].method: http
+      pangolin.public-resources.chartdb.targets[0].port: 80
+      pangolin.public-resources.chartdb.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.chartdb.targets[0].healthcheck.hostname: chartdb
+      pangolin.public-resources.chartdb.targets[0].healthcheck.port: 80
+      pangolin.public-resources.chartdb.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.chartdb.targets[0].healthcheck.path: /
+      pangolin.public-resources.chartdb.auth.sso-enabled: true
+      pangolin.public-resources.chartdb.auth.sso-roles[0]: Member
+      pangolin.public-resources.chartdb.rules[0].action: pass
+      pangolin.public-resources.chartdb.rules[0].match: country
+      pangolin.public-resources.chartdb.rules[0].value: US
+      pangolin.public-resources.chartdb.rules[0].priority: 0
+      pangolin.public-resources.chartdb.rules[1].action: deny
+      pangolin.public-resources.chartdb.rules[1].match: country
+      pangolin.public-resources.chartdb.rules[1].value: ALL
+      pangolin.public-resources.chartdb.rules[1].priority: 10

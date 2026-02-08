@@ -1,0 +1,71 @@
+# initial login: admin/stirling
+# OIDC requires a pro license
+---
+services:
+  stirling:
+    profiles: [stirling]
+    image: stirlingtools/stirling-pdf:latest-fat
+    container_name: stirling
+    restart: unless-stopped
+    environment:
+      SECURITY_ENABLELOGIN: true
+      MODE: BOTH
+      LANGS: en_GB
+      DISABLE_ADDITIONAL_FEATURES: false
+      UI_LOGOSTYLE: modern
+      MAIL_ENABLED: true
+      MAIL_ENABLEINVITES: true
+      METRICS_ENABLED: true
+
+      MAIL_HOST: ${SMTP_HOST}
+      MAIL_PORT: 587
+      MAIL_USERNAME: ${SMTP_USER}
+      MAIL_PASSWORD: ${SMTP_TOKEN}
+      MAIL_FROM: ${SMTP_USER}
+      MAIL_TLS_ENABLED: true
+    volumes:
+      - $DATA/stirling/tessdata:/usr/share/tessdata
+      - $DATA/stirling/configs:/configs
+      - $DATA/stirling/logs:/logs
+      - $DATA/stirling/customFiles:/customFiles:rw
+      - $DATA/stirling/pipeline:/pipeline
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8080/api/v1/info/status']
+    networks: [traefik]
+    labels:
+      homepage.group: File Edit, Convert
+      homepage.name: Stirling
+      homepage.icon: stirling-pdf.png
+      homepage.href: https://stirling.chenn.dev
+      homepage.description: PDF Editing
+
+      traefik.enable: true
+      traefik.http.routers.stirling.rule: Host(`stirling.henn.dev`)
+      traefik.http.routers.stirling.entrypoints: websecure
+      traefik.http.routers.stirling.middlewares: hdrs@file
+      traefik.http.routers.stirling.tls.certresolver: cf
+      traefik.http.services.stirling.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.stirling.name: stirling
+      pangolin.public-resources.stirling.protocol: http
+      pangolin.public-resources.stirling.full-domain: stirling.chenn.dev
+      pangolin.public-resources.stirling.ssl: true
+      pangolin.public-resources.stirling.targets[0].method: http
+      pangolin.public-resources.stirling.targets[0].port: 8080
+      pangolin.public-resources.stirling.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.stirling.targets[0].healthcheck.hostname: stirling
+      pangolin.public-resources.stirling.targets[0].healthcheck.port: 8080
+      pangolin.public-resources.stirling.targets[0].healthcheck.path: /api/v1/info/status
+      pangolin.public-resources.stirling.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.stirling.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.stirling.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.stirling.auth.sso-enabled: true
+      pangolin.public-resources.stirling.auth.sso-roles[0]: Member
+      pangolin.public-resources.stirling.rules[0].action: pass
+      pangolin.public-resources.stirling.rules[0].match: country
+      pangolin.public-resources.stirling.rules[0].value: US
+      pangolin.public-resources.stirling.rules[0].priority: 0
+      pangolin.public-resources.stirling.rules[1].action: deny
+      pangolin.public-resources.stirling.rules[1].match: country
+      pangolin.public-resources.stirling.rules[1].value: ALL
+      pangolin.public-resources.stirling.rules[1].priority: 10

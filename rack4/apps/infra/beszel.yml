@@ -1,0 +1,77 @@
+---
+services:
+  beszel:
+    profiles: [beszel]
+    image: henrygd/beszel
+    container_name: beszel
+    restart: unless-stopped
+    environment:
+      DISABLE_PASSWORD_AUTH: true
+      USER_CREATION: false
+    volumes:
+      - $DATA/beszel/beszel_server/data:/beszel_data
+    healthcheck:
+      test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Beszel
+      homepage.icon: beszel.png
+      homepage.href: https://beszel.chenn.dev
+      homepage.description: Server Stats
+
+      traefik.enable: true
+      traefik.http.routers.beszel.rule: Host(`beszel.henn.dev`)
+      traefik.http.routers.beszel.entrypoints: websecure
+      traefik.http.routers.beszel.middlewares: hdrs@file
+      traefik.http.routers.beszel.tls.certresolver: cf
+      traefik.http.services.beszel.loadbalancer.server.port: 8090
+
+      pangolin.public-resources.beszel.name: beszel
+      pangolin.public-resources.beszel.protocol: http
+      pangolin.public-resources.beszel.full-domain: beszel.chenn.dev
+      pangolin.public-resources.beszel.ssl: true
+      pangolin.public-resources.beszel.targets[0].method: http
+      pangolin.public-resources.beszel.targets[0].port: 8090
+      pangolin.public-resources.beszel.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.beszel.targets[0].healthcheck.hostname: beszel
+      pangolin.public-resources.beszel.targets[0].healthcheck.port: 8090
+      pangolin.public-resources.beszel.targets[0].healthcheck.path: /
+      pangolin.public-resources.beszel.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.beszel.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.beszel.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.beszel.auth.sso-enabled: true
+      pangolin.public-resources.beszel.auth.sso-roles[0]: Member
+      pangolin.public-resources.beszel.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.beszel.rules[0].action: pass
+      pangolin.public-resources.beszel.rules[0].match: country
+      pangolin.public-resources.beszel.rules[0].value: US
+      pangolin.public-resources.beszel.rules[0].priority: 0
+      pangolin.public-resources.beszel.rules[1].action: deny
+      pangolin.public-resources.beszel.rules[1].match: country
+      pangolin.public-resources.beszel.rules[1].value: ALL
+      pangolin.public-resources.beszel.rules[1].priority: 10
+
+  beszel_rack4:
+    profiles: [beszel]
+    image: henrygd/beszel-agent-nvidia
+    container_name: beszel_rack4
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [utility]
+    environment:
+      LISTEN: 45876
+      KEY: ${BESZEL_KEY}
+      TOKEN: ${BESZEL_TOKEN}
+      HUB_URL: https://beszel.henn.dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/beszel/beszel_rack4:/var/lib/beszel-agent
+    network_mode: host
+    healthcheck:
+      test: ['CMD', '/agent', 'health']

@@ -1,0 +1,80 @@
+# first time login: https://jellyfin.henn.dev/web/index.html#!/wizardstart.html
+---
+services:
+  jellyfin:
+    profiles: [jellyfin]
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: $PUID:$PGID
+    restart: unless-stopped
+    hostname: jellyfin
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu, video, compute]
+              count: 1
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      JELLYFIN_PublishedServerUrl: 'https://jellyfin.chenn.dev'
+    volumes:
+      - $DATA/jellyfin/config:/config
+      - $DATA/jellyfin/cache:/cache
+      - type: bind
+        source: $MEDIA
+        target: /media
+    ports:
+      - '1900:1900/udp'
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8096']
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Jellyfin
+      homepage.icon: jellyfin.png
+      homepage.href: https://jellyfin.chenn.dev
+      homepage.description: Media Server
+
+      traefik.enable: true
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.henn.dev`)
+      traefik.http.routers.jellyfin.entrypoints: websecure
+      traefik.http.routers.jellyfin.middlewares: hdrs@file
+      traefik.http.routers.jellyfin.tls.certresolver: cf
+      traefik.http.services.jellyfin.loadbalancer.server.port: 8096
+
+      pangolin.public-resources.jellyfin.name: jellyfin
+      pangolin.public-resources.jellyfin.protocol: http
+      pangolin.public-resources.jellyfin.full-domain: jellyfin.chenn.dev
+      pangolin.public-resources.jellyfin.ssl: true
+      pangolin.public-resources.jellyfin.targets[0].method: http
+      pangolin.public-resources.jellyfin.targets[0].port: 8096
+      pangolin.public-resources.jellyfin.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.jellyfin.targets[0].healthcheck.hostname: jellyfin
+      pangolin.public-resources.jellyfin.targets[0].healthcheck.port: 8096
+      pangolin.public-resources.jellyfin.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.jellyfin.targets[0].healthcheck.path: /
+      pangolin.public-resources.jellyfin.auth.sso-enabled: true
+      pangolin.public-resources.jellyfin.auth.sso-roles[0]: Member
+      pangolin.public-resources.jellyfin.rules[0].action: pass
+      pangolin.public-resources.jellyfin.rules[0].match: country
+      pangolin.public-resources.jellyfin.rules[0].value: US
+      pangolin.public-resources.jellyfin.rules[0].priority: 0
+      pangolin.public-resources.jellyfin.rules[1].action: deny
+      pangolin.public-resources.jellyfin.rules[1].match: country
+      pangolin.public-resources.jellyfin.rules[1].value: ALL
+      pangolin.public-resources.jellyfin.rules[1].priority: 10
+
+  jellyfin-discovery:
+    profiles: [jellyfin]
+    image: jpkribs/jellyfin-discovery-proxy:latest
+    container_name: jellyfin-discovery
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      JELLYFIN_SERVER_URL: https://jellyfin.henn.dev
+      CACHE_DURATION: 12
+      HTTP_PORT: 7359

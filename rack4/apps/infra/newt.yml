@@ -1,0 +1,18 @@
+---
+services:
+  newt:
+    profiles: [newt]
+    image: fosrl/newt
+    container_name: newt
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT}
+      NEWT_ID: ${NEWT_ID}
+      NEWT_SECRET: ${NEWT_SECRET}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [traefik, newt]
+
+networks:
+  newt:

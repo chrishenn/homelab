@@ -1,0 +1,165 @@
+---
+services:
+  gitlab:
+    profiles: [gitlab]
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: unless-stopped
+    shm_size: 2g
+    environment:
+      GITLAB_ROOT_EMAIL: ${EMAIL}
+      GITLAB_ROOT_PASSWORD: ${PASS}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_TOKEN: ${SMTP_TOKEN}
+      OIDC: ${OIDC}
+      GITLAB_OIDC_CLIENT: ${GITLAB_OIDC_CLIENT}
+      GITLAB_OIDC_SECRET: ${GITLAB_OIDC_SECRET}
+      GITLAB_OMNIBUS_CONFIG: |
+        # global config
+        gitlab_rails['initial_root_email'] = ENV['GITLAB_ROOT_EMAIL']
+        gitlab_rails['initial_root_password'] = ENV['GITLAB_ROOT_PASSWORD']
+
+        external_url 'https://gitlab.chenn.dev'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2525
+        gitlab_rails['lfs_enabled'] = true
+
+        # nginx
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['redirect_http_to_https'] = true
+        letsencrypt['enable'] = false
+
+        # container registry
+        registry['enable'] = true
+        gitlab_rails['registry_enabled'] = true
+        registry_external_url 'https://registry.gitlab.chenn.dev'
+        registry_nginx['listen_https'] = false
+        registry_nginx['listen_port'] = 5050
+
+        # smtp
+        gitlab_rails['smtp_enable']           = true
+        gitlab_rails['smtp_address']          = ENV['SMTP_HOST']
+        gitlab_rails['smtp_port']             = 465
+        gitlab_rails['smtp_user_name']        = ENV['SMTP_USER']
+        gitlab_rails['smtp_password']         = ENV['SMTP_TOKEN']
+        gitlab_rails['smtp_authentication']   = "login"
+        gitlab_rails['smtp_ssl']              = true
+        gitlab_rails['smtp_force_ssl']        = true
+        gitlab_rails['gitlab_email_from']     = ENV['SMTP_USER']
+        gitlab_rails['gitlab_email_reply_to'] = ENV['SMTP_USER']
+
+        # oidc
+        gitlab_rails['omniauth_auto_link_user'] = true
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['openid_connect']
+        gitlab_rails['omniauth_providers'] = [
+          {
+            name: "openid_connect",
+            label: "Pocket ID",
+            icon: "https://pocketid.chenn.dev/api/application-images/favicon",
+            args: {
+              name: "openid_connect",
+              scope: ["openid","profile","email", "groups"],
+              response_type: "code",
+              issuer: ENV['OIDC'],
+              discovery: true,
+              client_auth_method: "query",
+              send_scope_to_token_endpoint: "false",
+              pkce: true,
+              client_options: {
+                identifier: ENV['GITLAB_OIDC_CLIENT'],
+                secret: ENV['GITLAB_OIDC_SECRET'],
+                redirect_uri: "https://gitlab.chenn.dev/users/auth/openid_connect/callback"
+              }
+            }
+          }
+        ]
+
+        # monitoring
+        prometheus_monitoring['enable'] = false
+        sidekiq['metrics_enabled'] = false
+        puma['exporter_enabled'] = false
+
+        # resource limiting
+        postgresql['shared_buffers'] = "256MB"
+        sidekiq['max_concurrency'] = 4
+        sidekiq['concurrency'] = 1
+        puma['worker_timeout'] = 120
+        puma['worker_processes'] = 1
+
+        gitaly['configuration'] = {
+          concurrency: [
+            {
+              'rpc' => "/gitaly.SmartHTTPService/PostReceivePack",
+              'max_per_repo' => 3,
+            }, {
+              'rpc' => "/gitaly.SSHService/SSHUploadPack",
+              'max_per_repo' => 3,
+            },
+          ],
+        }
+        gitaly['env'] = {
+          'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000',
+          'GITALY_COMMAND_SPAWN_MAX_PARALLEL' => '2',
+        }
+        gitlab_rails['env'] = {
+          'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000',
+        }
+
+    volumes:
+      - $DATA/gitlab/data:/var/opt/gitlab
+      - $DATA/gitlab/logs:/var/log/gitlab
+      - $DATA/gitlab/config:/etc/gitlab
+    networks: [traefik]
+    labels:
+      homepage.group: Code
+      homepage.name: Gitlab
+      homepage.icon: gitlab.png
+      homepage.href: https://gitlab.chenn.dev
+      homepage.description: Gitlab
+
+      pangolin.public-resources.gitlab.name: gitlab
+      pangolin.public-resources.gitlab.protocol: http
+      pangolin.public-resources.gitlab.full-domain: gitlab.chenn.dev
+      pangolin.public-resources.gitlab.ssl: true
+      pangolin.public-resources.gitlab.targets[0].method: http
+      pangolin.public-resources.gitlab.targets[0].port: 80
+
+      pangolin.public-resources.gitlab.rules[0].action: allow
+      pangolin.public-resources.gitlab.rules[0].match: country
+      pangolin.public-resources.gitlab.rules[0].value: US
+      pangolin.public-resources.gitlab.rules[0].priority: 10
+      pangolin.public-resources.gitlab.rules[1].action: deny
+      pangolin.public-resources.gitlab.rules[1].match: country
+      pangolin.public-resources.gitlab.rules[1].value: ALL
+      pangolin.public-resources.gitlab.rules[1].priority: 20
+
+      pangolin.public-resources.gitlab_r.name: gitlab_r
+      pangolin.public-resources.gitlab_r.protocol: http
+      pangolin.public-resources.gitlab_r.full-domain: registry.gitlab.chenn.dev
+      pangolin.public-resources.gitlab_r.ssl: true
+      pangolin.public-resources.gitlab_r.targets[0].method: http
+      pangolin.public-resources.gitlab_r.targets[0].port: 5050
+
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.hostname: gitlab
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.port: 5050
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.path: /
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.gitlab_r.targets[0].healthcheck.timeout: 5
+
+      pangolin.public-resources.gitlab_r.rules[0].action: allow
+      pangolin.public-resources.gitlab_r.rules[0].match: country
+      pangolin.public-resources.gitlab_r.rules[0].value: US
+      pangolin.public-resources.gitlab_r.rules[0].priority: 10
+      pangolin.public-resources.gitlab_r.rules[1].action: deny
+      pangolin.public-resources.gitlab_r.rules[1].match: country
+      pangolin.public-resources.gitlab_r.rules[1].value: ALL
+      pangolin.public-resources.gitlab_r.rules[1].priority: 20
+
+      pangolin.public-resources.gitlab_ssh.name: gitlab_ssh
+      pangolin.public-resources.gitlab_ssh.protocol: tcp
+      pangolin.public-resources.gitlab_ssh.proxy-port: 2525
+      pangolin.public-resources.gitlab_ssh.targets[0].port: 22

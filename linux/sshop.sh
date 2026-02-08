@@ -138,7 +138,7 @@ function list_keys() {
 	fi
 
 	local keys_array=()
-	for key in "$keys"; do
+	for key in $keys; do
 		keys_array+=("$key")
 	done
 

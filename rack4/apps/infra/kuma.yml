@@ -1,0 +1,48 @@
+---
+services:
+  kuma:
+    profiles: [kuma]
+    image: louislam/uptime-kuma:1
+    container_name: kuma
+    restart: unless-stopped
+    volumes:
+      - $DATA/kuma:/app/data
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3001']
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Uptime Kuma
+      homepage.icon: uptime-kuma.png
+      homepage.href: https://kuma.chenn.dev
+      homepage.description: Uptime Tracker
+
+      traefik.enable: true
+      traefik.http.routers.kuma.rule: Host(`kuma.henn.dev`)
+      traefik.http.routers.kuma.entrypoints: websecure
+      traefik.http.routers.kuma.middlewares: hdrs@file
+      traefik.http.routers.kuma.tls.certresolver: cf
+      traefik.http.services.kuma.loadbalancer.server.port: 3001
+
+      pangolin.public-resources.kuma.name: kuma
+      pangolin.public-resources.kuma.protocol: http
+      pangolin.public-resources.kuma.full-domain: kuma.chenn.dev
+      pangolin.public-resources.kuma.ssl: true
+      pangolin.public-resources.kuma.targets[0].method: http
+      pangolin.public-resources.kuma.targets[0].port: 3001
+      pangolin.public-resources.kuma.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.kuma.targets[0].healthcheck.hostname: kuma
+      pangolin.public-resources.kuma.targets[0].healthcheck.port: 3001
+      pangolin.public-resources.kuma.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.kuma.targets[0].healthcheck.path: /
+      pangolin.public-resources.kuma.auth.sso-enabled: true
+      pangolin.public-resources.kuma.auth.sso-roles[0]: Member
+      pangolin.public-resources.kuma.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.kuma.rules[0].action: pass
+      pangolin.public-resources.kuma.rules[0].match: country
+      pangolin.public-resources.kuma.rules[0].value: US
+      pangolin.public-resources.kuma.rules[0].priority: 0
+      pangolin.public-resources.kuma.rules[1].action: deny
+      pangolin.public-resources.kuma.rules[1].match: country
+      pangolin.public-resources.kuma.rules[1].value: ALL
+      pangolin.public-resources.kuma.rules[1].priority: 10

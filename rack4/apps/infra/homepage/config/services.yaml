@@ -1,0 +1,50 @@
+---
+# doc
+# https://gethomepage.instance.private.dev/configs/services/
+
+# icons
+# https://github.com/walkxcode/dashboard-icons
+
+#- Infra:
+#    - Traefik-K8S:
+#        icon: traefik.png
+#        href: https://kube-traefik.henn.dev
+#        description: K8s Traefik Gui
+#        ping: 192.168.1.65
+
+- Hardware:
+    - Proxmox:
+        icon: proxmox.png
+        href: https://proxmox.henn.dev
+        description: Proxmox Host Webui (Rack 3)
+        ping: 192.168.1.42
+    - Mikrotik One:
+        icon: mikrotik.png
+        href: https://one.mikrotik.henn.dev
+        description: 10 Gigabit Router
+        ping: 192.168.1.1
+    - Mikrotik Two:
+        icon: mikrotik.png
+        href: https://two.mikrotik.henn.dev
+        description: 100 Gigabit Router
+        ping: 192.168.1.2
+    - PiKVM:
+        icon: pikvm.png
+        href: https://pikvm.henn.dev
+        description: KVM Rack1-Rack4
+        ping: 192.168.1.31
+    - KVM0:
+        icon: pikvm.png
+        href: https://kvm0.henn.dev
+        description: Kvm Rack0
+        ping: 192.168.1.22
+    - zyxel:
+        icon: zyxel-networks.png
+        href: https://zyxel.henn.dev
+        description: Wifi Router
+        ping: 192.168.1.12
+    - Brother:
+        icon: brother.png
+        href: https://brother.henn.dev
+        description: Brother Printer
+        ping: 192.168.1.9

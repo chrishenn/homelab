@@ -1,0 +1,55 @@
+# https://go-acme.github.io/lego/dns/cloudflare/
+---
+services:
+  traefik:
+    profiles: [traefik]
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/cfg:/cfg
+      - $DATA/traefik/logs:/logs
+      - $DATA/traefik/ssl:/ssl
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Traefik-Docker
+      homepage.instance.private.icon: traefik.png
+      homepage.instance.private.href: https://docker-traefik.henn.dev
+      homepage.instance.private.description: Docker Traefik Gui (Rack 4)
+      homepage.instance.private.widget.type: traefik
+      homepage.instance.private.widget.url: https://docker-traefik.henn.dev
+
+      traefik.enable: true
+      traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
+      traefik.http.routers.dash.entrypoints: websecure
+      traefik.http.routers.dash.middlewares: hdrs@file
+      traefik.http.routers.dash.tls.certresolver: cf
+      traefik.http.routers.dash.service: api@internal
+    ports:
+      - '${SVC_IP}:80:80' # http
+      - '${SVC_IP}:8080:8080' # traefik internal entrypoint
+      - '${SVC_IP}:443:443' # https
+      - '${SVC_IP}:22:22' # ssh
+      - '${SVC_IP}:2222:2222' # ssh
+      - '${SVC_IP}:2424:2424' # ssh
+      - '${SVC_IP}:1935:1935' # rtmp
+      - '${SVC_IP}:3128:3128' # spice
+      - '${SVC_IP}:61001:61001' # spice-tls
+      - '${SVC_IP}:10000:10000' #
+
+      - '${TRAEFIK_VIP}:80:80' # http
+      - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
+      - '${TRAEFIK_VIP}:443:443' # https
+      - '${TRAEFIK_VIP}:22:22' # ssh
+      - '${TRAEFIK_VIP}:2222:2222' # ssh
+      - '${TRAEFIK_VIP}:2424:2424' # ssh
+      - '${TRAEFIK_VIP}:1935:1935' # rtmp
+      - '${TRAEFIK_VIP}:3128:3128' # spice
+      - '${TRAEFIK_VIP}:61001:61001' # spice-tls
+      - '${TRAEFIK_VIP}:10000:10000' #

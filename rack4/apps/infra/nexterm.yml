@@ -1,0 +1,48 @@
+---
+services:
+  nexterm:
+    profiles: [nexterm]
+    image: germannewsmaker/nexterm
+    container_name: nexterm
+    restart: unless-stopped
+    volumes:
+      - $DATA/nexterm:/app/data
+    environment:
+      ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Nexterm
+      homepage.icon: nexterm.png
+      homepage.href: https://nexterm.chenn.dev
+      homepage.description: Server Manager
+
+      traefik.enable: true
+      traefik.http.routers.nexterm.rule: Host(`nexterm.henn.dev`)
+      traefik.http.routers.nexterm.entrypoints: websecure
+      traefik.http.routers.nexterm.middlewares: hdrs@file
+      traefik.http.routers.nexterm.tls.certresolver: cf
+      traefik.http.services.nexterm.loadbalancer.server.port: 6989
+
+      pangolin.public-resources.nexterm.name: nexterm
+      pangolin.public-resources.nexterm.protocol: http
+      pangolin.public-resources.nexterm.full-domain: nexterm.chenn.dev
+      pangolin.public-resources.nexterm.ssl: true
+      pangolin.public-resources.nexterm.targets[0].method: http
+      pangolin.public-resources.nexterm.targets[0].port: 6989
+      pangolin.public-resources.nexterm.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.nexterm.targets[0].healthcheck.hostname: nexterm
+      pangolin.public-resources.nexterm.targets[0].healthcheck.port: 6989
+      pangolin.public-resources.nexterm.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.nexterm.targets[0].healthcheck.path: /
+      pangolin.public-resources.nexterm.auth.sso-enabled: true
+      pangolin.public-resources.nexterm.auth.sso-roles[0]: Member
+      pangolin.public-resources.nexterm.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.nexterm.rules[0].action: pass
+      pangolin.public-resources.nexterm.rules[0].match: country
+      pangolin.public-resources.nexterm.rules[0].value: US
+      pangolin.public-resources.nexterm.rules[0].priority: 0
+      pangolin.public-resources.nexterm.rules[1].action: deny
+      pangolin.public-resources.nexterm.rules[1].match: country
+      pangolin.public-resources.nexterm.rules[1].value: ALL
+      pangolin.public-resources.nexterm.rules[1].priority: 10

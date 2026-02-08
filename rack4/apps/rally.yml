@@ -1,0 +1,82 @@
+# using 14GB of memory at idle
+---
+x-rally_env: &rally_env
+  NEXT_PUBLIC_BASE_URL: https://rally.chenn.dev
+  DATABASE_URL: postgres://postgres:postgres@rally_db:5432/db
+  SECRET_PASSWORD: $RALLY_SECRET
+
+  ALLOWED_EMAILS: '*'
+  SUPPORT_EMAIL: $SMTP_USER
+  SMTP_HOST: $SMTP_HOST
+  SMTP_USER: $SMTP_USER
+  SMTP_PWD: $SMTP_TOKEN
+  SMTP_PORT: 465
+  SMTP_SECURE: true
+
+  OIDC_ISSUER_URL: https://pocketid.chenn.dev
+  OIDC_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+  OIDC_CLIENT_ID: $RALLY_OIDC_CLIENT
+  OIDC_CLIENT_SECRET: $RALLY_OIDC_SECRET
+
+services:
+  rally:
+    profiles: [rally]
+    image: lukevella/rallly:latest
+    container_name: rally
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    environment:
+      <<: *rally_env
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
+    networks: [traefik, rally]
+    labels:
+      homepage.group: Tools
+      homepage.name: Rally
+      homepage.icon: rallly.png
+      homepage.href: https://rally.chenn.dev
+      homepage.description: Group Event Scheduler
+
+      pangolin.public-resources.rally.name: rally
+      pangolin.public-resources.rally.protocol: http
+      pangolin.public-resources.rally.full-domain: rally.chenn.dev
+      pangolin.public-resources.rally.ssl: true
+      pangolin.public-resources.rally.targets[0].method: http
+      pangolin.public-resources.rally.targets[0].port: 3000
+      pangolin.public-resources.rally.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.rally.targets[0].healthcheck.hostname: rally
+      pangolin.public-resources.rally.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.rally.targets[0].healthcheck.path: /
+      pangolin.public-resources.rally.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.rally.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.rally.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.rally.auth.sso-enabled: true
+      pangolin.public-resources.rally.auth.sso-roles[0]: Member
+      pangolin.public-resources.rally.rules[0].action: pass
+      pangolin.public-resources.rally.rules[0].match: country
+      pangolin.public-resources.rally.rules[0].value: US
+      pangolin.public-resources.rally.rules[0].priority: 0
+      pangolin.public-resources.rally.rules[1].action: deny
+      pangolin.public-resources.rally.rules[1].match: country
+      pangolin.public-resources.rally.rules[1].value: ALL
+      pangolin.public-resources.rally.rules[1].priority: 10
+
+  rally_db:
+    profiles: [rally]
+    image: postgres:14.2
+    container_name: rally_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    volumes:
+      - $DATA/rally/rally_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+    networks: [rally]
+
+networks:
+  rally:

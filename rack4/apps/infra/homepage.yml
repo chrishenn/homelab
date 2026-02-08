@@ -1,0 +1,64 @@
+---
+services:
+  homepage_pub:
+    profiles: [homepage_pub]
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage_pub
+    restart: unless-stopped
+    volumes:
+      - ./homepage_pub/config:/app/config
+      - ./homepage_pub/images:/app/public/images
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      HOMEPAGE_ALLOWED_HOSTS: home.chenn.dev
+    networks: [newt, docker]
+    labels:
+      pangolin.public-resources.homepage_pub.name: homepage_pub
+      pangolin.public-resources.homepage_pub.protocol: http
+      pangolin.public-resources.homepage_pub.full-domain: home.chenn.dev
+      pangolin.public-resources.homepage_pub.ssl: true
+      pangolin.public-resources.homepage_pub.targets[0].method: http
+      pangolin.public-resources.homepage_pub.targets[0].port: 3000
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.hostname: homepage_pub
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.path: /
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.homepage_pub.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.homepage_pub.auth.sso-enabled: true
+      pangolin.public-resources.homepage_pub.auth.sso-roles[0]: Member
+      pangolin.public-resources.homepage_pub.rules[0].action: pass
+      pangolin.public-resources.homepage_pub.rules[0].match: country
+      pangolin.public-resources.homepage_pub.rules[0].value: US
+      pangolin.public-resources.homepage_pub.rules[0].priority: 0
+      pangolin.public-resources.homepage_pub.rules[1].action: deny
+      pangolin.public-resources.homepage_pub.rules[1].match: country
+      pangolin.public-resources.homepage_pub.rules[1].value: ALL
+      pangolin.public-resources.homepage_pub.rules[1].priority: 10
+
+  homepage:
+    profiles: [homepage]
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    volumes:
+      - ./homepage/config:/app/config
+      - ./homepage/images:/app/public/images
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      HOMEPAGE_ALLOWED_HOSTS: home.henn.dev
+    networks: [traefik, docker]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.home.rule: Host(`home.henn.dev`)
+      traefik.http.routers.home.entrypoints: websecure
+      traefik.http.routers.home.middlewares: hdrs@file
+      traefik.http.routers.home.tls.certresolver: cf
+      traefik.http.services.home.loadbalancer.server.port: 3000

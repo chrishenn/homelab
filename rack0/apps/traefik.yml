@@ -7,20 +7,19 @@ networks:
 services:
   traefik:
     profiles: [traefik]
-    image: traefik:v3.5
+    image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     security_opt: [no-new-privileges=true]
     environment:
+      TZ: $TZ
       PUID: $PUID
       PGID: $PGID
-      TZ: $TZ
-      CF_API_EMAIL: ${CF_API_EMAIL}
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ../../rack4/apps/traefik/traefik.yml:/traefik.yml:ro
-      - ../../rack4/apps/traefik/cfg:/cfg:ro
+      - ../../rack4/apps/infra/traefik/traefik.yml:/traefik.yml:ro
+      - ../../rack4/apps/infra/traefik/cfg:/cfg:ro
       # CANNOT BE A CIFS MOUNT. Will work the first time, then fail after restarting container
       - $HOME/rack0_traefik/ssl:/ssl
       - $HOME/rack0_traefik/logs:/logs

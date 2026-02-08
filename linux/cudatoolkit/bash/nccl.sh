@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function install_nccl {
 	NCCL_VERSION=v2.21.5-1
 

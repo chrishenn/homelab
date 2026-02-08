@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # testing: we expect to see little to no traffic on the server, using iftop or btm
 
 # write: 24 gb/s (2944 MB) | read: 26 gb/s (3260 MB)

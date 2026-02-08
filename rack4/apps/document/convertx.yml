@@ -1,0 +1,48 @@
+---
+services:
+  convertx:
+    profiles: [convertx]
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: convertx
+    restart: unless-stopped
+    environment:
+      ALLOW_UNAUTHENTICATED: false
+      ACCOUNT_REGISTRATION: true
+    volumes:
+      - $DATA/convertx:/app/data
+    networks: [traefik]
+    labels:
+      homepage.group: File Edit, Convert
+      homepage.name: Convertx
+      homepage.icon: vertiv-dark.png
+      homepage.href: https://convertx.chenn.dev
+      homepage.description: File Converter
+
+      traefik.enable: true
+      traefik.http.routers.convertx.rule: Host(`convertx.henn.dev`)
+      traefik.http.routers.convertx.entrypoints: websecure
+      traefik.http.routers.convertx.middlewares: hdrs@file
+      traefik.http.routers.convertx.tls.certresolver: cf
+      traefik.http.services.convertx.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.convertx.name: convertx
+      pangolin.public-resources.convertx.protocol: http
+      pangolin.public-resources.convertx.full-domain: convertx.chenn.dev
+      pangolin.public-resources.convertx.ssl: true
+      pangolin.public-resources.convertx.targets[0].method: http
+      pangolin.public-resources.convertx.targets[0].port: 3000
+      pangolin.public-resources.convertx.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.convertx.targets[0].healthcheck.hostname: convertx
+      pangolin.public-resources.convertx.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.convertx.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.convertx.targets[0].healthcheck.path: /
+      pangolin.public-resources.convertx.auth.sso-enabled: true
+      pangolin.public-resources.convertx.auth.sso-roles[0]: Member
+      pangolin.public-resources.convertx.rules[0].action: pass
+      pangolin.public-resources.convertx.rules[0].match: country
+      pangolin.public-resources.convertx.rules[0].value: US
+      pangolin.public-resources.convertx.rules[0].priority: 0
+      pangolin.public-resources.convertx.rules[1].action: deny
+      pangolin.public-resources.convertx.rules[1].match: country
+      pangolin.public-resources.convertx.rules[1].value: ALL
+      pangolin.public-resources.convertx.rules[1].priority: 10

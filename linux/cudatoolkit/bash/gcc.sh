@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function install_gcc13 {
 	# install gcc-13
 	apt install build-essential libmpfr-dev libgmp3-dev libmpc-dev -y

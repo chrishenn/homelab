@@ -1,0 +1,45 @@
+---
+services:
+  ittools:
+    profiles: [ittools]
+    image: corentinth/it-tools:latest
+    container_name: ittools
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      homepage.group: Code
+      homepage.name: IT-Tools
+      homepage.icon: it-tools.png
+      homepage.href: https://ittools.chenn.dev
+      homepage.description: Code Calculators
+
+      traefik.enable: true
+      traefik.http.routers.ittools.rule: Host(`ittools.henn.dev`)
+      traefik.http.routers.ittools.entrypoints: websecure
+      traefik.http.routers.ittools.middlewares: hdrs@file
+      traefik.http.routers.ittools.tls.certresolver: cf
+      traefik.http.services.ittools.loadbalancer.server.port: 80
+
+      pangolin.public-resources.ittools.name: ittools
+      pangolin.public-resources.ittools.protocol: http
+      pangolin.public-resources.ittools.full-domain: ittools.chenn.dev
+      pangolin.public-resources.ittools.ssl: true
+      pangolin.public-resources.ittools.targets[0].method: http
+      pangolin.public-resources.ittools.targets[0].port: 80
+      pangolin.public-resources.ittools.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.ittools.targets[0].healthcheck.hostname: ittools
+      pangolin.public-resources.ittools.targets[0].healthcheck.port: 80
+      pangolin.public-resources.ittools.targets[0].healthcheck.path: /
+      pangolin.public-resources.ittools.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.ittools.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.ittools.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.ittools.auth.sso-enabled: true
+      pangolin.public-resources.ittools.auth.sso-roles[0]: Member
+      pangolin.public-resources.ittools.rules[0].action: pass
+      pangolin.public-resources.ittools.rules[0].match: country
+      pangolin.public-resources.ittools.rules[0].value: US
+      pangolin.public-resources.ittools.rules[0].priority: 0
+      pangolin.public-resources.ittools.rules[1].action: deny
+      pangolin.public-resources.ittools.rules[1].match: country
+      pangolin.public-resources.ittools.rules[1].value: ALL
+      pangolin.public-resources.ittools.rules[1].priority: 10

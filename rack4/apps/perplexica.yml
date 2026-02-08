@@ -1,3 +1,5 @@
+# using 16GB of memory at idle
+# note: perplexica is single-user
 ---
 services:
   perplexica:
@@ -5,22 +7,54 @@ services:
     image: itzcrazykns1337/perplexica:main
     container_name: perplexica
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
     environment:
       DATA_DIR: /home/perplexica
     volumes:
       - $DATA/perplexica/db:/home/perplexica/data
       - $DATA/perplexica/uploads:/home/perplexica/uploads
       - ./perplexica/config.toml:/home/perplexica/config.toml
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://perplexica:3000']
     networks: [traefik]
     labels:
+      homepage.group: AI
+      homepage.name: Perplexica
+      homepage.icon: perplexity-dark.png
+      homepage.href: https://perplexica.chenn.dev
+      homepage.description: Private AI Google
+
       traefik.enable: true
       traefik.http.routers.perplexica.rule: Host(`perplexica.henn.dev`)
       traefik.http.routers.perplexica.entrypoints: websecure
       traefik.http.routers.perplexica.middlewares: hdrs@file
       traefik.http.routers.perplexica.tls.certresolver: cf
       traefik.http.services.perplexica.loadbalancer.server.port: 3000
-      homepage.group: AI
-      homepage.name: Perplexica
-      homepage.icon: perplexity-dark.png
-      homepage.href: https://perplexica.henn.dev
-      homepage.description: AI Search
+
+      pangolin.public-resources.perplexica.name: perplexica
+      pangolin.public-resources.perplexica.protocol: http
+      pangolin.public-resources.perplexica.full-domain: perplexica.chenn.dev
+      pangolin.public-resources.perplexica.ssl: true
+      pangolin.public-resources.perplexica.targets[0].method: http
+      pangolin.public-resources.perplexica.targets[0].port: 3000
+      pangolin.public-resources.perplexica.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.perplexica.targets[0].healthcheck.hostname: perplexica
+      pangolin.public-resources.perplexica.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.perplexica.targets[0].healthcheck.path: /
+      pangolin.public-resources.perplexica.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.perplexica.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.perplexica.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.perplexica.auth.sso-enabled: true
+      pangolin.public-resources.perplexica.auth.sso-roles[0]: Member
+      pangolin.public-resources.perplexica.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.perplexica.rules[0].action: pass
+      pangolin.public-resources.perplexica.rules[0].match: country
+      pangolin.public-resources.perplexica.rules[0].value: US
+      pangolin.public-resources.perplexica.rules[0].priority: 0
+      pangolin.public-resources.perplexica.rules[1].action: deny
+      pangolin.public-resources.perplexica.rules[1].match: country
+      pangolin.public-resources.perplexica.rules[1].value: ALL
+      pangolin.public-resources.perplexica.rules[1].priority: 10

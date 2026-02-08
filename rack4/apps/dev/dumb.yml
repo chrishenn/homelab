@@ -1,0 +1,124 @@
+# https://github.com/DumbWareio
+---
+services:
+  dumbdo:
+    profiles: [dumb]
+    image: dumbwareio/dumbdo:latest
+    container_name: dumbdo
+    restart: unless-stopped
+    volumes:
+      - $DATA/dumbdo:/app/data
+    environment:
+      DUMBDO_SITE_TITLE: Chicken To-Do
+    healthcheck:
+      test: wget --spider -q http://dumbdo:3000
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Dumb Do
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://do.henn.dev
+      homepage.instance.private.description: Todo List
+
+      traefik.enable: true
+      traefik.http.routers.do.rule: Host(`do.henn.dev`)
+      traefik.http.routers.do.entrypoints: websecure
+      traefik.http.routers.do.middlewares: hdrs@file
+      traefik.http.routers.do.tls.certresolver: cf
+      traefik.http.services.do.loadbalancer.server.port: 3000
+
+  dumbkan:
+    profiles: [dumb]
+    image: dumbwareio/dumbkan:latest
+    container_name: dumbkan
+    restart: unless-stopped
+    environment:
+      SITE_TITLE: Chicken Kanban
+    volumes:
+      - $DATA/dumbkan:/app/data
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Dumb Kanban
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://kan.henn.dev
+      homepage.instance.private.description: Kanban
+
+      traefik.enable: true
+      traefik.http.routers.kan.rule: Host(`kan.henn.dev`)
+      traefik.http.routers.kan.entrypoints: websecure
+      traefik.http.routers.kan.middlewares: hdrs@file
+      traefik.http.routers.kan.tls.certresolver: cf
+      traefik.http.services.kan.loadbalancer.server.port: 3000
+
+  dumbdrop:
+    profiles: [dumb]
+    image: dumbwareio/dumbdrop:latest
+    container_name: dumbdrop
+    restart: unless-stopped
+    environment:
+      DUMBDROP_TITLE: Chicken Drop
+      AUTO_UPLOAD: true
+    volumes:
+      - $DATA/dumbdrop:/app/data
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Dumb Drop
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://drop.henn.dev
+      homepage.instance.private.description: File Drop
+
+      traefik.enable: true
+      traefik.http.routers.drop.rule: Host(`drop.henn.dev`)
+      traefik.http.routers.drop.entrypoints: websecure
+      traefik.http.routers.drop.middlewares: hdrs@file
+      traefik.http.routers.drop.tls.certresolver: cf
+      traefik.http.services.drop.loadbalancer.server.port: 3000
+
+  dumbwhois:
+    profiles: [dumb]
+    image: dumbwareio/dumbwhois:latest
+    container_name: dumbwhois
+    restart: unless-stopped
+    volumes:
+      - $DATA/dumbwhois:/app/data
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Dumb Whois
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://whois.henn.dev
+      homepage.instance.private.description: Whois
+
+      traefik.enable: true
+      traefik.http.routers.whois.rule: Host(`whois.henn.dev`)
+      traefik.http.routers.whois.entrypoints: websecure
+      traefik.http.routers.whois.middlewares: hdrs@file
+      traefik.http.routers.whois.tls.certresolver: cf
+      traefik.http.services.whois.loadbalancer.server.port: 3000
+
+  dumbpad:
+    profiles: [dumb]
+    image: dumbwareio/dumbpad:latest
+    container_name: dumbpad
+    volumes:
+      - $DATA/dumbpad:/app/data
+    environment:
+      SITE_TITLE: Chicken Pad
+      BASE_URL: https://dumbpad.henn.dev
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Dumb Notepad
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://dumbpad.henn.dev
+      homepage.instance.private.description: Simple Notepad
+
+      traefik.enable: true
+      traefik.http.routers.dumbpad.rule: Host(`dumbpad.henn.dev`)
+      traefik.http.routers.dumbpad.entrypoints: websecure
+      traefik.http.routers.dumbpad.middlewares: hdrs@file
+      traefik.http.routers.dumbpad.tls.certresolver: cf
+      traefik.http.services.dumbpad.loadbalancer.server.port: 3000

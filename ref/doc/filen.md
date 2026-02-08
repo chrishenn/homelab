@@ -1,5 +1,38 @@
 # Filen
 
+Mount using the filen-rs rust rewrite (mounts for a minute, then dies)
+
+The filen-rs cli passes these args to its internal rclone
+
+```bash
+rclone mount filen: /tmp/filen
+--no-gzip-encoding
+--use-mmap
+--disable-http2
+--file-perms 0666
+--dir-perms 0777
+--use-server-modtime
+--vfs-read-chunk-size 128Mi
+--buffer-size 0
+--vfs-read-ahead 1024Mi
+--vfs-read-chunk-size-limit 0
+--no-checksum
+--transfers 16
+--vfs-fast-fingerprint
+--devname Filen
+--vfs-cache-mode full
+--cache-dir /home/chris/.config/filen-cli/rclone/network-drive-rclone/cache
+--vfs-cache-max-size 426842972160B
+--vfs-cache-min-free-space 5Gi
+--vfs-cache-max-age 720h
+--vfs-cache-poll-interval 1m
+--dir-cache-time 3s
+--cache-info-age 5s
+--volname Filen
+```
+
+---
+
 Mount an S3-ish proxy to filen cloud files using the filne cli
 
 ```yml
@@ -146,8 +179,16 @@ run rclone manually to populate rclone.conf with credentials
 add user_allow_other in
 sudo nano /etc/fuse.conf
 
+note: upgrading rclone via mise will break this mise path to rclone, but we need the latest rclone. Maybe I'll
+download the binary manually
+
+```bash
+curl -fsSLo rclone.zip https://github.com/rclone/rclone/releases/download/v1.73.0/rclone-v1.73.0-linux-amd64.zip
+sudo 7z e rclone.zip -o/usr/local/bin rclone -r
+```
+
 ```systemd
-# /etc/systemd/system/rclone_filen.service
+# sudo nano /etc/systemd/system/rclone_filen.service
 
 [Unit]
 Description=rclone filen mount
@@ -159,8 +200,29 @@ Type=notify
 Environment=RCLONE_CONFIG=/home/chris/.config/rclone/rclone.conf
 RestartSec=5
 ExecStartPre=mkdir -p /home/chris/data/filen
-ExecStart=/home/chris/.local/share/mise/installs/rclone/1.73.0/rclone-v1.73.0-linux-amd64/rclone mount filen:/ \
-    /home/chris/data/filen --allow-non-empty --allow-other
+ExecStart=/usr/local/bin/rclone mount filen:/ /home/chris/data/filen \
+--allow-other \
+--no-gzip-encoding \
+--use-mmap \
+--disable-http2 \
+--file-perms 0666 \
+--dir-perms 0777 \
+--use-server-modtime \
+--vfs-read-chunk-size 128Mi \
+--buffer-size 0 \
+--vfs-read-ahead 1024Mi \
+--vfs-read-chunk-size-limit 0 \
+--no-checksum \
+--transfers 16 \
+--vfs-fast-fingerprint \
+--vfs-cache-mode full \
+--cache-dir /tmp/cache \
+--vfs-cache-max-size 5Gi \
+--vfs-cache-min-free-space 5Gi \
+--vfs-cache-max-age 720h \
+--vfs-cache-poll-interval 1m \
+--dir-cache-time 3s \
+--cache-info-age 5s
 ExecStop=/bin/fusermount3 -uz /home/chris/data/filen
 Restart=on-failure
 User=chris
@@ -170,9 +232,11 @@ Group=chris
 WantedBy=multi-user.target
 ```
 
+```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now rclone_filen
 
 sudo systemctl daemon-reload
 sudo systemctl restart rclone_filen
 sudo systemctl status rclone_filen
+```
