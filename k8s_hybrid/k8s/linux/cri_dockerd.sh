@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function cri_dockerd_install() {
 	ver=${1}
 

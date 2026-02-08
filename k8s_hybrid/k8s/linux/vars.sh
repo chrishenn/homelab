@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # https://github.com/kubernetes/kubernetes/releases/latest
 kube_ver="1.33.3"
 

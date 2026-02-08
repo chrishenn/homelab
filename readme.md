@@ -28,10 +28,10 @@ Docker compose stacks for:
 # this may be on its way out; probably replace with astra/ty soon (https://docs.astral.sh/ty)
 uv tool install mypy
 
-# run `hk fix`: lint/format
+# run `hk fix --all`: lint/format
 just f
 
-# run `hk check`: lint
+# run `hk check --all`: lint
 just c
 ```
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function verify {
 	# https://github.com/longhorn/longhorn/blob/v1.8.1/scripts/environment_check.sh
 	# https://raw.githubusercontent.com/longhorn/longhorn/v1.8.1/scripts/environment_check.sh

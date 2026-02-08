@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function install_cusparselt_13 {
 	tgt="$HOME/cuda/cuda-13.0"
 	url="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/libcusparse_lt-linux-x86_64-0.8.1.1_cuda13-archive.tar.xz"

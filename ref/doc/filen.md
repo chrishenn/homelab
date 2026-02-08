@@ -1,5 +1,63 @@
 # Filen
 
+Mount using the filen-rs rust rewrite (mounts for a minute, then dies)
+
+The filen-rs cli passes these args to its internal rclone
+
+```bash
+rclone mount filen: /tmp/filen
+--no-gzip-encoding
+--use-mmap
+--disable-http2
+--file-perms 0666
+--dir-perms 0777
+--use-server-modtime
+--vfs-read-chunk-size 128Mi
+--buffer-size 0
+--vfs-read-ahead 1024Mi
+--vfs-read-chunk-size-limit 0
+--no-checksum
+--transfers 16
+--vfs-fast-fingerprint
+--devname Filen
+--vfs-cache-mode full
+--cache-dir /home/chris/.config/filen-cli/rclone/network-drive-rclone/cache
+--vfs-cache-max-size 426842972160B
+--vfs-cache-min-free-space 5Gi
+--vfs-cache-max-age 720h
+--vfs-cache-poll-interval 1m
+--dir-cache-time 3s
+--cache-info-age 5s
+--volname Filen
+
+# modified. Appears to be stable on rack4
+mkdir -p /home/chris/tmpfilen
+rclone mount filen: /home/chris/tmpfilen \
+--no-gzip-encoding \
+--use-mmap \
+--disable-http2 \
+--file-perms 0666 \
+--dir-perms 0777 \
+--use-server-modtime \
+--vfs-read-chunk-size 128Mi \
+--buffer-size 0 \
+--vfs-read-ahead 1024Mi \
+--vfs-read-chunk-size-limit 0 \
+--no-checksum \
+--transfers 16 \
+--vfs-fast-fingerprint \
+--vfs-cache-mode full \
+--cache-dir /tmp/cache \
+--vfs-cache-max-size 5Gi \
+--vfs-cache-min-free-space 5Gi \
+--vfs-cache-max-age 720h \
+--vfs-cache-poll-interval 1m \
+--dir-cache-time 3s \
+--cache-info-age 5s
+```
+
+---
+
 Mount an S3-ish proxy to filen cloud files using the filne cli
 
 ```yml

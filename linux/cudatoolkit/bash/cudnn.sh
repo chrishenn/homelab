@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function install_cudnn {
 	# complete ver, ie "9.13.0.50"
 	declare cudnn_ver=${1}

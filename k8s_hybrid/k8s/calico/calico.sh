@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function calico_install {
 	calico_ver=${1}
 

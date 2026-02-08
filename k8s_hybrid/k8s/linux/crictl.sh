@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function crictl_install() {
 	ver=${1}
 	arch=${2}

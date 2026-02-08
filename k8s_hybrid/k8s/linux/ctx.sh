@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function k_unset {
 	echo "kube: unset"
 	ret=$(kubectl config unset current-context)
@@ -8,8 +10,8 @@ function k_unset {
 
 function k_dev {
 	echo "kube: attach to dev"
-	$ctx_tgt=''
-	$url=''
+	ctx_tgt=''
+	url=''
 
 	kubectl config use-context $url
 	ctx=$(kubectl config current-context)

@@ -2,6 +2,26 @@
 
 hosted on hostinger VPS
 
+---
+
+# install
+
+```bash
+# in the hostinger web console, open firewall ports:
+# 80 (TCP), 443 (TCP), 51820 (UDP), and 21820 (UDP for clients)
+
+# in the cloudflare web console, add a DNS A record to point to pangolin VPS
+
+# pangolin installer
+mkdir -p ~/pangolin && cd pangolin
+curl -fsSL https://static.pangolin.net/get-installer.sh | bash
+sudo ./installer
+```
+
+---
+
+# config
+
 Note the non-standard smtp SSL port 465.
 The standard port is 587, which didn't work for me
 
@@ -26,8 +46,20 @@ email:
 docker compose restart
 ```
 
-backup and update
+# update
 
 ```bash
+$SSH_CHRIS -t "cd /home/chris/pangolin ; bash --login"
+sudo cp -r config config_backup
+docker compose down
 
+# edit the tags manually. Or, set them all to "latest" or "ee-latest"
+sudo nano docker-compose.yml
+
+# update the version under experimental.plugins.badger.version
+# https://github.com/fosrl/badger/releases
+sudo nano config/traefik/traefik_config.yml
+
+docker compose up -d --pull always
+docker compose logs -f
 ```

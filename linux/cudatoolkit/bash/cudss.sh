@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function install_cudss_13 {
 	tgt="$HOME/cuda/cuda-13.0"
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function runc_install() {
 	ver=${1}
 	arch=${2}

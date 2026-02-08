@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function plane_install() {
 	# https://plane.so/changelog/commercial
 	PLANE_VERSION=v1.9.1

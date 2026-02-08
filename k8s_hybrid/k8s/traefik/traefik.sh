@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function traefik_install {
 	helm repo add traefik https://helm.traefik.io/traefik
 	helm repo update

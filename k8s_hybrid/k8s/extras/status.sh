@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function status() {
 	for name in "$@"; do
 		echo "${name}" "$(systemctl is-active "${name}")" "$(systemctl is-enabled "${name}")"

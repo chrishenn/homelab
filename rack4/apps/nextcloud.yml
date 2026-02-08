@@ -30,6 +30,7 @@ services:
     volumes:
       - $DATA/nextcloud/config:/config
       - $DATA/nextcloud/data:/data
+      - $DATA_LOCAL/filen:/data/filen:shared
     environment:
       TZ: $TZ
       PUID: $PUID

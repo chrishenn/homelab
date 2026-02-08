@@ -120,7 +120,8 @@ function coredns_bounce {
 }
 
 function logs_deploy {
-	kubectl logs -l app= <deployment-label >-n <namespace >--all-containers=true
+	return
+	# kubectl logs -l app= <deployment-label >-n <namespace >--all-containers=true
 }
 
 function infodump {

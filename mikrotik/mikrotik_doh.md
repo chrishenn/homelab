@@ -22,5 +22,5 @@ dig @192.168.1.1 msn.com
 
 # to disable "dynamic servers" from comcast, turn off "use peer dns"
 # IP -> DHCP Client -> edit the client on the WAN port sfpplus-1 -> under section DHCP, untoggle "use peer DNS"
-# I also toggled off "use peer NTP" but I'm not sure that matters 
+# I also toggled off "use peer NTP" but I'm not sure that matters
 ```

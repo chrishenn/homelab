@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function metallb_install {
 	helm repo add metallb https://metallb.github.io/metallb
 	helm install my-metallb metallb/metallb --version 0.15.2 --values=values.yml

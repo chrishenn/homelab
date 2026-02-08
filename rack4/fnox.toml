@@ -4,7 +4,7 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/osuyuc25hlprsxvfrlajni7sqa/credential" }
+OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
 
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
@@ -44,9 +44,9 @@ RXRESUME_PGURL = { provider = "onepass", value = "op://homelab/rxresume/pgurl" }
 PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
 PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
 
-PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/Pangolin-Hostinger/PANGOLIN_ENDPOINT" }
-NEWT_ID = { provider = "onepass", value = "op://homelab/Pangolin-Hostinger/NEWT_ID" }
-NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin-Hostinger/NEWT_SECRET" }
+PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/Pangolin/PANGOLIN_ENDPOINT" }
+NEWT_ID = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_ID" }
+NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_SECRET" }
 
 SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host" }
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }
@@ -74,7 +74,7 @@ FILEN_EMAIL = { provider = "onepass", value = "op://homelab/filen/username" }
 FILEN_PASSWORD = { provider = "onepass", value = "op://homelab/filen/password" }
 FILEN_2FA_CODE = { provider = "onepass", value = "op://homelab/Filen/2fa_recovery" }
 
-HOSTINGERIP = { provider = "onepass", value = "op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/hostinger_ip" }
+VPS0_IP = { provider = "onepass", value = "op://homelab/vps0/ip" }
 
 COLLABORA_AUTH_USER = { provider = "onepass", value = "op://homelab/collabora/username" }
 COLLABORA_AUTH_PASS = { provider = "onepass", value = "op://homelab/collabora/credential" }

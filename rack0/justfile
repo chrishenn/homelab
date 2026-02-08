@@ -80,10 +80,10 @@ reset:
     $DHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
 
 ssh:
-    $DHOST_SSH -At "cd ${REPO_MACHINE} && exec $SHELL"
+    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd ${REPO_MACHINE} && bash -l"
 
 cm:
-    $DHOST_SSH -At "$HOME/.local/share/mise/installs/chezmoi/latest/chezmoi init chrishenn --apply --force"
+    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && bash -i -c 'just cm'"
 
 # service-specific recipes
 

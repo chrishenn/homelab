@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function containerd_install() {
 	# NOTE: MANUAL CONTAINERD INSTALL WILL DESTROY/INTERFERE WITH DOCKER INSTALL
 

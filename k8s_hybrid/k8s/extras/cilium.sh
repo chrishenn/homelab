@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function cilim_cli_install() {
 	# https://github.com/cilium/cilium-cli/releases/latest
 	ver=${1:-"v0.18.3"}

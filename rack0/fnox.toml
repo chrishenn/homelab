@@ -4,7 +4,7 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/osuyuc25hlprsxvfrlajni7sqa/credential" }
+OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
 
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }

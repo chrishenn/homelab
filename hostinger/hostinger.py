@@ -12,11 +12,11 @@ def env_valid(name: str) -> str:
 
 def pangolin_public_resources() -> None:
     """
-    Pangolin Public Resources are proxied by the pangolin server at HOSTINGERIP.
+    Pangolin Public Resources are proxied by the pangolin server at VPS0_IP.
     They are dns-queryable via name.domain, where the domain is tied to clouflare's zone id (given by DOMAIN_ZONEID)
     """
     pfx = "dns"
-    hostip: str = env_valid("HOSTINGERIP")
+    hostip: str = env_valid("VPS0_IP")
     zoneid: str = env_valid("DOMAIN_ZONEID")
 
     rsc_names = [

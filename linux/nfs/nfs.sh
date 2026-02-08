@@ -52,8 +52,8 @@ nfsstat -m
 # rpc.nfsd --rdma=20049
 
 sudo nano /etc/nfs.conf
-rdma=on
-rdma-port=20049
+# rdma=on
+# rdma-port=20049
 
 sudo systemctl restart nfs-kernel-server
 
