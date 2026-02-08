@@ -9,12 +9,9 @@ import yaml
 from yaml import SafeLoader
 
 
-envrepo = os.environ["REPO"]
-
-
 @dataclass(frozen=True)
 class PATHS:
-    repo: Path = Path(envrepo)
+    repo: Path = Path(os.environ["REPO"])
 
 
 class YamlPath(Enum):
