@@ -1,9 +1,15 @@
 # mikrotik configuration notes
 
-make sure you have winbox! Otherwise you'll have to download it over mobile data hotspot
+Bugfix: update packages using the GUI, and DNS times out
+
+- ip -> DNS -> use doh server -> delete the doh server
+- ip -> DNS -> servers -> add 1.1.1.1
+- upgrade packages
+- restore doh server (https://one.one.one.one/dns-query)
 
 ---
 
+make sure you have winbox! Otherwise you'll have to download it over mobile data hotspot
 manually set your machine ip to be valid on the default subnet (192.168.88.0/24) reset with no default script applied
 
 ```rsc
@@ -121,4 +127,23 @@ add action=unreachable dst-address=my.unused.public.ip2
 
 # Note1:  All of these rules should be placed before any other routing rules.
 # Note2:  [color=#FF8000][b]CAUTION, [/b][/color]do not include any subnets you actually have on the LAN.
+```
+
+---
+
+## default firewall config
+
+```bash
+/ip firewall filter
+add action=accept chain=input comment="defconf: accept established,related,untracked" connection-state=established,related,untracked
+add action=drop chain=input comment="defconf: drop invalid" connection-state=invalid
+add action=accept chain=input comment="defconf: accept ICMP" protocol=icmp
+add action=accept chain=input comment="defconf: accept to local loopback (for CAPsMAN)" dst-address=127.0.0.1
+add action=drop chain=input comment="defconf: drop all not coming from LAN"in-interface-list=!LAN
+add action=accept chain=forward comment="defconf: accept in ipsec policy"ipsec-policy=in,ipsec
+add action=accept chain=forward comment="defconf: accept out ipsec policy"ipsec-policy=out,ipsec
+add action=fasttrack-connection chain=forward comment="defconf: fasttrack"connection-state=established,related disabled=yes
+add action=accept chain=forward comment="defconf: accept established,related, untracked" connection-state=established,related,untracked
+add action=drop chain=forward comment="defconf: drop invalid"connection-state=invalid
+add action=drop chain=forward comment="defconf: drop all from WAN not DSTNATed" connection-nat-state=!dstnatconnection-state=new in-interface-list=WAN
 ```

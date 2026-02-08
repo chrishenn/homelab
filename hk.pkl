@@ -6,9 +6,6 @@ local formatters = new Mapping<String, Step> {
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-//     ["ty"] = (Builtins.ty) {
-//         exclude = "*noqa*"
-//     }
     ["prettier"] = (Builtins.prettier) {
         batch = false
     }
