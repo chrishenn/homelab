@@ -1,0 +1,124 @@
+# pangolin SSO breaks container registry. Containerd is working on a fix and should be in shortly.
+# https://gitlab.com/gitlab-org/gitlab/-/issues/581900
+# https://github.com/containerd/containerd/pull/12857
+---
+services:
+  forgejo:
+    profiles: [forgejo]
+    image: codeberg.org/forgejo/forgejo:14
+    container_name: forgejo
+    restart: unless-stopped
+    environment:
+      USER_UID: $PUID
+      USER_GID: $PGID
+      FORGEJO__database__DB_TYPE: postgres
+      FORGEJO__database__HOST: forgejo_db:5432
+      FORGEJO__database__NAME: forgejo
+      FORGEJO__database__USER: forgejo
+      FORGEJO__database__PASSWD: forgejo
+      # listen on 22 but put 2424 in the repo urls (proxy listens on :2424 and routes tcp to container's :22)
+      FORGEJO__server__SSH_PORT: 2424
+      FORGEJO__server__SSH_LISTEN_PORT: 22
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/forgejo/data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
+    networks: [traefik]
+    labels:
+      docker-volume-backup.stop-during-backup: forgejo
+
+      homepage.instance.private.group: Code
+      homepage.instance.private.name: Forgejo
+      homepage.instance.private.icon: forgejo.png
+      homepage.instance.private.href: https://forgejo.chenn.dev
+      homepage.instance.private.description: Git Server
+
+      traefik.enable: true
+      traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)
+      traefik.http.routers.forgejo.entrypoints: websecure
+      traefik.http.routers.forgejo.middlewares: hdrs@file
+      traefik.http.routers.forgejo.tls.certresolver: cf
+      traefik.http.routers.forgejo.service: forgejo
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
+
+      traefik.tcp.routers.forgejo_ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.forgejo_ssh.entrypoints: tcp-2424
+      traefik.tcp.routers.forgejo_ssh.service: forgejo_ssh
+      traefik.tcp.services.forgejo_ssh.loadbalancer.server.port: 22
+
+      pangolin.public-resources.forgejo.name: forgejo
+      pangolin.public-resources.forgejo.protocol: http
+      pangolin.public-resources.forgejo.full-domain: forgejo.chenn.dev
+      pangolin.public-resources.forgejo.ssl: true
+      pangolin.public-resources.forgejo.targets[0].method: http
+      pangolin.public-resources.forgejo.targets[0].port: 3000
+      pangolin.public-resources.forgejo.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.forgejo.targets[0].healthcheck.hostname: forgejo
+      pangolin.public-resources.forgejo.targets[0].healthcheck.port: 3000
+      pangolin.public-resources.forgejo.targets[0].healthcheck.path: /
+      pangolin.public-resources.forgejo.auth.sso-enabled: true
+      pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
+      pangolin.public-resources.forgejo.auth.sso-users[0]: ${EMAIL}
+
+      # path that forgejo uses to generate a jwt for `docker login`.
+      # Possibly we could remove this bypass when the issue (mentioned up top) is resolved
+      # note: pangolin SSO on this route also breaks docker login for the local forgejo.henn.dev url, probably since
+      # the server is configured to serve on the public url forgejo.chenn.dev
+      pangolin.public-resources.forgejo.rules[0].action: allow
+      pangolin.public-resources.forgejo.rules[0].match: path
+      pangolin.public-resources.forgejo.rules[0].value: /v2/*
+      pangolin.public-resources.forgejo.rules[0].priority: 0
+
+      pangolin.public-resources.forgejo.rules[1].action: pass
+      pangolin.public-resources.forgejo.rules[1].match: country
+      pangolin.public-resources.forgejo.rules[1].value: US
+      pangolin.public-resources.forgejo.rules[1].priority: 10
+
+      pangolin.public-resources.forgejo.rules[2].action: deny
+      pangolin.public-resources.forgejo.rules[2].match: country
+      pangolin.public-resources.forgejo.rules[2].value: ALL
+      pangolin.public-resources.forgejo.rules[2].priority: 20
+
+      pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
+      pangolin.public-resources.forgejo_ssh.protocol: tcp
+      pangolin.public-resources.forgejo_ssh.proxy-port: 2424
+      pangolin.public-resources.forgejo_ssh.targets[0].port: 22
+
+  forgejo_db:
+    profiles: [forgejo]
+    image: postgres:14
+    container_name: forgejo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: forgejo
+      POSTGRES_PASSWORD: forgejo
+      POSTGRES_DB: forgejo
+    volumes:
+      - $DATA/forgejo/db:/var/lib/postgresql/data
+    networks: [traefik]
+    labels:
+      docker-volume-backup.stop-during-backup: forgejo
+
+  forgejo_backup:
+    profiles: [forgejo]
+    image: offen/docker-volume-backup:latest
+    container_name: forgejo_backup
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      # source data to backup
+      - $DATA/forgejo/data:/backup/forgejo/data:ro
+      - $DATA/forgejo/db:/backup/forgejo/db:ro
+      # backup destination
+      - $BACKUP/forgejo:/archive
+    environment:
+      TZ: $TZ
+      BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
+      BACKUP_CRON_EXPRESSION: '@daily'
+      BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
+      BACKUP_PRUNING_PREFIX: 'forgejo-'
+      BACKUP_RETENTION_DAYS: 2
+    networks: [traefik, docker]

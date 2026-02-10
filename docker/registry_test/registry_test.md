@@ -1,17 +1,15 @@
-## Registry Test
+    ## Registry Test
 
 forgejo
 
 ```bash
-docker login forgejo.henn.dev
-
-user=chris
-registry=forgejo.henn.dev
-image=repotest
-tag=latest
 docker build -t $registry/$user/$image:$tag . --load --push
 
+docker login forgejo.henn.dev
 docker build -t forgejo.henn.dev/chris/repotest:latest . --load --push
+
+docker login forgejo.chenn.dev
+docker build -t forgejo.chenn.dev/chris/testrepo:latest . --load --push
 ```
 
 gitlab

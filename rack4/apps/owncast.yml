@@ -10,6 +10,12 @@ services:
       - $DATA/owncast:/app/data
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Owncast
+      homepage.instance.private.icon: owncast.png
+      homepage.instance.private.href: https://owncast.henn.dev
+      homepage.instance.private.description: Federated Streaming Server
+
       traefik.enable: true
       traefik.http.routers.owncast.rule: Host(`owncast.henn.dev`)
       traefik.http.routers.owncast.entrypoints: websecure
@@ -22,9 +28,3 @@ services:
       traefik.tcp.routers.owncast-rtmp.entrypoints: rtmp
       traefik.tcp.routers.owncast-rtmp.service: owncast-rtmp
       traefik.tcp.services.owncast-rtmp.loadbalancer.server.port: 1935
-
-      homepage.group: Tools
-      homepage.name: Owncast
-      homepage.icon: owncast.png
-      homepage.href: https://owncast.henn.dev
-      homepage.description: Federated Streaming Server

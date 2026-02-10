@@ -46,3 +46,6 @@ LANCACHE_DNS = "192.168.1.143"
 
 # gitlab runner
 GITLAB_URL = "https://gitlab.henn.dev"
+
+# public oidc provider
+OIDC = "https://pocketid.chenn.dev"

@@ -14,22 +14,19 @@ services:
               capabilities: [gpu]
     healthcheck:
       test: ['CMD', 'curl', '--fail', 'http://speach:8000/health']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     volumes:
       - $DATA/speach:/home/ubuntu/.cache/huggingface/hub
     networks: [traefik]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Speach
+      homepage.instance.private.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/speaches.svg
+      homepage.instance.private.href: https://speach.henn.dev
+      homepage.instance.private.description: AI TTS/STT
+
       traefik.enable: true
       traefik.http.routers.speach.rule: Host(`speach.henn.dev`)
       traefik.http.routers.speach.entrypoints: websecure
       traefik.http.routers.speach.middlewares: hdrs@file
       traefik.http.routers.speach.tls.certresolver: cf
       traefik.http.services.speach.loadbalancer.server.port: 8000
-      homepage.group: AI
-      homepage.name: Speach
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/speaches.svg
-      homepage.href: https://speach.henn.dev
-      homepage.description: AI TTS/STT

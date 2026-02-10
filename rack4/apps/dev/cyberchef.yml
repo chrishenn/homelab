@@ -1,0 +1,21 @@
+---
+services:
+  cyberchef:
+    profiles: [cyberchef]
+    image: ghcr.io/gchq/cyberchef:latest
+    container_name: cyberchef
+    restart: unless-stopped
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Cyberchef
+      homepage.instance.private.icon: cyberchef.png
+      homepage.instance.private.href: https://cyberchef.henn.dev
+      homepage.instance.private.description: Cyber Security Tools
+
+      traefik.enable: true
+      traefik.http.routers.cyberchef.rule: Host(`cyberchef.henn.dev`)
+      traefik.http.routers.cyberchef.entrypoints: websecure
+      traefik.http.routers.cyberchef.middlewares: hdrs@file
+      traefik.http.routers.cyberchef.tls.certresolver: cf
+      traefik.http.services.cyberchef.loadbalancer.server.port: 80

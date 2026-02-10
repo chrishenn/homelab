@@ -9,6 +9,6 @@ services:
       TZ: ${TZ}
       KEEPALIVED_CUSTOM_CONFIG: 'true'
     volumes:
-      - ../../rack4/apps/traefik_k/backup.conf:/etc/keepalived/keepalived.conf
+      - ../../rack4/apps/infra/traefik_k/backup.conf:/etc/keepalived/keepalived.conf
     network_mode: host
     cap_add: [NET_ADMIN, NET_BROADCAST]

@@ -6,6 +6,7 @@ SSH_ROOT = "ssh root@{{env.VPS0_IP}}"
 SSH_CHRIS = "ssh chris@{{env.VPS0_IP}} -p 2200"
 
 [tools]
+"cargo:rustscan" = "latest"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"

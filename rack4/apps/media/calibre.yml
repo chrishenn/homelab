@@ -1,0 +1,108 @@
+---
+services:
+  # first login: admin/admin123
+  calibre:
+    profiles: [calibre]
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      HARDCOVER_TOKEN: ${HARDCOVER_TOKEN}
+      NETWORK_SHARE_MODE: false
+    volumes:
+      - $DATA/calibre/config:/config
+      - $DATA/calibre/ingest:/cwa-book-ingest
+      - $DATA/calibre/library:/calibre-library
+      - $DATA/calibre/plugins:/config/.config/calibre/plugins
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Calibre
+      homepage.icon: calibre.png
+      homepage.href: https://calibre.chenn.dev
+      homepage.description: Book Server
+
+      traefik.enable: true
+      traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
+      traefik.http.routers.calibre.entrypoints: websecure
+      traefik.http.routers.calibre.middlewares: hdrs@file
+      traefik.http.routers.calibre.tls.certresolver: cf
+      traefik.http.services.calibre.loadbalancer.server.port: 8083
+
+      pangolin.public-resources.calibre.name: calibre
+      pangolin.public-resources.calibre.protocol: http
+      pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
+      pangolin.public-resources.calibre.ssl: true
+      pangolin.public-resources.calibre.targets[0].method: http
+      pangolin.public-resources.calibre.targets[0].port: 8083
+      pangolin.public-resources.calibre.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.calibre.targets[0].healthcheck.hostname: calibre
+      pangolin.public-resources.calibre.targets[0].healthcheck.port: 8083
+      pangolin.public-resources.calibre.targets[0].healthcheck.path: /
+      pangolin.public-resources.calibre.auth.sso-enabled: true
+      pangolin.public-resources.calibre.auth.sso-roles[0]: Member
+      pangolin.public-resources.calibre.rules[0].action: pass
+      pangolin.public-resources.calibre.rules[0].match: country
+      pangolin.public-resources.calibre.rules[0].value: US
+      pangolin.public-resources.calibre.rules[0].priority: 0
+      pangolin.public-resources.calibre.rules[1].action: deny
+      pangolin.public-resources.calibre.rules[1].match: country
+      pangolin.public-resources.calibre.rules[1].value: ALL
+      pangolin.public-resources.calibre.rules[1].priority: 10
+
+  calibre_dl:
+    profiles: [calibre]
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    container_name: calibre_dl
+    restart: unless-stopped
+    environment:
+      UID: $PUID
+      GID: $PGID
+      TZ: $TZ
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en
+      USE_BOOK_TITLE: true
+      APP_ENV: prod
+      CWA_DB_PATH: /auth/app.db
+    volumes:
+      - $DATA/calibre/ingest:/cwa-book-ingest
+      - $DATA/calibre/config/app.db:/auth/app.db
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Calibre Downloader
+      homepage.icon: calibre.png
+      homepage.href: https://calibre_dl.chenn.dev
+      homepage.description: Book Downloader
+
+      traefik.enable: true
+      traefik.http.routers.calibre_dl.rule: Host(`calibre_dl.henn.dev`)
+      traefik.http.routers.calibre_dl.entrypoints: websecure
+      traefik.http.routers.calibre_dl.middlewares: hdrs@file
+      traefik.http.routers.calibre_dl.tls.certresolver: cf
+      traefik.http.services.calibre_dl.loadbalancer.server.port: 8084
+
+      pangolin.public-resources.calibre_dl.name: calibre_dl
+      pangolin.public-resources.calibre_dl.protocol: http
+      pangolin.public-resources.calibre_dl.full-domain: calibre_dl.chenn.dev
+      pangolin.public-resources.calibre_dl.ssl: true
+      pangolin.public-resources.calibre_dl.targets[0].method: http
+      pangolin.public-resources.calibre_dl.targets[0].port: 8084
+      pangolin.public-resources.calibre_dl.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.calibre_dl.targets[0].healthcheck.hostname: calibre_dl
+      pangolin.public-resources.calibre_dl.targets[0].healthcheck.port: 8084
+      pangolin.public-resources.calibre_dl.targets[0].healthcheck.path: /
+      pangolin.public-resources.calibre_dl.auth.sso-enabled: true
+      pangolin.public-resources.calibre_dl.auth.sso-roles[0]: Member
+      pangolin.public-resources.calibre_dl.rules[0].action: pass
+      pangolin.public-resources.calibre_dl.rules[0].match: country
+      pangolin.public-resources.calibre_dl.rules[0].value: US
+      pangolin.public-resources.calibre_dl.rules[0].priority: 0
+      pangolin.public-resources.calibre_dl.rules[1].action: deny
+      pangolin.public-resources.calibre_dl.rules[1].match: country
+      pangolin.public-resources.calibre_dl.rules[1].value: ALL
+      pangolin.public-resources.calibre_dl.rules[1].priority: 10

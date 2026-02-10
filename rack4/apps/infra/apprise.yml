@@ -1,0 +1,32 @@
+# curl -X POST -d '{"urls":"mailto://<gmail-username>:<app password>@gmail.com","body":"test body","title":"test title"}' \
+#   -H "Content-Type: application/json" "https://apprise.henn.dev/notify/"
+---
+services:
+  apprise:
+    profiles: [apprise]
+    image: lscr.io/linuxserver/apprise-api:latest
+    container_name: apprise
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      # in Mb
+      APPRISE_ATTACH_SIZE: 2000000
+    volumes:
+      - $DATA/apprise/config:/config
+      - $DATA/apprise/attachments:/attachments
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Apprise
+      homepage.instance.private.icon: apprise.png
+      homepage.instance.private.href: https://apprise.henn.dev
+      homepage.instance.private.description: Notification Server
+
+      traefik.enable: true
+      traefik.http.routers.apprise.rule: Host(`apprise.henn.dev`)
+      traefik.http.routers.apprise.entrypoints: websecure
+      traefik.http.routers.apprise.middlewares: hdrs@file
+      traefik.http.routers.apprise.tls.certresolver: cf
+      traefik.http.services.apprise.loadbalancer.server.port: 8000

@@ -45,7 +45,7 @@ echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
 # adduser chris (untested)
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
 $SSH_ROOT "sudo usermod -aG docker chris"
-echo "chris:$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/chris_pass')" | \
+echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | \
     $SSH_ROOT "chpasswd"
 
 # login as root
