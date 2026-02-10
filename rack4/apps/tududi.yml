@@ -24,8 +24,8 @@ services:
       traefik.http.routers.tududi.middlewares: hdrs@file
       traefik.http.routers.tududi.tls.certresolver: cf
       traefik.http.services.tududi.loadbalancer.server.port: 3002
-      homepage.group: Tools
-      homepage.name: Tududi
-      homepage.icon: atlassian.png
-      homepage.href: https://tududi.henn.dev
-      homepage.description: Project Management
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Tududi
+      homepage.instance.private.icon: atlassian.png
+      homepage.instance.private.href: https://tududi.henn.dev
+      homepage.instance.private.description: Project Management

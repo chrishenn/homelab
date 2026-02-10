@@ -14,7 +14,7 @@ TWINGATE_LABEL_HOSTNAME = { provider = "onepass", value = "op://homelab/twingate
 TWINGATE_LABEL_DEPLOYED_BY = { provider = "onepass", value = "op://homelab/twingate/deployed_by" }
 
 SHLINK_SERVER_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
-SHLINK_GEOLITE_LICENSE_KEY = { provider = "onepass", value = "op://homelab/shlink/maxmind" }
+SHLINK_GEOLITE_LICENSE_KEY = { provider = "onepass", value = "op://homelab/MaxMind/license" }
 
 CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
 

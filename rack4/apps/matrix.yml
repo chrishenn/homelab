@@ -38,11 +38,11 @@ services:
       traefik.http.routers.matrix.middlewares: hdrs@file
       traefik.http.routers.matrix.tls.certresolver: cf
       traefik.http.services.matrix.loadbalancer.server.port: 6167
-      homepage.group: Tools
-      homepage.name: Matrix Chat
-      homepage.icon: matrix.png
-      homepage.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
-      homepage.description: Federated Discord
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Matrix Chat
+      homepage.instance.private.icon: matrix.png
+      homepage.instance.private.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
+      homepage.instance.private.description: Federated Discord
 
   matrix_turn:
     profiles: [matrix]

@@ -32,7 +32,7 @@ $SSH_CHRIS -t "cd /home/chris/pangolin ; bash --login"
 sudo nano config/config.yml
 
 sudo chris pass:
-op read "op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/chris_pass"
+op read "op://homelab/vps0/chris_pass"
 
 email:
     smtp_host: "op://homelab/proton/SMTP/smtp_host"
@@ -62,4 +62,10 @@ sudo nano config/traefik/traefik_config.yml
 
 docker compose up -d --pull always
 docker compose logs -f
+```
+
+traefik fix
+
+```bash
+ sudo nano config/traefik/traefik_config.yml
 ```

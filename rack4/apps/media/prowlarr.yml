@@ -1,0 +1,49 @@
+---
+services:
+  prowlarr:
+    profiles: [prowlarr]
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/prowlarr:/config
+    networks: [traefik]
+    labels:
+      homepage.instance.prive.group: Media
+      homepage.instance.prive.name: Prowlarr
+      homepage.instance.prive.icon: prowlarr.png
+      homepage.instance.prive.href: https://prowlarr.chenn.dev
+      homepage.instance.prive.description: Indexer Manager
+
+      traefik.enable: true
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.middlewares: hdrs@file
+      traefik.http.routers.prowlarr.tls.certresolver: cf
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+      pangolin.public-resources.navidrome.name: navidrome
+      pangolin.public-resources.navidrome.protocol: http
+      pangolin.public-resources.navidrome.full-domain: navidrome.chenn.dev
+      pangolin.public-resources.navidrome.ssl: true
+      pangolin.public-resources.navidrome.targets[0].method: http
+      pangolin.public-resources.navidrome.targets[0].port: 4533
+      pangolin.public-resources.navidrome.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.navidrome.targets[0].healthcheck.hostname: navidrome
+      pangolin.public-resources.navidrome.targets[0].healthcheck.port: 4533
+      pangolin.public-resources.navidrome.targets[0].healthcheck.path: /
+      pangolin.public-resources.navidrome.auth.sso-enabled: true
+      pangolin.public-resources.navidrome.auth.sso-roles[0]: Member
+      pangolin.public-resources.navidrome.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.navidrome.rules[0].action: pass
+      pangolin.public-resources.navidrome.rules[0].match: country
+      pangolin.public-resources.navidrome.rules[0].value: US
+      pangolin.public-resources.navidrome.rules[0].priority: 0
+      pangolin.public-resources.navidrome.rules[1].action: deny
+      pangolin.public-resources.navidrome.rules[1].match: country
+      pangolin.public-resources.navidrome.rules[1].value: ALL
+      pangolin.public-resources.navidrome.rules[1].priority: 10

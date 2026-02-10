@@ -13,8 +13,8 @@ services:
       traefik.http.routers.wordle.middlewares: hdrs@file
       traefik.http.routers.wordle.tls.certresolver: cf
       traefik.http.services.wordle.loadbalancer.server.port: 80
-      homepage.group: Games
-      homepage.name: Wordle
-      homepage.icon: microsoft-word.png
-      homepage.href: https://wordle.henn.dev
-      homepage.description: Wordle Clone
+      homepage.instance.private.group: Games
+      homepage.instance.private.name: Wordle
+      homepage.instance.private.icon: microsoft-word.png
+      homepage.instance.private.href: https://wordle.henn.dev
+      homepage.instance.private.description: Wordle Clone

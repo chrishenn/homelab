@@ -1,0 +1,51 @@
+---
+services:
+  karakeep:
+    profiles: [karakeep]
+    image: ghcr.io/karakeep-app/karakeep:release
+    container_name: karakeep
+    restart: unless-stopped
+    env_file: ./karakeep/.env
+    volumes:
+      - $DATA/karakeep/data:/data
+    networks: [traefik, karakeep]
+    labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: Karakeep
+      homepage.instance.private.icon: karakeep.png
+      homepage.instance.private.href: https://karakeep.chenn.dev
+      homepage.instance.private.description: Notes with AI tagging
+
+      traefik.enable: true
+      traefik.http.routers.karakeep.rule: Host(`karakeep.henn.dev`)
+      traefik.http.routers.karakeep.entrypoints: websecure
+      traefik.http.routers.karakeep.middlewares: hdrs@file
+      traefik.http.routers.karakeep.tls.certresolver: cf
+      traefik.http.services.karakeep.loadbalancer.server.port: 3000
+
+  karakeep_chrome:
+    profiles: [karakeep]
+    image: gcr.io/zenika-hub/alpine-chrome:124
+    container_name: karakeep_chrome
+    restart: unless-stopped
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=9222
+      - --hide-scrollbars
+    networks: [karakeep]
+
+  karakeep_meili:
+    profiles: [karakeep]
+    image: getmeili/meilisearch:v1.13.3
+    container_name: karakeep_meili
+    restart: unless-stopped
+    env_file: ./karakeep/.env
+    volumes:
+      - $DATA/karakeep/meili:/meili_data
+    networks: [karakeep]
+
+networks:
+  karakeep:

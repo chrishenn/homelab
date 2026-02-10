@@ -18,8 +18,8 @@ services:
       traefik.http.routers.cognito.middlewares: hdrs@file
       traefik.http.routers.cognito.tls.certresolver: cf
       traefik.http.services.cognito.loadbalancer.server.port: 3000
-      homepage.group: AI
-      homepage.name: Cognito
-      homepage.icon: meilisearch.png
-      homepage.href: https://cognito.henn.dev
-      homepage.description: AI Search
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Cognito
+      homepage.instance.private.icon: meilisearch.png
+      homepage.instance.private.href: https://cognito.henn.dev
+      homepage.instance.private.description: AI Search

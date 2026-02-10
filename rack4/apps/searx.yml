@@ -27,11 +27,11 @@ services:
       traefik.http.routers.sear.middlewares: hdrs@file
       traefik.http.routers.sear.tls.certresolver: cf
       traefik.http.services.sear.loadbalancer.server.port: 8080
-      homepage.group: AI
-      homepage.name: Searx
-      homepage.icon: searxng.png
-      homepage.href: https://searx.henn.dev
-      homepage.description: Private Search
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Searx
+      homepage.instance.private.icon: searxng.png
+      homepage.instance.private.href: https://searx.henn.dev
+      homepage.instance.private.description: Private Search
     depends_on: [searx_redis]
 
   searx_redis:

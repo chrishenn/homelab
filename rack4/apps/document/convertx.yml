@@ -1,0 +1,24 @@
+---
+services:
+  convertx:
+    profiles: [convertx]
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: convertx
+    restart: unless-stopped
+    environment:
+      ALLOW_UNAUTHENTICATED: true
+    volumes:
+      - $DATA/convertx:/app/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.convertx.rule: Host(`convertx.henn.dev`)
+      traefik.http.routers.convertx.entrypoints: websecure
+      traefik.http.routers.convertx.middlewares: hdrs@file
+      traefik.http.routers.convertx.tls.certresolver: cf
+      traefik.http.services.convertx.loadbalancer.server.port: 3000
+      homepage.instance.private.group: File Edit, Convert
+      homepage.instance.private.name: Convertx
+      homepage.instance.private.icon: vertiv-dark.png
+      homepage.instance.private.href: https://convertx.henn.dev
+      homepage.instance.private.description: File Converter

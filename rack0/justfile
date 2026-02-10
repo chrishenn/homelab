@@ -1,5 +1,9 @@
 # compose operations over {profiles, svcs}
 
+alias b := bounce
+alias f := follow
+alias s := sync
+alias p := ps
 profile := "'*'"
 
 up profile=profile *svcs:
@@ -25,16 +29,14 @@ run *svcs:
 log *args:
     docker compose logs {{ args }}
 
-alias f := follow
-
 follow *args:
     just log --follow {{ args }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}
 
-ps:
-    docker compose ps
+ps *svcs:
+    docker compose ps {{ svcs }}
 
 watch:
     watch -n 1 "docker compose ps"
@@ -64,8 +66,6 @@ rlogin:
     #!/bin/bash
     $DHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
     $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
-
-alias s := sync
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push

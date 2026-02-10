@@ -1,0 +1,49 @@
+# pocketid passkeys only work with one domain (can't find a way to enable ROR). This instance is public only
+# initial login: https://pocketid.chenn.dev/setup
+---
+services:
+  pocketid:
+    profiles: [pocketid]
+    image: ghcr.io/pocket-id/pocket-id:v2
+    container_name: pocketid
+    restart: unless-stopped
+    env_file: ./pocketid/.env
+    volumes:
+      - $DATA/pocketid/data:/app/data
+    healthcheck:
+      test: ['CMD', '/app/pocket-id', 'healthcheck']
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: PocketID
+      homepage.icon: pocket-id.png
+      homepage.href: https://pocketid.chenn.dev
+      homepage.description: OIDC Server
+
+      pangolin.public-resources.pocketid.name: pocketid
+      pangolin.public-resources.pocketid.protocol: http
+      pangolin.public-resources.pocketid.full-domain: pocketid.chenn.dev
+      pangolin.public-resources.pocketid.ssl: true
+      pangolin.public-resources.pocketid.targets[0].method: http
+      pangolin.public-resources.pocketid.targets[0].port: 1411
+      pangolin.public-resources.pocketid.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.pocketid.targets[0].healthcheck.hostname: pocketid
+      pangolin.public-resources.pocketid.targets[0].healthcheck.port: 1411
+      pangolin.public-resources.pocketid.targets[0].healthcheck.path: /
+      pangolin.public-resources.pocketid.auth.sso-enabled: true
+      pangolin.public-resources.pocketid.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.pocketid.rules[0].action: pass
+      pangolin.public-resources.pocketid.rules[0].match: path
+      pangolin.public-resources.pocketid.rules[0].value: /login
+      pangolin.public-resources.pocketid.rules[0].priority: 0
+
+      pangolin.public-resources.pocketid.rules[1].action: pass
+      pangolin.public-resources.pocketid.rules[1].match: path
+      pangolin.public-resources.pocketid.rules[1].value: /settings
+      pangolin.public-resources.pocketid.rules[1].priority: 5
+
+      pangolin.public-resources.pocketid.rules[2].action: allow
+      pangolin.public-resources.pocketid.rules[2].match: path
+      pangolin.public-resources.pocketid.rules[2].value: '*'
+      pangolin.public-resources.pocketid.rules[2].priority: 10

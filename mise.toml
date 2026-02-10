@@ -38,6 +38,7 @@ RACK4_PORT = "2200"
 RACK4_REPO = "/home/chris/Projects/homelab/rack4"
 
 VPS0_USR = "chris"
+VPS0_IP = "76.13.30.83"
 VPS0_PORT = "2200"
 VPS0_REPO = "/home/chris/pangolin"
 

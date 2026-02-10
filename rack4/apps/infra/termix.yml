@@ -1,0 +1,24 @@
+---
+services:
+  termix:
+    profiles: [termix]
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    volumes:
+      - $DATA/termix:/app/data
+    environment:
+      PORT: '8080'
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.termix.rule: Host(`termix.henn.dev`)
+      traefik.http.routers.termix.entrypoints: websecure
+      traefik.http.routers.termix.middlewares: hdrs@file
+      traefik.http.routers.termix.tls.certresolver: cf
+      traefik.http.services.termix.loadbalancer.server.port: 8080
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Termix
+      homepage.instance.private.icon: termix.png
+      homepage.instance.private.href: https://termix.henn.dev
+      homepage.instance.private.description: Server Manager
