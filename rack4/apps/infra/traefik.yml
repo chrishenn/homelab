@@ -44,6 +44,8 @@ services:
       - '${SVC_IP}:1935:1935' # rtmp
       - '${SVC_IP}:3128:3128' # spice
       - '${SVC_IP}:61001:61001' # spice-tls
+      - '${SVC_IP}:10000:10000' # video
+
       - '${TRAEFIK_VIP}:80:80' # http
       - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
       - '${TRAEFIK_VIP}:443:443' # https
@@ -53,3 +55,4 @@ services:
       - '${TRAEFIK_VIP}:1935:1935' # rtmp
       - '${TRAEFIK_VIP}:3128:3128' # spice
       - '${TRAEFIK_VIP}:61001:61001' # spice-tls
+      - '${TRAEFIK_VIP}:10000:10000' # video

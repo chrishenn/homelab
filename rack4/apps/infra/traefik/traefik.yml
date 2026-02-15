@@ -104,6 +104,8 @@ entryPoints:
     address: ':3128'
   spice-tls:
     address: ':61001'
+  video:
+    address: ':10000/udp'
 
 certificatesResolvers:
   cf:
