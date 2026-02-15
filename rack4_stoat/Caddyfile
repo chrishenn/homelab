@@ -1,4 +1,4 @@
-{stoat.henn.dev} {
+stoat.henn.dev {
 	route /api* {
 		uri strip_prefix /api
 		reverse_proxy http://api:14702 {
