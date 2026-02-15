@@ -1,4 +1,8 @@
 stoat.henn.dev {
+    tls {
+      dns cloudflare {env.CF_DNS_API_TOKEN}
+   }
+
 	route /api* {
 		uri strip_prefix /api
 		reverse_proxy http://api:14702 {

@@ -57,6 +57,8 @@ services:
     image: caddy
     restart: unless-stopped
     env_file: .env.web
+    environment:
+      CF_DNS_API_TOKEN: $CF_DNS_API_TOKEN
     ports:
       - "$SVCIP:80:80"
       - "$SVCIP:443:443"
