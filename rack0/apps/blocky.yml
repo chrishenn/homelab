@@ -17,7 +17,7 @@ services:
       # don't overwrite blocky logs from rack4 with this rack0 instance
       - $HOME/blocky/logs:/logs
       # shared blocky config
-      - ../../rack4/apps/blocky/config.yml:/app/config.yml:ro
+      - ../../rack4/apps/infra/blocky/config.yml:/app/config.yml:ro
     ports:
       - '${SVC_IP}:53:53/tcp'
       - '${SVC_IP}:53:53/udp'
