@@ -62,9 +62,9 @@ services:
     environment:
       CF_DNS_API_TOKEN: $CF_DNS_API_TOKEN
     ports:
-      - "$SVCIP:80:80"
-      - "$SVCIP:443:443/tcp"
-      - "$SVCIP:443:443/udp"
+      - '$SVCIP:80:80'
+      - '$SVCIP:443:443/tcp'
+      - '$SVCIP:443:443/udp'
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - $DATA/stoat/caddy-data:/data

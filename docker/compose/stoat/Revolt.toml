@@ -1,3 +1,5 @@
+# ignored by trufflehog - default keys - replace for deployment
+
 production = true
 
 [database]

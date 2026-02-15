@@ -35,18 +35,21 @@ local linters = new Mapping<String, Step> {
     }
     ["trufflehog"] {
         glob = List("*")
+        exclude = "*Revolt.toml*"
+        workspace_indicator = "hk.pkl"
         check = """
             trufflehog filesystem --fail --no-update --no-verification --log-level=-1 \\
-            --exclude-detectors=Postgres,RabbitMQ,JDBC {{files}}
+            --exclude-detectors=Postgres,RabbitMQ,JDBC \\
+            {{files}}
         """
         output_summary = "hide"
         batch = false
     }
-//     ["detect-secrets"] {
-//         glob = List("*")
-//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
-//         batch = false
-//     }
+    // ["detect-secrets"] {
+    //     glob = List("*")
+    //     check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
+    //     batch = false
+    // }
 }
 
 hooks {
