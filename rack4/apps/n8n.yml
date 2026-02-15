@@ -38,17 +38,18 @@ services:
       GENERIC_TIMEZONE: $TZ
     networks: [traefik]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: N8n
+      homepage.instance.private.icon: n8n.png
+      homepage.instance.private.href: https://n8n.henn.dev
+      homepage.instance.private.description: GUI Data Flow
+
       traefik.enable: true
       traefik.http.routers.n8n.rule: Host(`n8n.henn.dev`)
       traefik.http.routers.n8n.entrypoints: websecure
       traefik.http.routers.n8n.middlewares: hdrs@file
       traefik.http.routers.n8n.tls.certresolver: cf
       traefik.http.services.n8n.loadbalancer.server.port: 5678
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: N8n
-      homepage.instance.private.icon: n8n.png
-      homepage.instance.private.href: https://n8n.henn.dev
-      homepage.instance.private.description: GUI Data Flow
 
   n8n_worker:
     profiles: [n8n]

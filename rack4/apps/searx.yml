@@ -21,17 +21,18 @@ services:
       - $DATA/searx/cache:/var/cache/searxng:rw
     networks: [traefik]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Searx
+      homepage.instance.private.icon: searxng.png
+      homepage.instance.private.href: https://searx.henn.dev
+      homepage.instance.private.description: Private Search
+
       traefik.enable: true
       traefik.http.routers.sear.rule: Host(`searx.henn.dev`)
       traefik.http.routers.sear.entrypoints: websecure
       traefik.http.routers.sear.middlewares: hdrs@file
       traefik.http.routers.sear.tls.certresolver: cf
       traefik.http.services.sear.loadbalancer.server.port: 8080
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Searx
-      homepage.instance.private.icon: searxng.png
-      homepage.instance.private.href: https://searx.henn.dev
-      homepage.instance.private.description: Private Search
     depends_on: [searx_redis]
 
   searx_redis:

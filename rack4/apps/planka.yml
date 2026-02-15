@@ -38,13 +38,6 @@ services:
       homepage.href: https://planka.chenn.dev
       homepage.description: Private Trello
 
-      traefik.enable: true
-      traefik.http.routers.planka.rule: Host(`planka.henn.dev`)
-      traefik.http.routers.planka.entrypoints: websecure
-      traefik.http.routers.planka.middlewares: hdrs@file
-      traefik.http.routers.planka.tls.certresolver: cf
-      traefik.http.services.planka.loadbalancer.server.port: 1337
-
       pangolin.public-resources.planka.name: planka
       pangolin.public-resources.planka.protocol: http
       pangolin.public-resources.planka.full-domain: planka.chenn.dev

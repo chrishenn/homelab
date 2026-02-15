@@ -49,13 +49,6 @@ services:
       homepage.href: https://ollama.chenn.dev
       homepage.description: AI Chat
 
-      traefik.enable: true
-      traefik.http.routers.ollama.rule: Host(`ollama.henn.dev`)
-      traefik.http.routers.ollama.entrypoints: websecure
-      traefik.http.routers.ollama.middlewares: hdrs@file
-      traefik.http.routers.ollama.tls.certresolver: cf
-      traefik.http.services.ollama.loadbalancer.server.port: 8080
-
       pangolin.public-resources.ollama.name: ollama
       pangolin.public-resources.ollama.protocol: http
       pangolin.public-resources.ollama.full-domain: ollama.chenn.dev

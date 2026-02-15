@@ -16,13 +16,6 @@ services:
       homepage.href: https://rally.chenn.dev
       homepage.description: Group Event Scheduler
 
-      traefik.enable: true
-      traefik.http.routers.rally.rule: Host(`rally.henn.dev`)
-      traefik.http.routers.rally.entrypoints: websecure
-      traefik.http.routers.rally.middlewares: hdrs@file
-      traefik.http.routers.rally.tls.certresolver: cf
-      traefik.http.services.rally.loadbalancer.server.port: 3000
-
       pangolin.public-resources.rally.name: rally
       pangolin.public-resources.rally.protocol: http
       pangolin.public-resources.rally.full-domain: rally.chenn.dev

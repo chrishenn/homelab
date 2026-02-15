@@ -33,7 +33,7 @@ services:
       homepage.instance.private.group: AI
       homepage.instance.private.name: ComfyUI
       homepage.instance.private.icon: comfy-ui.png
-      homepage.instance.private.href: https://comfy.henn.dev
+      homepage.instance.private.href: https://comfy.chenn.dev
       homepage.instance.private.description: Image Gen
 
       traefik.enable: true
@@ -49,16 +49,13 @@ services:
       pangolin.public-resources.comfy.ssl: true
       pangolin.public-resources.comfy.targets[0].method: http
       pangolin.public-resources.comfy.targets[0].port: 8188
-
       pangolin.public-resources.comfy.targets[0].healthcheck.enabled: true
       pangolin.public-resources.comfy.targets[0].healthcheck.hostname: comfy
       pangolin.public-resources.comfy.targets[0].healthcheck.port: 8188
       pangolin.public-resources.comfy.targets[0].healthcheck.path: /
-
       pangolin.public-resources.comfy.auth.sso-enabled: true
       pangolin.public-resources.comfy.auth.sso-roles[0]: Member
       pangolin.public-resources.comfy.auth.sso-users[0]: ${EMAIL}
-
       pangolin.public-resources.comfy.rules[0].action: pass
       pangolin.public-resources.comfy.rules[0].match: country
       pangolin.public-resources.comfy.rules[0].value: US
