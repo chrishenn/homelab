@@ -1,0 +1,137 @@
+# private slack
+# quite resource heavy
+# clunky old-school configuration with poor ergonomics
+
+# just attach zulip
+# cat /var/log/zulip/server.log
+# su zulip -c '/home/zulip/deployments/current/manage.py generate_realm_creation_link'
+---
+services:
+
+  zulip:
+    profiles: [zulip]
+    image: zulip/docker-zulip:latest
+    container_name: zulip
+    restart: unless-stopped
+    environment:
+      # note: zulip does not sanitize these, so they are case-sensitive python-style literals
+      # https://github.com/zulip/docker-zulip#configuration
+      # https://github.com/zulip/zulip/blob/11.5/zproject/prod_settings_template.py
+
+      SETTING_EXTERNAL_HOST: zulip.henn.dev
+      SETTING_ALLOWED_HOSTS: '["zulip.henn.dev"]'
+      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.henn.dev"]'
+      SETTING_LOADBALANCER_IPS: $FRONTEND_SUBNET
+      SETTING_DISABLE_HTTPS: True
+      SETTING_USE_X_FORWARDED_HOST: True
+
+      SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
+      SETTING_ZULIP_AUTH_BACKENDS: EmailAuthBackend,GenericOpenIdConnectBackend
+
+      SETTING_REMOTE_POSTGRES_HOST: zulip_pg
+      SETTING_REMOTE_POSTGRES_SSLMODE: allow
+      SETTING_MEMCACHED_LOCATION: zulip_memcached:11211
+      SETTING_RABBITMQ_HOST: zulip_rabbitmq
+      SETTING_REDIS_HOST: zulip_redis
+
+#      SECRETS_rabbitmq_password: REPLACE_WITH_SECURE_RABBITMQ_PASSWORD
+#      SECRETS_postgres_password: REPLACE_WITH_SECURE_POSTGRES_PASSWORD
+#      SECRETS_memcached_password: REPLACE_WITH_SECURE_MEMCACHED_PASSWORD
+#      SECRETS_redis_password: REPLACE_WITH_SECURE_REDIS_PASSWORD
+      SECRETS_secret_key: REPLACE_WITH_SECURE_SECRET_KEY
+
+      SETTING_EMAIL_HOST:
+      SETTING_EMAIL_HOST_USER:
+      SETTING_EMAIL_PORT: 465
+      SETTING_EMAIL_USE_SSL: True
+      SETTING_EMAIL_USE_TLS: True
+      SETTING_SEND_LOGIN_EMAILS: False
+
+    volumes:
+      - $DATA/zulip/data:/data:rw
+    networks: [traefik, zulip]
+    labels:
+      homepage.group: Tools
+      homepage.name: Zulip
+      homepage.icon: zulip.png
+      homepage.href: https://zulip.henn.dev
+      homepage.description: Free Slack Alternative
+
+      traefik.enable: true
+      traefik.http.routers.zulip.rule: Host(`zulip.henn.dev`)
+#      traefik.http.routers.zulip.rule: HostRegexp(`([a-zA-Z0-9\-]+\.)?zulip\.henn\.dev`)
+      traefik.http.routers.zulip.entrypoints: websecure
+      traefik.http.routers.zulip.tls: true
+      traefik.http.routers.zulip.tls.certresolver: cf
+      traefik.http.services.zulip.loadbalancer.server.port: 80
+
+      # this worked, but then I turned it off and it kept working
+      # traefik.http.routers.zulip.tls.domains[0].main: 'zulip.henn.dev'
+      # traefik.http.routers.zulip.tls.domains[0].sans: '*.zulip.henn.dev'
+      # necessary when not using Host() matcher
+#      traefik.http.routers.zulip.tls.domains[0].main: 'henn.dev'
+#      traefik.http.routers.zulip.tls.domains[0].sans: '*.henn.dev'
+
+  zulip_pg:
+    profiles: [zulip]
+    image: zulip/zulip-postgresql:14
+    container_name: zulip_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zulip
+      POSTGRES_USER: zulip
+#      POSTGRES_PASSWORD: REPLACE_WITH_SECURE_POSTGRES_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_pg:/var/lib/postgresql/data:rw
+    networks: [zulip]
+
+  zulip_memcached:
+    profiles: [zulip]
+    image: memcached:alpine
+    container_name: zulip_memcached
+    restart: unless-stopped
+#    command:
+#      - 'sh'
+#      - '-euc'
+#      - |
+#        echo 'mech_list: plain' > "$$SASL_CONF_PATH"
+#        echo "zulip@$$HOSTNAME:$$MEMCACHED_PASSWORD" > "$$MEMCACHED_SASL_PWDB"
+#        echo "zulip@localhost:$$MEMCACHED_PASSWORD" >> "$$MEMCACHED_SASL_PWDB"
+#        exec memcached -S
+#    environment:
+#      SASL_CONF_PATH: '/home/memcache/memcached.conf'
+#      MEMCACHED_SASL_PWDB: '/home/memcache/memcached-sasl-db'
+#      MEMCACHED_PASSWORD: 'REPLACE_WITH_SECURE_MEMCACHED_PASSWORD'
+    networks: [zulip]
+
+  zulip_rabbitmq:
+    profiles: [zulip]
+    image: rabbitmq:4.0.7
+    container_name: zulip_rabbitmq
+    restart: unless-stopped
+#    environment:
+#      RABBITMQ_DEFAULT_USER: zulip
+#      RABBITMQ_DEFAULT_PASS: REPLACE_WITH_SECURE_RABBITMQ_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_rabbitmq:/var/lib/rabbitmq:rw
+    networks: [zulip]
+
+  zulip_redis:
+    profiles: [zulip]
+    image: redis:alpine
+    container_name: zulip_redis
+    restart: unless-stopped
+#    command:
+#      - 'sh'
+#      - '-euc'
+#      - |
+#        echo "requirepass '$$REDIS_PASSWORD'" > /etc/redis.conf
+#        exec redis-server /etc/redis.conf
+#    environment:
+#      REDIS_PASSWORD: REPLACE_WITH_SECURE_REDIS_PASSWORD
+    volumes:
+      - $DATA/zulip/zulip_redis:/data:rw
+    networks: [zulip]
+
+networks:
+  zulip:

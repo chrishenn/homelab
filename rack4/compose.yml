@@ -110,3 +110,4 @@ include:
   - apps/tududi.yml
   - apps/vikunja.yml
   - apps/warden.yml
+  - apps/zulip.yml
