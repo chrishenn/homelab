@@ -28,7 +28,7 @@ services:
       traefik.http.routers.lidarr.middlewares: hdrs@file
       traefik.http.routers.lidarr.tls.certresolver: cf
       traefik.http.services.lidarr.loadbalancer.server.port: 8686
-      
+
       pangolin.public-resources.lidarr.name: lidarr
       pangolin.public-resources.lidarr.protocol: http
       pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev

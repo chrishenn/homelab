@@ -31,7 +31,7 @@ services:
       traefik.http.routers.calibre.middlewares: hdrs@file
       traefik.http.routers.calibre.tls.certresolver: cf
       traefik.http.services.calibre.loadbalancer.server.port: 8083
-      
+
       pangolin.public-resources.calibre.name: calibre
       pangolin.public-resources.calibre.protocol: http
       pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
@@ -78,14 +78,14 @@ services:
       homepage.icon: calibre.png
       homepage.href: https://calibre_dl.chenn.dev
       homepage.description: Book Downloader
-      
+
       traefik.enable: true
       traefik.http.routers.calibre_dl.rule: Host(`calibre_dl.henn.dev`)
       traefik.http.routers.calibre_dl.entrypoints: websecure
       traefik.http.routers.calibre_dl.middlewares: hdrs@file
       traefik.http.routers.calibre_dl.tls.certresolver: cf
       traefik.http.services.calibre_dl.loadbalancer.server.port: 8084
-      
+
       pangolin.public-resources.calibre_dl.name: calibre_dl
       pangolin.public-resources.calibre_dl.protocol: http
       pangolin.public-resources.calibre_dl.full-domain: calibre_dl.chenn.dev

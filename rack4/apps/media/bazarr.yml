@@ -26,7 +26,7 @@ services:
       traefik.http.routers.bazarr.middlewares: hdrs@file
       traefik.http.routers.bazarr.tls.certresolver: cf
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
-      
+
       pangolin.public-resources.bazarr.name: bazarr
       pangolin.public-resources.bazarr.protocol: http
       pangolin.public-resources.bazarr.full-domain: bazarr.chenn.dev

@@ -25,7 +25,7 @@ services:
       traefik.http.routers.audiobookshelf.middlewares: hdrs@file
       traefik.http.routers.audiobookshelf.tls.certresolver: cf
       traefik.http.services.audiobookshelf.loadbalancer.server.port: 80
-      
+
       pangolin.public-resources.audiobookshelf.name: audiobookshelf
       pangolin.public-resources.audiobookshelf.protocol: http
       pangolin.public-resources.audiobookshelf.full-domain: audiobookshelf.chenn.dev

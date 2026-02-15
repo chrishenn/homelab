@@ -22,7 +22,7 @@ services:
       traefik.http.routers.navidrome.middlewares: hdrs@file
       traefik.http.routers.navidrome.tls.certresolver: cf
       traefik.http.services.navidrome.loadbalancer.server.port: 4533
-      
+
       pangolin.public-resources.navidrome.name: navidrome
       pangolin.public-resources.navidrome.protocol: http
       pangolin.public-resources.navidrome.full-domain: navidrome.chenn.dev

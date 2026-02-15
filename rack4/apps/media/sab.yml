@@ -21,14 +21,14 @@ services:
       homepage.instance.private.icon: sabnzbd.png
       homepage.instance.private.href: https://sab.chenn.dev
       homepage.instance.private.description: Usenet Downloads
-      
+
       traefik.enable: true
       traefik.http.routers.sab.rule: Host(`sab.henn.dev`)
       traefik.http.routers.sab.entrypoints: websecure
       traefik.http.routers.sab.middlewares: hdrs@file
       traefik.http.routers.sab.tls.certresolver: cf
       traefik.http.services.sab.loadbalancer.server.port: 8080
-      
+
       pangolin.public-resources.sab.name: sab
       pangolin.public-resources.sab.protocol: http
       pangolin.public-resources.sab.full-domain: sab.chenn.dev

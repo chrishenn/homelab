@@ -35,7 +35,7 @@ services:
       traefik.http.routers.airtrail.tls.certresolver: cf
       traefik.http.routers.airtrail.middlewares: hdrs@file
       traefik.http.services.airtrail.loadbalancer.server.port: 3000
-      
+
       pangolin.public-resources.airtrail.name: airtrail
       pangolin.public-resources.airtrail.protocol: http
       pangolin.public-resources.airtrail.full-domain: airtrail.chenn.dev

@@ -13,7 +13,7 @@ services:
       LOG_HTML: false
       CAPTCHA_SOLVER: none
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8191/health | grep -q '\"status\": \"ok'"]
+      test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
     networks: [traefik]
     labels:
       homepage.instance.private.group: Infra

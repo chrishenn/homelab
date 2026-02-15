@@ -19,7 +19,6 @@
 
 ---
 services:
-
   documenso:
     profiles: [documenso]
     image: documenso/documenso:latest

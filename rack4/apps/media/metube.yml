@@ -21,7 +21,7 @@ services:
       traefik.http.routers.metube.middlewares: hdrs@file
       traefik.http.routers.metube.tls.certresolver: cf
       traefik.http.services.metube.loadbalancer.server.port: 8081
-      
+
       pangolin.public-resources.metube.name: metube
       pangolin.public-resources.metube.protocol: http
       pangolin.public-resources.metube.full-domain: metube.chenn.dev
