@@ -69,6 +69,7 @@ sudo reboot now
 mac="98:03:9b:ad:37:d0"
 ip0="192.168.1.142"
 ip1="192.168.1.143"
+ip2="192.168.1.144"
 
 # rack2
 mac="3c:fd:fe:34:d9:82"
@@ -86,6 +87,7 @@ function add_con() {
     sudo nmcli con mod "$con" ethernet.auto-negotiate yes
     sudo nmcli con mod "$con" +ipv4.addresses "$ip0/24" gw4 "$gateway"
     sudo nmcli con mod "$con" +ipv4.addresses "$ip1/24" gw4 "$gateway"
+    sudo nmcli con mod "$con" +ipv4.addresses "$ip2/24" gw4 "$gateway"
     sudo nmcli con mod "$con" ipv4.method manual
     sudo nmcli con down "$con" || true
     sudo nmcli con up "$con"
