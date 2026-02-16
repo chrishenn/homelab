@@ -40,7 +40,6 @@ https://devhints.io/docker-compose
 - [ ] grafana + loki
 - [ ] localsend server
 
-
 ---
 
 # Dev

@@ -12,7 +12,7 @@ x-appflowy_env: &appflowy_env
   APPFLOWY_WEBSOCKET_BASE_URL: wss://appflowy.henn.dev/ws/v2
   APPFLOWY_WS_BASE_URL: wss://appflowy.henn.dev/ws/v2
   APPFLOWY_GOTRUE_BASE_URL: https://appflowy.henn.dev/gotrue
-#  APPFLOWY_GOTRUE_BASE_URL: http://gotrue:9999
+  #  APPFLOWY_GOTRUE_BASE_URL: http://gotrue:9999
   API_EXTERNAL_URL: https://appflowy.henn.dev/gotrue
 
   MINIO_BROWSER_REDIRECT_URL: https://appflowy.henn.dev/minio
@@ -132,7 +132,7 @@ services:
       <<: *appflowy_env
     command: server /data --console-address ":9001"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 30s
       timeout: 20s
       retries: 3
@@ -146,9 +146,9 @@ services:
     restart: on-failure
     environment:
       <<: *appflowy_env
-    command: [ "postgres", "-c", "port=5432" ]
+    command: ['postgres', '-c', 'port=5432']
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres", "-p", "5432" ]
+      test: ['CMD', 'pg_isready', '-U', 'postgres', '-d', 'postgres', '-p', '5432']
       interval: 5s
       timeout: 5s
       retries: 12
@@ -167,7 +167,7 @@ services:
     container_name: gotrue
     restart: on-failure
     healthcheck:
-      test: "curl --fail http://127.0.0.1:9999/health || exit 1"
+      test: 'curl --fail http://127.0.0.1:9999/health || exit 1'
       interval: 5s
       timeout: 5s
       retries: 12
@@ -196,7 +196,7 @@ services:
     environment:
       <<: *appflowy_env
     healthcheck:
-      test: "curl --fail http://127.0.0.1:8000/api/health || exit 1"
+      test: 'curl --fail http://127.0.0.1:8000/api/health || exit 1'
       interval: 5s
       timeout: 5s
       retries: 12

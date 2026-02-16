@@ -6,7 +6,6 @@
 # mkdir -p $DATA/jitsi/{web,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
 
 ---
-
 x-jitsi_env: &jitsi_env
   PUBLIC_URL: https://jitsi.henn.dev
   VIRTUAL_HOST: jitsi.henn.dev
@@ -44,11 +43,11 @@ services:
     labels:
       service: 'jitsi-web'
 
-#      homepage.group: Tools
-#      homepage.name: Jitsi
-#      homepage.icon: jitsi.png
-#      homepage.href: https://jitsi.chenn.dev
-#      homepage.description: Private Google Meet
+      #      homepage.group: Tools
+      #      homepage.name: Jitsi
+      #      homepage.icon: jitsi.png
+      #      homepage.href: https://jitsi.chenn.dev
+      #      homepage.description: Private Google Meet
 
       traefik.enable: true
       traefik.http.routers.jitsi.rule: Host(`jitsi.henn.dev`)
@@ -57,26 +56,26 @@ services:
       traefik.http.routers.jitsi.tls.certresolver: cf
       traefik.http.services.jitsi.loadbalancer.server.port: 80
 
-#      pangolin.public-resources.jitsi.name: jitsi
-#      pangolin.public-resources.jitsi.protocol: http
-#      pangolin.public-resources.jitsi.full-domain: jitsi.chenn.dev
-#      pangolin.public-resources.jitsi.ssl: true
-#      pangolin.public-resources.jitsi.targets[0].method: http
-#      pangolin.public-resources.jitsi.targets[0].port: 80
-#      pangolin.public-resources.jitsi.targets[0].healthcheck.enabled: true
-#      pangolin.public-resources.jitsi.targets[0].healthcheck.hostname: jitsi
-#      pangolin.public-resources.jitsi.targets[0].healthcheck.port: 80
-#      pangolin.public-resources.jitsi.targets[0].healthcheck.path: /
-#      pangolin.public-resources.jitsi.auth.sso-enabled: true
-#      pangolin.public-resources.jitsi.auth.sso-roles[0]: Member
-#      pangolin.public-resources.jitsi.rules[0].action: pass
-#      pangolin.public-resources.jitsi.rules[0].match: country
-#      pangolin.public-resources.jitsi.rules[0].value: US
-#      pangolin.public-resources.jitsi.rules[0].priority: 0
-#      pangolin.public-resources.jitsi.rules[1].action: deny
-#      pangolin.public-resources.jitsi.rules[1].match: country
-#      pangolin.public-resources.jitsi.rules[1].value: ALL
-#      pangolin.public-resources.jitsi.rules[1].priority: 10
+  #      pangolin.public-resources.jitsi.name: jitsi
+  #      pangolin.public-resources.jitsi.protocol: http
+  #      pangolin.public-resources.jitsi.full-domain: jitsi.chenn.dev
+  #      pangolin.public-resources.jitsi.ssl: true
+  #      pangolin.public-resources.jitsi.targets[0].method: http
+  #      pangolin.public-resources.jitsi.targets[0].port: 80
+  #      pangolin.public-resources.jitsi.targets[0].healthcheck.enabled: true
+  #      pangolin.public-resources.jitsi.targets[0].healthcheck.hostname: jitsi
+  #      pangolin.public-resources.jitsi.targets[0].healthcheck.port: 80
+  #      pangolin.public-resources.jitsi.targets[0].healthcheck.path: /
+  #      pangolin.public-resources.jitsi.auth.sso-enabled: true
+  #      pangolin.public-resources.jitsi.auth.sso-roles[0]: Member
+  #      pangolin.public-resources.jitsi.rules[0].action: pass
+  #      pangolin.public-resources.jitsi.rules[0].match: country
+  #      pangolin.public-resources.jitsi.rules[0].value: US
+  #      pangolin.public-resources.jitsi.rules[0].priority: 0
+  #      pangolin.public-resources.jitsi.rules[1].action: deny
+  #      pangolin.public-resources.jitsi.rules[1].match: country
+  #      pangolin.public-resources.jitsi.rules[1].value: ALL
+  #      pangolin.public-resources.jitsi.rules[1].priority: 10
 
   prosody:
     profiles: [jitsi]
@@ -126,10 +125,10 @@ services:
     labels:
       service: 'jitsi-jvb'
 
-#      pangolin.public-resources.jvb.name: jvb
-#      pangolin.public-resources.jvb.protocol: udp
-#      pangolin.public-resources.jvb.proxy-port: 10000
-#      pangolin.public-resources.jvb.targets[0].port: 10000
+      #      pangolin.public-resources.jvb.name: jvb
+      #      pangolin.public-resources.jvb.protocol: udp
+      #      pangolin.public-resources.jvb.proxy-port: 10000
+      #      pangolin.public-resources.jvb.targets[0].port: 10000
 
       traefik.enable: true
       traefik.udp.routers.jvb.entrypoints: video
