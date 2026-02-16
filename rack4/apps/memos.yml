@@ -35,6 +35,7 @@ services:
       pangolin.public-resources.memos.targets[0].healthcheck.enabled: true
       pangolin.public-resources.memos.targets[0].healthcheck.hostname: memos
       pangolin.public-resources.memos.targets[0].healthcheck.port: 5230
+      pangolin.public-resources.memos.targets[0].healthcheck.interval: 3
       pangolin.public-resources.memos.targets[0].healthcheck.path: /
       pangolin.public-resources.memos.auth.sso-enabled: true
       pangolin.public-resources.memos.auth.sso-roles[0]: Member

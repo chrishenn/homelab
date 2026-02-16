@@ -44,6 +44,7 @@ services:
       pangolin.public-resources.immich.targets[0].healthcheck.enabled: true
       pangolin.public-resources.immich.targets[0].healthcheck.hostname: immich
       pangolin.public-resources.immich.targets[0].healthcheck.port: 2283
+      pangolin.public-resources.immich.targets[0].healthcheck.interval: 3
       pangolin.public-resources.immich.targets[0].healthcheck.path: /
 
       pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}

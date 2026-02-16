@@ -71,7 +71,7 @@ include:
   - apps/media/gluetun.yml
   - apps/media/immich.yml
   - apps/media/jellyfin.yml
-  - apps/media/jellyseerr.yml
+  - apps/media/seerr.yml
   - apps/media/lidarr.yml
   - apps/media/metube.yml
   - apps/media/navidrome.yml
@@ -111,3 +111,4 @@ include:
   - apps/vikunja.yml
   - apps/warden.yml
   - apps/zulip.yml
+  - apps/localsend.yml

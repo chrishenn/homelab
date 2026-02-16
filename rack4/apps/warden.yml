@@ -49,6 +49,7 @@ services:
       pangolin.public-resources.warden.targets[0].healthcheck.enabled: true
       pangolin.public-resources.warden.targets[0].healthcheck.hostname: warden
       pangolin.public-resources.warden.targets[0].healthcheck.port: 80
+      pangolin.public-resources.warden.targets[0].healthcheck.interval: 3
       pangolin.public-resources.warden.targets[0].healthcheck.path: /
       pangolin.public-resources.warden.auth.sso-enabled: true
       pangolin.public-resources.warden.auth.sso-roles[0]: Member

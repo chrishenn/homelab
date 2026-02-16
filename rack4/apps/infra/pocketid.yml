@@ -29,6 +29,7 @@ services:
       pangolin.public-resources.pocketid.targets[0].healthcheck.enabled: true
       pangolin.public-resources.pocketid.targets[0].healthcheck.hostname: pocketid
       pangolin.public-resources.pocketid.targets[0].healthcheck.port: 1411
+      pangolin.public-resources.pocketid.targets[0].healthcheck.interval: 3
       pangolin.public-resources.pocketid.targets[0].healthcheck.path: /
       pangolin.public-resources.pocketid.auth.sso-enabled: true
       pangolin.public-resources.pocketid.auth.sso-roles[0]: Member

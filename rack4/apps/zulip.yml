@@ -70,8 +70,8 @@ services:
       homepage.group: Tools
       homepage.name: Zulip
       homepage.icon: zulip.png
-      homepage.href: https://zulip.henn.dev
-      homepage.description: Free Slack
+      homepage.href: https://zulip.chenn.dev
+      homepage.description: Private Slack
 
       traefik.enable: true
       traefik.http.routers.zulip.rule: Host(`zulip.henn.dev`)
