@@ -2,14 +2,17 @@
 # clunky old-school configuration and server init, with poor ergonomics, useless logging
 # documentation is fragmented, incomplete, and nigh unusable
 
+# NOTE: OIDC is supported, but you will need to mount the settings file, rendering secrets to disk
 # NOTE: The server will crash if passwords on each memcache, rabbitmq, redis, pg are not used
 # NOTE: zulip does not sanitize env vars, so SOME are case-sensitive python-style literals, and quotes are required!
 # https://github.com/zulip/docker-zulip#configuration
 # https://github.com/zulip/zulip/blob/11.5/zproject/prod_settings_template.py
+# https://open.greenhost.net/varac/stackspin/-/blob/main/flux2/apps/zulip/zulip-values-configmap.yaml
 
-# dump server logs
+# dump server logs, settings file (yes settings are saved into a python file. it was a different time)
 # just attach zulip
 # cat /var/log/zulip/server.log
+# cat /etc/zulip/settings.py
 
 # create initial login link
 # docker exec -u zulip zulip /home/zulip/deployments/current/manage.py generate_realm_creation_link
@@ -52,13 +55,13 @@ services:
       SECRETS_redis_password: 'REPLACE_WITH_SECURE_REDIS_PASSWORD'
       SECRETS_secret_key: 'REPLACE_WITH_SECURE_SECRET_KEY'
 
-      SETTING_EMAIL_HOST:
-      SETTING_EMAIL_HOST_USER:
+      SETTING_EMAIL_HOST: '$SMTP_HOST'
+      SETTING_EMAIL_HOST_USER: '$SMTP_USER'
       SETTING_EMAIL_PORT: 465
       SETTING_EMAIL_USE_SSL: 'False'
       SETTING_EMAIL_USE_TLS: 'True'
       SETTING_SEND_LOGIN_EMAILS: 'False'
-      SECRETS_email_password: '123456789'
+      SECRETS_email_password: '$SMTP_TOKEN'
 
     volumes:
       - $DATA/zulip/data:/data:rw
@@ -68,7 +71,7 @@ services:
       homepage.name: Zulip
       homepage.icon: zulip.png
       homepage.href: https://zulip.henn.dev
-      homepage.description: Free Slack Alternative
+      homepage.description: Free Slack
 
       traefik.enable: true
       traefik.http.routers.zulip.rule: Host(`zulip.henn.dev`)

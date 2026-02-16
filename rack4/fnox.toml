@@ -96,6 +96,13 @@ BYTESTASH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bytestash/
 BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/oidc_secret" }
 BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }
 
+JICOFO_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JICOFO_AUTH_PASSWORD" }
+JVB_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JVB_AUTH_PASSWORD" }
+JIGASI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_XMPP_PASSWORD" }
+JIGASI_TRANSCRIBER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_TRANSCRIBER_PASSWORD" }
+JIBRI_RECORDER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_RECORDER_PASSWORD" }
+JIBRI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_XMPP_PASSWORD" }
+
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
 QUI_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/qui/oidc_client" }
@@ -126,4 +133,5 @@ HEDGE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/hedge/oidc_cli
 HEDGE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/hedge/oidc_secret" }
 TERMIX_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/termix/oidc_client" }
 TERMIX_OIDC_SECRET = { provider = "onepass", value = "op://homelab/termix/oidc_secret" }
-
+ZULIP_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/zulip/oidc_client" }
+ZULIP_OIDC_SECRET = { provider = "onepass", value = "op://homelab/zulip/oidc_secret" }

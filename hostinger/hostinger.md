@@ -61,6 +61,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 51820/udp
 sudo ufw allow 21820/udp
+sudo ufw allow 10000/udp
 sudo ufw enable -y
 # sudo ufw status verbose
 
