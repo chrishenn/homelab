@@ -4,6 +4,5 @@ services:
     image: $REGISTRY/localsend:latest
     profiles: [localsend]
     build:
-      context: https://github.com/localsend/localsend.git#:server
       dockerfile: ./localsend/Dockerfile
     container_name: localsend

@@ -38,6 +38,8 @@ https://devhints.io/docker-compose
 - [ ] iventoy
 - [x] conduit/synapse
 - [ ] grafana + loki
+- [ ] localsend server
+
 
 ---
 
