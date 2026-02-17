@@ -12,7 +12,7 @@ x-immich_env: &immich_env
   POSTGRES_DB: immich
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: 1234
-  POSTGRES_INITDB_ARGS: "--data-checksums"
+  POSTGRES_INITDB_ARGS: '--data-checksums'
 
 services:
   immich:

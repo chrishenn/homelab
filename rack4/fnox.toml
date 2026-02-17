@@ -133,3 +133,5 @@ TERMIX_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/termix/oidc_c
 TERMIX_OIDC_SECRET = { provider = "onepass", value = "op://homelab/termix/oidc_secret" }
 ZULIP_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/zulip/oidc_client" }
 ZULIP_OIDC_SECRET = { provider = "onepass", value = "op://homelab/zulip/oidc_secret" }
+STIRLING_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/stirling/oidc_client" }
+STIRLING_OIDC_SECRET = { provider = "onepass", value = "op://homelab/stirling/oidc_secret" }

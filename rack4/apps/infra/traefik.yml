@@ -1,3 +1,4 @@
+# https://go-acme.github.io/lego/dns/cloudflare/
 ---
 services:
   traefik:
@@ -7,10 +8,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: $TZ
-      PUID: $PUID
-      PGID: $PGID
-      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
-      TRAEFIK_CERTIFICATESRESOLVERS_CF_ACME_EMAIL: ${EMAIL}
+      CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik.yml:/traefik.yml:ro

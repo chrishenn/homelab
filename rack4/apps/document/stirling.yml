@@ -1,4 +1,5 @@
 # initial login: admin/stirling
+# OIDC requires a pro license
 ---
 services:
   stirling:
@@ -54,8 +55,10 @@ services:
       pangolin.public-resources.stirling.targets[0].healthcheck.enabled: true
       pangolin.public-resources.stirling.targets[0].healthcheck.hostname: stirling
       pangolin.public-resources.stirling.targets[0].healthcheck.port: 8080
-      pangolin.public-resources.stirling.targets[0].healthcheck.interval: 3
       pangolin.public-resources.stirling.targets[0].healthcheck.path: /api/v1/info/status
+      pangolin.public-resources.stirling.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.stirling.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.stirling.targets[0].healthcheck.timeout: 5
       pangolin.public-resources.stirling.auth.sso-enabled: true
       pangolin.public-resources.stirling.auth.sso-roles[0]: Member
       pangolin.public-resources.stirling.rules[0].action: pass

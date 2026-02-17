@@ -25,7 +25,7 @@ services:
       homepage.name: Searx
       homepage.icon: searxng.png
       homepage.href: https://searx.chenn.dev
-      homepage.description: Private Search
+      homepage.description: Private Google
 
       traefik.enable: true
       traefik.http.routers.sear.rule: Host(`searx.henn.dev`)

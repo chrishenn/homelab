@@ -13,7 +13,7 @@ You have to clone/pull the repo to the remote machine, to sync {traefik, blocky}
 
 # Refs
 
-https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/README.md
+https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/docker-compose.yml
 https://github.com/juftin/homelab/blob/main/docker-compose.yaml
 https://github.com/bluepuma77/traefik-best-practice
 https://github.com/easyselfhost/self-host/blob/main/apps/webtop/docker-compose.yml

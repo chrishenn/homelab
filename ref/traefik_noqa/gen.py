@@ -1,4 +1,4 @@
-""" see: https://go-acme.github.io/lego/dns/cloudflare/ """
+"""see: https://go-acme.github.io/lego/dns/cloudflare/"""
 
 from enum import Enum, StrEnum
 from pathlib import Path
