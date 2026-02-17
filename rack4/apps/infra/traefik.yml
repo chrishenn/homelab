@@ -12,7 +12,7 @@ services:
       PUID: $PUID
       PGID: $PGID
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
-      TRAEFIK_CERTIFICATESRESOLVERS_cf_ACME_EMAIL: ${EMAIL}
+      TRAEFIK_CERTIFICATESRESOLVERS_CF_ACME_EMAIL: ${EMAIL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik.yml:/traefik.yml:ro
