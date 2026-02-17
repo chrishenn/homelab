@@ -54,10 +54,10 @@ services:
       pangolin.public-resources.calibre.rules[1].value: ALL
       pangolin.public-resources.calibre.rules[1].priority: 10
 
-  calibre_dl:
+  calibre-dl:
     profiles: [calibre]
     image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
-    container_name: calibre_dl
+    container_name: calibre-dl
     restart: unless-stopped
     environment:
       UID: $PUID
@@ -77,34 +77,34 @@ services:
       homepage.group: Media
       homepage.name: Calibre Downloader
       homepage.icon: calibre.png
-      homepage.href: https://calibre_dl.chenn.dev
+      homepage.href: https://calibre-dl.chenn.dev
       homepage.description: Book Downloader
 
       traefik.enable: true
-      traefik.http.routers.calibre_dl.rule: Host(`calibre_dl.henn.dev`)
-      traefik.http.routers.calibre_dl.entrypoints: websecure
-      traefik.http.routers.calibre_dl.middlewares: hdrs@file
-      traefik.http.routers.calibre_dl.tls.certresolver: cf
-      traefik.http.services.calibre_dl.loadbalancer.server.port: 8084
+      traefik.http.routers.calibre-dl.rule: Host(`calibre-dl.henn.dev`)
+      traefik.http.routers.calibre-dl.entrypoints: websecure
+      traefik.http.routers.calibre-dl.middlewares: hdrs@file
+      traefik.http.routers.calibre-dl.tls.certresolver: cf
+      traefik.http.services.calibre-dl.loadbalancer.server.port: 8084
 
-      pangolin.public-resources.calibre_dl.name: calibre_dl
-      pangolin.public-resources.calibre_dl.protocol: http
-      pangolin.public-resources.calibre_dl.full-domain: calibre_dl.chenn.dev
-      pangolin.public-resources.calibre_dl.ssl: true
-      pangolin.public-resources.calibre_dl.targets[0].method: http
-      pangolin.public-resources.calibre_dl.targets[0].port: 8084
-      pangolin.public-resources.calibre_dl.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.calibre_dl.targets[0].healthcheck.hostname: calibre_dl
-      pangolin.public-resources.calibre_dl.targets[0].healthcheck.port: 8084
-      pangolin.public-resources.calibre_dl.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.calibre_dl.targets[0].healthcheck.path: /
-      pangolin.public-resources.calibre_dl.auth.sso-enabled: true
-      pangolin.public-resources.calibre_dl.auth.sso-roles[0]: Member
-      pangolin.public-resources.calibre_dl.rules[0].action: pass
-      pangolin.public-resources.calibre_dl.rules[0].match: country
-      pangolin.public-resources.calibre_dl.rules[0].value: US
-      pangolin.public-resources.calibre_dl.rules[0].priority: 0
-      pangolin.public-resources.calibre_dl.rules[1].action: deny
-      pangolin.public-resources.calibre_dl.rules[1].match: country
-      pangolin.public-resources.calibre_dl.rules[1].value: ALL
-      pangolin.public-resources.calibre_dl.rules[1].priority: 10
+      pangolin.public-resources.calibre-dl.name: calibre-dl
+      pangolin.public-resources.calibre-dl.protocol: http
+      pangolin.public-resources.calibre-dl.full-domain: calibre-dl.chenn.dev
+      pangolin.public-resources.calibre-dl.ssl: true
+      pangolin.public-resources.calibre-dl.targets[0].method: http
+      pangolin.public-resources.calibre-dl.targets[0].port: 8084
+      pangolin.public-resources.calibre-dl.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.calibre-dl.targets[0].healthcheck.hostname: calibre-dl
+      pangolin.public-resources.calibre-dl.targets[0].healthcheck.port: 8084
+      pangolin.public-resources.calibre-dl.targets[0].healthcheck.interval: 3
+      pangolin.public-resources.calibre-dl.targets[0].healthcheck.path: /
+      pangolin.public-resources.calibre-dl.auth.sso-enabled: true
+      pangolin.public-resources.calibre-dl.auth.sso-roles[0]: Member
+      pangolin.public-resources.calibre-dl.rules[0].action: pass
+      pangolin.public-resources.calibre-dl.rules[0].match: country
+      pangolin.public-resources.calibre-dl.rules[0].value: US
+      pangolin.public-resources.calibre-dl.rules[0].priority: 0
+      pangolin.public-resources.calibre-dl.rules[1].action: deny
+      pangolin.public-resources.calibre-dl.rules[1].match: country
+      pangolin.public-resources.calibre-dl.rules[1].value: ALL
+      pangolin.public-resources.calibre-dl.rules[1].priority: 10

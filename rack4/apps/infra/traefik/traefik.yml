@@ -35,6 +35,16 @@ tls:
         - 'CurveP256'
         - 'CurveP384'
 
+http:
+  encodedCharacters:
+    allowEncodedSlash: true
+    allowEncodedBackSlash: false
+    allowEncodedNullCharacter: false
+    allowEncodedSemicolon: false
+    allowEncodedPercent: false
+    allowEncodedQuestionMark: true
+    allowEncodedHash: false
+
 entryPoints:
   web:
     address: :80
@@ -74,9 +84,9 @@ entryPoints:
     address: :443
     transport:
       respondingTimeouts:
-        readTimeout: '60000'
-        writeTimeout: '60000'
-        idleTimeout: '60000'
+        readTimeout: '30m'
+        writeTimeout: '30m'
+        idleTimeout: '30m'
     forwardedHeaders:
       trustedIPs: *trustedIps
     http:
@@ -86,7 +96,7 @@ entryPoints:
         allowEncodedNullCharacter: false
         allowEncodedSemicolon: false
         allowEncodedPercent: false
-        allowEncodedQuestionMark: false
+        allowEncodedQuestionMark: true
         allowEncodedHash: false
       tls:
         certResolver: cf
@@ -104,7 +114,7 @@ entryPoints:
     address: ':3128'
   spice-tls:
     address: ':61001'
-  video:
+  udp-10000:
     address: ':10000/udp'
 
 certificatesResolvers:
@@ -119,5 +129,10 @@ certificatesResolvers:
 
 log:
   level: DEBUG
+  format: "common"
+  maxSize: 100
+  maxBackups: 3
+  maxAge: 3
+  compress: true
 
 ping: {}

@@ -8,18 +8,17 @@ x-karakeep_env: &karakeep_env
   BROWSER_WEB_URL: http://karakeep_chrome:9222
   OLLAMA_BASE_URL: http://ollama:11434
 
-  DISABLE_SIGNUPS: true
-  DISABLE_PASSWORD_AUTH: true
-  EMAIL_VERIFICATION_REQUIRED: true
-
-  OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
+  DISABLE_SIGNUPS: false
+  DISABLE_PASSWORD_AUTH: false
+  EMAIL_VERIFICATION_REQUIRED: false
+  OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: false
   OAUTH_WELLKNOWN_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
   OAUTH_CLIENT_ID: $KARAKEEP_OIDC_CLIENT
   OAUTH_CLIENT_SECRET: $KARAKEEP_OIDC_SECRET
   OAUTH_PROVIDER_NAME: PocketID
 
   MEILI_NO_ANALYTICS: true
-  DATA_DIR:  /data
+  DATA_DIR: /data
 
   SMTP_HOST: $SMTP_HOST
   SMTP_PORT: 465
@@ -34,7 +33,7 @@ services:
     image: ghcr.io/karakeep-app/karakeep:release
     container_name: karakeep
     restart: unless-stopped
-    env_file: ./karakeep/.env
+#    env_file: ./karakeep/.env
     environment:
       <<: *karakeep_env
     volumes:
@@ -83,7 +82,7 @@ services:
     image: getmeili/meilisearch:v1.13.3
     container_name: karakeep_meili
     restart: unless-stopped
-    env_file: ./karakeep/.env
+#    env_file: ./karakeep/.env
     environment:
       <<: *karakeep_env
     volumes:
