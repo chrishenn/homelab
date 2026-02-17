@@ -68,7 +68,6 @@ include:
   - apps/media/audiobookshelf.yml
   - apps/media/bazarr.yml
   - apps/media/calibre.yml
-  - apps/media/gluetun.yml
   - apps/media/immich.yml
   - apps/media/jellyfin.yml
   - apps/media/seerr.yml
