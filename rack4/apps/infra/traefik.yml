@@ -12,6 +12,7 @@ services:
       PUID: $PUID
       PGID: $PGID
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+      TRAEFIK_CERTIFICATESRESOLVERS_cf_ACME_EMAIL: ${EMAIL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik.yml:/traefik.yml:ro
@@ -43,7 +44,7 @@ services:
       - '${SVC_IP}:1935:1935' # rtmp
       - '${SVC_IP}:3128:3128' # spice
       - '${SVC_IP}:61001:61001' # spice-tls
-      - '${SVC_IP}:10000:10000' # video
+      - '${SVC_IP}:10000:10000' #
 
       - '${TRAEFIK_VIP}:80:80' # http
       - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
@@ -54,4 +55,4 @@ services:
       - '${TRAEFIK_VIP}:1935:1935' # rtmp
       - '${TRAEFIK_VIP}:3128:3128' # spice
       - '${TRAEFIK_VIP}:61001:61001' # spice-tls
-      - '${TRAEFIK_VIP}:10000:10000' # video
+      - '${TRAEFIK_VIP}:10000:10000' #
