@@ -25,9 +25,9 @@ services:
     restart: unless-stopped
     environment:
       TZ: $TZ
-      SETTING_EXTERNAL_HOST: 'zulip.henn.dev'
-      SETTING_ALLOWED_HOSTS: '["zulip.henn.dev"]'
-      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.henn.dev"]'
+      SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
+      SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev", "zulip.henn.dev"]'
+      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev", "https://zulip.henn.dev"]'
 
       LOADBALANCER_IPS: '$FRONTEND_SUBNET'
       SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
@@ -73,12 +73,32 @@ services:
       homepage.href: https://zulip.chenn.dev
       homepage.description: Private Slack
 
-      traefik.enable: true
-      traefik.http.routers.zulip.rule: Host(`zulip.henn.dev`)
-      traefik.http.routers.zulip.entrypoints: websecure
-      traefik.http.routers.zulip.tls: true
-      traefik.http.routers.zulip.tls.certresolver: cf
-      traefik.http.services.zulip.loadbalancer.server.port: 80
+      pangolin.public-resources.zulip.name: zulip
+      pangolin.public-resources.zulip.protocol: http
+      pangolin.public-resources.zulip.full-domain: zulip.chenn.dev
+      pangolin.public-resources.zulip.ssl: true
+      pangolin.public-resources.zulip.targets[0].method: http
+      pangolin.public-resources.zulip.targets[0].port: 80
+      pangolin.public-resources.zulip.targets[0].healthcheck.enabled: true
+      pangolin.public-resources.zulip.targets[0].healthcheck.hostname: zulip
+      pangolin.public-resources.zulip.targets[0].healthcheck.port: 80
+      pangolin.public-resources.zulip.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.timeout: 5
+      pangolin.public-resources.zulip.targets[0].healthcheck.path: /health
+      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].name: Host
+      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].value: zulip.chenn.dev
+      pangolin.public-resources.zulip.auth.sso-enabled: true
+      pangolin.public-resources.zulip.auth.sso-roles[0]: Member
+      pangolin.public-resources.zulip.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.zulip.rules[0].action: pass
+      pangolin.public-resources.zulip.rules[0].match: country
+      pangolin.public-resources.zulip.rules[0].value: US
+      pangolin.public-resources.zulip.rules[0].priority: 0
+      pangolin.public-resources.zulip.rules[1].action: deny
+      pangolin.public-resources.zulip.rules[1].match: country
+      pangolin.public-resources.zulip.rules[1].value: ALL
+      pangolin.public-resources.zulip.rules[1].priority: 10
 
   zulip_pg:
     profiles: [zulip]
