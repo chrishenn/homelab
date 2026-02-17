@@ -1,3 +1,4 @@
+---
 services:
   newt:
     profiles: [newt]

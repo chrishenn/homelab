@@ -33,7 +33,6 @@ services:
     image: ghcr.io/karakeep-app/karakeep:release
     container_name: karakeep
     restart: unless-stopped
-#    env_file: ./karakeep/.env
     environment:
       <<: *karakeep_env
     volumes:
@@ -45,13 +44,6 @@ services:
       homepage.icon: karakeep.png
       homepage.href: https://karakeep.chenn.dev
       homepage.description: Notes with AI tagging
-
-#      traefik.enable: true
-#      traefik.http.routers.karakeep.rule: Host(`karakeep.henn.dev`)
-#      traefik.http.routers.karakeep.entrypoints: websecure
-#      traefik.http.routers.karakeep.middlewares: hdrs@file
-#      traefik.http.routers.karakeep.tls.certresolver: cf
-#      traefik.http.services.karakeep.loadbalancer.server.port: 3000
 
       pangolin.public-resources.karakeep.name: karakeep
       pangolin.public-resources.karakeep.protocol: http
@@ -82,7 +74,6 @@ services:
     image: getmeili/meilisearch:v1.13.3
     container_name: karakeep_meili
     restart: unless-stopped
-#    env_file: ./karakeep/.env
     environment:
       <<: *karakeep_env
     volumes:

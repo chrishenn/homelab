@@ -56,11 +56,9 @@ def render_statcfg(templ: dict) -> dict:
 def render_env(templ: dict) -> dict:
     class SecretVars(StrEnum):
         # ruff: noqa: S105
-        CF_API_EMAIL = "CF_API_EMAIL"
         CF_DNS_API_TOKEN = "CF_DNS_API_TOKEN"
 
-    cf_email, cf_token = env_secret(SecretVars.CF_API_EMAIL), env_secret(SecretVars.CF_DNS_API_TOKEN)
-    templ[SecretVars.CF_API_EMAIL.value] = cf_email
+    cf_token = env_secret(SecretVars.CF_DNS_API_TOKEN)
     templ[SecretVars.CF_DNS_API_TOKEN.value] = cf_token
     return templ
 

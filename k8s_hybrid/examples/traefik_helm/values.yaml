@@ -34,11 +34,6 @@ deployment:
           name: data
 
 env:
-  - name: CF_API_EMAIL
-    valueFrom:
-      secretKeyRef:
-        name: cloudflare-credentials
-        key: email
   - name: CF_DNS_API_TOKEN
     valueFrom:
       secretKeyRef:

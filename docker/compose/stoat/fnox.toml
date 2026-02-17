@@ -12,5 +12,4 @@ SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host"
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }
 SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
 
-CF_API_EMAIL = { provider = "onepass", value = "op://homelab/cloudflare_token/username" }
 CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare_token/credential" }

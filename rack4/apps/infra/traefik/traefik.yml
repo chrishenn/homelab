@@ -120,19 +120,18 @@ entryPoints:
 certificatesResolvers:
   cf:
     acme:
-      storage: /ssl/acme.json
       dnsChallenge:
         provider: cloudflare
         resolvers:
-          - '1.1.1.1'
-          - '1.0.0.1'
+          - '1.1.1.1:53'
+          - '1.0.0.1:53'
+      email: "christopherpenn1000@gmail.com"
+      storage: /ssl/acme.json
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
 
 log:
   level: DEBUG
-  format: "common"
-  maxSize: 100
-  maxBackups: 3
-  maxAge: 3
+  format: common
   compress: true
 
 ping: {}

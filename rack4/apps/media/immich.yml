@@ -1,11 +1,27 @@
 ---
+x-immich_env: &immich_env
+  TZ: $TZ
+  IMMICH_MACHINE_LEARNING_URL: http://immich_ml:3003
+  REDIS_HOSTNAME: immich_redis
+  DB_HOSTNAME: immich_db
+
+  DB_DATABASE_NAME: immich
+  DB_USERNAME: postgres
+  DB_PASSWORD: 1234
+
+  POSTGRES_DB: immich
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: 1234
+  POSTGRES_INITDB_ARGS: "--data-checksums"
+
 services:
   immich:
     profiles: [immich]
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich
     restart: always
-    env_file: ./immich/.env
+    environment:
+      <<: *immich_env
     runtime: nvidia
     deploy:
       resources:
@@ -40,12 +56,13 @@ services:
       pangolin.public-resources.immich.ssl: true
       pangolin.public-resources.immich.targets[0].method: http
       pangolin.public-resources.immich.targets[0].port: 2283
-
       pangolin.public-resources.immich.targets[0].healthcheck.enabled: true
       pangolin.public-resources.immich.targets[0].healthcheck.hostname: immich
       pangolin.public-resources.immich.targets[0].healthcheck.port: 2283
-      pangolin.public-resources.immich.targets[0].healthcheck.interval: 3
       pangolin.public-resources.immich.targets[0].healthcheck.path: /
+      pangolin.public-resources.immich.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.immich.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.immich.targets[0].healthcheck.timeout: 5
 
       pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}
       pangolin.public-resources.immich.auth.basic-auth.password: ${IMMICH_PANGOLIN_AUTH_PASS}
@@ -73,7 +90,8 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:release-cuda
     container_name: immich_ml
     restart: always
-    env_file: ./immich/.env
+    environment:
+      <<: *immich_env
     runtime: nvidia
     deploy:
       resources:
@@ -91,7 +109,8 @@ services:
     image: docker.io/valkey/valkey:9
     container_name: immich_redis
     restart: always
-    env_file: ./immich/.env
+    environment:
+      <<: *immich_env
     healthcheck:
       test: redis-cli ping || exit 1
     networks: [traefik]
@@ -101,7 +120,8 @@ services:
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     container_name: immich_db
     restart: always
-    env_file: ./immich/.env
+    environment:
+      <<: *immich_env
     volumes:
       # NETWORK SHARES ARE NOT SUPPORTED FOR DATABASE STORAGE
       - $DATA/immich/postgres:/var/lib/postgresql/data
