@@ -5,8 +5,6 @@ services:
     image: traefik:latest
     container_name: traefik
     restart: unless-stopped
-    security_opt:
-      - no-new-privileges=true
     environment:
       TZ: $TZ
       PUID: $PUID
@@ -21,12 +19,6 @@ services:
       - $DATA/traefik/ssl:/ssl
     networks: [traefik]
     labels:
-      traefik.enable: true
-      traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
-      traefik.http.routers.dash.entrypoints: websecure
-      traefik.http.routers.dash.middlewares: hdrs@file
-      traefik.http.routers.dash.tls.certresolver: cf
-      traefik.http.routers.dash.service: api@internal
       homepage.instance.private.group: Infra
       homepage.instance.private.name: Traefik-Docker
       homepage.instance.private.icon: traefik.png
@@ -34,6 +26,13 @@ services:
       homepage.instance.private.description: Docker Traefik Gui (Rack 4)
       homepage.instance.private.widget.type: traefik
       homepage.instance.private.widget.url: https://docker-traefik.henn.dev
+
+      traefik.enable: true
+      traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
+      traefik.http.routers.dash.entrypoints: websecure
+      traefik.http.routers.dash.middlewares: hdrs@file
+      traefik.http.routers.dash.tls.certresolver: cf
+      traefik.http.routers.dash.service: api@internal
     ports:
       - '${SVC_IP}:80:80' # http
       - '${SVC_IP}:8080:8080' # traefik internal entrypoint
