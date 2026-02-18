@@ -3,6 +3,7 @@
 # - sign in as root using password from gitlab_pass
 # - create user 'chris' as 'validated'
 # - edit user 'chris' to add password
+# pangolin SSO breaks glab auth login
 ---
 services:
   gitlab:
@@ -14,8 +15,8 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         # global config
-        external_url 'https://gitlab.henn.dev'
-        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        external_url 'https://gitlab.chenn.dev'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2525
         gitlab_rails['lfs_enabled'] = true
 
         # nginx
@@ -27,9 +28,9 @@ services:
 
         # container registry
         registry['enable'] = true
-        registry_external_url 'https://registry.gitlab.henn.dev'
+        registry_external_url 'https://registry.gitlab.chenn.dev'
         gitlab_rails['registry_enabled'] = true
-        gitlab_rails['registry_host'] = 'registry.gitlab.henn.dev'
+        gitlab_rails['registry_host'] = 'registry.gitlab.chenn.dev'
         gitlab_rails['registry_port'] = 5050
         gitlab_rails['registry_api_url'] = 'http://localhost:5000'
         registry_nginx['enable'] = true
@@ -92,28 +93,62 @@ services:
       homepage.instance.private.group: Code
       homepage.instance.private.name: Gitlab
       homepage.instance.private.icon: gitlab.png
-      homepage.instance.private.href: https://gitlab.henn.dev
+      homepage.instance.private.href: https://gitlab.chenn.dev
       homepage.instance.private.description: Gitlab
 
-      traefik.enable: true
-      traefik.http.routers.gitlab.rule: Host(`gitlab.henn.dev`)
-      traefik.http.routers.gitlab.entrypoints: websecure
-      traefik.http.routers.gitlab.middlewares: hdrs@file
-      traefik.http.routers.gitlab.tls.certresolver: cf
-      traefik.http.routers.gitlab.service: gitlab
-      traefik.http.services.gitlab.loadbalancer.server.port: 80
+#      traefik.enable: true
+#      traefik.http.routers.gitlab.rule: Host(`gitlab.henn.dev`)
+#      traefik.http.routers.gitlab.entrypoints: websecure
+#      traefik.http.routers.gitlab.middlewares: hdrs@file
+#      traefik.http.routers.gitlab.tls.certresolver: cf
+#      traefik.http.routers.gitlab.service: gitlab
+#      traefik.http.services.gitlab.loadbalancer.server.port: 80
+#
+#      traefik.http.routers.gitlab_registry.rule: Host(`registry.gitlab.henn.dev`)
+#      traefik.http.routers.gitlab_registry.entrypoints: websecure
+#      traefik.http.routers.gitlab_registry.middlewares: hdrs@file
+#      traefik.http.routers.gitlab_registry.tls.certresolver: cf
+#      traefik.http.routers.gitlab_registry.service: gitlab_registry
+#      traefik.http.services.gitlab_registry.loadbalancer.server.port: 5050
+#
+#      traefik.tcp.routers.gitlab_ssh.rule: HostSNI(`*`)
+#      traefik.tcp.routers.gitlab_ssh.entrypoints: tcp-2222
+#      traefik.tcp.routers.gitlab_ssh.service: gitlab_ssh
+#      traefik.tcp.services.gitlab_ssh.loadbalancer.server.port: 22
 
-      traefik.http.routers.gitlab_registry.rule: Host(`registry.gitlab.henn.dev`)
-      traefik.http.routers.gitlab_registry.entrypoints: websecure
-      traefik.http.routers.gitlab_registry.middlewares: hdrs@file
-      traefik.http.routers.gitlab_registry.tls.certresolver: cf
-      traefik.http.routers.gitlab_registry.service: gitlab_registry
-      traefik.http.services.gitlab_registry.loadbalancer.server.port: 5050
+      pangolin.public-resources.gitlab.name: gitlab
+      pangolin.public-resources.gitlab.protocol: http
+      pangolin.public-resources.gitlab.full-domain: gitlab.chenn.dev
+      pangolin.public-resources.gitlab.ssl: true
+      pangolin.public-resources.gitlab.targets[0].method: http
+      pangolin.public-resources.gitlab.targets[0].port: 80
 
-      traefik.tcp.routers.gitlab_ssh.rule: HostSNI(`*`)
-      traefik.tcp.routers.gitlab_ssh.entrypoints: tcp-2222
-      traefik.tcp.routers.gitlab_ssh.service: gitlab_ssh
-      traefik.tcp.services.gitlab_ssh.loadbalancer.server.port: 22
+      pangolin.public-resources.gitlab_r.name: gitlab_r
+      pangolin.public-resources.gitlab_r.protocol: http
+      pangolin.public-resources.gitlab_r.full-domain: registry.gitlab.chenn.dev
+      pangolin.public-resources.gitlab_r.ssl: true
+      pangolin.public-resources.gitlab_r.targets[0].method: http
+      pangolin.public-resources.gitlab_r.targets[0].port: 5050
+
+      pangolin.public-resources.gitlab_ssh.name: gitlab_ssh
+      pangolin.public-resources.gitlab_ssh.protocol: tcp
+      pangolin.public-resources.gitlab_ssh.proxy-port: 2525
+      pangolin.public-resources.gitlab_ssh.targets[0].port: 22
+
+#  ghrunner:
+#    profiles: [ghrunner]
+#    image: myoung34/github-runner:latest
+#    container_name: ghrunner
+#    restart: unless-stopped
+#    environment:
+#      RUNNER_NAME: docker_rack4
+#      ACCESS_TOKEN: ${GHRUNNER_PAT}
+#      RUNNER_SCOPE: org
+#      ORG_NAME: chrishenn-org
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - $DATA/runner:/runner/data
+#      - /tmp/runner:/tmp/runner
 
 #  gitlab_pg:
 #    profiles: [gitlab]

@@ -42,10 +42,6 @@ RADARR_KEY = { provider = "onepass", value = "op://homelab/radarr/credential" }
 SONARR_URL = { provider = "onepass", value = "op://homelab/sonarr/url" }
 SONARR_KEY = { provider = "onepass", value = "op://homelab/sonarr/credential" }
 
-GHRUNNER_PAT = { provider = "onepass", value = "op://homelab/ghrunner/credential" }
-GL_RUNNER_TOKEN = { provider = "onepass", value = "op://homelab/Gitlab/runner_token" }
-GL_RUNNER_TOKEN2 = { provider = "onepass", value = "op://homelab/Gitlab/runner_token2" }
-
 DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
 DOCMOST_DBURL = { provider = "onepass", value = "op://homelab/docmost/dburl" }
 

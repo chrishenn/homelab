@@ -1,0 +1,5 @@
+[tools]
+glab = "latest"
+
+[env]
+GITLAB = "gitlab.chenn.dev"

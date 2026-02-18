@@ -22,7 +22,6 @@ include:
   - apps/dev/excalidraw.yml
   - apps/dev/focalboard.yml
   - apps/dev/forgejo.yml
-  - apps/dev/ghrunner.yml
   - apps/dev/gist.yml
   - apps/dev/gitlab.yml
   - apps/dev/ittools.yml
