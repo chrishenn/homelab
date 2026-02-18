@@ -3,7 +3,7 @@
 # https://gethomepage.instance.private.dev/configs/settings/
 
 instanceName: private
-title: Dancing Chicken
+title: 'Dancing Chicken: Private'
 theme: dark
 color: slate
 statusStyle: 'dot'

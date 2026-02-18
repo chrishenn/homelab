@@ -11,11 +11,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3001']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Uptime Kuma
-      homepage.instance.private.icon: uptime-kuma.png
-      homepage.instance.private.href: https://kuma.chenn.dev
-      homepage.instance.private.description: Uptime Tracker
+      homepage.group: Infra
+      homepage.name: Uptime Kuma
+      homepage.icon: uptime-kuma.png
+      homepage.href: https://kuma.chenn.dev
+      homepage.description: Uptime Tracker
 
       traefik.enable: true
       traefik.http.routers.kuma.rule: Host(`kuma.henn.dev`)

@@ -21,7 +21,6 @@ services:
       VPN_SERVICE_PROVIDER: protonvpn
       WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
       SERVER_COUNTRIES: 'United States,Canada'
-    #      PORT_FORWARD_ONLY: on
     volumes:
       - $DATA/gluetun:/gluetun
     networks: [traefik]

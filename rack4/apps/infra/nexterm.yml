@@ -11,11 +11,11 @@ services:
       ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Nexterm
-      homepage.instance.private.icon: nexterm.png
-      homepage.instance.private.href: https://nexterm.chenn.dev
-      homepage.instance.private.description: Server Manager
+      homepage.group: Infra
+      homepage.name: Nexterm
+      homepage.icon: nexterm.png
+      homepage.href: https://nexterm.chenn.dev
+      homepage.description: Server Manager
 
       traefik.enable: true
       traefik.http.routers.nexterm.rule: Host(`nexterm.henn.dev`)

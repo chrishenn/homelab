@@ -19,11 +19,11 @@ services:
       OIDC_USERINFO_URL: https://pocketid.chenn.dev/api/oidc/userinfo
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Termix
-      homepage.instance.private.icon: termix.png
-      homepage.instance.private.href: https://termix.henn.dev
-      homepage.instance.private.description: Server Manager
+      homepage.group: Infra
+      homepage.name: Termix
+      homepage.icon: termix.png
+      homepage.href: https://termix.chenn.dev
+      homepage.description: Server Manager
 
       traefik.enable: true
       traefik.http.routers.termix.rule: Host(`termix.henn.dev`)

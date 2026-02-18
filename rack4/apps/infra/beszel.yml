@@ -14,11 +14,11 @@ services:
       test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Beszel
-      homepage.instance.private.icon: beszel.png
-      homepage.instance.private.href: https://beszel.chenn.dev
-      homepage.instance.private.description: Server Stats
+      homepage.group: Infra
+      homepage.name: Beszel
+      homepage.icon: beszel.png
+      homepage.href: https://beszel.chenn.dev
+      homepage.description: Server Stats
 
       traefik.enable: true
       traefik.http.routers.beszel.rule: Host(`beszel.henn.dev`)

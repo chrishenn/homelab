@@ -16,14 +16,15 @@ services:
       - /mnt/f:/mnt/f
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: File Browser
+      homepage.instance.private.icon: filebrowser-quantum.png
+      homepage.instance.private.href: https://files.henn.dev
+      homepage.instance.private.description: File Browser
+
       traefik.enable: true
       traefik.http.routers.files.rule: Host(`files.henn.dev`)
       traefik.http.routers.files.entrypoints: websecure
       traefik.http.routers.files.middlewares: hdrs@file
       traefik.http.routers.files.tls.certresolver: cf
       traefik.http.services.files.loadbalancer.server.port: 80
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: File Browser
-      homepage.instance.private.icon: filebrowser-quantum.png
-      homepage.instance.private.href: https://files.henn.dev
-      homepage.instance.private.description: File Browser

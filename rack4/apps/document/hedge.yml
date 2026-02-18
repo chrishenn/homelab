@@ -38,11 +38,11 @@ services:
       - $DATA/hedge/config:/config
     networks: [traefik]
     labels:
-      homepage.instance.private.group: File Edit, Convert
-      homepage.instance.private.name: Hedge Doc
-      homepage.instance.private.icon: hedgedoc.png
-      homepage.instance.private.href: https://hedge.henn.dev
-      homepage.instance.private.description: Realtime Markdown Editing
+      homepage.group: File Edit, Convert
+      homepage.name: Hedge Doc
+      homepage.icon: hedgedoc.png
+      homepage.href: https://hedge.chenn.dev
+      homepage.description: Realtime Markdown Editing
 
       #      traefik.enable: true
       #      traefik.http.routers.hedge.rule: Host(`hedge.henn.dev`)

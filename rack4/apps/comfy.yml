@@ -30,11 +30,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8188']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: ComfyUI
-      homepage.instance.private.icon: comfy-ui.png
-      homepage.instance.private.href: https://comfy.chenn.dev
-      homepage.instance.private.description: Image Gen
+      homepage.group: AI
+      homepage.name: ComfyUI
+      homepage.icon: comfy-ui.png
+      homepage.href: https://comfy.chenn.dev
+      homepage.description: Image Gen
 
       traefik.enable: true
       traefik.http.routers.comfy.rule: Host(`comfy.henn.dev`)

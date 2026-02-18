@@ -16,11 +16,11 @@ services:
       test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Solverr
-      homepage.instance.private.icon: flaresolverr.png
-      homepage.instance.private.href: https://solverr.chenn.dev
-      homepage.instance.private.description: Cloudflare Captcha Solver
+      homepage.group: Infra
+      homepage.name: Solverr
+      homepage.icon: flaresolverr.png
+      homepage.href: https://solverr.chenn.dev
+      homepage.description: Cloudflare Captcha Solver
 
       traefik.enable: true
       traefik.http.routers.solverr.rule: Host(`solverr.henn.dev`)

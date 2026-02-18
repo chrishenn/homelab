@@ -13,11 +13,11 @@ services:
       - $DATA/prowlarr:/config
     networks: [traefik]
     labels:
-      homepage.instance.prive.group: Media
-      homepage.instance.prive.name: Prowlarr
-      homepage.instance.prive.icon: prowlarr.png
-      homepage.instance.prive.href: https://prowlarr.chenn.dev
-      homepage.instance.prive.description: Indexer Manager
+      homepage.group: Media
+      homepage.name: Prowlarr
+      homepage.icon: prowlarr.png
+      homepage.href: https://prowlarr.chenn.dev
+      homepage.description: Indexer Manager
 
       traefik.enable: true
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)

@@ -17,11 +17,11 @@ services:
       - $DATA/sab/config:/config
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Download
-      homepage.instance.private.name: Sab
-      homepage.instance.private.icon: sabnzbd.png
-      homepage.instance.private.href: https://sab.chenn.dev
-      homepage.instance.private.description: Usenet Downloads
+      homepage.group: Download
+      homepage.name: Sab
+      homepage.icon: sabnzbd.png
+      homepage.href: https://sab.chenn.dev
+      homepage.description: Usenet Downloads
 
       traefik.enable: true
       traefik.http.routers.sab.rule: Host(`sab.henn.dev`)

@@ -49,11 +49,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Backrest
-      homepage.instance.private.icon: backrest.png
-      homepage.instance.private.href: https://backrest.henn.dev
-      homepage.instance.private.description: Backup Automation Server
+      homepage.group: Infra
+      homepage.name: Backrest
+      homepage.icon: backrest.png
+      homepage.href: https://backrest.chenn.dev
+      homepage.description: Backup Automation Server
 
       traefik.enable: true
       traefik.http.routers.backrest.rule: Host(`backrest.henn.dev`)

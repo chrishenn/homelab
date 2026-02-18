@@ -1,0 +1,14 @@
+# https://tinyauth.app/docs/getting-started/
+---
+services:
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v4
+    container_name: tinyauth
+    restart: unless-stopped
+    environment:
+      APP_URL: https://auth.chenn.dev
+      USERS: your-username-password-hash
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tinyauth.rule: Host(`auth.chenn.dev`)
+      traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik

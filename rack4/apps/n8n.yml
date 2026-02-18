@@ -38,11 +38,11 @@ services:
       GENERIC_TIMEZONE: $TZ
     networks: [traefik]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: N8n
-      homepage.instance.private.icon: n8n.png
-      homepage.instance.private.href: https://n8n.henn.dev
-      homepage.instance.private.description: GUI Data Flow
+      homepage.group: AI
+      homepage.name: N8n
+      homepage.icon: n8n.png
+      homepage.href: https://n8n.chenn.dev
+      homepage.description: GUI Data Flow
 
       traefik.enable: true
       traefik.http.routers.n8n.rule: Host(`n8n.henn.dev`)

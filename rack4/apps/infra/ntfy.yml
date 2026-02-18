@@ -16,14 +16,15 @@ services:
     command: serve
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Ntfy
+      homepage.instance.private.icon: ntfy.png
+      homepage.instance.private.href: https://ntfy.henn.dev
+      homepage.instance.private.description: Notifications Server
+
       traefik.enable: true
       traefik.http.routers.ntfy.rule: Host(`ntfy.henn.dev`)
       traefik.http.routers.ntfy.entrypoints: websecure
       traefik.http.routers.ntfy.middlewares: hdrs@file
       traefik.http.routers.ntfy.tls.certresolver: cf
       traefik.http.services.ntfy.loadbalancer.server.port: 80
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Ntfy
-      homepage.instance.private.icon: ntfy.png
-      homepage.instance.private.href: https://ntfy.henn.dev
-      homepage.instance.private.description: Notifications Server

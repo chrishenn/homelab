@@ -13,17 +13,18 @@ services:
       test: wget --spider -q http://dumbdo:3000
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: DumbDo
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://do.henn.dev
+      homepage.instance.private.description: Todo List
+
       traefik.enable: true
       traefik.http.routers.do.rule: Host(`do.henn.dev`)
       traefik.http.routers.do.entrypoints: websecure
       traefik.http.routers.do.middlewares: hdrs@file
       traefik.http.routers.do.tls.certresolver: cf
       traefik.http.services.do.loadbalancer.server.port: 3000
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: DumbDo
-      homepage.instance.private.icon: dumbpad.png
-      homepage.instance.private.href: https://do.henn.dev
-      homepage.instance.private.description: Todo List
 
   dumbkan:
     profiles: [dumb]
@@ -34,17 +35,18 @@ services:
       - $DATA/dumbkan:/app/data
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: DumbKan
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://kan.henn.dev
+      homepage.instance.private.description: Kanban
+
       traefik.enable: true
       traefik.http.routers.kan.rule: Host(`kan.henn.dev`)
       traefik.http.routers.kan.entrypoints: websecure
       traefik.http.routers.kan.middlewares: hdrs@file
       traefik.http.routers.kan.tls.certresolver: cf
       traefik.http.services.kan.loadbalancer.server.port: 3000
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: DumbKan
-      homepage.instance.private.icon: dumbpad.png
-      homepage.instance.private.href: https://kan.henn.dev
-      homepage.instance.private.description: Kanban
 
   dumbdrop:
     profiles: [dumb]
@@ -55,17 +57,18 @@ services:
       - $DATA/dumbdrop:/app/data
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: DumbDrop
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://drop.henn.dev
+      homepage.instance.private.description: File Drop
+
       traefik.enable: true
       traefik.http.routers.drop.rule: Host(`drop.henn.dev`)
       traefik.http.routers.drop.entrypoints: websecure
       traefik.http.routers.drop.middlewares: hdrs@file
       traefik.http.routers.drop.tls.certresolver: cf
       traefik.http.services.drop.loadbalancer.server.port: 3000
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: DumbDrop
-      homepage.instance.private.icon: dumbpad.png
-      homepage.instance.private.href: https://drop.henn.dev
-      homepage.instance.private.description: File Drop
 
   dumbwhois:
     profiles: [dumb]
@@ -76,14 +79,15 @@ services:
       - $DATA/dumbwhois:/app/data
     networks: [traefik]
     labels:
+      homepage.instance.private.group: Tools
+      homepage.instance.private.name: DumbWhois
+      homepage.instance.private.icon: dumbpad.png
+      homepage.instance.private.href: https://whois.henn.dev
+      homepage.instance.private.description: Whois
+
       traefik.enable: true
       traefik.http.routers.whois.rule: Host(`whois.henn.dev`)
       traefik.http.routers.whois.entrypoints: websecure
       traefik.http.routers.whois.middlewares: hdrs@file
       traefik.http.routers.whois.tls.certresolver: cf
       traefik.http.services.whois.loadbalancer.server.port: 3000
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: DumbWhois
-      homepage.instance.private.icon: dumbpad.png
-      homepage.instance.private.href: https://whois.henn.dev
-      homepage.instance.private.description: Whois

@@ -23,17 +23,18 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
     networks: [traefik]
     labels:
+      homepage.instance.private.group: File Edit, Convert
+      homepage.instance.private.name: rxresume
+      homepage.instance.private.icon: reactive-resume.png
+      homepage.instance.private.href: https://rxresume.henn.dev
+      homepage.instance.private.description: Resume Editor
+
       traefik.enable: true
       traefik.http.routers.rxresume.rule: Host(`rxresume.henn.dev`)
       traefik.http.routers.rxresume.entrypoints: websecure
       traefik.http.routers.rxresume.middlewares: hdrs@file
       traefik.http.routers.rxresume.tls.certresolver: cf
       traefik.http.services.rxresume.loadbalancer.server.port: 3000
-      homepage.instance.private.group: File Edit, Convert
-      homepage.instance.private.name: rxresume
-      homepage.instance.private.icon: reactive-resume.png
-      homepage.instance.private.href: https://rxresume.henn.dev
-      homepage.instance.private.description: Resume Editor
 
   rxresume_chrome:
     profiles: [rxresume]

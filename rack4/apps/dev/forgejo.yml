@@ -29,11 +29,11 @@ services:
     labels:
       docker-volume-backup.stop-during-backup: forgejo
 
-      homepage.instance.private.group: Code
-      homepage.instance.private.name: Forgejo
-      homepage.instance.private.icon: forgejo.png
-      homepage.instance.private.href: https://forgejo.chenn.dev
-      homepage.instance.private.description: Git Server
+      homepage.group: Code
+      homepage.name: Forgejo
+      homepage.icon: forgejo.png
+      homepage.href: https://forgejo.chenn.dev
+      homepage.description: Git Server
 
       traefik.enable: true
       traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)

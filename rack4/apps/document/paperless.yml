@@ -31,17 +31,18 @@ services:
       - $DATA/paperless/consume:/usr/src/paperless/consume
     networks: [traefik, paperless]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Paperless
+      homepage.instance.private.icon: paperless.png
+      homepage.instance.private.href: https://paperless.henn.dev
+      homepage.instance.private.description: Document Organization
+
       traefik.enable: true
       traefik.http.routers.paperless.rule: Host(`paperless.henn.dev`)
       traefik.http.routers.paperless.entrypoints: websecure
       traefik.http.routers.paperless.middlewares: hdrs@file
       traefik.http.routers.paperless.tls.certresolver: cf
       traefik.http.services.paperless.loadbalancer.server.port: 8000
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Paperless
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless.henn.dev
-      homepage.instance.private.description: Document Organization
 
   paperless_ai:
     profiles: [paperless]
@@ -67,17 +68,18 @@ services:
       - $DATA/paperless/paperless_ai:/app/data
     networks: [traefik, paperless]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Paperless AI
+      homepage.instance.private.icon: paperless.png
+      homepage.instance.private.href: https://paperless_ai.henn.dev
+      homepage.instance.private.description: AI Document Processing
+
       traefik.enable: true
       traefik.http.routers.paperless_ai.rule: Host(`paperless_ai.henn.dev`)
       traefik.http.routers.paperless_ai.entrypoints: websecure
       traefik.http.routers.paperless_ai.middlewares: hdrs@file
       traefik.http.routers.paperless_ai.tls.certresolver: cf
       traefik.http.services.paperless_ai.loadbalancer.server.port: 3000
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Paperless AI
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless_ai.henn.dev
-      homepage.instance.private.description: AI Document Processing
 
   paperless_gpt:
     profiles: [paperless]
@@ -112,17 +114,18 @@ services:
       - $DATA/paperless/paperless_gpt:/app/prompts
     networks: [traefik, paperless]
     labels:
+      homepage.instance.private.group: AI
+      homepage.instance.private.name: Paperless GPT
+      homepage.instance.private.icon: paperless.png
+      homepage.instance.private.href: https://paperless_gpt.henn.dev
+      homepage.instance.private.description: AI Document Processing
+
       traefik.enable: true
       traefik.http.routers.paperless_gpt.rule: Host(`paperless_gpt.henn.dev`)
       traefik.http.routers.paperless_gpt.entrypoints: websecure
       traefik.http.routers.paperless_gpt.middlewares: hdrs@file
       traefik.http.routers.paperless_gpt.tls.certresolver: cf
       traefik.http.services.paperless_gpt.loadbalancer.server.port: 8080
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Paperless GPT
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless_gpt.henn.dev
-      homepage.instance.private.description: AI Document Processing
 
   paperless_postgres:
     profiles: [paperless]

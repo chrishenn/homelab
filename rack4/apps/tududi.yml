@@ -18,11 +18,11 @@ services:
       - $DATA/tududi/uploads:/app/backend/uploads
     networks: [traefik, docmost]
     labels:
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: Tududi
-      homepage.instance.private.icon: atlassian.png
-      homepage.instance.private.href: https://tududi.chenn.dev
-      homepage.instance.private.description: Project Management
+      homepage.group: Tools
+      homepage.name: Tududi
+      homepage.icon: atlassian.png
+      homepage.href: https://tududi.chenn.dev
+      homepage.description: Project Management
 
       traefik.enable: true
       traefik.http.routers.tududi.rule: Host(`tududi.henn.dev`)

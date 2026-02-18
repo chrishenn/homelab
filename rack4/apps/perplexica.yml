@@ -15,11 +15,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://perplexica:3000']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Perplexica
-      homepage.instance.private.icon: perplexity-dark.png
-      homepage.instance.private.href: https://perplexica.chenn.dev
-      homepage.instance.private.description: AI Search
+      homepage.group: AI
+      homepage.name: Perplexica
+      homepage.icon: perplexity-dark.png
+      homepage.href: https://perplexica.chenn.dev
+      homepage.description: AI Search
 
       traefik.enable: true
       traefik.http.routers.perplexica.rule: Host(`perplexica.henn.dev`)
