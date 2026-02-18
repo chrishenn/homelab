@@ -1,11 +1,30 @@
 ---
+x-rally_env: &rally_env
+  NEXT_PUBLIC_BASE_URL: https://rally.chenn.dev
+  DATABASE_URL: postgres://postgres:postgres@rally_db:5432/db
+  SECRET_PASSWORD: $RALLY_SECRET
+
+  ALLOWED_EMAILS: "*"
+  SUPPORT_EMAIL: $SMTP_USER
+  SMTP_HOST: $SMTP_HOST
+  SMTP_USER: $SMTP_USER
+  SMTP_PWD: $SMTP_TOKEN
+  SMTP_PORT: 465
+  SMTP_SECURE: true
+
+  OIDC_ISSUER_URL: https://pocketid.chenn.dev
+  OIDC_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+  OIDC_CLIENT_ID: $RALLY_OIDC_CLIENT
+  OIDC_CLIENT_SECRET: $RALLY_OIDC_SECRET
+
 services:
   rally:
     profiles: [rally]
     image: lukevella/rallly:latest
     container_name: rally
     restart: unless-stopped
-    env_file: ./rally/.env
+    environment:
+      <<: *rally_env
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
     networks: [traefik, rally]

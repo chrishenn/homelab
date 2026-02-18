@@ -4,24 +4,27 @@
 # cat ./pocketid.zip | dc run pocketid ./pocket-id import --yes --path -
 ---
 x-pid_env: &pid_env
-  PUID: $PUID
-  PGID: $PGID
+  APP_NAME: Chicken ID
   APP_URL: https://pocketid.chenn.dev
   ENCRYPTION_KEY: $POCKETID_SECRET
+  PUID: $PUID
+  PGID: $PGID
   TRUST_PROXY: true
   MAXMIND_LICENSE_KEY: $MAXMIND_LICENSE
 
+  UI_CONFIG_DISABLED: true
   SMTP_HOST: $SMTP_HOST
   SMTP_PORT: 465
   SMTP_FROM: $SMTP_USER
   SMTP_USER: $SMTP_USER
   SMTP_PASSWORD: $SMTP_TOKEN
   SMTP_TLS: tls
-  SESSION_DURATION: 360
-#  EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: true
-  EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: false
+
+  EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: true
   EMAIL_VERIFICATION_ENABLED: true
   EMAILS_VERIFIED: false
+  SESSION_DURATION: 360
+  DISABLE_ANIMATIONS: true
 
 services:
   pocketid:
@@ -29,7 +32,6 @@ services:
     image: ghcr.io/pocket-id/pocket-id:v2
     container_name: pocketid
     restart: unless-stopped
-#    env_file: ./pocketid/.env
     environment:
       <<: *pid_env
     volumes:
@@ -57,6 +59,7 @@ services:
       pangolin.public-resources.pocketid.targets[0].healthcheck.interval: 5
       pangolin.public-resources.pocketid.targets[0].healthcheck.unhealthy-interval: 5
       pangolin.public-resources.pocketid.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.pocketid.auth.sso-enabled: true
       pangolin.public-resources.pocketid.auth.sso-roles[0]: Member
 
