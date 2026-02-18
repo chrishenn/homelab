@@ -74,7 +74,6 @@ sudo nano config/traefik/traefik_config.yml
 
 # auth
 
-
 This config is for compose services on the same host as your pangolin+traefik+gerbil
 
 pangolin's traefik must trust headers from the pangolin container. I locked the pangolin ip via docker-compose
@@ -83,26 +82,27 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pang
 
 sudo nano docker-compose.yml
 the default network {name: "pangolin", reference: "default"} is defined by pangolin's docker compose
+
 ```yml
-networks: 
-  default: 
-    ipv4_address: 172.18.0.2
+networks:
+    default:
+        ipv4_address: 172.18.0.2
 ```
 
 sudo nano config/traefik/traefik_config.yml
+
 ```yml
 entryPoints:
- websecure:
-   address: :443
-   forwardedHeaders:
-     trustedIPs:
-        - 172.18.0.2/16
+    websecure:
+        address: :443
+        forwardedHeaders:
+            trustedIPs:
+                - 172.18.0.2/16
 ```
 
 Any docker svcs managed by the same traefik instance as this tinyauth one just need to attach the tinyauth middleware
 and traefik will redirect them to the tinyauth middleware for auth:
 traefik.http.routers.[your-svc-router].middlewares: tinyauth
-
 
 This means that my services on a remote site (NOT on the same docker network as pangolin+traefik+gerbil on my vps)
 will not be able to advertise that traefik router label to the correct traefik instance
@@ -126,21 +126,20 @@ There's a traefik plugin that provides and OIDC middleware, which I assume falls
 https://plugins.traefik.io/plugins/66b63d12d29fd1c421b503f5/oidc-authentication
 https://traefik-oidc-auth.sevensolutions.cc/docs/getting-started
 
-
 ---
 
 ```yml
 ---
 services:
-  tinyauth:
-    image: ghcr.io/steveiliop56/tinyauth:v4
-    container_name: tinyauth
-    restart: unless-stopped
-    environment:
-      APP_URL: https://auth.chenn.dev
-      USERS: your-username-password-hash
-    labels:
-      traefik.enable: true
-      traefik.http.routers.tinyauth.rule: Host(`auth.chenn.dev`)
-      traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
+    tinyauth:
+        image: ghcr.io/steveiliop56/tinyauth:v4
+        container_name: tinyauth
+        restart: unless-stopped
+        environment:
+            APP_URL: https://auth.chenn.dev
+            USERS: your-username-password-hash
+        labels:
+            traefik.enable: true
+            traefik.http.routers.tinyauth.rule: Host(`auth.chenn.dev`)
+            traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
 ```

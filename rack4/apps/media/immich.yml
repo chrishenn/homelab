@@ -37,11 +37,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:2283']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Media
-      homepage.instance.private.name: Immich
-      homepage.instance.private.icon: immich.png
-      homepage.instance.private.href: https://immich.henn.dev
-      homepage.instance.private.description: Private Google Photos
+      homepage.group: Media
+      homepage.name: Immich
+      homepage.icon: immich.png
+      homepage.href: https://immich.chenn.dev
+      homepage.description: Private Google Photos
 
       traefik.enable: true
       traefik.http.routers.immich.rule: Host(`immich.henn.dev`)

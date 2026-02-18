@@ -36,11 +36,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Vaultwarden
-      homepage.instance.private.icon: vaultwarden.png
-      homepage.instance.private.href: https://warden.chenn.dev
-      homepage.instance.private.description: Password Server
+      homepage.group: Infra
+      homepage.name: Vaultwarden
+      homepage.icon: vaultwarden.png
+      homepage.href: https://warden.chenn.dev
+      homepage.description: Private Bitwarden
 
       pangolin.public-resources.warden.name: warden
       pangolin.public-resources.warden.protocol: http

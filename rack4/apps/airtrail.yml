@@ -27,7 +27,7 @@ services:
       homepage.name: Airtrail
       homepage.icon: air-trail.png
       homepage.href: https://airtrail.chenn.dev
-      homepage.description: Personal Flight Mapper
+      homepage.description: Flight Mapper
 
       traefik.enable: true
       traefik.http.routers.airtrail.rule: Host(`airtrail.henn.dev`)

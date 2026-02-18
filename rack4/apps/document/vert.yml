@@ -13,7 +13,7 @@ services:
       homepage.name: Vert
       homepage.icon: converse-light.png
       homepage.href: https://vert.chenn.dev
-      homepage.description: Image and Video Converters
+      homepage.description: Image + Video Converter
 
       traefik.enable: true
       traefik.http.routers.vert.rule: Host(`vert.henn.dev`)

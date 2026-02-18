@@ -39,11 +39,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3552/api/health']
     networks: [traefik, docker]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Arcane
-      homepage.instance.private.icon: arcane.png
-      homepage.instance.private.href: https://arcane.chenn.dev
-      homepage.instance.private.description: Docker Gui (Rack 4)
+      homepage.group: Infra
+      homepage.name: Arcane
+      homepage.icon: arcane.png
+      homepage.href: https://arcane.chenn.dev
+      homepage.description: Docker Manager (Rack 4)
 
       traefik.enable: true
       traefik.http.routers.arcane.rule: Host(`arcane.henn.dev`)

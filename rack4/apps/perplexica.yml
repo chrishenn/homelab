@@ -19,7 +19,7 @@ services:
       homepage.name: Perplexica
       homepage.icon: perplexity-dark.png
       homepage.href: https://perplexica.chenn.dev
-      homepage.description: AI Search
+      homepage.description: Private AI Google
 
       traefik.enable: true
       traefik.http.routers.perplexica.rule: Host(`perplexica.henn.dev`)

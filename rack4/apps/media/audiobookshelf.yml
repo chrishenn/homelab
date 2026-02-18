@@ -17,7 +17,7 @@ services:
       homepage.name: AudioBookshelf
       homepage.icon: audiobookshelf.png
       homepage.href: https://audiobookshelf.chenn.dev
-      homepage.description: AudioBooks
+      homepage.description: AudioBook Server
 
       traefik.enable: true
       traefik.http.routers.audiobookshelf.rule: Host(`audiobookshelf.henn.dev`)

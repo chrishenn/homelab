@@ -20,7 +20,7 @@ services:
       homepage.name: OpenGist
       homepage.icon: opengist.png
       homepage.href: https://gist.chenn.dev
-      homepage.description: Gist
+      homepage.description: Private Gists
 
       traefik.enable: true
       traefik.http.routers.gist.rule: Host(`gist.henn.dev`)

@@ -19,7 +19,7 @@ services:
       homepage.name: Pairdrop
       homepage.icon: pairdrop.png
       homepage.href: https://pairdrop.chenn.dev
-      homepage.description: Airdrop
+      homepage.description: Private Airdrop
 
       traefik.enable: true
       traefik.http.routers.pairdrop.rule: Host(`pairdrop.henn.dev`)

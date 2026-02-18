@@ -1,6 +1,5 @@
 ---
 services:
-
   homepage_pub:
     profiles: [homepage_pub]
     image: ghcr.io/gethomepage/homepage:latest

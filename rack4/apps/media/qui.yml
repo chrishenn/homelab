@@ -21,11 +21,11 @@ services:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Download
-      homepage.instance.private.name: Qui
-      homepage.instance.private.icon: qui.png
-      homepage.instance.private.href: https://qui.chenn.dev
-      homepage.instance.private.description: Bittorrent GUI
+      homepage.group: Download
+      homepage.name: Qui
+      homepage.icon: qui.png
+      homepage.href: https://qui.chenn.dev
+      homepage.description: Bittorrent GUI
 
       traefik.enable: true
       traefik.http.routers.qui.rule: Host(`qui.henn.dev`)
