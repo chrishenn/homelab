@@ -4,7 +4,7 @@ x-rally_env: &rally_env
   DATABASE_URL: postgres://postgres:postgres@rally_db:5432/db
   SECRET_PASSWORD: $RALLY_SECRET
 
-  ALLOWED_EMAILS: "*"
+  ALLOWED_EMAILS: '*'
   SUPPORT_EMAIL: $SMTP_USER
   SMTP_HOST: $SMTP_HOST
   SMTP_USER: $SMTP_USER
