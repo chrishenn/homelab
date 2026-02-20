@@ -60,7 +60,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit/config:/config
       - $DATA/qbit/downloads:/qbit/downloads
-    network_mode: container:gluetun
+    network_mode: service:gluetun
     labels:
       homepage.instance.private.group: Download
       homepage.instance.private.name: Qbittorrent (VPN)

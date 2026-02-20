@@ -131,3 +131,5 @@ ZULIP_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/zulip/oidc_cli
 ZULIP_OIDC_SECRET = { provider = "onepass", value = "op://homelab/zulip/oidc_secret" }
 STIRLING_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/stirling/oidc_client" }
 STIRLING_OIDC_SECRET = { provider = "onepass", value = "op://homelab/stirling/oidc_secret" }
+GITLAB_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gitlab/oidc_client" }
+GITLAB_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gitlab/oidc_secret" }

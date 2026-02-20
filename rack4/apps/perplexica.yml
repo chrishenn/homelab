@@ -1,3 +1,4 @@
+# using 16GB of memory at idle
 ---
 services:
   perplexica:

@@ -1,3 +1,4 @@
+# using 30GB of memory at idle
 ---
 x-karakeep_env: &karakeep_env
   NEXTAUTH_URL: https://karakeep.chenn.dev

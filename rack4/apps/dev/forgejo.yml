@@ -1,6 +1,3 @@
-# pangolin SSO breaks container registry. Containerd is working on a fix and should be in shortly.
-# https://gitlab.com/gitlab-org/gitlab/-/issues/581900
-# https://github.com/containerd/containerd/pull/12857
 ---
 services:
   forgejo:
@@ -11,11 +8,24 @@ services:
     environment:
       USER_UID: $PUID
       USER_GID: $PGID
+
+      FORGEJO__service__DISABLE_REGISTRATION: true
+      FORGEJO__service__REGISTER_MANUAL_CONFIRM: false
+      FORGEJO__service__REGISTER_EMAIL_CONFIRM: false
+
+      FORGEJO__openid__ENABLE_OPENID_SIGNUP: true
+      FORGEJO__openid__ENABLE_OPENID_SIGNIN: true
+      FORGEJO__openid__WHITELISTED_URIS: '["$OIDC"]'
+
+      FORGEJO__repository__ENABLE_PUSH_CREATE_USER: true
+      FORGEJO__repository__ENABLE_PUSH_CREATE_ORG: true
+
       FORGEJO__database__DB_TYPE: postgres
       FORGEJO__database__HOST: forgejo_db:5432
       FORGEJO__database__NAME: forgejo
       FORGEJO__database__USER: forgejo
       FORGEJO__database__PASSWD: forgejo
+
       # listen on 22 but put 2424 in the repo urls (proxy listens on :2424 and routes tcp to container's :22)
       FORGEJO__server__SSH_PORT: 2424
       FORGEJO__server__SSH_LISTEN_PORT: 22
@@ -63,24 +73,25 @@ services:
       pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
       pangolin.public-resources.forgejo.auth.sso-users[0]: ${EMAIL}
 
-      # path that forgejo uses to generate a jwt for `docker login`.
-      # Possibly we could remove this bypass when the issue (mentioned up top) is resolved
-      # note: pangolin SSO on this route also breaks docker login for the local forgejo.henn.dev url, probably since
-      # the server is configured to serve on the public url forgejo.chenn.dev
       pangolin.public-resources.forgejo.rules[0].action: allow
       pangolin.public-resources.forgejo.rules[0].match: path
       pangolin.public-resources.forgejo.rules[0].value: /v2/*
       pangolin.public-resources.forgejo.rules[0].priority: 0
 
-      pangolin.public-resources.forgejo.rules[1].action: pass
-      pangolin.public-resources.forgejo.rules[1].match: country
-      pangolin.public-resources.forgejo.rules[1].value: US
-      pangolin.public-resources.forgejo.rules[1].priority: 10
+      pangolin.public-resources.forgejo.rules[1].action: allow
+      pangolin.public-resources.forgejo.rules[1].match: path
+      pangolin.public-resources.forgejo.rules[1].value: /api/*
+      pangolin.public-resources.forgejo.rules[1].priority: 5
 
-      pangolin.public-resources.forgejo.rules[2].action: deny
+      pangolin.public-resources.forgejo.rules[2].action: pass
       pangolin.public-resources.forgejo.rules[2].match: country
-      pangolin.public-resources.forgejo.rules[2].value: ALL
-      pangolin.public-resources.forgejo.rules[2].priority: 20
+      pangolin.public-resources.forgejo.rules[2].value: US
+      pangolin.public-resources.forgejo.rules[2].priority: 10
+
+      pangolin.public-resources.forgejo.rules[3].action: deny
+      pangolin.public-resources.forgejo.rules[3].match: country
+      pangolin.public-resources.forgejo.rules[3].value: ALL
+      pangolin.public-resources.forgejo.rules[3].priority: 20
 
       pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
       pangolin.public-resources.forgejo_ssh.protocol: tcp

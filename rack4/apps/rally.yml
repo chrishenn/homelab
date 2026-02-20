@@ -1,3 +1,4 @@
+# using 14GB of memory at idle
 ---
 x-rally_env: &rally_env
   NEXT_PUBLIC_BASE_URL: https://rally.chenn.dev
