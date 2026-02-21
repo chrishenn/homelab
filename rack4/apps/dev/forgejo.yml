@@ -69,9 +69,9 @@ services:
       pangolin.public-resources.forgejo.targets[0].healthcheck.port: 3000
       pangolin.public-resources.forgejo.targets[0].healthcheck.interval: 3
       pangolin.public-resources.forgejo.targets[0].healthcheck.path: /
+
       pangolin.public-resources.forgejo.auth.sso-enabled: true
       pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
-      pangolin.public-resources.forgejo.auth.sso-users[0]: ${EMAIL}
 
       pangolin.public-resources.forgejo.rules[0].action: allow
       pangolin.public-resources.forgejo.rules[0].match: path

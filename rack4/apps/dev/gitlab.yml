@@ -128,22 +128,14 @@ services:
       pangolin.public-resources.gitlab.targets[0].method: http
       pangolin.public-resources.gitlab.targets[0].port: 80
 
-      pangolin.public-resources.gitlab.auth.sso-enabled: true
-      pangolin.public-resources.gitlab.auth.sso-roles[0]: Member
-
       pangolin.public-resources.gitlab.rules[0].action: allow
-      pangolin.public-resources.gitlab.rules[0].match: path
-      pangolin.public-resources.gitlab.rules[0].value: /api/*
-      pangolin.public-resources.gitlab.rules[0].priority: 0
-
-      pangolin.public-resources.gitlab.rules[1].action: pass
+      pangolin.public-resources.gitlab.rules[0].match: country
+      pangolin.public-resources.gitlab.rules[0].value: US
+      pangolin.public-resources.gitlab.rules[0].priority: 10
+      pangolin.public-resources.gitlab.rules[1].action: deny
       pangolin.public-resources.gitlab.rules[1].match: country
-      pangolin.public-resources.gitlab.rules[1].value: US
-      pangolin.public-resources.gitlab.rules[1].priority: 10
-      pangolin.public-resources.gitlab.rules[2].action: deny
-      pangolin.public-resources.gitlab.rules[2].match: country
-      pangolin.public-resources.gitlab.rules[2].value: ALL
-      pangolin.public-resources.gitlab.rules[2].priority: 20
+      pangolin.public-resources.gitlab.rules[1].value: ALL
+      pangolin.public-resources.gitlab.rules[1].priority: 20
 
       pangolin.public-resources.gitlab_r.name: gitlab_r
       pangolin.public-resources.gitlab_r.protocol: http
@@ -151,6 +143,15 @@ services:
       pangolin.public-resources.gitlab_r.ssl: true
       pangolin.public-resources.gitlab_r.targets[0].method: http
       pangolin.public-resources.gitlab_r.targets[0].port: 5050
+
+      pangolin.public-resources.gitlab_r.rules[0].action: allow
+      pangolin.public-resources.gitlab_r.rules[0].match: country
+      pangolin.public-resources.gitlab_r.rules[0].value: US
+      pangolin.public-resources.gitlab_r.rules[0].priority: 10
+      pangolin.public-resources.gitlab_r.rules[1].action: deny
+      pangolin.public-resources.gitlab_r.rules[1].match: country
+      pangolin.public-resources.gitlab_r.rules[1].value: ALL
+      pangolin.public-resources.gitlab_r.rules[1].priority: 20
 
       pangolin.public-resources.gitlab_ssh.name: gitlab_ssh
       pangolin.public-resources.gitlab_ssh.protocol: tcp
