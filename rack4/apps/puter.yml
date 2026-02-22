@@ -12,7 +12,7 @@ services:
       PUID: $PUID
       PGID: $PGID
     volumes:
-      - ./puter/config:/etc/puter
+      - ./puter:/etc/puter
       - $DATA/puter/data:/var/puter
     networks: [traefik]
     labels:
