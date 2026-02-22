@@ -33,11 +33,7 @@ services:
       pangolin.public-resources.seerr.ssl: true
       pangolin.public-resources.seerr.targets[0].method: http
       pangolin.public-resources.seerr.targets[0].port: 5055
-      pangolin.public-resources.seerr.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.seerr.targets[0].healthcheck.hostname: seerr
-      pangolin.public-resources.seerr.targets[0].healthcheck.port: 5055
-      pangolin.public-resources.seerr.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.seerr.targets[0].healthcheck.path: /
+
       pangolin.public-resources.seerr.auth.sso-enabled: true
       pangolin.public-resources.seerr.auth.sso-roles[0]: Member
       pangolin.public-resources.seerr.rules[0].action: pass

@@ -33,13 +33,7 @@ services:
       pangolin.public-resources.beszel.ssl: true
       pangolin.public-resources.beszel.targets[0].method: http
       pangolin.public-resources.beszel.targets[0].port: 8090
-      pangolin.public-resources.beszel.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.beszel.targets[0].healthcheck.hostname: beszel
-      pangolin.public-resources.beszel.targets[0].healthcheck.port: 8090
-      pangolin.public-resources.beszel.targets[0].healthcheck.path: /
-      pangolin.public-resources.beszel.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.beszel.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.beszel.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.beszel.auth.sso-enabled: true
       pangolin.public-resources.beszel.auth.sso-roles[0]: Member
       pangolin.public-resources.beszel.auth.sso-users[0]: ${EMAIL}

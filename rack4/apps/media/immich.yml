@@ -56,13 +56,6 @@ services:
       pangolin.public-resources.immich.ssl: true
       pangolin.public-resources.immich.targets[0].method: http
       pangolin.public-resources.immich.targets[0].port: 2283
-      pangolin.public-resources.immich.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.immich.targets[0].healthcheck.hostname: immich
-      pangolin.public-resources.immich.targets[0].healthcheck.port: 2283
-      pangolin.public-resources.immich.targets[0].healthcheck.path: /
-      pangolin.public-resources.immich.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.immich.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.immich.targets[0].healthcheck.timeout: 5
 
       pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}
       pangolin.public-resources.immich.auth.basic-auth.password: ${IMMICH_PANGOLIN_AUTH_PASS}

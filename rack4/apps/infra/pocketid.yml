@@ -52,13 +52,6 @@ services:
       pangolin.public-resources.pocketid.ssl: true
       pangolin.public-resources.pocketid.targets[0].method: http
       pangolin.public-resources.pocketid.targets[0].port: 1411
-      pangolin.public-resources.pocketid.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.pocketid.targets[0].healthcheck.hostname: pocketid
-      pangolin.public-resources.pocketid.targets[0].healthcheck.port: 1411
-      pangolin.public-resources.pocketid.targets[0].healthcheck.path: /
-      pangolin.public-resources.pocketid.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.pocketid.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.pocketid.targets[0].healthcheck.timeout: 5
 
       pangolin.public-resources.pocketid.auth.sso-enabled: true
       pangolin.public-resources.pocketid.auth.sso-roles[0]: Member

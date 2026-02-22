@@ -47,13 +47,7 @@ services:
       pangolin.public-resources.stash.ssl: true
       pangolin.public-resources.stash.targets[0].method: http
       pangolin.public-resources.stash.targets[0].port: 5000
-      pangolin.public-resources.stash.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.stash.targets[0].healthcheck.hostname: bytestash
-      pangolin.public-resources.stash.targets[0].healthcheck.port: 5000
-      pangolin.public-resources.stash.targets[0].healthcheck.path: /
-      pangolin.public-resources.stash.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.stash.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.stash.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.stash.auth.sso-enabled: true
       pangolin.public-resources.stash.auth.sso-roles[0]: Member
       pangolin.public-resources.stash.rules[0].action: pass

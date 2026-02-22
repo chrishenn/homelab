@@ -45,13 +45,7 @@ services:
       pangolin.public-resources.linkding.ssl: true
       pangolin.public-resources.linkding.targets[0].method: http
       pangolin.public-resources.linkding.targets[0].port: 9090
-      pangolin.public-resources.linkding.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.linkding.targets[0].healthcheck.hostname: linkding
-      pangolin.public-resources.linkding.targets[0].healthcheck.port: 9090
-      pangolin.public-resources.linkding.targets[0].healthcheck.path: /
-      pangolin.public-resources.linkding.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.linkding.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.linkding.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.linkding.auth.sso-enabled: true
       pangolin.public-resources.linkding.auth.sso-roles[0]: Member
       pangolin.public-resources.linkding.rules[0].action: pass

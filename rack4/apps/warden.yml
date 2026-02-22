@@ -48,13 +48,7 @@ services:
       pangolin.public-resources.warden.ssl: true
       pangolin.public-resources.warden.targets[0].method: http
       pangolin.public-resources.warden.targets[0].port: 80
-      pangolin.public-resources.warden.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.warden.targets[0].healthcheck.hostname: warden
-      pangolin.public-resources.warden.targets[0].healthcheck.port: 80
-      pangolin.public-resources.warden.targets[0].healthcheck.path: /
-      pangolin.public-resources.warden.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.warden.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.warden.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.warden.auth.sso-enabled: true
       pangolin.public-resources.warden.auth.sso-roles[0]: Member
       pangolin.public-resources.warden.auth.sso-users[0]: ${EMAIL}

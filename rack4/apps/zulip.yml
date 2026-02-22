@@ -79,15 +79,7 @@ services:
       pangolin.public-resources.zulip.ssl: true
       pangolin.public-resources.zulip.targets[0].method: http
       pangolin.public-resources.zulip.targets[0].port: 80
-      pangolin.public-resources.zulip.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.zulip.targets[0].healthcheck.hostname: zulip
-      pangolin.public-resources.zulip.targets[0].healthcheck.port: 80
-      pangolin.public-resources.zulip.targets[0].healthcheck.path: /health
-      pangolin.public-resources.zulip.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.zulip.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.zulip.targets[0].healthcheck.timeout: 5
-      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].name: Host
-      pangolin.public-resources.zulip.targets[0].healthcheck.headers[0].value: zulip.chenn.dev
+
       pangolin.public-resources.zulip.auth.sso-enabled: true
       pangolin.public-resources.zulip.auth.sso-roles[0]: Member
       pangolin.public-resources.zulip.rules[0].action: pass

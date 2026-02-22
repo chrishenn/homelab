@@ -22,13 +22,7 @@ services:
       pangolin.public-resources.homepage_pub.ssl: true
       pangolin.public-resources.homepage_pub.targets[0].method: http
       pangolin.public-resources.homepage_pub.targets[0].port: 3000
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.hostname: homepage_pub
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.port: 3000
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.path: /
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.homepage_pub.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.homepage_pub.auth.sso-enabled: true
       pangolin.public-resources.homepage_pub.auth.sso-roles[0]: Member
       pangolin.public-resources.homepage_pub.rules[0].action: pass

@@ -26,13 +26,7 @@ services:
       pangolin.public-resources.ittools.ssl: true
       pangolin.public-resources.ittools.targets[0].method: http
       pangolin.public-resources.ittools.targets[0].port: 80
-      pangolin.public-resources.ittools.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.ittools.targets[0].healthcheck.hostname: ittools
-      pangolin.public-resources.ittools.targets[0].healthcheck.port: 80
-      pangolin.public-resources.ittools.targets[0].healthcheck.path: /
-      pangolin.public-resources.ittools.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.ittools.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.ittools.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.ittools.auth.sso-enabled: true
       pangolin.public-resources.ittools.auth.sso-roles[0]: Member
       pangolin.public-resources.ittools.rules[0].action: pass

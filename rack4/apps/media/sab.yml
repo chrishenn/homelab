@@ -36,13 +36,7 @@ services:
       pangolin.public-resources.sab.ssl: true
       pangolin.public-resources.sab.targets[0].method: http
       pangolin.public-resources.sab.targets[0].port: 8080
-      pangolin.public-resources.sab.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.sab.targets[0].healthcheck.hostname: sab
-      pangolin.public-resources.sab.targets[0].healthcheck.port: 8080
-      pangolin.public-resources.sab.targets[0].healthcheck.path: /
-      pangolin.public-resources.sab.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.sab.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.sab.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.sab.auth.sso-enabled: true
       pangolin.public-resources.sab.auth.sso-roles[0]: Member
       pangolin.public-resources.sab.auth.sso-users[0]: ${EMAIL}

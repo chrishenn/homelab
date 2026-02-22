@@ -68,13 +68,7 @@ services:
       pangolin.public-resources.backrest.ssl: true
       pangolin.public-resources.backrest.targets[0].method: http
       pangolin.public-resources.backrest.targets[0].port: 9898
-      pangolin.public-resources.backrest.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.backrest.targets[0].healthcheck.hostname: backrest
-      pangolin.public-resources.backrest.targets[0].healthcheck.port: 9898
-      pangolin.public-resources.backrest.targets[0].healthcheck.path: /
-      pangolin.public-resources.backrest.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.backrest.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.backrest.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.backrest.auth.sso-enabled: true
       pangolin.public-resources.backrest.auth.sso-roles[0]: Member
       pangolin.public-resources.backrest.auth.sso-users[0]: ${EMAIL}

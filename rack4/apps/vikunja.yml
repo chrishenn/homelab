@@ -47,13 +47,7 @@ services:
       pangolin.public-resources.vikunja.ssl: true
       pangolin.public-resources.vikunja.targets[0].method: http
       pangolin.public-resources.vikunja.targets[0].port: 3456
-      pangolin.public-resources.vikunja.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.vikunja.targets[0].healthcheck.hostname: vikunja
-      pangolin.public-resources.vikunja.targets[0].healthcheck.port: 3456
-      pangolin.public-resources.vikunja.targets[0].healthcheck.path: /
-      pangolin.public-resources.vikunja.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.vikunja.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.vikunja.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.vikunja.auth.sso-enabled: true
       pangolin.public-resources.vikunja.auth.sso-roles[0]: Member
       pangolin.public-resources.vikunja.rules[0].action: pass

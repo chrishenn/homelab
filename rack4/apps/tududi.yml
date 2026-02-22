@@ -37,11 +37,7 @@ services:
       pangolin.public-resources.tududi.ssl: true
       pangolin.public-resources.tududi.targets[0].method: http
       pangolin.public-resources.tududi.targets[0].port: 3002
-      pangolin.public-resources.tududi.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.tududi.targets[0].healthcheck.hostname: tududi
-      pangolin.public-resources.tududi.targets[0].healthcheck.port: 3002
-      pangolin.public-resources.tududi.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.tududi.targets[0].healthcheck.path: /
+
       pangolin.public-resources.tududi.auth.sso-enabled: true
       pangolin.public-resources.tududi.auth.sso-roles[0]: Member
       pangolin.public-resources.tududi.auth.sso-users[0]: ${EMAIL}

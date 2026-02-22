@@ -55,11 +55,7 @@ services:
       pangolin.public-resources.ollama.ssl: true
       pangolin.public-resources.ollama.targets[0].method: http
       pangolin.public-resources.ollama.targets[0].port: 8080
-      pangolin.public-resources.ollama.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.ollama.targets[0].healthcheck.hostname: openwebui
-      pangolin.public-resources.ollama.targets[0].healthcheck.port: 8080
-      pangolin.public-resources.ollama.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.ollama.targets[0].healthcheck.path: /
+
       pangolin.public-resources.ollama.auth.sso-enabled: true
       pangolin.public-resources.ollama.auth.sso-roles[0]: Member
       pangolin.public-resources.ollama.rules[0].action: pass

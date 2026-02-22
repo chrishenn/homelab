@@ -142,14 +142,6 @@ services:
       pangolin.public-resources.gitlab_r.targets[0].method: http
       pangolin.public-resources.gitlab_r.targets[0].port: 5050
 
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.hostname: gitlab
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.port: 5050
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.path: /
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.gitlab_r.targets[0].healthcheck.timeout: 5
-
       pangolin.public-resources.gitlab_r.rules[0].action: allow
       pangolin.public-resources.gitlab_r.rules[0].match: country
       pangolin.public-resources.gitlab_r.rules[0].value: US

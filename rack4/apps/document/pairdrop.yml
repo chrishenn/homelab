@@ -34,11 +34,7 @@ services:
       pangolin.public-resources.pairdrop.ssl: true
       pangolin.public-resources.pairdrop.targets[0].method: http
       pangolin.public-resources.pairdrop.targets[0].port: 3000
-      pangolin.public-resources.pairdrop.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.pairdrop.targets[0].healthcheck.hostname: pairdrop
-      pangolin.public-resources.pairdrop.targets[0].healthcheck.port: 3000
-      pangolin.public-resources.pairdrop.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.pairdrop.targets[0].healthcheck.path: /
+
       pangolin.public-resources.pairdrop.auth.sso-enabled: true
       pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
       pangolin.public-resources.pairdrop.rules[0].action: pass

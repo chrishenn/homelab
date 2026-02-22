@@ -26,11 +26,7 @@ services:
       pangolin.public-resources.wordle.ssl: true
       pangolin.public-resources.wordle.targets[0].method: http
       pangolin.public-resources.wordle.targets[0].port: 80
-      pangolin.public-resources.wordle.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.wordle.targets[0].healthcheck.hostname: wordle
-      pangolin.public-resources.wordle.targets[0].healthcheck.port: 80
-      pangolin.public-resources.wordle.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.wordle.targets[0].healthcheck.path: /
+
       pangolin.public-resources.wordle.auth.sso-enabled: true
       pangolin.public-resources.wordle.auth.sso-roles[0]: Member
       pangolin.public-resources.wordle.rules[0].action: pass

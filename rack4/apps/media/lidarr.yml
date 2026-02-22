@@ -35,11 +35,7 @@ services:
       pangolin.public-resources.lidarr.ssl: true
       pangolin.public-resources.lidarr.targets[0].method: http
       pangolin.public-resources.lidarr.targets[0].port: 8686
-      pangolin.public-resources.lidarr.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.lidarr.targets[0].healthcheck.hostname: lidarr
-      pangolin.public-resources.lidarr.targets[0].healthcheck.port: 8686
-      pangolin.public-resources.lidarr.targets[0].healthcheck.interval: 3
-      pangolin.public-resources.lidarr.targets[0].healthcheck.path: /
+
       pangolin.public-resources.lidarr.auth.sso-enabled: true
       pangolin.public-resources.lidarr.auth.sso-roles[0]: Member
 

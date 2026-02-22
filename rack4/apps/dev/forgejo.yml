@@ -65,14 +65,6 @@ services:
       pangolin.public-resources.forgejo.targets[0].method: http
       pangolin.public-resources.forgejo.targets[0].port: 3000
 
-      pangolin.public-resources.forgejo.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.forgejo.targets[0].healthcheck.hostname: forgejo
-      pangolin.public-resources.forgejo.targets[0].healthcheck.port: 3000
-      pangolin.public-resources.forgejo.targets[0].healthcheck.path: /
-      pangolin.public-resources.forgejo.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.forgejo.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.forgejo.targets[0].healthcheck.timeout: 5
-
       pangolin.public-resources.forgejo.auth.sso-enabled: true
       pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
 

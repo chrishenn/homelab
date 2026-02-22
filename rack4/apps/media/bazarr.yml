@@ -33,13 +33,7 @@ services:
       pangolin.public-resources.bazarr.ssl: true
       pangolin.public-resources.bazarr.targets[0].method: http
       pangolin.public-resources.bazarr.targets[0].port: 6767
-      pangolin.public-resources.bazarr.targets[0].healthcheck.enabled: true
-      pangolin.public-resources.bazarr.targets[0].healthcheck.hostname: bazarr
-      pangolin.public-resources.bazarr.targets[0].healthcheck.port: 6767
-      pangolin.public-resources.bazarr.targets[0].healthcheck.path: /
-      pangolin.public-resources.bazarr.targets[0].healthcheck.interval: 5
-      pangolin.public-resources.bazarr.targets[0].healthcheck.unhealthy-interval: 5
-      pangolin.public-resources.bazarr.targets[0].healthcheck.timeout: 5
+
       pangolin.public-resources.bazarr.auth.sso-enabled: true
       pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
       pangolin.public-resources.bazarr.rules[0].action: pass
