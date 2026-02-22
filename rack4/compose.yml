@@ -109,3 +109,4 @@ include:
   - apps/vikunja.yml
   - apps/warden.yml
   - apps/zulip.yml
+  - apps/puter.yml

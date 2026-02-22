@@ -1,0 +1,32 @@
+{
+  "config_name": "generated default config",
+  "allow_nipio_domains": true,
+  "env": "prod",
+  "nginx_mode": true,
+  "server_id": "localhost",
+  "http_port": "auto",
+  "domain": "puter.henn.dev",
+  "protocol": "http",
+  "contact_email": "hey@example.com",
+  "services": {
+    "database": {
+      "engine": "sqlite",
+      "path": "puter-database.sqlite"
+    },
+    "thumbnails": {
+      "engine": "purejs"
+    },
+    "file-cache": {
+      "disk_limit": 16384,
+      "disk_max_size": 16384,
+      "precache_size": 16384,
+      "path": "./file-cache"
+    }
+  },
+  "cookie_name": "1b6800fd-53df-4863-9890-27753537abec",
+  "jwt_secret": "b4e3c7f0-588a-42f9-a6e2-cec601380c28",
+  "url_signature_secret": "91328ca2-0095-4709-9efa-474283fc50f0",
+  "private_uid_secret": "d20efd55a37f3bc31972ed94b4eb5727aa2abecc9b01da46",
+  "private_uid_namespace": "83840b3d-7c55-40bc-b3d0-bb32a90c373e",
+  "": null
+}

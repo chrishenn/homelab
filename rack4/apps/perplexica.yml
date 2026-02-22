@@ -1,4 +1,5 @@
 # using 16GB of memory at idle
+# note: perplexica is single-user
 ---
 services:
   perplexica:
@@ -6,6 +7,10 @@ services:
     image: itzcrazykns1337/perplexica:main
     container_name: perplexica
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
     environment:
       DATA_DIR: /home/perplexica
     volumes:
@@ -38,8 +43,10 @@ services:
       pangolin.public-resources.perplexica.targets[0].healthcheck.enabled: true
       pangolin.public-resources.perplexica.targets[0].healthcheck.hostname: perplexica
       pangolin.public-resources.perplexica.targets[0].healthcheck.port: 3000
-      pangolin.public-resources.perplexica.targets[0].healthcheck.interval: 3
       pangolin.public-resources.perplexica.targets[0].healthcheck.path: /
+      pangolin.public-resources.perplexica.targets[0].healthcheck.interval: 5
+      pangolin.public-resources.perplexica.targets[0].healthcheck.unhealthy-interval: 5
+      pangolin.public-resources.perplexica.targets[0].healthcheck.timeout: 5
       pangolin.public-resources.perplexica.auth.sso-enabled: true
       pangolin.public-resources.perplexica.auth.sso-roles[0]: Member
       pangolin.public-resources.perplexica.auth.sso-users[0]: ${EMAIL}

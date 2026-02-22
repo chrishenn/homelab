@@ -1,0 +1,24 @@
+# mkdir -p $DATA/puter/data $DATA/puter/config && sudo chown -R 1000:1000 $DATA/puter
+# in the config.json: "allow_nipio_domains": true
+---
+services:
+  puter:
+    profiles: [puter]
+    image: ghcr.io/heyputer/puter:latest
+    container_name: puter
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - ./puter/config:/etc/puter
+      - $DATA/puter/data:/var/puter
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.puter.rule: Host(`puter.henn.dev`)
+      traefik.http.routers.puter.entrypoints: websecure
+      traefik.http.routers.puter.middlewares: hdrs@file
+      traefik.http.routers.puter.tls.certresolver: cf
+      traefik.http.services.puter.loadbalancer.server.port: 4100

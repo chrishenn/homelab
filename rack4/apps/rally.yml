@@ -24,6 +24,10 @@ services:
     image: lukevella/rallly:latest
     container_name: rally
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
     environment:
       <<: *rally_env
     healthcheck:
