@@ -29,15 +29,18 @@ gitlab
 # you MUST have a project first! the repo is inside the project
 gnewrepo
 
-# login
+# login. If your user is provided by OIDC/external IDP, use your gitlab PAT as password
 export reg='registry.gitlab.chenn.dev'
 docker login $reg
 
-# project 'testproject' -> deploy -> container registry -> repository 'testproject' -> tag 'latest'
-docker build -t $reg/root/regtest:latest . --load --push
+# this will also work, but you must push to the registry url
+docker login -u chris gitlab.chenn.dev
 
-# project 'testproject' -> deploy -> container registry -> repository 'repo_1' -> tag 'latest'
-docker build -t $reg/root/regtest/repo_1:latest . --load --push
+# project 'regtest' -> deploy -> container registry -> repository 'regtest' -> tag 'latest'
+docker build -t $reg/chris/regtest:latest . --load --push
+
+# project 'regtest' -> deploy -> container registry -> repository 'repo_1' -> tag 'latest'
+docker build -t $reg/chris/regtest/repo_1:latest . --load --push
 ```
 
 gitlab (delete repo)

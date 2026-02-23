@@ -42,6 +42,12 @@ VPS0_IP = "76.13.30.83"
 VPS0_PORT = "2200"
 VPS0_REPO = "/home/chris/pangolin"
 
+GITLAB_HOST = "gitlab.chenn.dev"
+
+BERG_USR = "chris"
+BERG_BASE_URL = "forgejo.chenn.dev"
+BERG_SSH_PORT = 2424
+
 [tasks.pre-commit]
 alias = "pc"
 run = "hk run pre-commit"

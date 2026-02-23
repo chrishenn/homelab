@@ -1,7 +1,3 @@
 [tools]
 "cargo:codeberg-cli" = "latest"
 glab = "latest"
-
-[env]
-GITLAB = "gitlab.chenn.dev"
-BERG_BASE_URL = "forgejo.chenn.dev"
