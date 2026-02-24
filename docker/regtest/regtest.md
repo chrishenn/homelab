@@ -66,8 +66,3 @@ forgejo cli (too old to use)
 git remote add origin ssh://git@forgejo.chenn.dev:2424/chris/$(basename $PWD).git
 git push -u origin main
 ```
-
----
-
-newt | WARN: 2026/02/21 01:35:13 Target 44: health check failed: Get "http://rally:3000/": dial tcp: lookup rally on 127.0.0.11:53: no such host
-newt | WARN: 2026/02/21 01:35:13 Target 77: health check failed: Get "http://karakeep:3000/": dial tcp: lookup karakeep on 127.0.0.11:53: no such host
