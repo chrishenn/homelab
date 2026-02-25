@@ -26,6 +26,7 @@ POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_
 MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license" }
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
+SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
 
 ARCANE_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/arcane/encryption_key" }
 ARCANE_API_KEY = { provider = "onepass", value = "op://homelab/arcane/api_key" }

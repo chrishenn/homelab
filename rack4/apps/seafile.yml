@@ -1,62 +1,71 @@
 ---
 x-seafile_env: &seafile_env
-  INIT_SEAFILE_MYSQL_ROOT_PASSWORD: seafile
+  MYSQL_ROOT_PASSWORD: 1234
+  INIT_SEAFILE_MYSQL_ROOT_PASSWORD: 1234
+  DB_HOST: seafile_db
   SEAFILE_MYSQL_DB_HOST: seafile_db
+  DB_PORT: 3306
   SEAFILE_MYSQL_DB_PORT: 3306
+  DB_USER: seafile
   SEAFILE_MYSQL_DB_USER: seafile
+  DB_PASSWORD: seafile
   SEAFILE_MYSQL_DB_PASSWORD: seafile
+
+  DB_NAME: seahub_db
+  SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: seahub_db
   SEAFILE_MYSQL_DB_CCNET_DB_NAME: ccnet_db
   SEAFILE_MYSQL_DB_SEAFILE_DB_NAME: seafile_db
-  SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: seahub_db
+
+  MYSQL_LOG_CONSOLE: true
+  MARIADB_AUTO_UPGRADE: 1
+
   TIME_ZONE: $TZ
-  INIT_SEAFILE_ADMIN_EMAIL: ${EMAIL}
-  INIT_SEAFILE_ADMIN_PASSWORD: ${PASS}
   SEAFILE_SERVER_HOSTNAME: seafile.henn.dev
   SEAFILE_SERVER_PROTOCOL: https
+  INIT_SEAFILE_ADMIN_EMAIL: ${EMAIL}
+  INIT_SEAFILE_ADMIN_PASSWORD: ${PASS}
   SITE_ROOT: /
   NON_ROOT: false
-  JWT_PRIVATE_KEY: JWT_PRIVATE_KEY
+  JWT_PRIVATE_KEY: ${SEAFILE_SECRET}
+
   SEAFILE_LOG_TO_STDOUT: false
   ENABLE_GO_FILESERVER: true
   ENABLE_SEADOC: true
   SEADOC_SERVER_URL: https://seafile.henn.dev/sdoc-server
+
   CACHE_PROVIDER: redis
   REDIS_HOST: seafile_redis
   REDIS_PORT: 6379
-  REDIS_PASSWORD: REDIS_PASSWORD
-  MEMCACHED_HOST: seafile_memcached
-  MEMCACHED_PORT: 11211
-  SEAF_SERVER_STORAGE_TYPE: disk
+  REDIS_PASSWORD: 1234
+#  MEMCACHED_HOST: seafile_memcached
+#  MEMCACHED_PORT: 11211
   ENABLE_NOTIFICATION_SERVER: true
   INNER_NOTIFICATION_SERVER_URL: http://seafile_notifications:8083
   NOTIFICATION_SERVER_URL: https://seafile.henn.dev/notification
+
   ENABLE_SEAFILE_AI: false
   SEAFILE_AI_SERVER_URL: http://seafile_ai:8888
   SEAFILE_AI_SECRET_KEY: SEAFILE_AI_SECRET_KEY
+
   MD_FILE_COUNT_LIMIT: 100000
   EMAIL_HOST_PASSWORD: ${SMTP_TOKEN}
 
-  DB_HOST: seafile_db
-  DB_PORT: 3306
-  DB_USER: seafile
-  DB_PASSWORD: seafile
-  DB_NAME: seahub_db
+  SEAF_SERVER_STORAGE_TYPE: disk
+  MD_STORAGE_TYPE: disk
+  SS_STORAGE_TYPE: disk
 
   SEAHUB_SERVICE_URL: http://seafile
+  INNER_SEAHUB_SERVICE_URL: http://seafile
   NOTIFICATION_SERVER_LOG_LEVEL: info
   MD_PORT: 8084
   MD_LOG_LEVEL: info
   MD_MAX_CACHE_SIZE: 2GB
   MD_CHECK_UPDATE_INTERVAL: 30m
-  MD_STORAGE_TYPE: disk
-  
-  INNER_SEAHUB_SERVICE_URL: http://seafile
   THUMBNAIL_IMAGE_ORIGINAL_SIZE_LIMIT: 256
 
   SS_FIRST_ADMIN_USER: ${EMAIL}
   SS_FIRST_ADMIN_PASSWORD: ${PASS}
   SS_MAX_OBJ_CACHE_SIZE: 10GB
-  SS_STORAGE_TYPE: disk
   SS_LOG_TO_STDOUT: false
   SS_LOG_DIR: /opt/seasearch/data/log
   SS_LOG_LEVEL: info
@@ -74,10 +83,6 @@ x-seafile_env: &seafile_env
   SS_CLUSTER_MANAGER_HOST: 0.0.0.0
   SS_CLUSTER_MANAGER_PORT: 4081
 
-  MYSQL_ROOT_PASSWORD: seafile
-  MYSQL_LOG_CONSOLE: true
-  MARIADB_AUTO_UPGRADE: 1
-
 services:
 
   seafile:
@@ -92,11 +97,10 @@ services:
     networks: [traefik, seafile]
     labels:
       traefik.enable: true
-      traefik.http.routers.seafile.rule: Host(`seafile.henn.dev`) && PathPrefix(`/`)
+      traefik.http.routers.seafile.rule: Host(`seafile.henn.dev`)
       traefik.http.routers.seafile.entrypoints: websecure
       traefik.http.routers.seafile.middlewares: hdrs@file
       traefik.http.routers.seafile.tls.certresolver: cf
-      traefik.http.routers.seafile.priority: 1
       traefik.http.services.seafile.loadbalancer.server.port: 80
 
   seadoc:
@@ -118,20 +122,18 @@ services:
       traefik.http.routers.seadoc.middlewares: seadoc_strip
       traefik.http.routers.seadoc.tls.certresolver: cf
       traefik.http.routers.seadoc.service: seadoc
-      traefik.http.routers.seadoc.priority: 10
 
       traefik.http.routers.seadoc_ws.rule: Host(`seafile.henn.dev`) && PathPrefix(`/socket.io`)
       traefik.http.routers.seadoc_ws.entrypoints: websecure
       traefik.http.routers.seadoc_ws.tls.certresolver: cf
       traefik.http.routers.seadoc_ws.service: seadoc
-      traefik.http.routers.seadoc_ws.priority: 10
 
       traefik.http.services.seadoc.loadbalancer.server.port: 80
 
   seafile_notifications:
     profiles: [seafile]
     image: ${NOTIFICATION_SERVER_IMAGE:-seafileltd/notification-server:13.0-latest}
-    container_name: notification-server
+    container_name: seafile_notifications
     restart: unless-stopped
     volumes:
       - $DATA/seafile/seafile/seafile/logs:/shared/seafile/logs
@@ -143,19 +145,7 @@ services:
       traefik.http.routers.seafile_notifications.rule: Host(`seafile.henn.dev`) && PathPrefix(`/notification`)
       traefik.http.routers.seafile_notifications.entrypoints: websecure
       traefik.http.routers.seafile_notifications.tls.certresolver: cf
-      traefik.http.routers.seafile_notifications.priority: 10
       traefik.http.services.seafile_notifications.loadbalancer.server.port: 8083
-
-  seafile_md:
-    profiles: [seafile]
-    image: seafileltd/seafile-md-server:13.0-latest
-    container_name: seafile_md
-    restart: unless-stopped
-    volumes:
-      - $DATA/seafile/seafile:/shared
-    environment:
-      <<: *seafile_env
-    networks: [seafile]
 
   seafile_thumbs:
     profiles: [seafile]
@@ -172,8 +162,18 @@ services:
       traefik.http.routers.seafile_thumbs.rule: Host(`seafile.henn.dev`) && PathPrefix(`/thumbnail`)
       traefik.http.routers.seafile_thumbs.entrypoints: websecure
       traefik.http.routers.seafile_thumbs.tls.certresolver: cf
-      traefik.http.routers.seafile_thumbs.priority: 10
       traefik.http.services.seafile_thumbs.loadbalancer.server.port: 80
+
+  seafile_md:
+    profiles: [seafile]
+    image: seafileltd/seafile-md-server:13.0-latest
+    container_name: seafile_md
+    restart: unless-stopped
+    volumes:
+      - $DATA/seafile/seafile:/shared
+    environment:
+      <<: *seafile_env
+    networks: [seafile]
 
   seasearch:
     profiles: [seafile]
@@ -209,12 +209,12 @@ services:
     environment:
       <<: *seafile_env
 
-  seafile_memcached:
-    profiles: [seafile]
-    image: memcached:1.6.18
-    container_name: seafile_memcached
-    restart: unless-stopped
-    entrypoint: memcached -m 256
+#  seafile_memcached:
+#    profiles: [seafile]
+#    image: memcached:1.6.18
+#    container_name: seafile_memcached
+#    restart: unless-stopped
+#    entrypoint: memcached -m 256
 
 networks:
   seafile:
