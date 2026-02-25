@@ -7,7 +7,6 @@ fnox = "latest"
 rclone = "latest"
 mc = "latest"
 glab = { version = "latest", exe = "glab" }
-"cargo:codeberg-cli" = "latest"
 cargo-binstall = "latest"
 "cargo:forgejo-cli" = "latest"
 
