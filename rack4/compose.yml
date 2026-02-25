@@ -110,3 +110,4 @@ include:
   - apps/warden.yml
   - apps/zulip.yml
   - apps/miro.yml
+  - apps/seafile.yml
