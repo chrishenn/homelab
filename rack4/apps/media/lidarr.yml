@@ -9,6 +9,7 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
+      LIDARR__AUTH__METHOD: External
     volumes:
       - $DATA/lidarr:/config
       - $DATA/sab/downloads:/sab/downloads

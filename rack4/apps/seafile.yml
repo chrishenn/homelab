@@ -1,0 +1,62 @@
+---
+services:
+  seafile_db:
+    restart: unless-stopped
+    image: mariadb:10.11
+    container_name: seafile_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=MYSQL_ROOT_PASSWORD
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - $DATA/seafile/seafile_db:/var/lib/mysql
+  #    ports:
+  #      - 3306:3306
+
+  seafile_memcached:
+    image: memcached:1.6.18
+    container_name: seafile_memcached
+    restart: unless-stopped
+    entrypoint: memcached -m 256
+
+  av:
+    image: clamav/clamav:latest
+    container_name: seafile-clamav
+    restart: unless-stopped
+
+  seadoc:
+    image: seafileltd/sdoc-server:2.0-latest
+    container_name: seadoc
+    restart: unless-stopped
+    volumes:
+      - $DATA/seafile/seadoc:/shared
+    environment:
+      - DB_HOST=seafile_db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWD=MYSQL_ROOT_PASSWORD
+      - DB_NAME=sdoc_db
+      - TIME_ZONE=$TZ
+      - SDOC_SERVER_LETSENCRYPT=false
+      - SDOC_SERVER_HOSTNAME=seafile.chenn.dev
+      - SEAHUB_SERVICE_URL=https://seafile.chenn.dev
+  #    ports:
+  #      - 7070:7070
+  #      - 8888:8888
+
+  seafile:
+    restart: unless-stopped
+    image: seafileltd/seafile-pro-mc:13.0-latest
+    container_name: seafile
+    #    ports:
+    #      - 80:80
+
+    volumes:
+      - $DATA/seafile/seafile:/shared
+    environment:
+      - DB_HOST=seafile_db
+      - DB_ROOT_PASSWD=MYSQL_ROOT_PASSWORD
+      - SEAFILE_ADMIN_EMAIL=${EMAIL}
+      - SEAFILE_ADMIN_PASSWORD=${PASS}
+      - SEAFILE_SERVER_LETSENCRYPT=false # Whether to use https or not
+      - SEAFILE_SERVER_HOSTNAME=cloud.example.com.tr # for local only, set 192.168.1.222

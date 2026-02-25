@@ -40,7 +40,6 @@ services:
 
       pangolin.public-resources.tududi.auth.sso-enabled: true
       pangolin.public-resources.tududi.auth.sso-roles[0]: Member
-      pangolin.public-resources.tududi.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.tududi.rules[0].action: pass
       pangolin.public-resources.tududi.rules[0].match: country
       pangolin.public-resources.tududi.rules[0].value: US

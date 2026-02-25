@@ -32,7 +32,6 @@ services:
       pangolin.public-resources.nexterm.targets[0].port: 6989
 
       pangolin.public-resources.nexterm.auth.sso-enabled: true
-      pangolin.public-resources.nexterm.auth.sso-roles[0]: Member
       pangolin.public-resources.nexterm.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.nexterm.rules[0].action: pass
       pangolin.public-resources.nexterm.rules[0].match: country

@@ -70,7 +70,6 @@ services:
       pangolin.public-resources.backrest.targets[0].port: 9898
 
       pangolin.public-resources.backrest.auth.sso-enabled: true
-      pangolin.public-resources.backrest.auth.sso-roles[0]: Member
       pangolin.public-resources.backrest.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.backrest.rules[0].action: pass
       pangolin.public-resources.backrest.rules[0].match: country

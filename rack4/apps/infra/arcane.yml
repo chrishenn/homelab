@@ -60,7 +60,6 @@ services:
       pangolin.public-resources.arcane.targets[0].port: 3552
 
       pangolin.public-resources.arcane.auth.sso-enabled: true
-      pangolin.public-resources.arcane.auth.sso-roles[0]: Member
       pangolin.public-resources.arcane.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.arcane.rules[0].action: pass
       pangolin.public-resources.arcane.rules[0].match: country

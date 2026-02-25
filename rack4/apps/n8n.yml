@@ -1,3 +1,4 @@
+# oidc requires enterprise license
 ---
 x-shared: &shared
   image: docker.n8n.io/n8nio/n8n
@@ -60,7 +61,6 @@ services:
 
       pangolin.public-resources.n8n.auth.sso-enabled: true
       pangolin.public-resources.n8n.auth.sso-roles[0]: Member
-      pangolin.public-resources.n8n.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.n8n.rules[0].action: pass
       pangolin.public-resources.n8n.rules[0].match: country
       pangolin.public-resources.n8n.rules[0].value: US

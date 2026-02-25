@@ -42,7 +42,6 @@ services:
       pangolin.public-resources.perplexica.targets[0].port: 3000
 
       pangolin.public-resources.perplexica.auth.sso-enabled: true
-      pangolin.public-resources.perplexica.auth.sso-roles[0]: Member
       pangolin.public-resources.perplexica.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.perplexica.rules[0].action: pass
       pangolin.public-resources.perplexica.rules[0].match: country

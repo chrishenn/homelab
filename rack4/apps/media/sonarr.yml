@@ -1,3 +1,4 @@
+# https://wiki.servarr.com/sonarr
 ---
 services:
   sonarr:
@@ -9,6 +10,7 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
+      SONARR__AUTH__METHOD: External
     volumes:
       - $DATA/sonarr:/config
       - $DATA/sab/downloads:/sab/downloads

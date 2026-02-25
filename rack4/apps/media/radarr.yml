@@ -1,3 +1,4 @@
+# https://wiki.servarr.com/en/radarr
 ---
 services:
   radarr:
@@ -9,6 +10,7 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
+      RADARR__AUTH__METHOD: External
     volumes:
       - $DATA/radarr:/config
       - $DATA/sab/downloads:/sab/downloads

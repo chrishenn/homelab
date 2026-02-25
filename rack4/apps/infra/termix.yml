@@ -40,7 +40,6 @@ services:
       pangolin.public-resources.termix.targets[0].port: 8080
 
       pangolin.public-resources.termix.auth.sso-enabled: true
-      pangolin.public-resources.termix.auth.sso-roles[0]: Member
       pangolin.public-resources.termix.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.termix.rules[0].action: pass
       pangolin.public-resources.termix.rules[0].match: country

@@ -1,3 +1,4 @@
+# https://www.audiobookshelf.org/docs/
 ---
 services:
   audiobookshelf:
@@ -35,6 +36,7 @@ services:
 
       pangolin.public-resources.audiobookshelf.auth.sso-enabled: true
       pangolin.public-resources.audiobookshelf.auth.sso-roles[0]: Member
+
       pangolin.public-resources.audiobookshelf.rules[0].action: pass
       pangolin.public-resources.audiobookshelf.rules[0].match: country
       pangolin.public-resources.audiobookshelf.rules[0].value: US

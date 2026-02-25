@@ -51,11 +51,8 @@ services:
       pangolin.public-resources.comfy.targets[0].port: 8188
 
       pangolin.public-resources.comfy.auth.sso-enabled: true
-      pangolin.public-resources.comfy.auth.sso-roles[0]: Member
       pangolin.public-resources.comfy.auth.sso-users[0]: ${EMAIL}
-
-      # bug: https://github.com/fosrl/pangolin/issues/737
-      # pangolin.public-resources.comfy.auth.sso-users[1]: ${USER1}
+      pangolin.public-resources.comfy.auth.sso-users[1]: ${USER1}
 
       pangolin.public-resources.comfy.rules[0].action: pass
       pangolin.public-resources.comfy.rules[0].match: country

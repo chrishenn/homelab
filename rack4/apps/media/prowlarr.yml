@@ -35,7 +35,6 @@ services:
 
       pangolin.public-resources.prowlarr.auth.sso-enabled: true
       pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.prowlarr.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.prowlarr.rules[0].action: pass
       pangolin.public-resources.prowlarr.rules[0].match: country
       pangolin.public-resources.prowlarr.rules[0].value: US
