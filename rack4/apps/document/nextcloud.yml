@@ -46,16 +46,17 @@ services:
       homepage.instance.private.description: File Server
 
       traefik.enable: true
-      traefik.http.middlewares.nc_reg1.redirectregex.regex: https?://([^/]*)/.well-known/(card|cal)dav
-      traefik.http.middlewares.nc_reg1.redirectregex.replacement: https://$${1}/remote.php/dav/
-      traefik.http.middlewares.nc_reg1.redirectregex.permanent: true
-      traefik.http.middlewares.nc_reg2.redirectregex.regex: https?://([^/]*)(/.well-known[^#]*)
-      traefik.http.middlewares.nc_reg2.redirectregex.replacement: https://$${1}/index.php$${2}
-      traefik.http.middlewares.nc_reg2.redirectregex.permanent: true
+#      traefik.http.middlewares.nc_reg1.redirectregex.regex: https?://([^/]*)/.well-known/(card|cal)dav
+#      traefik.http.middlewares.nc_reg1.redirectregex.replacement: https://$${1}/remote.php/dav/
+#      traefik.http.middlewares.nc_reg1.redirectregex.permanent: true
+#      traefik.http.middlewares.nc_reg2.redirectregex.regex: https?://([^/]*)(/.well-known[^#]*)
+#      traefik.http.middlewares.nc_reg2.redirectregex.replacement: https://$${1}/index.php$${2}
+#      traefik.http.middlewares.nc_reg2.redirectregex.permanent: true
       traefik.http.routers.nextcloud.rule: Host(`nextcloud.henn.dev`)
       traefik.http.routers.nextcloud.entrypoints: websecure
       traefik.http.routers.nextcloud.tls.certresolver: cf
-      traefik.http.routers.nextcloud.middlewares: nc_reg1,nc_reg2,hdrs@file
+#      traefik.http.routers.nextcloud.middlewares: nc_reg1,nc_reg2,hdrs@file
+      traefik.http.routers.nextcloud.middlewares: hdrs@file
       traefik.http.services.nextcloud.loadbalancer.server.port: 80
 
   # https://collabora.henn.dev/hosting/discovery

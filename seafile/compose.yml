@@ -1,15 +1,58 @@
+# todo: clean up envs and service names in this stack
+# todo: search doesn't seem to work. use elasticsearch instead?
+
 # problem 1: seadoc hits pangolin SSO when opening a doc - same problem as nextcloud
 #   mitigated: put only the /accounts route behind SSO
-
 # problem 2: seafile clients don't support custom headers, so auth headers through pangolin are no-go
-#   unsolved: this is a deal-breaker. I'd need to put my machine onto the local network as a pango client (same as nc)
-
-# problem 3: spreadsheet editing is provided by {collabora,
+#   mitigated: the mobile browser editing experience (realtime collab) is quite good for sdoc!
+# problem 3: awful behavior - caching settings on disk. This why configuration isn't code, people. FFS
 
 # positive 1: MUCH faster than nextcloud
 # positive 2: native markdown editing (without seadoc, even) is enough to replace google docs for me
 
 services:
+
+  seafile_collabora:
+    image: collabora/code:24.04.5.1.1
+    container_name: seafile_collabora
+    restart: unless-stopped
+    cap_add:
+      - MKNOD
+    environment:
+      TZ: America/Chicago
+      DONT_GEN_SSL_CERT: YES
+      dictionaries: en_US
+      username: ${USER}
+      password: ${PASS}
+      aliasgroup1: https://seafile.chenn.dev
+      server_name: collabora.chenn.dev
+      extra_params: |
+        --o:admin_console.enable=false \
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+    networks:
+      - seafile-net
+      - traefik
+    labels:
+      pangolin.public-resources.seafile_collabora.name: seafile_collabora
+      pangolin.public-resources.seafile_collabora.protocol: http
+      pangolin.public-resources.seafile_collabora.full-domain: collabora.chenn.dev
+      pangolin.public-resources.seafile_collabora.ssl: true
+      pangolin.public-resources.seafile_collabora.targets[0].method: http
+      pangolin.public-resources.seafile_collabora.targets[0].port: 9980
+
+      pangolin.public-resources.seafile_collabora.rules[0].action: allow
+      pangolin.public-resources.seafile_collabora.rules[0].match: country
+      pangolin.public-resources.seafile_collabora.rules[0].value: US
+      pangolin.public-resources.seafile_collabora.rules[0].priority: 10
+
+      pangolin.public-resources.seafile_collabora.rules[1].action: deny
+      pangolin.public-resources.seafile_collabora.rules[1].match: country
+      pangolin.public-resources.seafile_collabora.rules[1].value: ALL
+      pangolin.public-resources.seafile_collabora.rules[1].priority: 20
+
   db:
     image: ${SEAFILE_DB_IMAGE:-mariadb:10.11}
     container_name: seafile-mysql
@@ -143,9 +186,17 @@ services:
       pangolin.public-resources.seafile.targets[0].method: http
       pangolin.public-resources.seafile.targets[0].path-match: prefix
       pangolin.public-resources.seafile.targets[0].path: /
-      pangolin.public-resources.seafile.headers[0].name: X-Forwarded-Proto
-      pangolin.public-resources.seafile.headers[0].value: https
       pangolin.public-resources.seafile.targets[0].port: 80
+
+      pangolin.public-resources.seafile.targets[5].method: http
+      pangolin.public-resources.seafile.targets[5].path-match: prefix
+      pangolin.public-resources.seafile.targets[5].path: /dav
+      pangolin.public-resources.seafile.targets[5].port: 8080
+
+      pangolin.public-resources.seafile.targets[6].method: http
+      pangolin.public-resources.seafile.targets[6].path-match: prefix
+      pangolin.public-resources.seafile.targets[6].path: /:dir_browser
+      pangolin.public-resources.seafile.targets[6].port: 8080
 
   seadoc:
     image: ${SEADOC_IMAGE:-seafileltd/sdoc-server:2.0-latest}
@@ -178,20 +229,10 @@ services:
       pangolin.public-resources.seafile.targets[1].rewrite-match: stripPrefix
       pangolin.public-resources.seafile.targets[1].port: 80
 
-#      pangolin.public-resources.seafile.rules[0].action: allow
-#      pangolin.public-resources.seafile.rules[0].match: path
-#      pangolin.public-resources.seafile.rules[0].value: /sdoc-server/*
-#      pangolin.public-resources.seafile.rules[0].priority: 0
-
       pangolin.public-resources.seafile.targets[2].method: http
       pangolin.public-resources.seafile.targets[2].path-match: prefix
       pangolin.public-resources.seafile.targets[2].path: /socket.io
       pangolin.public-resources.seafile.targets[2].port: 80
-
-#      pangolin.public-resources.seafile.rules[1].action: allow
-#      pangolin.public-resources.seafile.rules[1].match: path
-#      pangolin.public-resources.seafile.rules[1].value: /socket.io/*
-#      pangolin.public-resources.seafile.rules[1].priority: 10
 
   notification-server:
     image: ${NOTIFICATION_SERVER_IMAGE:-seafileltd/notification-server:13.0-latest}
