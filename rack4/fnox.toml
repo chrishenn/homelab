@@ -26,7 +26,17 @@ POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_
 MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license" }
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
+
 SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
+SEAFILE_PASS = { provider = "onepass", value = "op://homelab/seafile/password" }
+SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc_client" }
+SEAFILE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/seafile/oidc_secret" }
+SEAFILE_OIDC_REDIRECT = { provider = "onepass", value = "op://homelab/seafile/oidc_redirect" }
+SEAFILE_OIDC_DOMAIN = { provider = "onepass", value = "op://homelab/seafile/oidc_domain" }
+SEAFILE_OIDC_PROVIDER = { provider = "onepass", value = "op://homelab/seafile/oidc_provider" }
+SEAFILE_OIDC_AUTH_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_auth_url" }
+SEAFILE_OIDC_TOKEN_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_token_url" }
+SEAFILE_OIDC_USER_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_user_url" }
 
 ARCANE_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/arcane/encryption_key" }
 ARCANE_API_KEY = { provider = "onepass", value = "op://homelab/arcane/api_key" }

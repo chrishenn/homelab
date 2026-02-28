@@ -1,0 +1,328 @@
+x-seafile_env: &seafile_env
+  SEAFILE_SERVER_HOSTNAME: seafile.chenn.dev
+  SEAFILE_SERVER_PROTOCOL: https
+  SEADOC_SERVER_URL: https://seafile.chenn.dev/sdoc-server
+  SEAHUB_SERVICE_URL: http://seafile
+  INNER_SEAHUB_SERVICE_URL: http://seafile
+  NOTIFICATION_SERVER_URL: https://seafile.chenn.dev/notification
+  INNER_NOTIFICATION_SERVER_URL: http://seafile_notify:8083
+  JWT_PRIVATE_KEY: $SEAFILE_SECRET
+  SEAFILE_AI_SECRET_KEY: $SEAFILE_SECRET
+  TIME_ZONE: $TZ
+  TZ: $TZ
+  SITE_ROOT: /
+  NON_ROOT: false
+  SEAFILE_AI_SERVER_URL:
+
+  INIT_SEAFILE_MYSQL_ROOT_PASSWORD: 1234
+  INIT_SEAFILE_ADMIN_EMAIL: $EMAIL
+  INIT_SEAFILE_ADMIN_PASSWORD: $SEAFILE_PASS
+  SEAFILE_MYSQL_DB_HOST: seafile_db
+  SEAFILE_MYSQL_DB_USER: seafile
+  SEAFILE_MYSQL_DB_PASSWORD: 1234
+  SEAFILE_MYSQL_DB_CCNET_DB_NAME: ccnet_db
+  SEAFILE_MYSQL_DB_SEAFILE_DB_NAME: seafile_db
+  SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: seahub_db
+  DB_HOST: seafile_db
+  DB_PORT: 3306
+  DB_USER: seafile
+  DB_PASSWORD: 1234
+  DB_NAME: seahub_db
+  MYSQL_ROOT_PASSWORD: 1234
+  MYSQL_LOG_CONSOLE: true
+  MARIADB_AUTO_UPGRADE: 1
+
+  CACHE_PROVIDER: redis
+  REDIS_HOST: seafile_redis
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 1234
+
+  ENABLE_SEADOC: true
+  SEAF_SERVER_STORAGE_TYPE: disk
+  MD_STORAGE_TYPE: disk
+  SS_STORAGE_TYPE: disk
+  SEAFILE_LOG_TO_STDOUT: true
+  SEATABLE_LOG_TO_STDOUT: false
+  ENABLE_GO_FILESERVER: true
+  THUMBNAIL_IMAGE_ORIGINAL_SIZE_LIMIT: 256
+  ENABLE_NOTIFICATION_SERVER: true
+  NOTIFICATION_SERVER_LOG_LEVEL: info
+
+  ENABLE_SEAFILE_AI: false
+  SEAFILE_AI_LLM_TYPE: openai
+  SEAFILE_AI_LLM_URL:
+  SEAFILE_AI_LLM_KEY:
+  SEAFILE_AI_LLM_MODEL: gpt-4o-mini
+
+  MD_PORT: 8084
+  MD_LOG_LEVEL: info
+  MD_MAX_CACHE_SIZE: 1GB
+  MD_CHECK_UPDATE_INTERVAL: 30m
+  MD_FILE_COUNT_LIMIT: 100000
+
+  INIT_SS_ADMIN_USER: $EMAIL
+  INIT_SS_ADMIN_PASSWORD: $SEAFILE_PASS
+  SS_FIRST_ADMIN_USER: $EMAIL
+  SS_FIRST_ADMIN_PASSWORD: $SEAFILE_PASS
+  SS_MAX_OBJ_CACHE_SIZE: 10GB
+  SS_LOG_TO_STDOUT: true
+  SS_LOG_OUTPUT: true
+  SS_LOG_LEVEL: info
+  SS_LOG_DIR: /opt/seasearch/data/log
+  SS_SERVER_MODE:
+  SS_CLUSTER_ID:
+  SS_CLUSTER_PROXY_HOST: 0.0.0.0
+  SS_CLUSTER_PROXY_PORT: 4082
+  SS_CLUSTER_MANAGER_ADDR: 127.0.0.1:4081
+  SS_ETCD_USERNAME:
+  SS_ETCD_PASSWORD:
+  SS_ETCD_ENDPOINTS: 127.0.0.1:2379
+  SS_ETCD_PREFIX: /zinc
+  SS_CLUSTER_PROXY_LOG_DIR: /opt/seasearch/data/log
+  SS_CLUSTER_MANAGER_HOST: 0.0.0.0
+  SS_CLUSTER_MANAGER_PORT: 4081
+
+  OIDC_CLIENT: $SEAFILE_OIDC_CLIENT
+  OIDC_SECRET: $SEAFILE_OIDC_SECRET
+  OIDC_REDIRECT: $SEAFILE_OIDC_REDIRECT
+  OIDC_DOMAIN: $SEAFILE_OIDC_DOMAIN
+  OIDC_PROVIDER: $SEAFILE_OIDC_PROVIDER
+  OIDC_AUTH_URL: $SEAFILE_OIDC_AUTH_URL
+  OIDC_TOKEN_URL: $SEAFILE_OIDC_TOKEN_URL
+  OIDC_USER_URL: $SEAFILE_OIDC_USER_URL
+
+  SMTP_HOST: $SMTP_HOST
+  SMTP_USER: $SMTP_USER
+  SMTP_PASS: $SMTP_TOKEN
+  SMTP_FROM: $SMTP_HOST
+
+services:
+
+  seafile_collabora:
+    profiles: [seafile]
+    image: collabora/code:latest
+    container_name: seafile_collabora
+    restart: unless-stopped
+    cap_add: [MKNOD]
+    environment:
+      TZ: $TZ
+      DONT_GEN_SSL_CERT: true
+      LC_CTYPE: C.UTF-8
+      dictionaries: en_US
+      aliasgroup1: https://seafile.chenn.dev
+      server_name: collabora.chenn.dev
+      extra_params: |
+        --o:admin_console.enable=false \
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+    networks: [seafile, newt]
+    labels:
+      pangolin.public-resources.seafile_collabora.name: seafile_collabora
+      pangolin.public-resources.seafile_collabora.protocol: http
+      pangolin.public-resources.seafile_collabora.full-domain: collabora.chenn.dev
+      pangolin.public-resources.seafile_collabora.ssl: true
+      pangolin.public-resources.seafile_collabora.targets[0].method: http
+      pangolin.public-resources.seafile_collabora.targets[0].port: 9980
+
+      pangolin.public-resources.seafile_collabora.rules[0].action: allow
+      pangolin.public-resources.seafile_collabora.rules[0].match: country
+      pangolin.public-resources.seafile_collabora.rules[0].value: US
+      pangolin.public-resources.seafile_collabora.rules[0].priority: 10
+
+      pangolin.public-resources.seafile_collabora.rules[1].action: deny
+      pangolin.public-resources.seafile_collabora.rules[1].match: country
+      pangolin.public-resources.seafile_collabora.rules[1].value: ALL
+      pangolin.public-resources.seafile_collabora.rules[1].priority: 20
+
+  seafile:
+    profiles: [seafile]
+    image: seafileltd/seafile-pro-mc:13.0-latest
+    container_name: seafile
+    restart: unless-stopped
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/data:/shared
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      seafile_db:
+        condition: service_healthy
+      seafile_redis:
+        condition: service_started
+    networks: [seafile, newt]
+    labels:
+      pangolin.public-resources.seafile.name: seafile
+      pangolin.public-resources.seafile.protocol: http
+      pangolin.public-resources.seafile.full-domain: seafile.chenn.dev
+      pangolin.public-resources.seafile.ssl: true
+
+      pangolin.public-resources.seafile.auth.sso-enabled: true
+      pangolin.public-resources.seafile.auth.sso-users[0]: ${EMAIL}
+
+      pangolin.public-resources.seafile.rules[0].action: pass
+      pangolin.public-resources.seafile.rules[0].match: path
+      pangolin.public-resources.seafile.rules[0].value: /accounts/*
+      pangolin.public-resources.seafile.rules[0].priority: 0
+
+      pangolin.public-resources.seafile.rules[1].action: pass
+      pangolin.public-resources.seafile.rules[1].match: path
+      pangolin.public-resources.seafile.rules[1].value: /sys/*
+      pangolin.public-resources.seafile.rules[1].priority: 5
+
+      pangolin.public-resources.seafile.rules[2].action: allow
+      pangolin.public-resources.seafile.rules[2].match: country
+      pangolin.public-resources.seafile.rules[2].value: US
+      pangolin.public-resources.seafile.rules[2].priority: 10
+
+      pangolin.public-resources.seafile.rules[3].action: deny
+      pangolin.public-resources.seafile.rules[3].match: country
+      pangolin.public-resources.seafile.rules[3].value: ALL
+      pangolin.public-resources.seafile.rules[3].priority: 20
+
+      pangolin.public-resources.seafile.targets[0].method: http
+      pangolin.public-resources.seafile.targets[0].path-match: prefix
+      pangolin.public-resources.seafile.targets[0].path: /
+      pangolin.public-resources.seafile.targets[0].port: 80
+
+      pangolin.public-resources.seafile.targets[5].method: http
+      pangolin.public-resources.seafile.targets[5].path-match: prefix
+      pangolin.public-resources.seafile.targets[5].path: /dav
+      pangolin.public-resources.seafile.targets[5].port: 8080
+
+      pangolin.public-resources.seafile.targets[6].method: http
+      pangolin.public-resources.seafile.targets[6].path-match: prefix
+      pangolin.public-resources.seafile.targets[6].path: /:dir_browser
+      pangolin.public-resources.seafile.targets[6].port: 8080
+
+  seafile_doc:
+    profiles: [seafile]
+    image: seafileltd/sdoc-server:2.0-latest
+    container_name: seafile_doc
+    restart: unless-stopped
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/seafile_doc:/shared
+    depends_on:
+      seafile_db:
+        condition: service_healthy
+      seafile:
+        condition: service_healthy
+    networks: [seafile, newt]
+    labels:
+      pangolin.public-resources.seafile.targets[1].method: http
+      pangolin.public-resources.seafile.targets[1].path-match: prefix
+      pangolin.public-resources.seafile.targets[1].path: /sdoc-server
+      pangolin.public-resources.seafile.targets[1].rewrite-match: stripPrefix
+      pangolin.public-resources.seafile.targets[1].port: 80
+
+      pangolin.public-resources.seafile.targets[2].method: http
+      pangolin.public-resources.seafile.targets[2].path-match: prefix
+      pangolin.public-resources.seafile.targets[2].path: /socket.io
+      pangolin.public-resources.seafile.targets[2].port: 80
+
+  seafile_notify:
+    profiles: [seafile]
+    image: seafileltd/notification-server:13.0-latest
+    container_name: seafile_notify
+    restart: always
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/data/seafile/logs:/shared/seafile/logs
+    depends_on:
+      seafile_db:
+        condition: service_healthy
+      seafile:
+        condition: service_healthy
+    networks: [seafile, newt]
+    labels:
+      pangolin.public-resources.seafile.targets[3].path-match: prefix
+      pangolin.public-resources.seafile.targets[3].path: /notification
+      pangolin.public-resources.seafile.targets[3].method: http
+      pangolin.public-resources.seafile.targets[3].port: 8083
+
+  seafile_thumb:
+    profiles: [seafile]
+    image: seafileltd/thumbnail-server:13.0-latest
+    container_name: seafile_thumb
+    restart: always
+    environment:
+      <<: *seafile_env
+    depends_on:
+      seafile_db:
+        condition: service_healthy
+      seafile:
+        condition: service_healthy
+    volumes:
+      - $DATA/seafile/data:/shared
+    networks: [seafile, newt]
+    labels:
+      pangolin.public-resources.seafile.targets[4].path-match: prefix
+      pangolin.public-resources.seafile.targets[4].path: /thumbnail
+      pangolin.public-resources.seafile.targets[4].method: http
+      pangolin.public-resources.seafile.targets[4].port: 80
+
+  seafile_md:
+    profiles: [seafile]
+    image: seafileltd/seafile-md-server:13.0-latest
+    container_name: seafile_md
+    restart: unless-stopped
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/data:/shared
+    depends_on:
+      seafile_db:
+        condition: service_healthy
+      seafile:
+        condition: service_healthy
+    networks: [seafile]
+
+  seafile_search:
+    profiles: [seafile]
+    image: seafileltd/seasearch:1.0-latest
+    container_name: seafile_search
+    restart: unless-stopped
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/seafile_search:/opt/seasearch/data
+    networks: [seafile]
+
+  seafile_db:
+    profiles: [seafile]
+    image: mariadb:10.11
+    container_name: seafile_db
+    restart: unless-stopped
+    environment:
+      <<: *seafile_env
+    volumes:
+      - $DATA/seafile/db:/var/lib/mysql
+    networks: [seafile]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--connect", "--mariadbupgrade", "--innodb_initialized"]
+      interval: 20s
+      start_period: 30s
+      timeout: 5s
+      retries: 10
+
+  seafile_redis:
+    profiles: [seafile]
+    image: redis
+    container_name: seafile_redis
+    restart: unless-stopped
+    command: ["/bin/sh", "-c", 'redis-server --requirepass "$$REDIS_PASSWORD"']
+    environment:
+      <<: *seafile_env
+    networks: [seafile]
+
+networks:
+  seafile:
