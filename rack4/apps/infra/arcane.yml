@@ -5,7 +5,7 @@
 services:
   arcane:
     profiles: [arcane]
-    image: ghcr.io/getarcaneapp/arcane:latest
+    image: ghcr.io/getarcaneapp/arcane:next
     container_name: arcane
     restart: unless-stopped
     deploy:
@@ -16,6 +16,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
       PUID: ${PUID}
       PGID: ${PGID}
       APP_URL: https://arcane.chenn.dev
@@ -25,7 +26,12 @@ services:
       GPU_MONITORING_ENABLED: true
       GPU_TYPE: nvidia
 
+      AUTH_LOCAL_ENABLED: false
+      OIDC_AUTO_REDIRECT_TO_PROVIDER: true
+      OIDC_MERGE_ACCOUNTS: true
       OIDC_ENABLED: true
+      OIDC_PROVIDER_NAME: PocketID
+      OIDC_PROVIDER_LOGO_URL: https://pocketid.chenn.dev/api/application-images/logo?light=false
       OIDC_ISSUER_URL: $OIDC
       OIDC_CLIENT_ID: $ARCANE_OIDC_CLIENT
       OIDC_CLIENT_SECRET: $ARCANE_OIDC_SECRET
@@ -37,20 +43,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3552/api/health']
-    networks: [traefik, docker]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Arcane
       homepage.icon: arcane.png
       homepage.href: https://arcane.chenn.dev
       homepage.description: Docker Manager (Rack 4)
-
-      traefik.enable: true
-      traefik.http.routers.arcane.rule: Host(`arcane.henn.dev`)
-      traefik.http.routers.arcane.entrypoints: websecure
-      traefik.http.routers.arcane.tls.certresolver: cf
-      traefik.http.routers.arcane.middlewares: hdrs@file
-      traefik.http.services.arcane.loadbalancer.server.port: 3552
 
       pangolin.public-resources.arcane.name: arcane
       pangolin.public-resources.arcane.protocol: http

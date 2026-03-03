@@ -1,5 +1,6 @@
 FROM rust:1.83 AS builder
 
+ADD https://github.com/localsend/localsend.git /
 WORKDIR /app
 
 COPY Cargo.* ./
