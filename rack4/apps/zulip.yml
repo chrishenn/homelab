@@ -37,7 +37,8 @@ services:
       SETTING_USE_X_FORWARDED_HOST: 'True'
 
       SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
-      SETTING_ZULIP_AUTH_BACKENDS: 'EmailAuthBackend,GenericOpenIdConnectBackend'
+      SETTING_ZULIP_AUTH_BACKENDS: 'GenericOpenIdConnectBackend'
+      SETTING_ZULIP_AUTHENTICATION_BACKENDS: "('zproject.backends.GenericOpenIdConnectBackend',)"
 
       DB_HOST: 'zulip_pg'
       DB_HOST_PORT: '5432'
@@ -62,6 +63,19 @@ services:
       SETTING_EMAIL_USE_TLS: 'True'
       SETTING_SEND_LOGIN_EMAILS: 'False'
       SECRETS_email_password: '$SMTP_TOKEN'
+
+      ZULIP_CUSTOM_SETTINGS: |
+        import os
+        SOCIAL_AUTH_OIDC_ENABLED_IDPS: dict[str, Any] = {
+          "pocketid": {
+              "oidc_url": "https://pocketid.chenn.dev",
+              "display_name": "PocketID",
+              "display_icon": "https://pocketid.chenn.dev/api/application-images/logo?light=false",
+              "client_id": os.getenv("ZULIP_OIDC_CLIENT"),
+              "secret": os.getenv("ZULIP_OIDC_SECRET"),
+              "auto_signup": True,
+          }
+        }
 
     volumes:
       - $DATA/zulip/data:/data:rw
