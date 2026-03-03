@@ -1,6 +1,5 @@
 ---
 services:
-
   rxresume:
     profiles: [rxresume]
     image: amruthpillai/reactive-resume:latest
@@ -45,7 +44,7 @@ services:
     networks: [traefik]
     labels:
       homepage.group: File Edit, Convert
-      homepage.name: rxresume
+      homepage.name: Reactive Resume
       homepage.icon: reactive-resume.png
       homepage.href: https://resume.chenn.dev
       homepage.description: Resume Editor
@@ -100,7 +99,7 @@ services:
     volumes:
       - $DATA/rxresume/seaweedfs:/data
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8888"]
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8888']
       start_period: 10s
       interval: 30s
       timeout: 10s
