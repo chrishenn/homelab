@@ -65,6 +65,7 @@ services:
 
     volumes:
       - $DATA/zulip/data:/data:rw
+      - ./zulip/settings.py:/etc/zulip/settings.py
     networks: [traefik, zulip]
     labels:
       homepage.group: Tools

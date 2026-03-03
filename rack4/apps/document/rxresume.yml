@@ -1,40 +1,63 @@
 ---
 services:
+
   rxresume:
     profiles: [rxresume]
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
     container_name: rxresume
     environment:
-      TZ: $TZ
-      APP_URL: https://rxresume.henn.dev
-      PRINTER_ENDPOINT: http://rxresume_chrome:3000
+      APP_URL: https://resume.chenn.dev
+      PRINTER_ENDPOINT: http://rxresume_chrome:3000?token=1234567890
       DATABASE_URL: ${RXRESUME_PGURL}
       AUTH_SECRET: ${RXRESUME_AUTH_SECRET}
+      TZ: ${TZ}
+      NODE_ENV: production
+
+      S3_ACCESS_KEY_ID: seaweedfs
+      S3_SECRET_ACCESS_KEY: seaweedfs
+      S3_ENDPOINT: http://seaweedfs:8333
+      S3_BUCKET: reactive-resume
+      S3_FORCE_PATH_STYLE: true
+
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: 465
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_TOKEN}
       SMTP_FROM: ${SMTP_USER}
       SMTP_SECURE: true
+
+      OAUTH_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+      OAUTH_PROVIDER_NAME: PocketID
+      OAUTH_CLIENT_ID: ${RXRESUME_OIDC_CLIENT}
+      OAUTH_CLIENT_SECRET: ${RXRESUME_OIDC_SECRET}
     volumes:
       - $DATA/rxresume/data:/app/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+    depends_on:
+      rxresume_pg:
+        condition: service_healthy
+      rxresume_chrome:
+        condition: service_healthy
+      seaweedfs_create_bucket:
+        condition: service_completed_successfully
     networks: [traefik]
     labels:
-      homepage.instance.private.group: File Edit, Convert
-      homepage.instance.private.name: rxresume
-      homepage.instance.private.icon: reactive-resume.png
-      homepage.instance.private.href: https://rxresume.henn.dev
-      homepage.instance.private.description: Resume Editor
+      homepage.group: File Edit, Convert
+      homepage.name: rxresume
+      homepage.icon: reactive-resume.png
+      homepage.href: https://resume.chenn.dev
+      homepage.description: Resume Editor
 
-      traefik.enable: true
-      traefik.http.routers.rxresume.rule: Host(`rxresume.henn.dev`)
-      traefik.http.routers.rxresume.entrypoints: websecure
-      traefik.http.routers.rxresume.middlewares: hdrs@file
-      traefik.http.routers.rxresume.tls.certresolver: cf
-      traefik.http.services.rxresume.loadbalancer.server.port: 3000
+      pangolin.public-resources.rxresume.name: rxresume
+      pangolin.public-resources.rxresume.protocol: http
+      pangolin.public-resources.rxresume.full-domain: resume.chenn.dev
+      pangolin.public-resources.rxresume.ssl: true
+      pangolin.public-resources.rxresume.targets[0].method: http
+      pangolin.public-resources.rxresume.targets[0].port: 3000
+      pangolin.public-resources.rxresume.auth.sso-enabled: true
+      pangolin.public-resources.rxresume.auth.sso-roles[0]: Member
 
   rxresume_chrome:
     profiles: [rxresume]
@@ -42,11 +65,12 @@ services:
     restart: unless-stopped
     container_name: rxresume_chrome
     environment:
-      TIMEOUT: 120000
-      CONCURRENT: 10
+      QUEUED: 10
       HEALTH: true
+      CONCURRENT: 5
+      TOKEN: 1234567890
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/pressure']
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/pressure?token=1234567890']
     networks: [traefik]
 
   rxresume_pg:
@@ -54,12 +78,48 @@ services:
     image: postgres:16-alpine
     container_name: rxresume_pg
     restart: unless-stopped
-    volumes:
-      - $DATA/rxresume/rxresume_pg:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    volumes:
+      - $DATA/rxresume/rxresume_pg:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+    networks: [traefik]
+
+  seaweedfs:
+    profiles: [rxresume]
+    image: chrislusf/seaweedfs:latest
+    container_name: seaweedfs
+    restart: unless-stopped
+    command: server -s3 -filer -dir=/data -ip=0.0.0.0
+    environment:
+      AWS_ACCESS_KEY_ID: seaweedfs
+      AWS_SECRET_ACCESS_KEY: seaweedfs
+    volumes:
+      - $DATA/rxresume/seaweedfs:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8888"]
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks: [traefik]
+
+  seaweedfs_create_bucket:
+    profiles: [rxresume]
+    image: quay.io/minio/mc:latest
+    container_name: seaweedfs_create_bucket
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+        sleep 5;
+        mc alias set seaweedfs http://seaweedfs:8333 seaweedfs seaweedfs;
+        mc mb seaweedfs/reactive-resume;
+        exit 0;
+      "
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
     networks: [traefik]

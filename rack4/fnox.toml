@@ -150,3 +150,5 @@ STIRLING_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/stirling/oi
 STIRLING_OIDC_SECRET = { provider = "onepass", value = "op://homelab/stirling/oidc_secret" }
 GITLAB_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gitlab/oidc_client" }
 GITLAB_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gitlab/oidc_secret" }
+RXRESUME_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/rxresume/oidc_client" }
+RXRESUME_OIDC_SECRET = { provider = "onepass", value = "op://homelab/rxresume/oidc_secret" }
