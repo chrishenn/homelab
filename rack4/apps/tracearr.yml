@@ -1,0 +1,82 @@
+# secrets: openssl rand -hex 32
+# sudo chown -R 1000:1000 $DATA/tracearr/timescale
+
+services:
+  tracearr:
+    profiles: [tracearr]
+    image: ghcr.io/connorgallopo/tracearr:latest
+    container_name: tracearr
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      TZ: $TZ
+      DATABASE_URL: postgres://tracearr:tracearr@tracearr_timescale:5432/tracearr
+      REDIS_URL: redis://tracearr_redis:6379
+      JWT_SECRET: $TRACEARR_SECRET
+      COOKIE_SECRET: $TRACEARR_COOKIE_SECRET
+      CORS_ORIGIN: https://tracearr.chenn.dev
+      LOG_LEVEL: info
+      DATABASE_POOL_MAX: 100
+    depends_on:
+      tracearr_timescale:
+        condition: service_healthy
+      tracearr_redis:
+        condition: service_healthy
+    networks: [tracearr, traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Tracearr
+      homepage.icon: tracearr.png
+      homepage.href: https://tracearr.chenn.dev
+      homepage.description: Jellyfin Stats
+
+      pangolin.public-resources.tracearr.name: tracearr
+      pangolin.public-resources.tracearr.protocol: http
+      pangolin.public-resources.tracearr.full-domain: tracearr.chenn.dev
+      pangolin.public-resources.tracearr.ssl: true
+      pangolin.public-resources.tracearr.targets[0].method: http
+      pangolin.public-resources.tracearr.targets[0].port: 3000
+
+  tracearr_timescale:
+    profiles: [tracearr]
+    image: timescale/timescaledb-ha:pg18.1-ts2.25.0
+    container_name: tracearr_timescale
+    restart: unless-stopped
+    shm_size: 2gb
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    command: postgres -c timescaledb.max_tuples_decompressed_per_dml_transaction=0 -c max_locks_per_transaction=4096 -c timescaledb.telemetry_level=off
+    environment:
+      POSTGRES_USER: tracearr
+      POSTGRES_PASSWORD: tracearr
+      POSTGRES_DB: tracearr
+    volumes:
+      - $DATA/tracearr/timescale:/home/postgres/pgdata/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tracearr']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [tracearr]
+
+  tracearr_redis:
+    profiles: [tracearr]
+    image: redis:8-alpine
+    container_name: tracearr_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - $DATA/tracearr/redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [tracearr]
+
+networks:
+  tracearr:

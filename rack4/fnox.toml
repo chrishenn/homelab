@@ -27,6 +27,11 @@ MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license"
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
 
+TRACEARR_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_secret" }
+TRACEARR_COOKIE_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_cookie_secret" }
+TRACEARR_AUTH_USER = { provider = "onepass", value = "op://homelab/tracearr/tracearr_auth_user" }
+TRACEARR_AUTH_PASS = { provider = "onepass", value = "op://homelab/tracearr/tracearr_auth_pass" }
+
 SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
 SEAFILE_PASS = { provider = "onepass", value = "op://homelab/seafile/password" }
 SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc_client" }

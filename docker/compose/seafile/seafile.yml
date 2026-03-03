@@ -97,7 +97,6 @@ x-seafile_env: &seafile_env
   SMTP_FROM: $SMTP_HOST
 
 services:
-
   seafile_collabora:
     profiles: [seafile]
     image: collabora/code:latest
@@ -146,7 +145,7 @@ services:
     volumes:
       - $DATA/seafile/data:/shared
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      test: ['CMD-SHELL', 'curl -f http://localhost:80 || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -308,7 +307,7 @@ services:
       - $DATA/seafile/db:/var/lib/mysql
     networks: [seafile]
     healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--connect", "--mariadbupgrade", "--innodb_initialized"]
+      test: ['CMD', '/usr/local/bin/healthcheck.sh', '--connect', '--mariadbupgrade', '--innodb_initialized']
       interval: 20s
       start_period: 30s
       timeout: 5s
@@ -319,7 +318,7 @@ services:
     image: redis
     container_name: seafile_redis
     restart: unless-stopped
-    command: ["/bin/sh", "-c", 'redis-server --requirepass "$$REDIS_PASSWORD"']
+    command: ['/bin/sh', '-c', 'redis-server --requirepass "$$REDIS_PASSWORD"']
     environment:
       <<: *seafile_env
     networks: [seafile]

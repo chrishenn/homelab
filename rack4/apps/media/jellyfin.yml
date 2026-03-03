@@ -24,9 +24,7 @@ services:
     volumes:
       - $DATA/jellyfin/config:/config
       - $DATA/jellyfin/cache:/cache
-      - type: bind
-        source: $MEDIA
-        target: /media
+      - $MEDIA:/media
     ports:
       - '1900:1900/udp'
     healthcheck:
