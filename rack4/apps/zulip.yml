@@ -1,8 +1,8 @@
-# private slack. quite resource heavy, slow
-# clunky old-school configuration and server init, with poor ergonomics, useless logging
-# documentation is fragmented, incomplete, and nigh unusable
+# private slack
+# - quite resource heavy, slow
+# - clunky old-school configuration and server init, with poor ergonomics, useless logging
+# - documentation is fragmented, incomplete, and nigh unusable
 
-# NOTE: OIDC is supported, but you will need to mount the settings file, rendering secrets to disk
 # NOTE: The server will crash if passwords on each memcache, rabbitmq, redis, pg are not used
 # NOTE: zulip does not sanitize env vars, so SOME are case-sensitive python-style literals, and quotes are required!
 # https://github.com/zulip/docker-zulip#configuration
@@ -26,8 +26,8 @@ services:
     environment:
       TZ: $TZ
       SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
-      SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev", "zulip.henn.dev"]'
-      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev", "https://zulip.henn.dev"]'
+      SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev",]'
+      SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev",]'
 
       LOADBALANCER_IPS: '$FRONTEND_SUBNET'
       SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
@@ -37,8 +37,7 @@ services:
       SETTING_USE_X_FORWARDED_HOST: 'True'
 
       SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
-      SETTING_ZULIP_AUTH_BACKENDS: 'GenericOpenIdConnectBackend'
-      SETTING_ZULIP_AUTHENTICATION_BACKENDS: "('zproject.backends.GenericOpenIdConnectBackend',)"
+      SETTING_AUTHENTICATION_BACKENDS: "('zproject.backends.GenericOpenIdConnectBackend',)"
 
       DB_HOST: 'zulip_pg'
       DB_HOST_PORT: '5432'
@@ -48,7 +47,7 @@ services:
       SETTING_MEMCACHED_LOCATION: 'zulip_memcached:11211'
       SETTING_RABBITMQ_HOST: 'zulip_rabbitmq'
       SETTING_REDIS_HOST: 'zulip_redis'
-      SETTING_JITSI_SERVER_URL: 'meet.jit.si'
+      SETTING_JITSI_SERVER_URL: 'miro.chenn.dev'
 
       SECRETS_rabbitmq_password: 'REPLACE_WITH_SECURE_RABBITMQ_PASSWORD'
       SECRETS_postgres_password: 'REPLACE_WITH_SECURE_POSTGRES_PASSWORD'
@@ -59,28 +58,27 @@ services:
       SETTING_EMAIL_HOST: '$SMTP_HOST'
       SETTING_EMAIL_HOST_USER: '$SMTP_USER'
       SETTING_EMAIL_PORT: 465
-      SETTING_EMAIL_USE_SSL: 'False'
-      SETTING_EMAIL_USE_TLS: 'True'
+      SETTING_EMAIL_USE_SSL: 'True'
+      SETTING_EMAIL_USE_TLS: 'False'
       SETTING_SEND_LOGIN_EMAILS: 'False'
       SECRETS_email_password: '$SMTP_TOKEN'
 
       ZULIP_CUSTOM_SETTINGS: |
-        import os
         SOCIAL_AUTH_OIDC_ENABLED_IDPS: dict[str, Any] = {
           "pocketid": {
-              "oidc_url": "https://pocketid.chenn.dev",
-              "display_name": "PocketID",
-              "display_icon": "https://pocketid.chenn.dev/api/application-images/logo?light=false",
-              "client_id": os.getenv("ZULIP_OIDC_CLIENT"),
-              "secret": os.getenv("ZULIP_OIDC_SECRET"),
-              "auto_signup": True,
+            "oidc_url": "https://pocketid.chenn.dev",
+            "display_name": "PocketID",
+            "display_icon": "https://pocketid.chenn.dev/api/application-images/logo?light=false",
+            "client_id": "$ZULIP_OIDC_CLIENT",
+            "secret": "$ZULIP_OIDC_SECRET",
+            "auto_signup": True,
           }
         }
 
     volumes:
       - $DATA/zulip/data:/data:rw
-      - ./zulip/settings.py:/etc/zulip/settings.py
-    networks: [traefik, zulip]
+    # must match LOADBALANCER_IPS above
+    networks: [zulip, traefik]
     labels:
       homepage.group: Tools
       homepage.name: Zulip
