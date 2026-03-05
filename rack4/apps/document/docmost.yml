@@ -23,7 +23,7 @@ services:
       - $DATA/docmost/docmost:/app/data/storage
     networks: [traefik, docmost]
     labels:
-      homepage.group: File Edit, Convert
+      homepage.group: File Editing
       homepage.name: Docmost
       homepage.icon: docmost.png
       homepage.href: https://docmost.chenn.dev

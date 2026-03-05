@@ -26,19 +26,16 @@ include:
   - apps/dev/gitlab.yml
   - apps/dev/ittools.yml
 
-  - apps/document/convertx.yml
   - apps/document/docmost.yml
   - apps/document/documenso.yml
   - apps/document/filebrowser.yml
   - apps/document/hedge.yml
   - apps/document/nextcloud.yml
-  - apps/document/omni.yml
   - apps/document/openresume.yml
   - apps/document/pairdrop.yml
   - apps/document/paperless.yml
   - apps/document/rxresume.yml
   - apps/document/stirling.yml
-  - apps/document/vert.yml
 
   - apps/infra/apprise.yml
   - apps/infra/aptcache.yml
@@ -83,6 +80,11 @@ include:
   - apps/media/solverr.yml
   - apps/media/sonarr.yml
   - apps/media/tracearr.yml
+
+  - apps/converters/convertx.yml
+  - apps/converters/vert.yml
+  - apps/converters/transmute.yml
+  - apps/converters/omni.yml
 
   - apps/actual.yml
   - apps/airtrail.yml

@@ -32,10 +32,13 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
+  File Converters:
+    style: row
+    columns: 5
   Code:
     style: row
     columns: 5
-  File Edit, Convert:
+  File Editing:
     style: row
     columns: 5
   AI:

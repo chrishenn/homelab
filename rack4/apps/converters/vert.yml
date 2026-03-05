@@ -9,7 +9,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
     networks: [traefik]
     labels:
-      homepage.group: File Edit, Convert
+      homepage.group: File Converters
       homepage.name: Vert
       homepage.icon: converse-light.png
       homepage.href: https://vert.chenn.dev

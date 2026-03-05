@@ -19,14 +19,15 @@ services:
       - $DATA/fileflow/temp:/temp
     networks: [traefik, docker]
     labels:
+      homepage.group: File Editing
+      homepage.instance.private.name: Fileflow
+      homepage.instance.private.icon: fileflows.png
+      homepage.instance.private.href: https://fileflow.henn.dev
+      homepage.instance.private.description: Automatic File Flows
+
       traefik.enable: true
       traefik.http.routers.fileflow.rule: Host(`fileflow.henn.dev`)
       traefik.http.routers.fileflow.entrypoints: websecure
       traefik.http.routers.fileflow.middlewares: hdrs@file
       traefik.http.routers.fileflow.tls.certresolver: cf
       traefik.http.services.fileflow.loadbalancer.server.port: 5000
-      homepage.instance.private.group: File Edit, Convert
-      homepage.instance.private.name: Fileflow
-      homepage.instance.private.icon: fileflows.png
-      homepage.instance.private.href: https://fileflow.henn.dev
-      homepage.instance.private.description: Automatic File Flows

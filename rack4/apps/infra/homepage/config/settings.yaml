@@ -31,7 +31,10 @@ layout:
   Code:
     style: row
     columns: 5
-  File Edit, Convert:
+  File Converters:
+    style: row
+    columns: 5
+  File Editing:
     style: row
     columns: 5
   AI:

@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
-      homepage.group: File Edit, Convert
+      homepage.group: Code
       homepage.name: Excalidraw
       homepage.icon: excalidraw.png
       homepage.href: https://draw.chenn.dev

@@ -14,7 +14,7 @@ services:
       test: wget --spider -q http://dumbdo:3000
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Code
       homepage.instance.private.name: Dumb Do
       homepage.instance.private.icon: dumbpad.png
       homepage.instance.private.href: https://do.henn.dev
@@ -38,7 +38,7 @@ services:
       - $DATA/dumbkan:/app/data
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Code
       homepage.instance.private.name: Dumb Kanban
       homepage.instance.private.icon: dumbpad.png
       homepage.instance.private.href: https://kan.henn.dev
@@ -63,7 +63,7 @@ services:
       - $DATA/dumbdrop:/app/data
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Code
       homepage.instance.private.name: Dumb Drop
       homepage.instance.private.icon: dumbpad.png
       homepage.instance.private.href: https://drop.henn.dev
@@ -85,7 +85,7 @@ services:
       - $DATA/dumbwhois:/app/data
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Code
       homepage.instance.private.name: Dumb Whois
       homepage.instance.private.icon: dumbpad.png
       homepage.instance.private.href: https://whois.henn.dev
@@ -110,7 +110,7 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Code
       homepage.instance.private.name: Dumb Notepad
       homepage.instance.private.icon: dumbpad.png
       homepage.instance.private.href: https://dumbpad.henn.dev

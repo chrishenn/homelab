@@ -12,7 +12,7 @@ services:
       - $DATA/convertx:/app/data
     networks: [traefik]
     labels:
-      homepage.group: File Edit, Convert
+      homepage.group: File Converters
       homepage.name: Convertx
       homepage.icon: vertiv-dark.png
       homepage.href: https://convertx.chenn.dev

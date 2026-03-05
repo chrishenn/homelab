@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
-      homepage.group: File Edit, Convert
+      homepage.group: File Converters
       homepage.name: Omni Converters
       homepage.icon: omni-tools.png
       homepage.href: https://omni.chenn.dev

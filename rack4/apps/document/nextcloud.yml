@@ -39,7 +39,7 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:80/']
     networks: [nextcloud, traefik]
     labels:
-      homepage.instance.private.group: File Edit, Convert
+      homepage.group: File Editing
       homepage.instance.private.name: Nextcloud
       homepage.instance.private.icon: nextcloud.png
       homepage.instance.private.href: https://nextcloud.henn.dev
