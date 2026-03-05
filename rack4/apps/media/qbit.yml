@@ -1,9 +1,63 @@
 # default user/pass: admin/{printed in the container logs}
 ---
 services:
+
+  qui:
+    profiles: [qbit]
+    image: ghcr.io/autobrr/qui:latest
+    container_name: qui
+    restart: unless-stopped
+    environment:
+      QUI__OIDC_ISSUER: $OIDC
+      QUI__OIDC_ENABLED: true
+      QUI__OIDC_CLIENT_ID: $QUI_OIDC_CLIENT
+      QUI__OIDC_CLIENT_SECRET: $QUI_OIDC_SECRET
+      QUI__OIDC_REDIRECT_URL: https://qui.chenn.dev/api/auth/oidc/callback
+      QUI__OIDC_DISABLE_BUILT_IN_LOGIN: true
+    volumes:
+      - $DATA/qui/config:/config
+      - $DATA/qui/torrents:/data/torrents
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $DATA/qbit_novpn:/qbit_novpn/downloads
+    healthcheck:
+      test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
+    networks: [traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Qui
+      homepage.icon: qui.png
+      homepage.href: https://qui.chenn.dev
+      homepage.description: Bittorrent GUI
+
+      traefik.enable: true
+      traefik.http.routers.qui.rule: Host(`qui.henn.dev`)
+      traefik.http.routers.qui.entrypoints: websecure
+      traefik.http.routers.qui.middlewares: hdrs@file
+      traefik.http.routers.qui.tls.certresolver: cf
+      traefik.http.services.qui.loadbalancer.server.port: 7476
+
+      pangolin.public-resources.qui.name: qui
+      pangolin.public-resources.qui.protocol: http
+      pangolin.public-resources.qui.full-domain: qui.chenn.dev
+      pangolin.public-resources.qui.ssl: true
+      pangolin.public-resources.qui.targets[0].method: http
+      pangolin.public-resources.qui.targets[0].port: 7476
+
+      pangolin.public-resources.qui.auth.sso-enabled: true
+      pangolin.public-resources.qui.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.qui.auth.sso-users[1]: ${USER1}
+      pangolin.public-resources.qui.rules[0].action: pass
+      pangolin.public-resources.qui.rules[0].match: country
+      pangolin.public-resources.qui.rules[0].value: US
+      pangolin.public-resources.qui.rules[0].priority: 0
+      pangolin.public-resources.qui.rules[1].action: deny
+      pangolin.public-resources.qui.rules[1].match: country
+      pangolin.public-resources.qui.rules[1].value: ALL
+      pangolin.public-resources.qui.rules[1].priority: 10
+
   gluetun:
-    profiles: [gluetun]
-    image: ghcr.io/qdm12/gluetun:v3.41.1
+    profiles: [qbit]
+    image: qmcgaw/gluetun:latest
     container_name: gluetun
     restart: unless-stopped
     hostname: gluetun
@@ -21,8 +75,6 @@ services:
       VPN_SERVICE_PROVIDER: protonvpn
       WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
       SERVER_COUNTRIES: 'United States,Canada'
-    volumes:
-      - $DATA/gluetun:/gluetun
     networks: [traefik]
     labels:
       homepage.instance.private.group: Media
@@ -46,7 +98,7 @@ services:
       - '51413:51413/udp'
 
   qbit_vpn:
-    profiles: [gluetun]
+    profiles: [qbit]
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbit_vpn
     restart: unless-stopped
@@ -67,7 +119,7 @@ services:
       homepage.instance.private.description: VPN Torrents
 
   qbit_novpn:
-    profiles: [qbit_novpn]
+    profiles: [qbit]
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbit_novpn
     restart: unless-stopped
@@ -79,9 +131,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit_novpn:/config
       - $DATA/qbit_novpn:/qbit_novpn/downloads
-    ports:
-      - '6881:6881/tcp'
-      - '6881:6881/udp'
     networks: [traefik]
     labels:
       homepage.instance.private.group: Media

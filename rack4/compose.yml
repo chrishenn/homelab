@@ -91,7 +91,6 @@ include:
   - apps/media/navidrome.yml
   - apps/media/prowlarr.yml
   - apps/media/qbit.yml
-  - apps/media/qui.yml
   - apps/media/radarr.yml
   - apps/media/recyclarr.yml
   - apps/media/sab.yml
