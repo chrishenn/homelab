@@ -1,24 +1,27 @@
 # generate secrets with `openssl rand -base64 32`
 
-#  j attach documenso /bin/sh
-#  mkdir -p /app/certs && \
-#  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-#    -keyout /tmp/private.key \
-#    -out /tmp/certificate.crt \
-#    -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost' && \
-#  openssl pkcs12 -export -out /app/certs/cert.p12 \
-#    -inkey /tmp/private.key -in /tmp/certificate.crt \
-#    -passout env:NEXT_PRIVATE_SIGNING_PASSPHRASE && \
-#  rm /tmp/private.key /tmp/certificate.crt
-# exit
-
 # on rack4:
+# j attach documenso /bin/sh
+
+# mkdir -p /app/certs && \
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#   -keyout /tmp/private.key \
+#   -out /tmp/certificate.crt \
+#   -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost' && \
+# openssl pkcs12 -export -out /app/certs/cert.p12 \
+#   -inkey /tmp/private.key -in /tmp/certificate.crt \
+#   -passout env:NEXT_PRIVATE_SIGNING_PASSPHRASE && \
+# rm /tmp/private.key /tmp/certificate.crt
+# exit
 # docker compose cp documenso:/app/certs/cert.p12 cert.p12
-# j down documenso
+# j d c documenso
+# sudo rm -rf $DATA/documenso/cert.p12
+# sudo mkdir -p $DATA/documenso
 # sudo chmod 777 $DATA/documenso
-# mv cert.p12 $DATA/documenso/cert.p12
+# sudo mv cert.p12 $DATA/documenso/cert.p12
 # sudo chmod 644 $DATA/documenso/cert.p12
 # sudo chown 1001:1001 $DATA/documenso/cert.p12
+# j u documenso
 
 ---
 services:

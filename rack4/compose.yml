@@ -67,9 +67,9 @@ include:
   - apps/media/audiobookshelf.yml
   - apps/media/bazarr.yml
   - apps/media/calibre.yml
+  - apps/media/dawarich.yml
   - apps/media/immich.yml
   - apps/media/jellyfin.yml
-  - apps/media/seerr.yml
   - apps/media/lidarr.yml
   - apps/media/metube.yml
   - apps/media/navidrome.yml
@@ -79,8 +79,10 @@ include:
   - apps/media/radarr.yml
   - apps/media/recyclarr.yml
   - apps/media/sab.yml
+  - apps/media/seerr.yml
   - apps/media/solverr.yml
   - apps/media/sonarr.yml
+  - apps/media/tracearr.yml
 
   - apps/actual.yml
   - apps/airtrail.yml
@@ -96,6 +98,7 @@ include:
   - apps/littlelink.yml
   - apps/matrix.yml
   - apps/memos.yml
+  - apps/miro.yml
   - apps/n8n.yml
   - apps/ollama.yml
   - apps/openwebui.yml
@@ -109,6 +112,3 @@ include:
   - apps/vikunja.yml
   - apps/warden.yml
   - apps/zulip.yml
-  - apps/miro.yml
-  - apps/tracearr.yml
-  - apps/dawarich.yml
