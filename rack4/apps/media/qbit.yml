@@ -29,8 +29,6 @@ services:
       homepage.instance.private.name: Gluetun
       homepage.instance.private.icon: gluetun.png
       homepage.instance.private.description: Qbittorrent VPN Tunnel
-      homepage.instance.private.widget.type: gluetun
-      homepage.instance.private.widget.url: http://gluetun:8000
 
       traefik.enable: true
       traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)

@@ -54,7 +54,7 @@ services:
     labels:
       docker-volume-backup.stop-during-backup: forgejo
 
-      homepage.group: Code
+      homepage.group: Dev
       homepage.name: Forgejo
       homepage.icon: forgejo.png
       homepage.href: https://forgejo.chenn.dev

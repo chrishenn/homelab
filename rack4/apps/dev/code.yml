@@ -19,7 +19,7 @@ services:
       - $DATA/code:/config
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Code
+      homepage.instance.private.group: Dev
       homepage.instance.private.name: Code
       homepage.instance.private.icon: code.png
       homepage.instance.private.href: https://code.henn.dev

@@ -22,8 +22,6 @@ services:
       homepage.instance.private.icon: traefik.png
       homepage.instance.private.href: https://docker-traefik.henn.dev
       homepage.instance.private.description: Docker Traefik Gui (Rack 4)
-      homepage.instance.private.widget.type: traefik
-      homepage.instance.private.widget.url: https://docker-traefik.henn.dev
 
       traefik.enable: true
       traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)

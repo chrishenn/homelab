@@ -113,7 +113,7 @@ services:
       - $DATA/gitlab/config:/etc/gitlab
     networks: [traefik]
     labels:
-      homepage.group: Code
+      homepage.group: Dev
       homepage.name: Gitlab
       homepage.icon: gitlab.png
       homepage.href: https://gitlab.chenn.dev

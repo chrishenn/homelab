@@ -16,7 +16,7 @@ services:
       test: ['CMD', 'curl', '-fs', 'http://localhost:6157/healthcheck']
     networks: [traefik]
     labels:
-      homepage.group: Code
+      homepage.group: Dev
       homepage.name: OpenGist
       homepage.icon: opengist.png
       homepage.href: https://gist.chenn.dev

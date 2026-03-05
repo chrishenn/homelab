@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
-      homepage.group: Code
+      homepage.group: Dev
       homepage.name: Chartdb
       homepage.icon: chart-db.png
       homepage.href: https://chart.chenn.dev

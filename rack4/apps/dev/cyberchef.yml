@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Code
+      homepage.instance.private.group: Dev
       homepage.instance.private.name: Cyberchef
       homepage.instance.private.icon: cyberchef.png
       homepage.instance.private.href: https://cyberchef.henn.dev

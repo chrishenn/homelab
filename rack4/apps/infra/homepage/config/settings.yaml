@@ -37,7 +37,7 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
-  Code:
+  Dev:
     useEqualHeights: true
     style: row
     columns: 5

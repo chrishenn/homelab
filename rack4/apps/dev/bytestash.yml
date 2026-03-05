@@ -28,7 +28,7 @@ services:
 
     networks: [traefik]
     labels:
-      homepage.group: Code
+      homepage.group: Dev
       homepage.name: ByteStash
       homepage.icon: bytestash.png
       homepage.href: https://stash.chenn.dev
