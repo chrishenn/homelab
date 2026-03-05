@@ -17,7 +17,7 @@ services:
       - $DATA/sab/config:/config
     networks: [traefik]
     labels:
-      homepage.group: Download
+      homepage.group: Media
       homepage.name: Sab
       homepage.icon: sabnzbd.png
       homepage.href: https://sab.chenn.dev

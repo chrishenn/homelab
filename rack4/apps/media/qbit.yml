@@ -25,7 +25,7 @@ services:
       - $DATA/gluetun:/gluetun
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
+      homepage.instance.private.group: Media
       homepage.instance.private.name: Gluetun
       homepage.instance.private.icon: gluetun.png
       homepage.instance.private.description: Qbittorrent VPN Tunnel
@@ -62,7 +62,7 @@ services:
       - $DATA/qbit/downloads:/qbit/downloads
     network_mode: service:gluetun
     labels:
-      homepage.instance.private.group: Download
+      homepage.instance.private.group: Media
       homepage.instance.private.name: Qbittorrent (VPN)
       homepage.instance.private.icon: qbittorrent.png
       homepage.instance.private.href: https://vpn.qbit.henn.dev
@@ -86,7 +86,7 @@ services:
       - '6881:6881/udp'
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Download
+      homepage.instance.private.group: Media
       homepage.instance.private.name: QBittorrent (No VPN)
       homepage.instance.private.icon: qbittorrent.png
       homepage.instance.private.href: https://novpn.qbit.henn.dev

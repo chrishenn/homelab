@@ -9,10 +9,10 @@ services:
       - $DATA/transmute:/app/data
     healthcheck:
       test:
-        - "CMD"
-        - "curl"
-        - "-f"
-        - "http://localhost:3319/api/health/ready"
+        - 'CMD'
+        - 'curl'
+        - '-f'
+        - 'http://localhost:3319/api/health/ready'
       interval: 30s
       timeout: 10s
       retries: 3
@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Transmute
-      homepage.icon: transmute.png
+      homepage.icon: vertiv.png
       homepage.href: https://transmute.chenn.dev
       homepage.description: File Converters
 

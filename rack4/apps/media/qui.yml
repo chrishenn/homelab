@@ -21,7 +21,7 @@ services:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
     networks: [traefik]
     labels:
-      homepage.group: Download
+      homepage.group: Media
       homepage.name: Qui
       homepage.icon: qui.png
       homepage.href: https://qui.chenn.dev
