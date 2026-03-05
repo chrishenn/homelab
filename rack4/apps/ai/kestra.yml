@@ -43,7 +43,7 @@ services:
           url: http://localhost:8080/
     networks: [traefik, docker]
     labels:
-      homepage.instance.private.group: Dev
+      homepage.instance.private.group: AI
       homepage.instance.private.name: Kestra
       homepage.instance.private.icon: kestra.png
       homepage.instance.private.href: https://kestra.henn.dev
