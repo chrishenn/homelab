@@ -26,6 +26,7 @@ POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_
 MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license" }
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
+DAWARICH_SECRET = { provider = "onepass", value = "op://homelab/dawarich/secret" }
 
 TRACEARR_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_secret" }
 TRACEARR_COOKIE_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_cookie_secret" }
@@ -152,3 +153,5 @@ GITLAB_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gitlab/oidc_c
 GITLAB_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gitlab/oidc_secret" }
 RXRESUME_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/rxresume/oidc_client" }
 RXRESUME_OIDC_SECRET = { provider = "onepass", value = "op://homelab/rxresume/oidc_secret" }
+DAWARICH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/dawarich/oidc_client" }
+DAWARICH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/dawarich/oidc_secret" }

@@ -40,9 +40,6 @@ services:
       NEXT_PRIVATE_DATABASE_URL: postgresql://postgres:postgres@documenso_db:5432/documenso
       NEXT_PRIVATE_DIRECT_DATABASE_URL: postgresql://postgres:postgres@documenso_db:5432/documenso
 
-      NEXT_PRIVATE_GOOGLE_CLIENT_ID:
-      NEXT_PRIVATE_GOOGLE_CLIENT_SECRET:
-
       NEXT_PRIVATE_SMTP_TRANSPORT: smtp-auth
       NEXT_PRIVATE_SMTP_HOST: ${SMTP_HOST}
       NEXT_PRIVATE_SMTP_PORT: 465
@@ -95,14 +92,14 @@ services:
 
   documenso_db:
     profiles: [documenso]
-    image: postgres:15
+    image: postgres:18
     container_name: documenso_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: documenso
     volumes:
-      - $DATA/documenso/documenso_db:/var/lib/postgresql/data
+      - $DATA/documenso/documenso_db:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
     networks: [traefik]

@@ -1,13 +1,18 @@
+# looks like you must
+# - ENABLE_INTERNAL_SIGNIN: true
+# - add OIDC manually (ui)
+# - ENABLE_INTERNAL_SIGNIN: false
 ---
 services:
   forgejo:
     profiles: [forgejo]
-    image: codeberg.org/forgejo/forgejo:14
+    image: data.forgejo.org/forgejo/forgejo:14
     container_name: forgejo
     restart: unless-stopped
     environment:
       USER_UID: $PUID
       USER_GID: $PGID
+      FORGEJO__ui__DEFAULT_THEME: forgejo-auto-deuteranopia-protanopia
 
       FORGEJO__service__DISABLE_REGISTRATION: false
       FORGEJO__service__REGISTER_MANUAL_CONFIRM: false
@@ -15,11 +20,9 @@ services:
       FORGEJO__service__ENABLE_INTERNAL_SIGNIN: false
       FORGEJO__service__DEFAULT_KEEP_EMAIL_PRIVATE: true
 
-      FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION: true
-
       FORGEJO__openid__ENABLE_OPENID_SIGNUP: true
       FORGEJO__openid__ENABLE_OPENID_SIGNIN: true
-      FORGEJO__openid__WHITELISTED_URIS: '["$OIDC"]'
+      FORGEJO__openid__WHITELISTED_URIS: '["$OIDC",]'
 
       FORGEJO__repository__ENABLE_PUSH_CREATE_USER: true
       FORGEJO__repository__ENABLE_PUSH_CREATE_ORG: true
@@ -33,6 +36,14 @@ services:
       # listen on 22 but put 2424 in the repo urls (proxy listens on :2424 and routes tcp to container's :22)
       FORGEJO__server__SSH_PORT: 2424
       FORGEJO__server__SSH_LISTEN_PORT: 22
+
+      FORGEJO__mailer__ENABLED: true
+      FORGEJO__mailer__SMTP_ADDR: $SMTP_HOST
+      FORGEJO__mailer__SMTP_PORT: 465
+      FORGEJO__mailer__USER: $SMTP_USER
+      FORGEJO__mailer__PASSWD: $SMTP_TOKEN
+      FORGEJO__mailer__FROM: $SMTP_USER
+
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -99,7 +110,7 @@ services:
 
   forgejo_db:
     profiles: [forgejo]
-    image: postgres:14
+    image: postgres:18
     container_name: forgejo_db
     restart: unless-stopped
     environment:
@@ -107,7 +118,8 @@ services:
       POSTGRES_PASSWORD: forgejo
       POSTGRES_DB: forgejo
     volumes:
-      - $DATA/forgejo/db:/var/lib/postgresql/data
+#      - $DATA/forgejo/db:/var/lib/postgresql/data
+      - $DATA/forgejo/db:/var/lib/postgresql
     networks: [traefik]
     labels:
       docker-volume-backup.stop-during-backup: forgejo

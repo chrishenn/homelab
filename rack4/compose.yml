@@ -111,3 +111,4 @@ include:
   - apps/zulip.yml
   - apps/miro.yml
   - apps/tracearr.yml
+  - apps/dawarich.yml

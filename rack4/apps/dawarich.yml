@@ -1,0 +1,178 @@
+# oidc on the app side can only handle one domain
+---
+x-dawarich_env: &dawarich_env
+  DATABASE_HOST: dawarich_db
+  DATABASE_PORT: 5432
+  DATABASE_USERNAME: postgres
+  DATABASE_PASSWORD: password
+  DATABASE_NAME: dawarich_development
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DB: dawarich_development
+
+  APPLICATION_HOSTS: localhost,::1,127.0.0.1,dawarich.chenn.dev
+  TIME_ZONE: $TZ
+  APPLICATION_PROTOCOL: http
+  SECRET_KEY_BASE: $DAWARICH_SECRET
+  RAILS_LOG_TO_STDOUT: true
+  SELF_HOSTED: true
+  STORE_GEODATA: true
+  BACKGROUND_PROCESSING_CONCURRENCY: 10
+  RAILS_ENV: production
+
+  REDIS_URL: redis://dawarich_redis:6379
+  PROMETHEUS_EXPORTER_ENABLED: false
+  PROMETHEUS_EXPORTER_HOST: 0.0.0.0
+  PROMETHEUS_EXPORTER_PORT: 9394
+
+  OIDC_ISSUER: $OIDC
+  OIDC_PROVIDER_NAME: PocketID
+  OIDC_AUTO_REGISTER: true
+  ALLOW_EMAIL_PASSWORD_REGISTRATION: false
+  OIDC_CLIENT_ID: $DAWARICH_OIDC_CLIENT
+  OIDC_CLIENT_SECRET: $DAWARICH_OIDC_SECRET
+  OIDC_REDIRECT_URI: https://dawarich.chenn.dev/users/auth/openid_connect/callback
+
+  SMTP_SERVER: $SMTP_HOST
+  SMTP_PORT: 465
+  SMTP_DOMAIN: $SMTP_USER
+  SMTP_USERNAME: $SMTP_USER
+  SMTP_PASSWORD: $SMTP_TOKEN
+  SMTP_FROM: $SMTP_USER
+
+services:
+  dawarich:
+    profiles: [dawarich]
+    image: freikin/dawarich:latest
+    container_name: dawarich
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    entrypoint: web-entrypoint.sh
+    command: ['bin/rails', 'server', '-p', '3000', '-b', '::']
+    environment:
+      <<: *dawarich_env
+    volumes:
+      - $DATA/dawarich/dawarich_public:/var/app/public
+      - $DATA/dawarich/dawarich_watched:/var/app/tmp/imports/watched
+      - $DATA/dawarich/dawarich_storage:/var/app/storage
+      - $DATA/dawarich/dawarich_db_data:/dawarich_db_data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 100m
+        max-file: 2
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'" ]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+    depends_on:
+      dawarich_db:
+        condition: service_healthy
+        restart: true
+      dawarich_redis:
+        condition: service_healthy
+        restart: true
+    # integration with immich requires treafik network
+    networks: [dawarich, traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Dawarich
+      homepage.icon: dawarich.png
+      homepage.href: https://dawarich.chenn.dev
+      homepage.description: Geolocation for Immich
+
+      pangolin.public-resources.dawarich.name: dawarich
+      pangolin.public-resources.dawarich.protocol: http
+      pangolin.public-resources.dawarich.full-domain: dawarich.chenn.dev
+      pangolin.public-resources.dawarich.ssl: true
+      pangolin.public-resources.dawarich.targets[0].method: http
+      pangolin.public-resources.dawarich.targets[0].port: 3000
+      pangolin.public-resources.dawarich.auth.sso-enabled: true
+      pangolin.public-resources.immich.auth.sso-roles[0]: Member
+      pangolin.public-resources.dawarich.rules[0].action: pass
+      pangolin.public-resources.dawarich.rules[0].match: country
+      pangolin.public-resources.dawarich.rules[0].value: US
+      pangolin.public-resources.dawarich.rules[0].priority: 0
+      pangolin.public-resources.dawarich.rules[1].action: deny
+      pangolin.public-resources.dawarich.rules[1].match: country
+      pangolin.public-resources.dawarich.rules[1].value: ALL
+      pangolin.public-resources.dawarich.rules[1].priority: 10
+
+  dawarich_sidekiq:
+    profiles: [dawarich]
+    image: freikin/dawarich:latest
+    container_name: dawarich_sidekiq
+    stdin_open: true
+    tty: true
+    entrypoint: sidekiq-entrypoint.sh
+    command: ['sidekiq']
+    restart: on-failure
+    environment:
+      <<: *dawarich_env
+    volumes:
+      - $DATA/dawarich/dawarich_public:/var/app/public
+      - $DATA/dawarich/dawarich_watched:/var/app/tmp/imports/watched
+      - $DATA/dawarich/dawarich_storage:/var/app/storage
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 100m
+        max-file: 2
+    healthcheck:
+      test: [ "CMD-SHELL", "pgrep -f sidekiq" ]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+    depends_on:
+      dawarich_db:
+        condition: service_healthy
+        restart: true
+      dawarich_redis:
+        condition: service_healthy
+        restart: true
+      dawarich:
+        condition: service_healthy
+        restart: true
+    networks: [dawarich]
+
+  dawarich_redis:
+    profiles: [dawarich]
+    image: redis:7.4-alpine
+    container_name: dawarich_redis
+    restart: unless-stopped
+    command: redis-server
+    volumes:
+      - $DATA/dawarich/dawarich_shared:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks: [dawarich]
+
+  dawarich_db:
+    profiles: [dawarich]
+    image: postgis/postgis:17-3.5-alpine
+    container_name: dawarich_db
+    restart: unless-stopped
+    shm_size: 2G
+    volumes:
+      - $DATA/dawarich/dawarich_db_data:/var/lib/postgresql/data
+      - $DATA/dawarich/dawarich_shared:/var/shared
+    environment:
+      <<: *dawarich_env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dawarich_development"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks: [dawarich]
+
+networks:
+  dawarich:
