@@ -26,7 +26,6 @@ services:
       pangolin.public-resources.chartdb.ssl: true
       pangolin.public-resources.chartdb.targets[0].method: http
       pangolin.public-resources.chartdb.targets[0].port: 80
-
       pangolin.public-resources.chartdb.auth.sso-enabled: true
       pangolin.public-resources.chartdb.auth.sso-roles[0]: Member
       pangolin.public-resources.chartdb.rules[0].action: pass

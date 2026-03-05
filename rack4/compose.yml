@@ -98,6 +98,7 @@ include:
   - apps/media/solverr.yml
   - apps/media/sonarr.yml
   - apps/media/tracearr.yml
+  - apps/media/booklore.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml
