@@ -30,7 +30,6 @@ services:
       pangolin.public-resources.kuma.ssl: true
       pangolin.public-resources.kuma.targets[0].method: http
       pangolin.public-resources.kuma.targets[0].port: 3001
-
       pangolin.public-resources.kuma.auth.sso-enabled: true
       pangolin.public-resources.kuma.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.kuma.rules[0].action: pass

@@ -11,8 +11,24 @@ networks:
           gateway: $FRONTEND
 
 include:
+  - apps/ai/cognito.yml
+  - apps/ai/comfy.yml
+  - apps/ai/kestra.yml
+  - apps/ai/ldr.yml
+  - apps/ai/n8n.yml
+  - apps/ai/ollama.yml
+  - apps/ai/openwebui.yml
+  - apps/ai/perplexica.yml
+  - apps/ai/searx.yml
+  - apps/ai/speach.yml
+
   - apps/backup/backrest.yml
   - apps/backup/rsync.yml
+
+  - apps/converters/convertx.yml
+  - apps/converters/omni.yml
+  - apps/converters/transmute.yml
+  - apps/converters/vert.yml
 
   - apps/dev/bytestash.yml
   - apps/dev/chartdb.yml
@@ -37,6 +53,8 @@ include:
   - apps/document/rxresume.yml
   - apps/document/stirling.yml
 
+  - apps/games/wordle.yml
+
   - apps/infra/apprise.yml
   - apps/infra/aptcache.yml
   - apps/infra/arcane.yml
@@ -60,6 +78,7 @@ include:
   - apps/infra/termix.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
+  - apps/infra/warden.yml
 
   - apps/media/audiobookshelf.yml
   - apps/media/bazarr.yml
@@ -81,36 +100,19 @@ include:
   - apps/media/sonarr.yml
   - apps/media/tracearr.yml
 
-  - apps/converters/convertx.yml
-  - apps/converters/vert.yml
-  - apps/converters/transmute.yml
-  - apps/converters/omni.yml
-
-  - apps/actual.yml
-  - apps/airtrail.yml
-  - apps/cognito.yml
-  - apps/comfy.yml
-  - apps/fileflow.yml
-  - apps/game.yml
-  - apps/karakeep.yml
-  - apps/kestra.yml
-  - apps/ldr.yml
-  - apps/linkding.yml
-  - apps/linkstack.yml
-  - apps/littlelink.yml
-  - apps/matrix.yml
-  - apps/memos.yml
-  - apps/miro.yml
-  - apps/n8n.yml
-  - apps/ollama.yml
-  - apps/openwebui.yml
-  - apps/owncast.yml
-  - apps/perplexica.yml
-  - apps/planka.yml
-  - apps/rally.yml
-  - apps/searx.yml
-  - apps/speach.yml
-  - apps/tududi.yml
-  - apps/vikunja.yml
-  - apps/warden.yml
-  - apps/zulip.yml
+  - apps/tools/actual.yml
+  - apps/tools/airtrail.yml
+  - apps/tools/fileflow.yml
+  - apps/tools/karakeep.yml
+  - apps/tools/linkding.yml
+  - apps/tools/linkstack.yml
+  - apps/tools/littlelink.yml
+  - apps/tools/matrix.yml
+  - apps/tools/memos.yml
+  - apps/tools/miro.yml
+  - apps/tools/owncast.yml
+  - apps/tools/planka.yml
+  - apps/tools/rally.yml
+  - apps/tools/tududi.yml
+  - apps/tools/vikunja.yml
+  - apps/tools/zulip.yml

@@ -26,37 +26,46 @@ background:
 
 layout:
   Media:
-    style: row
-    columns: 5
-  Code:
-    style: row
-    columns: 5
-  File Converters:
-    style: row
-    columns: 5
-  File Editing:
-    style: row
-    columns: 5
-  AI:
-    style: row
-    columns: 5
-  Tools:
-    style: row
-    columns: 5
-  Download:
-    style: row
-    columns: 5
-  Hardware:
-    style: row
-    columns: 5
-  Webtop:
-    style: row
-    columns: 5
-  Infra:
     useEqualHeights: true
     style: row
     columns: 5
   Games:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  File Converters:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Code:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  File Editing:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  AI:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Tools:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Download:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Hardware:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Webtop:
+    useEqualHeights: true
+    style: row
+    columns: 5
+  Infra:
     useEqualHeights: true
     style: row
     columns: 5

@@ -44,13 +44,6 @@ services:
       homepage.href: https://hedge.chenn.dev
       homepage.description: Realtime Markdown Editing
 
-      #      traefik.enable: true
-      #      traefik.http.routers.hedge.rule: Host(`hedge.henn.dev`)
-      #      traefik.http.routers.hedge.entrypoints: websecure
-      #      traefik.http.routers.hedge.middlewares: hdrs@file
-      #      traefik.http.routers.hedge.tls.certresolver: cf
-      #      traefik.http.services.hedge.loadbalancer.server.port: 3000
-
       pangolin.public-resources.hedge.name: hedge
       pangolin.public-resources.hedge.protocol: http
       pangolin.public-resources.hedge.full-domain: hedge.chenn.dev

@@ -12,7 +12,7 @@ services:
     volumes:
       - $DATA/librespeed:/config
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Infra
       homepage.instance.private.name: librespeed
       homepage.instance.private.icon: librespeed.png
       # bypass traefik and use the ip for performance over 3Gbps

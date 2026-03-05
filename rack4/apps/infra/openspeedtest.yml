@@ -10,7 +10,7 @@ services:
       PUID: $PUID
       PGID: $PGID
     labels:
-      homepage.instance.private.group: Tools
+      homepage.instance.private.group: Infra
       homepage.instance.private.name: Openspeedtest
       homepage.instance.private.icon: openspeedtest.png
       # bypass traefik and use the ip for performance over 3Gbps

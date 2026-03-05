@@ -19,7 +19,7 @@ services:
       - $DATA/fileflow/temp:/temp
     networks: [traefik, docker]
     labels:
-      homepage.group: File Editing
+      homepage.group: Tools
       homepage.instance.private.name: Fileflow
       homepage.instance.private.icon: fileflows.png
       homepage.instance.private.href: https://fileflow.henn.dev
