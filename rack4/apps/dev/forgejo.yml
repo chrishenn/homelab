@@ -118,7 +118,7 @@ services:
       POSTGRES_PASSWORD: forgejo
       POSTGRES_DB: forgejo
     volumes:
-#      - $DATA/forgejo/db:/var/lib/postgresql/data
+      #      - $DATA/forgejo/db:/var/lib/postgresql/data
       - $DATA/forgejo/db:/var/lib/postgresql
     networks: [traefik]
     labels:
