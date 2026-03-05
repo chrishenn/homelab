@@ -1,7 +1,6 @@
 # default user/pass: admin/{printed in the container logs}
 ---
 services:
-
   qui:
     profiles: [qbit]
     image: ghcr.io/autobrr/qui:latest
