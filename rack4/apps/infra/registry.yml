@@ -1,6 +1,5 @@
 ---
 services:
-
   registry_docker:
     profiles: [registry]
     image: registry:2

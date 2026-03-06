@@ -1,0 +1,4 @@
+config:
+  rack2:clusterName: cluster0
+  rack2:diskPath: /dev/0
+  rack2:nodeIP: 192.168.122.241

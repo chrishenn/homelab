@@ -16,4 +16,3 @@ add cake-diffserv=diffserv4 cake-mpu=84 cake-nat=yes cake-overhead=42 \
 /queue simple
 add max-limit=1350M/35M name=cake-simple queue=cake-down-simple/cake-up-simple \
  target=sfp-sfpplus1
-
