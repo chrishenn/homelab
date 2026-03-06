@@ -128,9 +128,11 @@ def boot_cluster(cluster: dict):
     ips = list(pluck("ip", cluster["nodes"]))
     sec.client_configuration.apply(lambda cc: cfg_talos_write(cc, ips, ips, paths["talos"]))
 
-    # TODO: this is failing. I assume the cluster-endpoint is invalid, since that's the only thing that changed from the
-    #   working example
-    # wrong zoneid! made the entrypoint under the wrong domain
+    # TODO: this is failing - hangs indefinitely
+    #   dns record is up but caches and retries may be keeping the old ones alive for quite some time
+    #   waited for dig to start returning the correct ip, then ran pulumi up again - hangs
+    #   talos health shows all OK
+    #   pulumi seems unable to cancel or delete its pending create operations. aggravating
     # write kubeconfig
     cfg_kube = talos.cluster.Kubeconfig(
         "kubeconfig",

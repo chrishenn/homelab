@@ -2,9 +2,9 @@ config:
   clusters:
     [
       {
-        name: cdev,
-        main: cdev.henn.dev,
-        enpt: https://cdev.henn.dev:6443,
+        name: dev,
+        main: dev.henn.dev,
+        enpt: https://dev.henn.dev:6443,
         nodes: [{ i: 0, type: controlplane, ip: 192.168.1.29, disk: /dev/nvme0n1, if: enp10s0np0 }],
       },
     ]
