@@ -63,3 +63,20 @@ pulumi new
 pulumi plugin install resource talos
 uv add pulumiverse-talos
 ```
+
+boot from iso. grab ip. use talosctl on dev machine,
+
+```bash
+export node0="192.168.1.29"
+talosctl get disks --insecure --nodes
+# disk: nvme0n1
+```
+
+populate the node ip and disk name (as /dev/nvme0n1) into the Pulumi.dev.yaml
+
+```bash
+pulumi preview
+pulumi up
+talosctl --nodes $node0 --talosconfig=.secrets/talosconfig health
+KUBECONFIG=.secrets/kubeconfig kubectl get nodes
+```

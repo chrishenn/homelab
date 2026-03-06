@@ -1,3 +1,5 @@
 [tools]
+kubectl = "latest"
 pulumi = "latest"
+talosctl = "latest"
 uv = "latest"

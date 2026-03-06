@@ -6,13 +6,19 @@ import pulumiverse_talos as talos
 import yaml
 
 
-def cfg_talos_fmt(
+def cfg_talos_dump(cfg: dict, path: Path):
+    with path.open("w") as f:
+        yaml.dump(cfg, f, default_flow_style=False)
+
+
+def cfg_talos_write(
     cc: talos.machine.outputs.ClientConfiguration,
     endpoints: list[str],
     nodes: list[str],
+    path: Path,
     context_name: str = "default",
-) -> dict:
-    return {
+):
+    cfg_talos = {
         "context": context_name,
         "contexts": {
             context_name: {
@@ -24,11 +30,7 @@ def cfg_talos_fmt(
             }
         },
     }
-
-
-def cfg_talos_write(cfg: dict, path: Path):
-    with path.open("w") as f:
-        yaml.dump(cfg, f, default_flow_style=False)
+    cfg_talos_dump(cfg_talos, path)
 
 
 def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult):
@@ -53,11 +55,8 @@ def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult):
 
 
 def main():
-    # first, boot the node from talos linux iso. Manually find the IP and disk name
-    # To get disks: `talosctl get disks --insecure --nodes <IP>`
-
     # data from config
-    config = pulumi.Config()
+    config = pulumi.Config("rack2")
     cluster_name = config.require("clusterName")
     disk = config.require("diskPath")
     node_ip = config.require("nodeIP")
@@ -67,8 +66,10 @@ def main():
     endpoints = [node_ip]
     nodes = [node_ip]
 
-    cfgpath_talos = Path(".secrets/talosconfig")
-    cfgpath_kube = Path(".secrets/kubeconfig")
+    sec_dir = Path(".secrets")
+    sec_dir.mkdir(parents=True, exist_ok=True)
+    cfgpath_talos = Path(sec_dir / "talosconfig")
+    cfgpath_kube = Path(sec_dir / "kubeconfig")
 
     # Initialize Talos & Kubernetes Secrets
     secrets = talos.machine.Secrets("secrets")
@@ -93,8 +94,7 @@ def main():
     )
 
     # write taloscfg
-    cc_fmt: dict = secrets.client_configuration.apply(lambda cc: cfg_talos_fmt(cc, endpoints, nodes))
-    cfg_talos_write(cc_fmt, cfgpath_talos)
+    secrets.client_configuration.apply(lambda cc: cfg_talos_write(cc, endpoints, nodes, cfgpath_talos))
 
     # write kubeconfig
     cfg_kube = talos.cluster.Kubeconfig(
