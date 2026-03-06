@@ -16,7 +16,7 @@ services:
     volumes:
       - $DATA/tududi/db:/app/backend/db
       - $DATA/tududi/uploads:/app/backend/uploads
-    networks: [traefik, docmost]
+    networks: [traefik]
     labels:
       homepage.group: Tools
       homepage.name: Tududi

@@ -1,7 +1,4 @@
 networks:
-  docker:
-    name: docker
-    driver: bridge
   traefik:
     name: traefik
     driver: bridge
@@ -81,7 +78,6 @@ include:
   - apps/infra/ntfy.yml
   - apps/infra/openspeedtest.yml
   - apps/infra/pocketid.yml
-  - apps/infra/socket-proxy.yml
   - apps/infra/termix.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml

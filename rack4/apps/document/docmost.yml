@@ -21,7 +21,7 @@ services:
       MAIL_FROM_ADDRESS: $SMTP_USER
     volumes:
       - $DATA/docmost/docmost:/app/data/storage
-    networks: [traefik, docmost]
+    networks: [docmost, traefik]
     labels:
       homepage.group: File Editors
       homepage.name: Docmost

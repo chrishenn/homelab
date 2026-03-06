@@ -8,13 +8,13 @@ services:
     volumes:
       - ./homepage_pub/config:/app/config
       - ./homepage_pub/images:/app/public/images
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
       HOMEPAGE_ALLOWED_HOSTS: home.chenn.dev
-    networks: [traefik, newt, docker]
+    networks: [traefik, newt]
     labels:
       pangolin.public-resources.homepage_pub.name: homepage_pub
       pangolin.public-resources.homepage_pub.protocol: http
@@ -41,13 +41,13 @@ services:
     volumes:
       - ./homepage/config:/app/config
       - ./homepage/images:/app/public/images
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
       HOMEPAGE_ALLOWED_HOSTS: home.henn.dev
-    networks: [traefik, newt, docker]
+    networks: [traefik, newt]
     labels:
       traefik.enable: true
       traefik.http.routers.home.rule: Host(`home.henn.dev`)

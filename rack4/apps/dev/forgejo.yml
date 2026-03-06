@@ -50,7 +50,7 @@ services:
       - $DATA/forgejo/data:/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
-    networks: [traefik]
+    networks: [forgejo, traefik]
     labels:
       docker-volume-backup.stop-during-backup: forgejo
 
@@ -118,11 +118,10 @@ services:
       POSTGRES_PASSWORD: forgejo
       POSTGRES_DB: forgejo
     volumes:
-      #      - $DATA/forgejo/db:/var/lib/postgresql/data
       - $DATA/forgejo/db:/var/lib/postgresql
-    networks: [traefik]
+    networks: [forgejo]
     labels:
-      docker-volume-backup.stop-during-backup: forgejo
+      docker-volume-backup.stop-during-backup: forgejo_db
 
   forgejo_backup:
     profiles: [forgejo]
@@ -132,10 +131,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
-      # source data to backup
       - $DATA/forgejo/data:/backup/forgejo/data:ro
       - $DATA/forgejo/db:/backup/forgejo/db:ro
-      # backup destination
       - $BACKUP/forgejo:/archive
     environment:
       TZ: $TZ
@@ -144,4 +141,6 @@ services:
       BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
       BACKUP_PRUNING_PREFIX: 'forgejo-'
       BACKUP_RETENTION_DAYS: 2
-    networks: [traefik, docker]
+
+networks:
+  forgejo:

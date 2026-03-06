@@ -29,7 +29,7 @@ services:
       - $DATA/paperless/media:/usr/src/paperless/media
       - $DATA/paperless/export:/usr/src/paperless/export
       - $DATA/paperless/consume:/usr/src/paperless/consume
-    networks: [traefik, paperless]
+    networks: [paperless, traefik]
     labels:
       homepage.instance.private.group: AI
       homepage.instance.private.name: Paperless
@@ -66,7 +66,7 @@ services:
 
     volumes:
       - $DATA/paperless/paperless_ai:/app/data
-    networks: [traefik, paperless]
+    networks: [paperless, traefik]
     labels:
       homepage.instance.private.group: AI
       homepage.instance.private.name: Paperless AI
@@ -112,7 +112,7 @@ services:
       PDF_OCR_COMPLETE_TAG: paperless-gpt-ocr-complete
     volumes:
       - $DATA/paperless/paperless_gpt:/app/prompts
-    networks: [traefik, paperless]
+    networks: [paperless, traefik]
     labels:
       homepage.instance.private.group: AI
       homepage.instance.private.name: Paperless GPT

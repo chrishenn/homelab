@@ -41,7 +41,7 @@ services:
             tmpDir:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:8080/
-    networks: [traefik, docker]
+    networks: [kestra, traefik]
     labels:
       homepage.instance.private.group: AI
       homepage.instance.private.name: Kestra
@@ -69,4 +69,7 @@ services:
       POSTGRES_PASSWORD: k3str4
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
-    networks: [traefik]
+    networks: [kestra]
+
+networks:
+  kestra:

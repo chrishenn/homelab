@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks: [traefik, docker]
+    networks: [traefik]
     labels:
       homepage.instance.private.group: Infra
       homepage.instance.private.name: Dozzle

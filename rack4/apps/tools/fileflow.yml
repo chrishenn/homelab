@@ -17,7 +17,7 @@ services:
       - /mnt/q/media_library:/media
       - $DATA/fileflow/fileflow:/app/Data
       - $DATA/fileflow/temp:/temp
-    networks: [traefik, docker]
+    networks: [traefik]
     labels:
       homepage.group: Tools
       homepage.instance.private.name: Fileflow

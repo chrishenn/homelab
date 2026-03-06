@@ -7,14 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/transmute:/app/data
-    healthcheck:
-      test: wget -q --tries=1 http://0.0.0.0:3319/api/health/ready
-#      test: ["CMD-SHELL", "curl -f http://0.0.0.0:3319/api/health/ready"]
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Converters
       homepage.name: Transmute

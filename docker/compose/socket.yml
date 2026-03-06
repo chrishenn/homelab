@@ -1,15 +1,13 @@
-# containers that consume this socket-proxy must be on the "docker" network to find this
-#
 # can be used like this (portainer, watchtower):
 #   DOCKER_HOST: tcp://socket-proxy:2375
 # or like this for traefik:
 # - --providers.docker.endpoint=tcp://socket-proxy:2375
 ---
 services:
-  socket-proxy:
-    profiles: [socket-proxy]
+  socket:
+    profiles: [socket]
     image: linuxserver/socket-proxy:latest
-    container_name: socket-proxy
+    container_name: socket
     restart: unless-stopped
     environment:
       PUID: $PUID
@@ -45,4 +43,3 @@ services:
       - no-new-privileges=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks: [docker]
