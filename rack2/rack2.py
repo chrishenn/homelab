@@ -1,9 +1,13 @@
 import json
+import os
 from pathlib import Path
 
 import pulumi
+import pulumi_cloudflare as cf
 import pulumiverse_talos as talos
 import yaml
+from cytoolz import curry, pluck
+from pulumi import ResourceOptions
 
 
 def cfg_talos_dump(cfg: dict, path: Path):
@@ -16,12 +20,12 @@ def cfg_talos_write(
     endpoints: list[str],
     nodes: list[str],
     path: Path,
-    context_name: str = "default",
+    tctx: str = "default",
 ):
     cfg_talos = {
-        "context": context_name,
+        "context": tctx,
         "contexts": {
-            context_name: {
+            tctx: {
                 "endpoints": endpoints,
                 "nodes": nodes,
                 "ca": cc.ca_certificate,
@@ -54,60 +58,97 @@ def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult):
     }
 
 
-def main():
-    # data from config
-    config = pulumi.Config("rack2")
-    cluster_name = config.require("clusterName")
-    disk = config.require("diskPath")
-    node_ip = config.require("nodeIP")
+def env_valid(name: str) -> str:
+    assert name in os.environ
+    val = os.environ[name]
+    assert val
+    return val
 
-    # derived consts
-    cluster_endpoint = f"https://{node_ip}:6443"
-    endpoints = [node_ip]
-    nodes = [node_ip]
 
-    sec_dir = Path(".secrets")
+@curry
+def boot_node(cluster: dict, node: dict):
+    dnsrec = None
+    if node["type"] == "controlplane":
+        dnsrec = cf.DnsRecord(
+            resource_name=f"dnsrec_{node['i']}",
+            type="A",
+            name=cluster["name"],
+            content=node["ip"],
+            ttl=1,
+            zone_id=cluster["zoneid"],
+            proxied=False,
+        )
+    patch = {
+        "machine": {
+            "install": {"disk": node["disk"]},
+            "network": {"interfaces": [{"interface": node["if"], "dhcp": True}]},
+        }
+    }
+    cfg_node = talos.machine.get_configuration_output(
+        cluster_name=cluster["name"],
+        machine_type=node["type"],
+        cluster_endpoint=cluster["enpt"],
+        machine_secrets=cluster["secrets"].machine_secrets.apply(sec_machine_fmt),
+    )
+    return talos.machine.ConfigurationApply(
+        f"cfgapply_{node['i']}",
+        client_configuration=cluster["secrets"].client_configuration,
+        machine_configuration_input=cfg_node.machine_configuration,
+        node=node["ip"],
+        config_patches=[json.dumps(patch)],
+        opts=ResourceOptions(depends_on=dnsrec),
+    )
+
+
+def boot_cluster(cluster: dict):
+    # TODO: cf secrets - zoneid for cluster_domain
+    cluster["zoneid"] = env_valid("ZONEID")
+    cluster["secrets"] = talos.machine.Secrets("secrets")
+    env_valid("CLOUDFLARE_API_TOKEN")
+
+    # file paths
+    sec_dir = Path(f".secrets/{cluster['name']}")
     sec_dir.mkdir(parents=True, exist_ok=True)
-    cfgpath_talos = Path(sec_dir / "talosconfig")
-    cfgpath_kube = Path(sec_dir / "kubeconfig")
+    paths = {
+        "talos": Path(sec_dir / "talosconfig"),
+        "kube": Path(sec_dir / "kubeconfig"),
+    }
 
-    # Initialize Talos & Kubernetes Secrets
-    secrets = talos.machine.Secrets("secrets")
-    cfg_machine = talos.machine.get_configuration_output(
-        cluster_name=cluster_name,
-        machine_type="controlplane",
-        cluster_endpoint=cluster_endpoint,
-        machine_secrets=secrets.machine_secrets.apply(sec_machine_fmt),
-    )
-    cfg_apply = talos.machine.ConfigurationApply(
-        "configurationApply",
-        client_configuration=secrets.client_configuration,
-        machine_configuration_input=cfg_machine.machine_configuration,
-        node=node_ip,
-        config_patches=[json.dumps({"machine": {"install": {"disk": disk}}})],
-    )
+    # configure nodes, boot cluster
+    sec = cluster["secrets"]
+    cfgapps = list(map(boot_node(cluster), cluster["nodes"]))
     talos.machine.Bootstrap(
         "bootstrap",
-        node=node_ip,
-        client_configuration=secrets.client_configuration,
-        opts=pulumi.ResourceOptions(depends_on=[cfg_apply]),
+        node=cluster["nodes"][0]["ip"],
+        client_configuration=sec.client_configuration,
+        opts=ResourceOptions(depends_on=cfgapps),
     )
 
     # write taloscfg
-    secrets.client_configuration.apply(lambda cc: cfg_talos_write(cc, endpoints, nodes, cfgpath_talos))
+    ips = list(pluck("ip", cluster["nodes"]))
+    sec.client_configuration.apply(lambda cc: cfg_talos_write(cc, ips, ips, paths["talos"]))
 
+    # TODO: this is failing. I assume the cluster-endpoint is invalid, since that's the only thing that changed from the
+    #   working example
+    # wrong zoneid! made the entrypoint under the wrong domain
     # write kubeconfig
     cfg_kube = talos.cluster.Kubeconfig(
         "kubeconfig",
-        client_configuration=secrets.client_configuration,
-        node=node_ip,
-        endpoint=node_ip,
+        client_configuration=sec.client_configuration,
+        node=cluster["nodes"][0]["ip"],
+        endpoint=cluster["enpt"],
     )
-    cfg_kube.kubeconfig_raw.apply(lambda cfg: cfgpath_kube.open("w").write(cfg))
+    cfg_kube.kubeconfig_raw.apply(lambda cfg: paths["kube"].open("w").write(cfg))
 
     # Export data to Pulumi outputs
     pulumi.export("kubeconfig", cfg_kube.kubeconfig_raw)
-    pulumi.export("clientConfiguration", secrets.client_configuration)
+    pulumi.export("clientConfiguration", sec.client_configuration)
+
+
+def main():
+    cfg = pulumi.Config()
+    clusters: list[dict] = cfg.require_object("clusters")
+    list(map(boot_cluster, clusters))
 
 
 if __name__ == "__main__":

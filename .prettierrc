@@ -18,3 +18,9 @@ overrides:
 - files: ['*.sh']
   options:
     useTabs: true
+
+# individual files
+- files: ['Pulumi*yaml']
+  options:
+    tabWidth: 2
+    printWidth: 120

@@ -1,4 +1,10 @@
 config:
-  rack2:clusterName: cluster0
-  rack2:diskPath: /dev/nvme0n1
-  rack2:nodeIP: 192.168.1.29
+  clusters:
+    [
+      {
+        name: cdev,
+        main: cdev.henn.dev,
+        enpt: https://cdev.henn.dev:6443,
+        nodes: [{ i: 0, type: controlplane, ip: 192.168.1.29, disk: /dev/nvme0n1, if: enp10s0np0 }],
+      },
+    ]
