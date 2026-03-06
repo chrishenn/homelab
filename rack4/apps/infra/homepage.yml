@@ -11,8 +11,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       TZ: $TZ
-      PUID: $PUID
-      PGID: $PGID
       HOMEPAGE_ALLOWED_HOSTS: home.chenn.dev
     networks: [traefik, newt]
     labels:
@@ -44,8 +42,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       TZ: $TZ
-      PUID: $PUID
-      PGID: $PGID
       HOMEPAGE_ALLOWED_HOSTS: home.henn.dev
     networks: [traefik, newt]
     labels:
