@@ -7,8 +7,15 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: $FRONTEND_SUBNET
-          gateway: $FRONTEND
+        - subnet: $TRAEFIK_SUBNET
+          gateway: $TRAEFIK_GATEWAY
+  newt:
+    name: newt
+    driver: bridge
+    ipam:
+      config:
+        - subnet: $NEWT_SUBNET
+          gateway: $NEWT_GATEWAY
 
 include:
   - apps/ai/cognito.yml

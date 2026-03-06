@@ -57,11 +57,11 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
-  Hardware:
+  Webtop:
     useEqualHeights: true
     style: row
     columns: 5
-  Webtop:
+  Hardware:
     useEqualHeights: true
     style: row
     columns: 5

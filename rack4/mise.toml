@@ -35,8 +35,10 @@ BACKUP = "/mnt/h/backup"
 MEDIA = "/mnt/q/media_library"
 
 # This is to ensure the auto-generated range does not conflict with any existing subnets
-FRONTEND = "192.168.100.1"
-FRONTEND_SUBNET = "192.168.100.0/24"
+TRAEFIK_GATEWAY = "192.168.100.1"
+TRAEFIK_SUBNET = "192.168.100.0/24"
+NEWT_GATEWAY = "192.168.200.1"
+NEWT_SUBNET = "192.168.200.0/24"
 
 # SVC_IP is the default bound IP for docker services, including blocky-dns on port 53
 SVC_IP = "192.168.1.142"

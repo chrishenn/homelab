@@ -29,7 +29,7 @@ services:
       SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev",]'
       SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev",]'
 
-      LOADBALANCER_IPS: '$FRONTEND_SUBNET'
+      LOADBALANCER_IPS: '$TRAEFIK_SUBNET'
       SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
       SSL_CERTIFICATE_GENERATION: 'self-signed'
       SETTING_CERTIFICATES: 'self-signed'
