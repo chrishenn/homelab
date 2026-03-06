@@ -1,0 +1,7 @@
+name: rack2
+description: rack2 talos k8s deployment
+main: rack2.py
+runtime:
+  name: python
+  options:
+    toolchain: uv

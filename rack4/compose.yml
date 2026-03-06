@@ -82,6 +82,7 @@ include:
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
   - apps/infra/warden.yml
+  - apps/infra/registry.yml
 
   - apps/media/audiobookshelf.yml
   - apps/media/bazarr.yml
