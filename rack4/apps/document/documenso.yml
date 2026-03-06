@@ -62,7 +62,7 @@ services:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:3000/api/health']
     networks: [traefik]
     labels:
-      homepage.group: File Editing
+      homepage.group: File Editors
       homepage.name: Documenso
       homepage.icon: documenso.png
       homepage.href: https://documenso.chenn.dev

@@ -43,7 +43,7 @@ services:
         condition: service_completed_successfully
     networks: [traefik]
     labels:
-      homepage.group: File Editing
+      homepage.group: File Editors
       homepage.name: Reactive Resume
       homepage.icon: reactive-resume.png
       homepage.href: https://resume.chenn.dev

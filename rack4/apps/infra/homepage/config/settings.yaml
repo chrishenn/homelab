@@ -37,11 +37,11 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
-  Dev:
+  File Editors:
     useEqualHeights: true
     style: row
     columns: 5
-  File Editing:
+  Dev:
     useEqualHeights: true
     style: row
     columns: 5
