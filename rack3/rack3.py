@@ -9,6 +9,26 @@ import yaml
 from pulumi import ResourceOptions
 from pydantic import BaseModel
 
+from pulumi_kubernetes.meta.v1 import ObjectMetaArgs
+from pulumi_kubernetes.core.v1 import Namespace
+from pulumi_kubernetes.helm.v4 import Chart, RepositoryOptsArgs
+
+
+def longhorn():
+    ...
+    # ns = Namespace("nginx",
+    #     metadata=ObjectMetaArgs(
+    #         name="nginx",
+    #     )
+    # )
+    # Chart("nginx",
+    #     namespace=ns.metadata.name,
+    #     chart="nginx",
+    #     repository_opts=RepositoryOptsArgs(
+    #         repo="https://charts.bitnami.com/bitnami",
+    #     )
+    # )
+
 
 class NodeType(StrEnum):
     controlplane = "controlplane"
@@ -37,10 +57,12 @@ class Cluster(BaseModel):
 
     @property
     def cfg_talos(self) -> Path:
+        self.cfg_secrets.mkdir(parents=True, exist_ok=True)
         return self.cfg_secrets / "talosconfig"
 
     @property
     def cfg_kube(self) -> Path:
+        self.cfg_secrets.mkdir(parents=True, exist_ok=True)
         return self.cfg_secrets / "kubeconfig"
 
 
@@ -100,6 +122,7 @@ def node_dns(cluster: Cluster, node: Node):
     """Per Talos docs, we only need domain names for controlplane nodes
     Note that these dns records are used instead of a TCP load balancer like HAProxy, nginx, (probably) traefik
     """
+    return None
     if node.nodetype != NodeType.controlplane:
         return None
 
@@ -121,7 +144,19 @@ def node_cfg(cluster: Cluster, node: Node):
         "machine": {
             "install": {"disk": node.disk},
             "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
-        }
+            "kubelet": {
+                "extraMounts": [
+                    {
+                        "destination": "/var/lib/longhorn",
+                        "type": "bind",
+                        "source": "/var/lib/longhorn",
+                        "options": ["bind", "rshared", "rw"],
+                    }
+                ]
+            },
+            "sysctls": {"vm.nr_hugepages": "1024"},
+            "kernel": {"modules": [{"name": "nvme_tcp"}, {"name": "vfio_pci"}]},
+        },
     }
     nodecfg = talos.machine.get_configuration_output(
         cluster_name=cluster.name,
@@ -153,16 +188,17 @@ def cluster_cfg(cluster: Cluster):
         opts=ResourceOptions(depends_on=cfgapps),
     )
 
-    # write taloscfg. NOTE: these 'endpoints' must be ips or else you get a tls error using the resulting talosconfg
+    # write taloscfg. these 'endpoints' must be control plane ips
     ips = [n.ip for n in cluster.nodes]
-    cluster.secrets.client_configuration.apply(lambda cc: cfg_talos_fmt_write(cc, ips, ips, cluster.cfg_talos))
+    eps = [n.ip for n in cluster.nodes if n.nodetype == NodeType.controlplane]
+    cluster.secrets.client_configuration.apply(lambda cc: cfg_talos_fmt_write(cc, eps, ips, cluster.cfg_talos))
 
-    # write kubeconfig. NOTE: this `endpoint` must be an ip or the cluster domain name, NOT the talos enpdpoint
+    # write kubeconfig. NOTE: this `endpoint` must be an ip or the cluster domain name, NOT the talos endpoint
     cfg_kube = talos.cluster.Kubeconfig(
         "kubeconfig",
         client_configuration=cluster.secrets.client_configuration,
         node=cluster.nodes[0].ip,
-        endpoint=cluster.domain,
+        endpoint=cluster.nodes[0].ip,
         opts=ResourceOptions(depends_on=dnsrecs),
     )
     cfg_kube.kubeconfig_raw.apply(lambda cfg: cluster.cfg_kube.open("w").write(cfg))
@@ -172,13 +208,22 @@ def cluster_cfg(cluster: Cluster):
     pulumi.export("clientConfiguration", cluster.secrets.client_configuration)
 
 
+def cluster_val(cluster: Cluster):
+    assert len(cluster.nodes) >= 1
+    assert cluster.nodes[0].nodetype == NodeType.controlplane, "Node0 in any cluster must be a control plane"
+
+
 def main():
     cfgf = Path("config.json")
     assert cfgf.exists()
 
     with cfgf.open() as f:
         cfg = Clusters.model_validate_json(f.read())
+
+    list(map(cluster_val, cfg.clusters))
     list(map(cluster_cfg, cfg.clusters))
+
+    longhorn()
 
 
 if __name__ == "__main__":
