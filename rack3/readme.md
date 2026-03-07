@@ -9,6 +9,23 @@ https://github.com/scottslowe/talos-aws-pulumi/blob/main/main.go
 
 ---
 
+install
+reboot
+disk volume err
+static pods come up
+stage running
+kubelet helathy
+type controlplane
+cluster dev
+created rbac
+user warning controller failed controller-runtime nodepplycontroller
+error getting node nodes rack3 not found
+machine is running and ready
+kern info cni0 port
+multicast, promiscuous, blockiing, forwarding state
+
+---
+
 grab a talos linux iso from their "image factory"
 https://factory.talos.dev/
 
@@ -37,30 +54,30 @@ uv add pulumi-cloudflare
 boot from iso. grab ip. using talosctl on dev machine:
 
 ```bash
-export node0="192.168.1.29"
 talosctl get disks --insecure --nodes $node0
-# disk: nvme0n1
 ```
 
-populate the node ip and disk name (as /dev/nvme0n1) into the Pulumi.dev.yaml
+populate the node ip and disk name into the Pulumi.dev.yaml
 
 ```bash
 pulumi preview
 pulumi up
-talosctl --nodes $node0 --talosconfig=.secrets/dev/talosconfig health
-KUBECONFIG=.secrets/kubeconfig kubectl get nodes
+
+talosctl --talosconfig=$tcfg health
+talosctl --nodes $node0 --talosconfig=$tcfg health
+KUBECONFIG=$kcfg k get nodes
 
 # see all resource definitions
-talosctl -n $node0 --talosconfig=.secrets/talosconfig g rd
+talosctl -n $node0 --talosconfig=$tcfg g rd
 
 # ethtool on node0
-talosctl -n $node0 --talosconfig=.secrets/talosconfig get ethtool
+talosctl -n $node0 --talosconfig=$tcfg g ethtool
 ```
 
 # todo
 
 - kludgy secrets handling reading from env vars - use native op pulumi provider
-- parse pulumi config into dataclasses instead of raw dicts
+- parse pulumi config into dataclasses/pydantic models instead of raw dicts
 - add worker node
 - hybridize cluster with cloud machines?
 - boot a prod cluster in addition to the current dev cluster

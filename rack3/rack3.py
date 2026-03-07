@@ -6,16 +6,16 @@ import pulumi
 import pulumi_cloudflare as cf
 import pulumiverse_talos as talos
 import yaml
-from cytoolz import curry, pluck
+from cytoolz import pluck
 from pulumi import ResourceOptions
 
 
-def cfg_talos_dump(cfg: dict, path: Path):
+def cfg_talos_write(cfg: dict, path: Path):
     with path.open("w") as f:
         yaml.dump(cfg, f, default_flow_style=False)
 
 
-def cfg_talos_write(
+def cfg_talos_fmt_write(
     cc: talos.machine.outputs.ClientConfiguration,
     endpoints: list[str],
     nodes: list[str],
@@ -34,7 +34,7 @@ def cfg_talos_write(
             }
         },
     }
-    cfg_talos_dump(cfg_talos, path)
+    cfg_talos_write(cfg_talos, path)
 
 
 def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult):
@@ -65,26 +65,30 @@ def env_valid(name: str) -> str:
     return val
 
 
-@curry
-def boot_node(cluster: dict, node: dict):
-    dnsrec = None
-    if node["type"] == "controlplane":
-        dnsrec = cf.DnsRecord(
-            resource_name=f"dnsrec_{node['i']}",
-            type="A",
-            name=cluster["name"],
-            content=node["ip"],
-            ttl=1,
-            zone_id=cluster["zoneid"],
-            proxied=False,
-        )
+def dns_node(cluster: dict, node: dict):
+    if node["type"] != "controlplane":
+        return None
+
+    return cf.DnsRecord(
+        resource_name=f"dnsrec_{node['i']}",
+        type="A",
+        name=cluster["name"],
+        content=node["ip"],
+        ttl=1,
+        zone_id=cluster["zoneid"],
+        proxied=False,
+    )
+
+
+def cfg_node(cluster: dict, node: dict):
     patch = {
         "machine": {
             "install": {"disk": node["disk"]},
-            "network": {"interfaces": [{"interface": node["if"], "dhcp": True}]},
+            # "network": {"interfaces": [{"interface": node["if"], "dhcp": True}]},
         }
     }
-    cfg_node = talos.machine.get_configuration_output(
+    # talos endpoint format: https://192.168.1.29:6443
+    node_cfg = talos.machine.get_configuration_output(
         cluster_name=cluster["name"],
         machine_type=node["type"],
         cluster_endpoint=cluster["enpt"],
@@ -93,10 +97,9 @@ def boot_node(cluster: dict, node: dict):
     return talos.machine.ConfigurationApply(
         f"cfgapply_{node['i']}",
         client_configuration=cluster["secrets"].client_configuration,
-        machine_configuration_input=cfg_node.machine_configuration,
+        machine_configuration_input=node_cfg.machine_configuration,
         node=node["ip"],
         config_patches=[json.dumps(patch)],
-        opts=ResourceOptions(depends_on=dnsrec),
     )
 
 
@@ -114,8 +117,9 @@ def boot_cluster(cluster: dict):
         "kube": Path(sec_dir / "kubeconfig"),
     }
 
-    # configure nodes, boot cluster
-    cfgapps = list(map(boot_node(cluster), cluster["nodes"]))
+    # configure nodes, dsn A records for cluster domain, boot cluster
+    dnsrecs = [dns_node(cluster, node) for node in cluster["nodes"]]
+    cfgapps = [cfg_node(cluster, node) for node in cluster["nodes"]]
     talos.machine.Bootstrap(
         "bootstrap",
         node=cluster["nodes"][0]["ip"],
@@ -124,20 +128,19 @@ def boot_cluster(cluster: dict):
     )
 
     # write taloscfg
+    # NOTE: these 'endpoints' must be ips or else you get a tls error using the resulting talosconfg
+    # I do not think these can be put behind an https load balancer, though
     ips = list(pluck("ip", cluster["nodes"]))
-    sec.client_configuration.apply(lambda cc: cfg_talos_write(cc, ips, ips, paths["talos"]))
+    sec.client_configuration.apply(lambda cc: cfg_talos_fmt_write(cc, ips, ips, paths["talos"]))
 
-    # TODO: this is failing - hangs indefinitely
-    #   dns record is up but caches and retries may be keeping the old ones alive for quite some time
-    #   waited for dig to start returning the correct ip, then ran pulumi up again - hangs
-    #   talos health shows all OK
-    #   pulumi seems unable to cancel or delete its pending create operations. aggravating
     # write kubeconfig
+    # NOTE: this endpoint must be an ip or the cluster endpoint domain name NOT the talos enpdpoint
     cfg_kube = talos.cluster.Kubeconfig(
         "kubeconfig",
         client_configuration=sec.client_configuration,
         node=cluster["nodes"][0]["ip"],
-        endpoint=cluster["enpt"],
+        endpoint=cluster["main"],
+        opts=ResourceOptions(depends_on=dnsrecs),
     )
     cfg_kube.kubeconfig_raw.apply(lambda cfg: paths["kube"].open("w").write(cfg))
 

@@ -3,3 +3,8 @@ kubectl = "latest"
 pulumi = "latest"
 talosctl = "latest"
 uv = "latest"
+
+[env]
+node0 = "192.168.1.29"
+tcfg = ".secrets/dev/talosconfig"
+kcfg = ".secrets/dev/kubeconfig"
