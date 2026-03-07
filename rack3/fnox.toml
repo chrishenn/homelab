@@ -4,5 +4,4 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare_token/credential" }
-ZONEID = { provider = "onepass", value = "op://homelab/cloudflare_token/zoneid_henndev" }
+CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }

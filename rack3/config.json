@@ -1,0 +1,22 @@
+{
+  "clusters": [
+    {
+      "name": "dev",
+      "cfg_secrets": ".secrets/dev",
+      "enpt": "https://192.168.1.29:6443",
+      "domain": "dev.henn.dev",
+      "zoneid": "3d4f45e9c52c4c8a080a696c29f3d224",
+      "secrets": null,
+      "nodes": [
+        {
+          "disk": "/dev/nvme0n1",
+          "i": 0,
+          "ifc": "enp10s0np0",
+          "ip": "192.168.1.29",
+          "nodetype": "controlplane",
+          "dhcp": true
+        }
+      ]
+    }
+  ]
+}

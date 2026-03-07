@@ -1,11 +1,11 @@
 // /etc/docker/daemon.json
 // set the default container device runtime to 'nvidia'
 {
-    "default-runtime": "nvidia",
-    "runtimes": {
-        "nvidia": {
-            "args": [],
-            "path": "nvidia-container-runtime"
-        }
+  "default-runtime": "nvidia",
+  "runtimes": {
+    "nvidia": {
+      "args": [],
+      "path": "nvidia-container-runtime"
     }
+  }
 }

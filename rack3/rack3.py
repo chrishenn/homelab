@@ -1,13 +1,51 @@
 import json
-import os
+from enum import StrEnum
 from pathlib import Path
 
 import pulumi
 import pulumi_cloudflare as cf
 import pulumiverse_talos as talos
 import yaml
-from cytoolz import pluck
 from pulumi import ResourceOptions
+from pydantic import BaseModel
+
+
+class NodeType(StrEnum):
+    controlplane = "controlplane"
+    worker = "worker"
+
+
+class Node(BaseModel):
+    nodetype: NodeType
+    i: int
+    ip: str
+    disk: str
+    ifc: str
+    dhcp: bool
+
+
+class Cluster(BaseModel):
+    model_config = {"arbitrary_types_allowed": True}
+
+    name: str
+    domain: str
+    zoneid: str
+    enpt: str
+    cfg_secrets: Path
+    nodes: list[Node]
+    secrets: talos.machine.Secrets | None
+
+    @property
+    def cfg_talos(self) -> Path:
+        return self.cfg_secrets / "talosconfig"
+
+    @property
+    def cfg_kube(self) -> Path:
+        return self.cfg_secrets / "kubeconfig"
+
+
+class Clusters(BaseModel):
+    clusters: list[Cluster]
 
 
 def cfg_talos_write(cfg: dict, path: Path):
@@ -58,101 +96,88 @@ def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult):
     }
 
 
-def env_valid(name: str) -> str:
-    assert name in os.environ
-    val = os.environ[name]
-    assert val
-    return val
-
-
-def dns_node(cluster: dict, node: dict):
-    if node["type"] != "controlplane":
+def node_dns(cluster: Cluster, node: Node):
+    """Per Talos docs, we only need domain names for controlplane nodes
+    Note that these dns records are used instead of a TCP load balancer like HAProxy, nginx, (probably) traefik
+    """
+    if node.nodetype != NodeType.controlplane:
         return None
 
     return cf.DnsRecord(
-        resource_name=f"dnsrec_{node['i']}",
+        resource_name=f"dnsrec_{node.i}",
         type="A",
-        name=cluster["name"],
-        content=node["ip"],
+        name=cluster.name,
+        content=node.ip,
         ttl=1,
-        zone_id=cluster["zoneid"],
+        zone_id=cluster.zoneid,
         proxied=False,
     )
 
 
-def cfg_node(cluster: dict, node: dict):
+def node_cfg(cluster: Cluster, node: Node):
+    assert cluster.secrets is not None
+
     patch = {
         "machine": {
-            "install": {"disk": node["disk"]},
-            # "network": {"interfaces": [{"interface": node["if"], "dhcp": True}]},
+            "install": {"disk": node.disk},
+            # "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
         }
     }
-    # talos endpoint format: https://192.168.1.29:6443
     node_cfg = talos.machine.get_configuration_output(
-        cluster_name=cluster["name"],
-        machine_type=node["type"],
-        cluster_endpoint=cluster["enpt"],
-        machine_secrets=cluster["secrets"].machine_secrets.apply(sec_machine_fmt),
+        cluster_name=cluster.name,
+        machine_type=node.nodetype,
+        cluster_endpoint=cluster.enpt,
+        machine_secrets=cluster.secrets.machine_secrets.apply(sec_machine_fmt),
     )
     return talos.machine.ConfigurationApply(
-        f"cfgapply_{node['i']}",
-        client_configuration=cluster["secrets"].client_configuration,
+        f"cfgapply_{node.i}",
+        client_configuration=cluster.secrets.client_configuration,
         machine_configuration_input=node_cfg.machine_configuration,
-        node=node["ip"],
+        node=node.ip,
         config_patches=[json.dumps(patch)],
     )
 
 
-def boot_cluster(cluster: dict):
-    # TODO: cf secrets - zoneid for cluster_domain
-    cluster["zoneid"] = env_valid("ZONEID")
-    cluster["secrets"] = sec = talos.machine.Secrets("secrets")
-    env_valid("CLOUDFLARE_API_TOKEN")
+def cluster_cfg(cluster: Cluster):
+    # various resources depend on this cluster-wide set of secrets
+    cluster.secrets = talos.machine.Secrets("secrets")
 
-    # file paths
-    sec_dir = Path(f".secrets/{cluster['name']}")
-    sec_dir.mkdir(parents=True, exist_ok=True)
-    paths = {
-        "talos": Path(sec_dir / "talosconfig"),
-        "kube": Path(sec_dir / "kubeconfig"),
-    }
-
-    # configure nodes, dsn A records for cluster domain, boot cluster
-    dnsrecs = [dns_node(cluster, node) for node in cluster["nodes"]]
-    cfgapps = [cfg_node(cluster, node) for node in cluster["nodes"]]
+    # dns A records for cluster domain, configure nodes, boot cluster
+    dnsrecs = [node_dns(cluster, node) for node in cluster.nodes]
+    cfgapps = [node_cfg(cluster, node) for node in cluster.nodes]
     talos.machine.Bootstrap(
         "bootstrap",
-        node=cluster["nodes"][0]["ip"],
-        client_configuration=sec.client_configuration,
+        node=cluster.nodes[0].ip,
+        client_configuration=cluster.secrets.client_configuration,
         opts=ResourceOptions(depends_on=cfgapps),
     )
 
-    # write taloscfg
-    # NOTE: these 'endpoints' must be ips or else you get a tls error using the resulting talosconfg
-    # I do not think these can be put behind an https load balancer, though
-    ips = list(pluck("ip", cluster["nodes"]))
-    sec.client_configuration.apply(lambda cc: cfg_talos_fmt_write(cc, ips, ips, paths["talos"]))
+    # write taloscfg. NOTE: these 'endpoints' must be ips or else you get a tls error using the resulting talosconfg
+    ips = [n.ip for n in cluster.nodes]
+    cluster.secrets.client_configuration.apply(lambda cc: cfg_talos_fmt_write(cc, ips, ips, cluster.cfg_talos))
 
-    # write kubeconfig
-    # NOTE: this endpoint must be an ip or the cluster endpoint domain name NOT the talos enpdpoint
+    # write kubeconfig. NOTE: this `endpoint` must be an ip or the cluster domain name, NOT the talos enpdpoint
     cfg_kube = talos.cluster.Kubeconfig(
         "kubeconfig",
-        client_configuration=sec.client_configuration,
-        node=cluster["nodes"][0]["ip"],
-        endpoint=cluster["main"],
+        client_configuration=cluster.secrets.client_configuration,
+        node=cluster.nodes[0].ip,
+        endpoint=cluster.domain,
         opts=ResourceOptions(depends_on=dnsrecs),
     )
-    cfg_kube.kubeconfig_raw.apply(lambda cfg: paths["kube"].open("w").write(cfg))
+    cfg_kube.kubeconfig_raw.apply(lambda cfg: cluster.cfg_kube.open("w").write(cfg))
 
-    # Export data to Pulumi outputs
+    # export data to pulumi outputs
     pulumi.export("kubeconfig", cfg_kube.kubeconfig_raw)
-    pulumi.export("clientConfiguration", sec.client_configuration)
+    pulumi.export("clientConfiguration", cluster.secrets.client_configuration)
 
 
 def main():
-    cfg = pulumi.Config()
-    clusters: list[dict] = cfg.require_object("clusters")
-    list(map(boot_cluster, clusters))
+    cfgf = Path("config.json")
+    assert cfgf.exists()
+
+    with cfgf.open() as f:
+        cfg = Clusters.model_validate_json(f.read())
+    list(map(cluster_cfg, cfg.clusters))
 
 
 if __name__ == "__main__":

@@ -9,22 +9,30 @@ https://github.com/scottslowe/talos-aws-pulumi/blob/main/main.go
 
 ---
 
-install
-reboot
-disk volume err
-static pods come up
-stage running
-kubelet helathy
-type controlplane
-cluster dev
-created rbac
-user warning controller failed controller-runtime nodepplycontroller
-error getting node nodes rack3 not found
-machine is running and ready
-kern info cni0 port
-multicast, promiscuous, blockiing, forwarding state
+# todo
+
+- [x] kludgy secrets handling reading from env vars - use native op pulumi provider
+    - see "notes on secrets" below
+- parse pulumi config into dataclasses/pydantic models instead of raw dicts
+- add worker node
+- hybridize cluster with cloud machines?
+- boot a prod cluster in addition to the current dev cluster
 
 ---
+
+# notes
+
+- talos endpoint format: https://192.168.1.29:6443
+
+### notes on secrets
+
+pulumi 1password provider not great. Items only - have to access by vault and uuid, can't just grab from secret ref.
+pulumi secrets provider is rigid. Can't have secrets embedded into nested configuration objects without them being
+wholly decrypted into plaintext, or the whole configuration object is encrypted
+
+---
+
+# manual steps
 
 grab a talos linux iso from their "image factory"
 https://factory.talos.dev/
@@ -42,13 +50,12 @@ the initial boot with these schematics, but I don't think the example I'm using 
 
 I'll just download the iso, presumably with extensions built-in
 
----
-
 ```bash
 pulumi new
 pulumi plugin install resource talos
 uv add pulumiverse-talos
 uv add pulumi-cloudflare
+uv add pulumi-onepassword
 ```
 
 boot from iso. grab ip. using talosctl on dev machine:
@@ -57,7 +64,7 @@ boot from iso. grab ip. using talosctl on dev machine:
 talosctl get disks --insecure --nodes $node0
 ```
 
-populate the node ip and disk name into the Pulumi.dev.yaml
+populate the node ip and disk name into the config
 
 ```bash
 pulumi preview
@@ -73,14 +80,6 @@ talosctl -n $node0 --talosconfig=$tcfg g rd
 # ethtool on node0
 talosctl -n $node0 --talosconfig=$tcfg g ethtool
 ```
-
-# todo
-
-- kludgy secrets handling reading from env vars - use native op pulumi provider
-- parse pulumi config into dataclasses/pydantic models instead of raw dicts
-- add worker node
-- hybridize cluster with cloud machines?
-- boot a prod cluster in addition to the current dev cluster
 
 ---
 

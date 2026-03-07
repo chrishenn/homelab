@@ -6,7 +6,7 @@ printWidth: 120
 useTabs: false
 
 overrides:
-- files: ['*.yml', '*.yaml']
+- files: ['*.yml', '*.yaml', '*.json']
   options:
     tabWidth: 2
     printWidth: 240
