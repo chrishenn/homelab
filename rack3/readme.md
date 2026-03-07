@@ -27,8 +27,6 @@ I'll just download the iso, presumably with extensions built-in
 
 ---
 
----
-
 ```bash
 pulumi new
 pulumi plugin install resource talos
@@ -69,7 +67,7 @@ talosctl -n $node0 --talosconfig=.secrets/talosconfig get ethtool
 
 ---
 
-# advanced booting
+# net booting
 
 image schematic id
 
@@ -90,7 +88,8 @@ the machine configuration:
 
 - factory.talos.dev/metal-installer/cdd6d87822ad5fcd18092af75a54ffd803b9d6e44027deab63b2e26ddbc41a4c:v1.12.4
 
-the halt_if_installed flag will block a new init when booted from iso
+The halt_if_installed flag will block a new init when booted from iso. This adds an extra step if you're debugging your
+infra stack - to reset the host for a new k8s bootstrap, you'll need to boot from iso and select the "reset disk" option
 
 ```yaml
 customization:

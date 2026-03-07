@@ -103,7 +103,7 @@ def boot_node(cluster: dict, node: dict):
 def boot_cluster(cluster: dict):
     # TODO: cf secrets - zoneid for cluster_domain
     cluster["zoneid"] = env_valid("ZONEID")
-    cluster["secrets"] = talos.machine.Secrets("secrets")
+    cluster["secrets"] = sec = talos.machine.Secrets("secrets")
     env_valid("CLOUDFLARE_API_TOKEN")
 
     # file paths
@@ -115,7 +115,6 @@ def boot_cluster(cluster: dict):
     }
 
     # configure nodes, boot cluster
-    sec = cluster["secrets"]
     cfgapps = list(map(boot_node(cluster), cluster["nodes"]))
     talos.machine.Bootstrap(
         "bootstrap",
