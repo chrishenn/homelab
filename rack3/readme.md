@@ -13,8 +13,9 @@ https://github.com/scottslowe/talos-aws-pulumi/blob/main/main.go
 
 - [x] kludgy secrets handling reading from env vars - use native op pulumi provider
     - see "notes on secrets" below
-- parse pulumi config into dataclasses/pydantic models instead of raw dicts
-- add worker node
+- [x] parse pulumi config into dataclasses/pydantic models instead of raw dicts
+- [x] add worker node
+    - wow that was easy. Just booted the machine, added the data in the config.json, and ran `pulumi up`
 - hybridize cluster with cloud machines?
 - boot a prod cluster in addition to the current dev cluster
 
@@ -61,7 +62,9 @@ uv add pulumi-onepassword
 boot from iso. grab ip. using talosctl on dev machine:
 
 ```bash
-talosctl get disks --insecure --nodes $node0
+export node="192.168.1.30"
+talosctl get disks --insecure --nodes $node
+talosctl get ethtool --insecure --nodes $node
 ```
 
 populate the node ip and disk name into the config
@@ -70,15 +73,22 @@ populate the node ip and disk name into the config
 pulumi preview
 pulumi up
 
-talosctl --talosconfig=$tcfg health
-talosctl --nodes $node0 --talosconfig=$tcfg health
+talosctl --talosconfig=$tcfg -n $node0 health
+talosctl --talosconfig=$tcfg -n $node1 health
 KUBECONFIG=$kcfg k get nodes
+export KUBECONFIG=$kcfg
+
+# 'health' doesn't work when there's more than one node. instead:
+talosctl --talosconfig=$tcfg dashboard
 
 # see all resource definitions
 talosctl -n $node0 --talosconfig=$tcfg g rd
 
 # ethtool on node0
 talosctl -n $node0 --talosconfig=$tcfg g ethtool
+
+# reboot
+talosctl -n $node0 --talosconfig=$tcfg reboot
 ```
 
 ---

@@ -120,10 +120,10 @@ def node_cfg(cluster: Cluster, node: Node):
     patch = {
         "machine": {
             "install": {"disk": node.disk},
-            # "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
+            "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
         }
     }
-    node_cfg = talos.machine.get_configuration_output(
+    nodecfg = talos.machine.get_configuration_output(
         cluster_name=cluster.name,
         machine_type=node.nodetype,
         cluster_endpoint=cluster.enpt,
@@ -132,7 +132,7 @@ def node_cfg(cluster: Cluster, node: Node):
     return talos.machine.ConfigurationApply(
         f"cfgapply_{node.i}",
         client_configuration=cluster.secrets.client_configuration,
-        machine_configuration_input=node_cfg.machine_configuration,
+        machine_configuration_input=nodecfg.machine_configuration,
         node=node.ip,
         config_patches=[json.dumps(patch)],
     )
@@ -144,6 +144,7 @@ def cluster_cfg(cluster: Cluster):
 
     # dns A records for cluster domain, configure nodes, boot cluster
     dnsrecs = [node_dns(cluster, node) for node in cluster.nodes]
+    dnsrecs = [rec for rec in dnsrecs if rec is not None]
     cfgapps = [node_cfg(cluster, node) for node in cluster.nodes]
     talos.machine.Bootstrap(
         "bootstrap",

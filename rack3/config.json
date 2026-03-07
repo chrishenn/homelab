@@ -3,8 +3,8 @@
     {
       "name": "dev",
       "cfg_secrets": ".secrets/dev",
-      "enpt": "https://192.168.1.29:6443",
       "domain": "dev.henn.dev",
+      "enpt": "https://dev.henn.dev:6443",
       "zoneid": "3d4f45e9c52c4c8a080a696c29f3d224",
       "secrets": null,
       "nodes": [
@@ -14,6 +14,14 @@
           "ifc": "enp10s0np0",
           "ip": "192.168.1.29",
           "nodetype": "controlplane",
+          "dhcp": true
+        },
+        {
+          "disk": "/dev/nvme0n1",
+          "i": 1,
+          "ifc": "enp9s0f1np1",
+          "ip": "192.168.1.30",
+          "nodetype": "worker",
           "dhcp": true
         }
       ]
