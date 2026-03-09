@@ -30,17 +30,17 @@ MISE_NPM_BUN = 1
 RACK0_USR = "chris"
 RACK0_IP = "192.168.1.70"
 RACK0_PORT = "22"
-RACK0_REPO = "/home/chris/Projects/homelab/rack0"
+RACK0_DIR = "/home/chris/Projects/homelab/rack0"
 
 RACK4_USR = "chris"
 RACK4_IP = "192.168.1.142"
 RACK4_PORT = "2200"
-RACK4_REPO = "/home/chris/Projects/homelab/rack4"
+RACK4_DIR = "/home/chris/Projects/homelab/rack4"
 
 VPS0_USR = "chris"
 VPS0_IP = "76.13.30.83"
 VPS0_PORT = "2200"
-VPS0_REPO = "/home/chris/pangolin"
+VPS0_DIR = "/home/chris/pangolin"
 
 GITLAB_HOST = "gitlab.chenn.dev"
 
