@@ -1,6 +1,6 @@
 import json
 import os
-from enum import StrEnum
+from enum import StrEnum, auto
 from pathlib import Path
 
 import pulumi
@@ -12,7 +12,26 @@ from pulumi_kubernetes.helm.v4 import Chart, RepositoryOptsArgs
 from pulumi_kubernetes.meta.v1 import ObjectMetaArgs
 from pulumi_kubernetes.yaml.v2 import ConfigGroup
 from pydantic import BaseModel
+from rich.console import Console
 from yaml import SafeLoader
+
+
+def traefik_dash(deps: list[Resource]) -> list[Resource]:
+    svc = ConfigGroup(
+        "traefik-dash",
+        files=["./traefik_/dash.yml"],
+        opts=ResourceOptions(depends_on=deps),
+    )
+    return [svc]
+
+
+def beszel(deps: list[Resource]) -> list[Resource]:
+    svc = ConfigGroup(
+        "beszel-app",
+        files=["./app/beszel.yml"],
+        opts=ResourceOptions(depends_on=deps),
+    )
+    return [svc]
 
 
 def kuma(deps: list[Resource]) -> list[Resource]:
@@ -40,6 +59,22 @@ def longhorn_dash(deps: list[Resource]) -> list[Resource]:
         opts=ResourceOptions(depends_on=deps),
     )
     return [svc]
+
+
+def newt(deps: list[Resource]) -> list[Resource]:
+    ns = Namespace(
+        "newt-ns",
+        metadata=ObjectMetaArgs(name="newt"),
+    )
+    chart = Chart(
+        "newt-chart",
+        namespace=ns.metadata.name,
+        chart="newt",
+        repository_opts=RepositoryOptsArgs(repo="https://charts.fossorial.io"),
+        value_yaml_files=[pulumi.FileAsset("newt_/values.yml")],
+        opts=ResourceOptions(depends_on=deps),
+    )
+    return [ns, chart]
 
 
 def certmanager() -> list[Resource]:
@@ -147,25 +182,24 @@ def longhorn() -> list[Resource]:
 
 
 class NodeType(StrEnum):
-    controlplane = "controlplane"
-    worker = "worker"
+    controlplane = auto()
+    worker = auto()
 
 
-class Newt(BaseModel):
-    pangolin_endpoint: str
-    newt_id: str | None
-    newt_secret: str | None
+class NodeCap(StrEnum):
+    gpu = auto()
 
 
 class Node(BaseModel):
-    nodetype: NodeType
     i: int
+    name: str
+    caps: set[NodeCap]
+    nodetype: NodeType
     ip: str
     disk: str
     image: str
     ifc: str
     dhcp: bool
-    newt: Newt
 
 
 class Cluster(BaseModel):
@@ -274,20 +308,8 @@ def load_yaml(path: Path) -> dict:
         return yaml.load(f, SafeLoader)
 
 
-def patch_newt() -> dict:
-    # TODO: only patch newt secrets for nodes running the newt client. applying to other nodes seems not to break em
-    tpath = Path("./newt/newt.yaml")
-    patch = load_yaml(tpath)
-    patch["environment"] = [
-        f"PANGOLIN_ENDPOINT={env_valid('PANGOLIN_ENDPOINT')}",
-        f"NEWT_ID={env_valid('NEWT_ID')}",
-        f"NEWT_SECRET={env_valid('NEWT_SECRET')}",
-    ]
-    return patch
-
-
-def patch_machine(node: Node) -> dict:
-    return {
+def patch_cmn(node: Node) -> str:
+    patch = {
         "machine": {
             "install": {"disk": node.disk, "image": node.image},
             "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
@@ -302,14 +324,81 @@ def patch_machine(node: Node) -> dict:
                 ]
             },
             "sysctls": {"vm.nr_hugepages": "1024"},
-            "kernel": {"modules": [{"name": "nvme_tcp"}, {"name": "vfio_pci"}]},
+            "kernel": {
+                "modules": [
+                    {"name": "nvme_tcp"},
+                    {"name": "vfio_pci"},
+                ],
+            },
         },
-        "cluster": {"proxy": {"extraArgs": {"ipvs-strict-arp": True}}},
+        "cluster": {
+            "proxy": {"extraArgs": {"ipvs-strict-arp": True}},
+            "allowSchedulingOnControlPlanes": True,
+        },
     }
+    return json.dumps(patch)
+
+
+def patch_taint() -> str:
+    # this delete patch will fail when the exclude label no longer exists
+    patch = {
+        # "machine": {
+        #     "nodeLabels": {
+        #         "node.kubernetes.io/exclude-from-external-load-balancers": {
+        #             "$patch": "delete"
+        #         }
+        #     }
+        # },
+        "cluster": {"allowSchedulingOnControlPlanes": True}
+    }
+    return json.dumps(patch)
+
+
+def nvidia(deps: list[Resource]) -> list[Resource]:
+    ns = Namespace(
+        "nvdp-ns",
+        metadata=ObjectMetaArgs(name="gpu", labels={"pod-security.kubernetes.io/enforce": "privileged"}),
+    )
+    svc = ConfigGroup(
+        "nvdp-runtimeclass",
+        files=["./nvidia/class.yml"],
+        opts=ResourceOptions(depends_on=deps),
+    )
+    chart = Chart(
+        "nvdp-chart",
+        chart="nvidia-device-plugin",
+        namespace=ns.metadata.name,
+        repository_opts=RepositoryOptsArgs(repo="https://nvidia.github.io/k8s-device-plugin"),
+        value_yaml_files=[pulumi.FileAsset("nvidia/nvdp.yml")],
+        opts=ResourceOptions(depends_on=svc),
+    )
+    return [svc, chart]
+
+
+def patch_nvidia(node: Node) -> str:
+    if NodeCap.gpu not in node.caps:
+        return ""
+    patch = {
+        "machine": {
+            "kernel": {
+                "modules": [
+                    {"name": "nvidia"},
+                    {"name": "nvidia_uvm"},
+                    {"name": "nvidia_drm"},
+                    {"name": "nvidia_modeset"},
+                ]
+            },
+            "sysctls": {"net.core.bpf_jit_harden": 1},
+        },
+    }
+    return json.dumps(patch)
 
 
 def node_cfg(cluster: Cluster, node: Node) -> Resource:
     assert cluster.secrets is not None
+
+    mc = [patch_cmn(node), patch_taint(), patch_nvidia(node)]
+    mc = list(filter(bool, mc))
 
     nodecfg = talos.machine.get_configuration_output(
         cluster_name=cluster.name,
@@ -322,7 +411,7 @@ def node_cfg(cluster: Cluster, node: Node) -> Resource:
         client_configuration=cluster.secrets.client_configuration,
         machine_configuration_input=nodecfg.machine_configuration,
         node=node.ip,
-        config_patches=[json.dumps(patch_machine(node)), json.dumps(patch_newt())],
+        config_patches=mc,
     )
 
 
@@ -375,6 +464,9 @@ def main() -> None:
     with cfgf.open() as f:
         cfg = Clusters.model_validate_json(f.read())
 
+    console = Console(width=200)
+    console.print(cfg.clusters[0])
+
     list(map(cluster_val, cfg.clusters))
     list(map(cluster_cfg, cfg.clusters))
 
@@ -383,10 +475,14 @@ def main() -> None:
     svc_rscs.extend(metallb())
     svc_rscs.extend(traefik())
     svc_rscs.extend(certmanager())
-    svc_rscs.extend(longhorn_dash(svc_rscs))
 
+    nvidia(svc_rscs)
+    newt(svc_rscs)
+    traefik_dash(svc_rscs)
+    longhorn_dash(svc_rscs)
     whoami(svc_rscs)
     kuma(svc_rscs)
+    beszel(svc_rscs)
 
 
 if __name__ == "__main__":

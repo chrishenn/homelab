@@ -27,15 +27,6 @@ topologySpreadConstraints:
       matchLabels:
         app.kubernetes.io/name: traefik
 
-ingressRoute:
-  dashboard:
-    enabled: true
-    matchRule: Host(`traefik-k8s.chenn.io`)
-    entryPoints:
-      - websecure
-    middlewares:
-      - name: hdr
-
 providers:
   kubernetesCRD:
     enabled: true
@@ -91,6 +82,11 @@ ports:
         allowEncodedHash: true
       tls:
         enabled: true
+    transport:
+      respondingTimeouts:
+        readTimeout: '30m'
+        writeTimeout: '30m'
+        idleTimeout: '30m'
 
 #metrics:
 #  prometheus:
@@ -103,31 +99,3 @@ ports:
 #      interval: 30s
 #      additionalLabels:
 #        release: prometheus
-
-extraObjects:
-  - apiVersion: traefik.io/v1alpha1
-    kind: Middleware
-    metadata:
-      name: hdr
-    spec:
-      headers:
-        customResponseHeaders:
-          X-Robots-Tag: 'noindex,nofollow'
-          X-Forwarded-Proto: 'https'
-          server: ''
-          X-Powered-By: ''
-        customRequestHeaders:
-          X-Forwarded-Proto: 'https'
-          Strict-Transport-Security: 'max-age: 63072000'
-        sslProxyHeaders:
-          X-Forwarded-Proto: 'https'
-        hostsProxyHeaders:
-          - 'X-Forwarded-Host'
-        referrerPolicy: 'same-origin'
-        contentTypeNosniff: true
-        browserXssFilter: true
-        customFrameOptionsValue: 'SAMEORIGIN'
-        forceSTSHeader: true
-        stsIncludeSubdomains: true
-        stsSeconds: 63072000
-        stsPreload: true

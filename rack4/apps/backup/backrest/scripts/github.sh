@@ -1,32 +1,47 @@
 #!/bin/bash
+set -eux
+
+# god in heaven this language needs to die
 
 owner='chrishenn'
 host='github.com'
 dst='/mnt/h/github'
 
-function repo_update {
-	git pull
-	if [ $? -eq 0 ]; then
-		return
-	fi
-
+function repo_reset {
 	# find name of default branch using github api
 	dbr=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
-	[ -z "$dbr" ] && echo 'error: variable {dbr} is empty or unset'
-	return
+	[[ -z "$dbr" ]] && echo 'error: default branch not found' && return 1 || true
 
 	# find the name of the remote (probably origin)
 	drm=$(git remote -v | head -n1 | awk '{print $1}')
-	[ -z "$drm" ] && echo 'error: variable {drm} is empty or unset'
-	return
+	[[ -z "$drm" ]] && echo 'error: remote name not found' && return 1 || true
 
 	# latest commit hash on origin/main
-	git fetch
+	git fetch --force || echo 'error: git fetch failed' && return 1
 	hash=$(git log -n 1 $drm/$dbr --pretty=format:"%H")
-	[ -z "$hash" ] && echo 'error: variable {hash} is empty or unset'
-	return
+	[[ -z "$hash" ]] && echo 'error: latest commit hash not found' && return 1 || true
 
-	git reset --hard $hash
+	git reset --hard $hash && return 0 || echo 'error: git reset failed' && return 1
+}
+
+function repo_update {
+	declare owner=$1
+	shift
+	declare host=$1
+	shift
+	declare dst=$1
+	shift
+	declare repo=$1
+	shift
+
+	bpath="$dst/$host/$owner/$repo"
+	if ! test -d $bpath; then
+		gh repo clone $owner/$repo $bpath && return 0 || return 1
+	fi
+
+	pushd $bpath
+	git pull --force && popd && return 0
+	repo_reset && popd && return 0 || popd && return 1
 }
 
 function main {
@@ -37,6 +52,7 @@ function main {
 	ssh-keyscan github.com >~/.ssh/known_hosts
 
 	# gh login. Ensure OP_SERVICE_ACCOUNT_TOKEN is set or this will fail
+	[[ -z "$OP_SERVICE_ACCOUNT_TOKEN" ]] && echo 'error: {OP_SERVICE_ACCOUNT_TOKEN} is empty or unset' && return 1 || true
 	echo $(op read "op://homelab/github/credential") | gh auth login -h $host -p ssh --with-token --skip-ssh-key
 
 	# github ssh key - needed for git commands
@@ -52,16 +68,8 @@ function main {
 	i=0
 	for repo in "${repos[@]}"; do
 		echo "syncing: $repo"
-
-		bpath="$dst/$host/$owner/$repo"
-		if ! test -d $bpath; then
-			gh repo clone $owner/$repo $bpath
-			[[ $? -eq 0 ]] && ((i++))
-		else
-			pushd $bpath
-			repo_update
-			[[ $? -eq 0 ]] && ((i++))
-			popd
+		if repo_update $owner $host $dst $repo; then
+			i=$((i + 1))
 		fi
 	done
 
@@ -73,8 +81,8 @@ function main {
 	echo ''
 	echo "counted success: $i / ${#repos[@]}"
 	echo ''
+	[[ $i -eq ${#repos[@]} ]]
 }
 
-main
-echo -e "\n exited with code: $?"
+main && echo -e "\n SUCCESS with code: $?" || echo -e "\n FAILED with code: $?"
 exit

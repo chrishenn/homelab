@@ -1,0 +1,9 @@
+newtInstances:
+  - name: rack3
+    enabled: true
+    auth:
+      existingSecretName: newt-cred
+      keys:
+        endpointKey: PANGOLIN_ENDPOINT
+        idKey: NEWT_ID
+        secretKey: NEWT_SECRET

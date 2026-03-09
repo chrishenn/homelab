@@ -1,7 +1,7 @@
 # Pulumi Talos K8s cluster on {Rack2, Rack3}
 
-control planes: rack3
-workers: rack2
+control planes: {rack3}
+workers: {rack2}
 
 ---
 
@@ -15,29 +15,34 @@ workers: rack2
 - [x] upgrade talos installed disk images
     - [x] add required extensions for longhorn
     - [x] add required longhorn data path mounts, kernel modules required for longhorn V2 data engine
-- [x] connect newt to my pangolin instance
 - [x] longhorn
 - [x] metallb
 - [x] traefik
     - [x] letsencrypt certs working (local storage)
     - [x] secure headers
     - [x] ingressroute for longhorn dash
-    - [x] traefik: replace helm chart ingressroute for traefik dash with standalone - dedupe the secure headers
-
+    - [x] ingressroute for traefik dash
 - [x] cert-manager
     - [x] integrate with traefik
+- [x] nvidia gpu
+- [x] loosen seccomp
 - [ ] autoscaler
     - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
     - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server
-- [ ] loosen seccomp
-    - https://docs.siderolabs.com/kubernetes-guides/security/seccomp-profiles
-- [ ] nvidia dra
-    - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/dynamic-resource-allocation
 
 apps
 
+- [ ] pangolin
+    - [ ] pangolin
+    - [x] newt
 - [x] uptime-kuma
 - [ ] beszel (https://beszel.dev/guide/advanced-deployment)
+    - [ ] beszel server
+    - [x] beszel agents for each node
+    - [x] gpu monitoring
+- [ ] local container registry pull-through cache
+    - [x] docker's official registry (hosted on rack4 compose)
+    - [ ] configure talos clients to use the cache
 - [ ] oath2-proxy + pocketid
 - [ ] grafana/loki
     - https://github.com/timothystewart6/launchpad/tree/152d6bbcba239f98ea8cfa136a98841dc3cd30cd/kubernetes/kube-prometheus-stack
@@ -49,15 +54,18 @@ apps
 
 annoyances
 
-- [ ] traefik: bump the read/write/send timeouts as on rack4
-- [ ] traefik chart values podAntiAffinity don't put one replica on each node like I expected
+- [x] traefik chart values podAntiAffinity don't put one replica on each node like I expected
+    - fixed - hadn't successfully untainted the control-plane rack3
+- [x] traefik: bump the read/write/send timeouts as on rack4
+    - copy/paste from rack4 traefik static cfg to helm chart values
 - [ ] figure out how to bring control plane nodes up without the noschedule taint (must apply on first boot)
 
 more
 
-- [ ] hybridize cluster with cloud machines?
+- [ ] hybridize cluster with cloud machines
     - https://github.com/exivity/pulumi-hcloud-k8s
     - add Ray (or newer compute clustering) https://docs.siderolabs.com/kubernetes-guides/advanced-guides/kuberay
+- [ ] hybridize cluster with a windows worker
 - [ ] boot a prod cluster in addition to the current dev cluster
 - [ ] add another CNI?
     - the default CNI on talos is flannel. is that enough for what I need?
@@ -69,6 +77,8 @@ more
 
 # manual steps
 
+## talos image
+
 https://factory.talos.dev/
 
 - grab a talos linux iso from their "image factory"
@@ -77,14 +87,17 @@ https://factory.talos.dev/
 hit the image factory api with the yml above, and get the image id in response. The image id goes in the image url
 
 ```bash
-curl -X POST --data-binary @images/image.yml https://factory.talos.dev/schematics
+# rack2: longhorn
 # edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096
-curl -X POST --data-binary @images/image_newt.yml https://factory.talos.dev/schematics
-# 4e2d8806d9ee1965e2e3513c36a65fed1964cfcc41f2e482aa158af9fe851f2b
+curl -X POST --data-binary @talos/image_rack2.yml https://factory.talos.dev/schematics
+
+# rack3: longhorn, nvidia
+# a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6
+curl -X POST --data-binary @talos/image_rack3.yml https://factory.talos.dev/schematics
 
 # image url and pxe url formats
-# factory.talos.dev/metal-installer/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3:v1.12.4
-# https://pxe.factory.talos.dev/pxe/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3/v1.12.4/metal-amd64
+# factory.talos.dev/metal-installer/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3:v1.12.5
+# https://pxe.factory.talos.dev/pxe/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3/v1.12.5/metal-amd64
 ```
 
 The doc is extremely unclear, but it seems that extensions are not built into the downloaded iso. You have to spec the
@@ -96,35 +109,25 @@ the image you spec is then installed to disk).
 So I ran a manual upgrade to install an image with the patches included
 
 ```bash
-# rack3 (control plane) gets newt; worker (rack2) does not
-talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/4e2d8806d9ee1965e2e3513c36a65fed1964cfcc41f2e482aa158af9fe851f2b:v1.12.4"
-talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.4"
+talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5"
+talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.5"
 ```
 
-starting from the beginning
+---
+
+env setup
 
 ```bash
 pulumi new
 pulumi plugin install resource talos
-uv add pulumiverse-talos
-uv add pulumi-cloudflare
-uv add pulumi-kubernetes
-uv add pulumi_kubernetes_cert_manager
 ```
 
-boot from iso. grab ip. using talosctl:
+boot from iso. grab ip from kvm gui. then
 
 ```bash
-export node="192.168.1.30"
-talosctl get disks --insecure --nodes $node
-talosctl get ethtool --insecure --nodes $node
-```
-
-populate the node ip and disk name into the config
-
-```bash
-export KUBECONFIG=$kcfg
-export TALOSCONFIG=$tcfg
+# populate the node ip and disk name into the config
+talosctl get disks --insecure --nodes $rack3
+talosctl get ethtool --insecure --nodes $rack3
 
 # 'health' won't work for worker nodes (?). instead use dashboard
 talosctl -n $rack3 health
@@ -138,9 +141,25 @@ talosctl shutdown
 
 # see current talos machine configuration
 talosctl -n $rack3 get mc -o yaml
+```
 
-# manual untaint control plane nodes
+taint
+
+```bash
+# manual untaint control plane nodes. had to specify the node names to untaint
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl taint nodes rack3 node-role.kubernetes.io/control-plane:NoSchedule-
+
+# check taints
+kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
+kubectl describe node rack3 | grep -A5 Taints
+
+# patch taint - the delete will only succeed once, while the label it deletes exists. duplicated in pulumi code
+talosctl patch mc -n $rack3 --patch talos/taint.yml
+
+# delete pods that are not running
+kubectl delete pods --field-selector status.phase!=Running
 ```
 
 longhorn
@@ -149,13 +168,14 @@ longhorn
 # pods look identical to the install documentation: https://longhorn.io/docs/1.11.0/deploy/install/install-with-helm/
 k -n longhorn-system get pod
 
-# quick n dirty: forward service port to localhost and view longhorn dash on http://localhost:8080
+# quick n dirty test: forward service port to localhost and view longhorn dash on http://localhost:8080
 k port-forward service/longhorn-frontend 8080:80 -n longhorn-system
 ```
 
 traefik
 
 ```bash
+# this is for traefik's built-in letsencrypt SSL from cloudflare - replacing this later with cert-manager
 kubectl create secret generic cloudflare-credentials \
     --namespace traefik-system \
     --from-literal=token=$(op read "op://homelab/cloudflare/token")
@@ -167,22 +187,70 @@ k get svc -n traefik-system
 cert-manager
 
 ```bash
-# todo: where does this secret live? appears not to persist the way I expected (kubeconfig file?)
 kubectl create secret generic cloudflare-credentials \
     --namespace cert-manager \
     --from-literal=token=$(op read "op://homelab/cloudflare/token")
 
-# helm uninstall. you have to manually delete the cert-manager crds, else a subsequent helm install will fail
-kubectl delete crd \
-  issuers.cert-manager.io \
-  clusterissuers.cert-manager.io \
-  certificates.cert-manager.io \
-  certificaterequests.cert-manager.io \
-  orders.acme.cert-manager.io \
-  challenges.acme.cert-manager.io
-
 # check for the certificates resource. If the READY field is False, the certificate has not been issued yet
 k get -n default certificates
+```
+
+newt
+
+```bash
+kubectl create secret generic newt-cred -n newt --from-env-file=<(fnox export -P newt --no-defaults | sd 'export ' '' | sd "'" '')
+```
+
+nvidia
+
+```bash
+# the gpu operator does not currently work, although that should change soon
+# Talos 1.13 now ships /etc/ld.* files, so this might not be a problem anymore, the gpu operator works now
+# https://github.com/NVIDIA/k8s-dra-driver-gpu/pull/695
+
+# dra does not appear to work, because nvidia-smi and other nvidia libs are in nonstandard paths
+
+# verify that modules are loaded
+t -n $rack3 read /proc/modules | grep nvidia
+# nvidia_uvm 2232320 0 - Live 0x0000000000000000 (PO)
+# nvidia_drm 151552 0 - Live 0x0000000000000000 (PO)
+# nvidia_modeset 1908736 2 nvidia_drm, Live 0x0000000000000000 (PO)
+# drm_ttm_helper 12288 1 nvidia_drm, Live 0x0000000000000000
+# nvidia 111489024 8 nvidia_uvm,nvidia_drm,nvidia_modeset, Live 0x0000000000000000 (PO)
+
+t get extensions -n $rack3 | grep nvidia
+# 192.168.1.29   runtime     ExtensionStatus   4             1         nonfree-kmod-nvidia-lts        580.126.16-v1.12.5
+# 192.168.1.29   runtime     ExtensionStatus   5             1         nvidia-container-toolkit-lts   580.126.16-v1.18.2
+
+# check node labels from node discovery
+kubectl label nodes rack2 nvidia.com/gpu.deploy.operands=false
+kubectl label nodes rack2 nvidia.com/gpu.deploy.driver=false
+kubectl get node rack3 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com"))'
+kubectl get node rack2 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com"))'
+
+kubectl run \
+  nvidia-test \
+  --restart=Never \
+  -ti --rm \
+  --image nvcr.io/nvidia/cuda:12.5.0-base-ubuntu22.04 \
+  --overrides '{"spec": {"runtimeClassName": "nvidia"}}' \
+  nvidia-smi
+```
+
+secrets
+
+- pulumi 1password provider
+    - not great. Items only - have to access by vault and uuid, can't just grab from secret ref.
+- pulumi secrets provider
+    - rigid. Can't have secrets embedded into nested configuration objects without them being wholly decrypted into
+      plaintext, or the whole configuration object is encrypted
+
+Trying out something like this. We'll see how it goes
+
+```bash
+# quotes are not allowed; spaces are fine in values for 'key=value w space'
+kubectl create secret generic dev-secrets --from-env-file=<(fnox export | sd 'export ' '' | sd "'" '')
+kubectl delete secret dev-secrets
 ```
 
 ---
@@ -194,15 +262,7 @@ k get -n default certificates
   debugging your infra stack - to reset the host for a new k8s bootstrap, you'll need to boot from iso and select
   the "reset disk" option
 
-### notes on secrets
-
-pulumi 1password provider not great. Items only - have to access by vault and uuid, can't just grab from secret ref.
-pulumi secrets provider is rigid. Can't have secrets embedded into nested configuration objects without them being
-wholly decrypted into plaintext, or the whole configuration object is encrypted
-
----
-
-# pxe booting
+### pxe booting
 
 ipxe script - this worked on the first try, somehow. That NEVER happens. I booted to netbootxyz, selected "ipxe shell",
 and typed the following. It downloaded from image factory and booted.
@@ -222,6 +282,7 @@ chain https://pxe.factory.talos.dev/pxe/cdd6d87822ad5fcd18092af75a54ffd803b9d6e4
 - recommended boot order: disk, then pxe network
 - ?? it's not really clear what will happen next - presumably, booter sniffs pxe traffic, then serves your preferred
   talos image to any pxe-booting machine?
+- presumably, you would need to configure DHCP to hand out the booter's IP as the `next_machine` or whatever it is
 
 ```docker
 # to serve this schematic with booter
@@ -268,7 +329,7 @@ metal machines alternatives
 - proxmox VMs, where the VMs are then clustered
     - https://www.pulumi.com/registry/packages/proxmoxve/
 
-possible hybrid cluster cloud targets
+possible hybrid clustering
 
 - koyeb
     - https://www.pulumi.com/registry/packages/koyeb/
@@ -280,3 +341,4 @@ possible hybrid cluster cloud targets
     - https://github.com/exivity/pulumi-hcloud-k8s
 - google cloud
     - https://www.pulumi.com/registry/packages/gcp/
+- https://docs.siderolabs.com/talos/v1.12/networking/kubespan

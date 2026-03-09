@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -eux
 
 if ! grep -qF "https://downloads.1password.com/linux/alpinelinux/stable/" /etc/apk/repositories; then
 	sh -c 'echo https://downloads.1password.com/linux/alpinelinux/stable/ >> /etc/apk/repositories'

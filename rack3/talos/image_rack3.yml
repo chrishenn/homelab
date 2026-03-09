@@ -2,7 +2,9 @@ customization:
   systemExtensions:
     officialExtensions:
       - siderolabs/amd-ucode
-      - siderolabs/iscsi-tools
       - siderolabs/mellanox-mstflint
+      - siderolabs/iscsi-tools
       - siderolabs/util-linux-tools
+      - siderolabs/nonfree-kmod-nvidia-lts
+      - siderolabs/nvidia-container-toolkit-lts
   bootloader: sd-boot

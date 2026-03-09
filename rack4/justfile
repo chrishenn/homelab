@@ -11,7 +11,7 @@ up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
 pullup profile=profile *svcs:
-    docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
+    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
 
 down profile=profile *svcs:
     docker compose --profile {{ profile }} down {{ svcs }}

@@ -1,6 +1,6 @@
 # secrets: openssl rand -hex 32
 # sudo chown -R 1000:1000 $DATA/tracearr/timescale
-
+---
 services:
   tracearr:
     profiles: [tracearr]
@@ -32,6 +32,8 @@ services:
       homepage.href: https://tracearr.chenn.dev
       homepage.description: Jellyfin Stats
 
+      pangolin.public-resources.tracearr.auth.sso-enabled: true
+      pangolin.public-resources.tracearr.auth.sso-roles[0]: Member
       pangolin.public-resources.tracearr.name: tracearr
       pangolin.public-resources.tracearr.protocol: http
       pangolin.public-resources.tracearr.full-domain: tracearr.chenn.dev

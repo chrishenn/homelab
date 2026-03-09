@@ -1,3 +1,7 @@
+[profiles.local.providers.age]
+type = "age"
+recipients = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL"]
+
 [providers.onepass]
 type = "1password"
 vault = "homelab"
@@ -6,6 +10,8 @@ account = "my.1password.com"
 [secrets]
 OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
 CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
+SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
+PROWLARR_API_KEY = { provider = "onepass", value = "op://homelab/prowlarr/credential" }
 
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
@@ -27,6 +33,7 @@ MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license"
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
 DAWARICH_SECRET = { provider = "onepass", value = "op://homelab/dawarich/secret" }
+CLOUDREVE_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/cloudreve/meili_key" }
 
 TRACEARR_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_secret" }
 TRACEARR_COOKIE_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_cookie_secret" }
@@ -155,3 +162,5 @@ RXRESUME_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/rxresume/oi
 RXRESUME_OIDC_SECRET = { provider = "onepass", value = "op://homelab/rxresume/oidc_secret" }
 DAWARICH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/dawarich/oidc_client" }
 DAWARICH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/dawarich/oidc_secret" }
+MM_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/mediamanager/oidc_client" }
+MM_OIDC_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/oidc_secret" }

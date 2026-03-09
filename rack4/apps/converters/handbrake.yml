@@ -1,0 +1,65 @@
+# sudo chown -R 1000:1000 $DATA/handbrake
+---
+services:
+  handbrake:
+    profiles: [handbrake]
+    image: ghcr.io/thenickoftime/handbrake-web-server:latest
+    container_name: handbrake
+    user: $PUID:$PGID
+    volumes:
+      - $DATA/handbrake/data:/data
+      - $DATA/handbrake/convert:/video
+    networks: [handbrake, newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Handbrake
+      homepage.icon: handbrake.png
+      homepage.href: https://handbrake.chenn.dev
+      homepage.description: Video Converter
+
+      traefik.enable: true
+      traefik.http.routers.handbrake.rule: Host(`handbrake.henn.dev`)
+      traefik.http.routers.handbrake.entrypoints: websecure
+      traefik.http.routers.handbrake.middlewares: hdrs@file
+      traefik.http.routers.handbrake.tls.certresolver: cf
+      traefik.http.services.handbrake.loadbalancer.server.port: 9999
+
+      pangolin.public-resources.handbrake.name: handbrake
+      pangolin.public-resources.handbrake.protocol: http
+      pangolin.public-resources.handbrake.full-domain: handbrake.chenn.dev
+      pangolin.public-resources.handbrake.ssl: true
+      pangolin.public-resources.handbrake.targets[0].method: http
+      pangolin.public-resources.handbrake.targets[0].port: 9999
+      pangolin.public-resources.handbrake.auth.sso-enabled: true
+      pangolin.public-resources.handbrake.auth.sso-roles[0]: Member
+      pangolin.public-resources.handbrake.rules[0].action: pass
+      pangolin.public-resources.handbrake.rules[0].match: country
+      pangolin.public-resources.handbrake.rules[0].value: US
+      pangolin.public-resources.handbrake.rules[0].priority: 0
+      pangolin.public-resources.handbrake.rules[1].action: deny
+      pangolin.public-resources.handbrake.rules[1].match: country
+      pangolin.public-resources.handbrake.rules[1].value: ALL
+      pangolin.public-resources.handbrake.rules[1].priority: 10
+
+  handbrake_worker:
+    profiles: [handbrake]
+    image: ghcr.io/thenickoftime/handbrake-web-worker:latest
+    container_name: handbrake_worker
+    user: $PUID:$PGID
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, video]
+    environment:
+      WORKER_ID: handbrake_worker_0
+      SERVER_URL: http://handbrake
+      SERVER_PORT: 9999
+    volumes:
+      - $DATA/handbrake/convert:/video
+    networks: [handbrake]
+
+networks:
+  handbrake:

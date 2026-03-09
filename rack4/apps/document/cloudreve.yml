@@ -1,0 +1,114 @@
+# I can't get collabora to open in a new tab
+# Not sure what the intended use case for this is - tiny cloud file storage platform entrepreneurs?
+# oidc behind a paywall
+---
+services:
+  cloudreve:
+    profiles: [cloudreve]
+    image: cloudreve/cloudreve:v4
+    container_name: cloudreve
+    restart: unless-stopped
+    environment:
+      CR_CONF_Database.Type: postgres
+      CR_CONF_Database.Host: cloudreve_pg
+      CR_CONF_Database.User: cloudreve
+      CR_CONF_Database.Name: cloudreve
+      CR_CONF_Database.Port: 5432
+      CR_CONF_Redis.Server: cloudreve_redis:6379
+      CR_SETTING_DEFAULT_fts_meilisearch_api_key: ${CLOUDREVE_MEILI_MASTER_KEY}
+      CR_SETTING_DEFAULT_fts_meilisearch_endpoint: http://cloudreve_meilisearch:7700
+      CR_SETTING_DEFAULT_fts_enabled: 1
+      CR_SETTING_DEFAULT_fts_tika_endpoint: http://cloudreve_tika:9998
+    volumes:
+      - $DATA/cloudreve/data:/cloudreve/data
+    networks: [newt, cloudreve]
+    labels:
+      pangolin.public-resources.cloudreve.name: cloudreve
+      pangolin.public-resources.cloudreve.protocol: http
+      pangolin.public-resources.cloudreve.full-domain: cloudreve.chenn.dev
+      pangolin.public-resources.cloudreve.ssl: true
+      pangolin.public-resources.cloudreve.targets[0].method: http
+      pangolin.public-resources.cloudreve.targets[0].port: 5212
+
+      pangolin.public-resources.cloudreve.rules[0].action: pass
+      pangolin.public-resources.cloudreve.rules[0].match: country
+      pangolin.public-resources.cloudreve.rules[0].value: US
+      pangolin.public-resources.cloudreve.rules[0].priority: 0
+      pangolin.public-resources.cloudreve.rules[1].action: deny
+      pangolin.public-resources.cloudreve.rules[1].match: country
+      pangolin.public-resources.cloudreve.rules[1].value: ALL
+      pangolin.public-resources.cloudreve.rules[1].priority: 10
+
+  cloudreve_tika:
+    profiles: [cloudreve]
+    image: apache/tika:latest
+    container_name: cloudreve_tika
+    restart: unless-stopped
+    networks: [cloudreve]
+
+  cloudreve_meilisearch:
+    profiles: [cloudreve]
+    image: getmeili/meilisearch:v1.37
+    container_name: cloudreve_meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${CLOUDREVE_MEILI_MASTER_KEY}
+    volumes:
+      - $DATA/cloudreve/meili:/meili_data
+    networks: [cloudreve]
+
+  cloudreve_pg:
+    profiles: [cloudreve]
+    image: postgres:17
+    container_name: postgresql
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cloudreve
+      POSTGRES_DB: cloudreve
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - $DATA/cloudreve/pg:/var/lib/postgresql/data
+    networks: [cloudreve]
+
+  cloudreve_redis:
+    profiles: [cloudreve]
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/cloudreve/redis:/data
+    networks: [cloudreve]
+
+  collabora_reve:
+    profiles: [cloudreve]
+    image: collabora/code:latest
+    container_name: collabora_reve
+    restart: unless-stopped
+    cap_add: [MKNOD]
+    environment:
+      username: ${USER}
+      password: ${PASS}
+      DONT_GEN_SSL_CERT: YES
+      server_name: collab.chenn.dev
+      aliasgroup1: https://cloudreve.chenn.dev:443
+      extra_params: |
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks: [newt]
+    labels:
+      pangolin.public-resources.collabora_reve.name: collabora_reve
+      pangolin.public-resources.collabora_reve.protocol: http
+      pangolin.public-resources.collabora_reve.full-domain: collab.chenn.dev
+      pangolin.public-resources.collabora_reve.ssl: true
+      pangolin.public-resources.collabora_reve.targets[0].method: http
+      pangolin.public-resources.collabora_reve.targets[0].port: 9980
+
+networks:
+  cloudreve:

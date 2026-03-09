@@ -1,0 +1,130 @@
+# login: admin/${PASS}
+# sudo chown -R 1000:1000 $DATA/opencloud
+---
+services:
+  opencloud:
+    profiles: [opencloud]
+    image: opencloudeu/opencloud-rolling:latest
+    container_name: opencloud
+    restart: unless-stopped
+    user: $PUID:$PGID
+    entrypoint:
+      - /bin/sh
+    command: ['-c', 'opencloud init || true; opencloud server']
+    environment:
+      OC_URL: https://oc.henn.dev
+      OC_DOMAIN: oc.henn.dev
+      OC_ADD_RUN_SERVICES: collaboration
+      OC_LOG_LEVEL: info
+      OC_LOG_COLOR: true
+      OC_LOG_PRETTY: true
+      OC_INSECURE: false
+      OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: true
+      OC_SHARING_PUBLIC_WRITEABLE_SHARE_MUST_HAVE_PASSWORD: false
+      OC_PASSWORD_POLICY_DISABLED: true
+
+      PROXY_CSP_CONFIG_FILE_LOCATION: /etc/csp.yaml
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      PROXY_ENABLE_BASIC_AUTH: false
+      PROXY_TLS: false
+
+      COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
+      COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
+      NATS_NATS_HOST: 0.0.0.0
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      MICRO_REGISTRY: 'nats-js-kv'
+      MICRO_REGISTRY_ADDRESS: 'opencloud:9233'
+
+      FRONTEND_ARCHIVER_MAX_SIZE: '10000000000'
+      FRONTEND_CHECK_FOR_UPDATES: false
+
+      IDM_CREATE_DEMO_USERS: false
+      IDM_ADMIN_PASSWORD: ${PASS}
+
+      NOTIFICATIONS_SMTP_HOST: ${SMTP_HOST}
+      NOTIFICATIONS_SMTP_PORT: 465
+      NOTIFICATIONS_SMTP_SENDER: oc.henn.dev
+      NOTIFICATIONS_SMTP_USERNAME: ${SMTP_USER}
+      NOTIFICATIONS_SMTP_PASSWORD: ${SMTP_TOKEN}
+      NOTIFICATIONS_SMTP_INSECURE: false
+      NOTIFICATIONS_SMTP_AUTHENTICATION:
+      NOTIFICATIONS_SMTP_ENCRYPTION: tls
+
+      COLLABORA_DOMAIN: collabora.henn.dev
+      TRAEFIK_PORT_HTTPS: ':443'
+      FRONTEND_APP_HANDLER_SECURE_VIEW_APP_ADDR: eu.opencloud.api.collaboration
+      COLLABORATION_WOPI_SRC: https://wopi.henn.dev
+      COLLABORATION_APP_NAME: 'CollaboraOnline'
+      COLLABORATION_APP_PRODUCT: 'Collabora'
+      COLLABORATION_APP_ADDR: https://collabora.henn.dev
+      COLLABORATION_APP_ICON: https://collabora.henn.dev/favicon.ico
+      COLLABORATION_APP_INSECURE: false
+      COLLABORATION_CS3API_DATAGATEWAY_INSECURE: false
+
+      SEARCH_EXTRACTOR_TYPE:
+      SEARCH_EXTRACTOR_TIKA_TIKA_URL:
+      FRONTEND_FULL_TEXT_SEARCH_ENABLED: false
+    volumes:
+      - ./opencloud/csp.yaml:/etc/csp.yaml
+      - $DATA/opencloud/apps:/var/lib/opencloud/web/assets/apps
+      - $DATA/opencloud/config:/etc/opencloud
+      - $DATA/opencloud/data:/var/lib/opencloud
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.opencloud.rule: Host(`oc.henn.dev`)
+      traefik.http.routers.opencloud.entrypoints: websecure
+      traefik.http.routers.opencloud.middlewares: hdrs@file
+      traefik.http.routers.opencloud.tls.certresolver: cf
+      traefik.http.routers.opencloud.service: opencloud
+      traefik.http.services.opencloud.loadbalancer.server.port: 9200
+
+      traefik.http.routers.oc_collaboration.rule: Host(`wopi.henn.dev`)
+      traefik.http.routers.oc_collaboration.entrypoints: websecure
+      traefik.http.routers.oc_collaboration.middlewares: hdrs@file
+      traefik.http.routers.oc_collaboration.tls.certresolver: cf
+      traefik.http.routers.oc_collaboration.service: oc_collaboration
+      traefik.http.services.oc_collaboration.loadbalancer.server.port: 9300
+
+    depends_on:
+      collabora:
+        condition: service_healthy
+
+  collabora:
+    profiles: [opencloud]
+    image: collabora/code:25.04.9.2.1
+    container_name: opencloud_collabora
+    restart: unless-stopped
+    cap_add: [SYS_ADMIN, MKNOD]
+    security_opt: [seccomp=unconfined, apparmor:unconfined]
+    entrypoint: ['/bin/bash', '-c']
+    command: ['coolconfig generate-proof-key && /start-collabora-online.sh']
+    environment:
+      username: ${USER}
+      password: ${PASS}
+      server_name: collabora.henn.dev
+      aliasgroup1: https://wopi.henn.dev
+      aliasgroup2: https://oc.henn.dev
+      aliasgroup3: https://collabora.henn.dev
+      DONT_GEN_SSL_CERT: YES
+      extra_params: |
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false \
+        --o:net.frame_ancestors=oc.henn.dev \
+        --o:net.lok_allow.host[14]=oc.henn.dev
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.oc_collabora.rule: Host(`collabora.henn.dev`)
+      traefik.http.routers.oc_collabora.entrypoints: websecure
+      traefik.http.routers.oc_collabora.middlewares: hdrs@file
+      traefik.http.routers.oc_collabora.tls.certresolver: cf
+      traefik.http.services.oc_collabora.loadbalancer.server.port: 9980

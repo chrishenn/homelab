@@ -8,14 +8,6 @@ services:
     image: garethgeorge/backrest:latest
     container_name: backrest
     restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DATA/backrest/data:/data
-      - $DATA/backrest/cache:/cache
-      - $DATA/backrest/config:/config
-      - ./backrest/scripts:/scripts
-      - /mnt/k:/mnt/k
-      - /mnt/h:/mnt/h
     environment:
       # hooks run in the container env; only restic/S3 creds must be passed thru to restic via the UI/cfg file
       TZ: $TZ
@@ -45,6 +37,18 @@ services:
           :drive:/
           /mnt/h/gdrive
         && chown -R 1000:1000 /mnt/h/gdrive
+      SCRIPT_GITHUB: |
+        . /scripts/deps.sh
+        && /scripts/github.sh
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/backrest/data:/data
+      - $DATA/backrest/cache:/cache
+      - $DATA/backrest/config:/config
+      - ./backrest/scripts:/scripts
+      - /mnt/k:/mnt/k
+      - /mnt/h:/mnt/h
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
     networks: [traefik]

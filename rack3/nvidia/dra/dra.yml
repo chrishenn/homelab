@@ -1,0 +1,6 @@
+# nvidia-smi and other drivers will never be found
+# operator support coming soon
+nvidiaDriverRoot: /usr/local/glibc
+resources:
+  gpus:
+    enabled: false
