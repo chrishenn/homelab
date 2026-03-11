@@ -14,18 +14,18 @@ function repo_update {
 	# find name of default branch using github api
 	dbr=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
 	[ -z "$dbr" ] && echo 'error: variable {dbr} is empty or unset'
-	return
+	false; return
 
 	# find the name of the remote (probably origin)
 	drm=$(git remote -v | head -n1 | awk '{print $1}')
 	[ -z "$drm" ] && echo 'error: variable {drm} is empty or unset'
-	return
+	false; return
 
 	# latest commit hash on origin/main
 	git fetch
 	hash=$(git log -n 1 $drm/$dbr --pretty=format:"%H")
 	[ -z "$hash" ] && echo 'error: variable {hash} is empty or unset'
-	return
+	false; return
 
 	git reset --hard $hash
 }
@@ -56,12 +56,10 @@ function main {
 
 		bpath="$dst/$host/$owner/$repo"
 		if ! test -d $bpath; then
-			gh repo clone $owner/$repo $bpath
-			[[ $? -eq 0 ]] && i=$((i+1))
+			gh repo clone $owner/$repo $bpath && i=$((i+1)) || continue
 		else
 			pushd $bpath
-			repo_update
-			[[ $? -eq 0 ]] && i=$((i+1))
+			repo_update && i=$((i+1)) || popd; continue
 			popd
 		fi
 	done
@@ -74,6 +72,7 @@ function main {
 	echo ''
 	echo "counted success: $i / ${#repos[@]}"
 	echo ''
+	[[ $i -eq ${#repos[@]} ]]
 }
 
 main
