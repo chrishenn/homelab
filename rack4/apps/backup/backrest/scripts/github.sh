@@ -8,7 +8,7 @@ dst='/mnt/h/github'
 function repo_update {
 	git pull
 	if [ $? -eq 0 ]; then
-		return
+		true; return
 	fi
 
 	# find name of default branch using github api
@@ -57,11 +57,11 @@ function main {
 		bpath="$dst/$host/$owner/$repo"
 		if ! test -d $bpath; then
 			gh repo clone $owner/$repo $bpath
-			[[ $? -eq 0 ]] && ((i++))
+			[[ $? -eq 0 ]] && i=$((i+1))
 		else
 			pushd $bpath
 			repo_update
-			[[ $? -eq 0 ]] && ((i++))
+			[[ $? -eq 0 ]] && i=$((i+1))
 			popd
 		fi
 	done
