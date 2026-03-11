@@ -1,10 +1,66 @@
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
-  name: beszel-agent
-  namespace: default
+  name: beszel-agent-rack3
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beszel-agent
+  template:
+    metadata:
+      labels:
+        app: beszel-agent
+    spec:
+      runtimeClassName: nvidia
+      hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values: [rack3]
+      containers:
+        - env:
+            - name: LISTEN
+              value: '45876'
+            - name: HUB_URL
+              value: https://beszel.chenn.dev
+            - name: KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dev-secrets
+                  key: BESZEL_KEY
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dev-secrets
+                  key: BESZEL_TOKEN
+          image: henrygd/beszel-agent-nvidia:latest
+          imagePullPolicy: Always
+          name: beszel-agent
+          ports:
+            - containerPort: 45876
+              hostPort: 45876
+      restartPolicy: Always
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beszel-agent-rack2
+spec:
+  replicas: 1
   selector:
     matchLabels:
       app: beszel-agent
@@ -14,12 +70,30 @@ spec:
         app: beszel-agent
     spec:
       hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values: [rack2]
       containers:
         - env:
             - name: LISTEN
               value: '45876'
+            - name: HUB_URL
+              value: https://beszel.chenn.dev
             - name: KEY
-              value: 'YOUR-KEY-HERE'
+              valueFrom:
+                secretKeyRef:
+                  name: dev-secrets
+                  key: BESZEL_KEY
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dev-secrets
+                  key: BESZEL_TOKEN
           image: henrygd/beszel-agent:latest
           imagePullPolicy: Always
           name: beszel-agent
@@ -34,8 +108,3 @@ spec:
         - effect: NoSchedule
           key: node-role.kubernetes.io/control-plane
           operator: Exists
-  updateStrategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 100%
-    type: RollingUpdate

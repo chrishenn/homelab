@@ -24,6 +24,15 @@ def traefik_dash(deps: list[Resource]) -> list[Resource]:
     return [svc]
 
 
+def beszel(deps: list[Resource]) -> list[Resource]:
+    svc = ConfigGroup(
+        "beszel-app",
+        files=["./app/beszel.yml"],
+        opts=ResourceOptions(depends_on=deps),
+    )
+    return [svc]
+
+
 def kuma(deps: list[Resource]) -> list[Resource]:
     svc = ConfigGroup(
         "kuma-app",
@@ -467,6 +476,7 @@ def main() -> None:
     longhorn_dash(svc_rscs)
     whoami(svc_rscs)
     kuma(svc_rscs)
+    beszel(svc_rscs)
 
 
 if __name__ == "__main__":
