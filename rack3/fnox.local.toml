@@ -1,0 +1,13 @@
+#:schema https://fnox.jdx.dev/schema.json
+
+# fnox sync --provider age --config fnox.local.toml
+
+[providers.age]
+type = "age"
+recipients = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL"]
+
+[secrets]
+CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token", sync = { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHNzaC1lZDI1NTE5IEhQWmRqQSAvNjZBUTZvZ3VXQlpOZElSSUN0SkFwdkZJcHJRK2k5dHlzRmtOMVZOZXpvCkJ4bTUxTWFCTjdlNkRPUUFoYTVsZExvZjJ1Z2FFeisyM3p6M29rbDhpWGMKLT4gZ3RFYS1ncmVhc2UKbkEKLS0tIGhDalNFcnFzZmxSdE5wQjlhRWlHYytQb0c5cXBqWEowQ3NMemdTWDRZTHMKVMNozOMzFNkd6zrUvDE+9xM0cS2YakqWtV0U1VNXUtoX++EHpbeuInVYyjx02v6QyGqd1Bm4uUYjGm+1hGPEw0s5D+mc30h2" } }
+PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/rack3/pangolin_endpoint", sync = { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHNzaC1lZDI1NTE5IEhQWmRqQSBUbmtnYnkyWE53SVdkRkZXTWxXeUtIMW5wUmh6dGk0STZiQzhuOFFTODNnCmx5dFp5N3BIMXlqWUZaQzJYSDduRzJiWktEWWdReTFBd1gvQ1lSaFZ3aWMKLT4gTV84SyoxLWdyZWFzZQpwNUlYeVRReERwWmVFL3dvb1JXOHpENVFDSEV1b2MrWDRBSExNZjdQczdvSFNwczdubUhsQ1NMaGk4UEowMmlPClVCZmpmaXV2bXkwNU56eUJJNjB0RmFyc2ZRZ2J3YUVwcDFIbTRNVllaVVVzCi0tLSBxYUZFWlF1dWFTMlp2OTV6d2YvejBwbUpjMFJUK1JMU1FSS2hjVWRabkpNChdMg09fBYPPSlqQl4U/EW4YE8wUGv7sDpDj35UM7IcBm8T14e2NAa/uQG+3Uq1AcecsJXsIHQj/nEs=" } }
+NEWT_ID = { provider = "onepass", value = "op://homelab/rack3/newt_id", sync = { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHNzaC1lZDI1NTE5IEhQWmRqQSBPdVp0Ym1LUXoyZ002YXppTVNyOWVXS3dzeGxKSVhiWlNTMHZsb1B6L1dZCnBQNVhERVRWV0tJUW1pZC9nZEkxWUtKZ1B5R1MwR21telNqNVlUZUh3eDAKLT4gZEZMd15xLWdyZWFzZSBSd0V4IG9VVEhxIDhgIERnbSteN24KYitVVytVMVpIcG1VbEh4ckF5WnZCaHNpZ3JZNG9NbUloTVNlMlR6N0NTMG9KUDR5VWRtbXBsYwotLS0gcnMzU0ZvM1JBNUdIMXdPODdtWHBaVkxVUVpCK1ovYy9NVTc3Rm1aalU5dwq3TNBCqO0yHnXSuGsTUVXooFQnpYdNdcROqFrZVV92NhFfZe02PfyN7Z4GlnZpDQ==" } }
+NEWT_SECRET = { provider = "onepass", value = "op://homelab/rack3/newt_secret", sync = { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHNzaC1lZDI1NTE5IEhQWmRqQSBTVGpwZTRlRDZiMkVQN3ZmcG8ybWVUdllyUzA4bWhBVEZSUWx1S1o3VWhJCkZNWDd1dG10Z29sNGdLV2JuK25QemU5R1JXVWFNcDRDcWxwRU40MER0d0EKLT4gIy1ncmVhc2UgJyZmaU59d1ogJDgsIHBcdG8sUS4KSTJsdzMxd2d1d2RBNUhRc1lSeTA1NlNnbjJvRVVqSTBtSGxXMnRnNmdVbUhEMklKcC9VWjRTdEtrUTRXQlJ4YwpRNjhFbXVHUlk1WlIKLS0tIFFSNzdQTG9tNlhaaTR0VzgxblpQMFA3V2lJWExwOXlkTStPNDN1TksyNlkK35iw92nHJnjmHYtEXj0t6em1QSiSasKG3DvQujWpmLOwV3WlsLpKL53TYF4HtpfbWLD5+hyhWUY29dKXMJwy+BnqT6cQU75z1o5qvNDizV4=" } }

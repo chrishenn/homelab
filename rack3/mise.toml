@@ -3,6 +3,7 @@ helm = "latest"
 k9s = "latest"
 kubectl = "latest"
 pulumi = "latest"
+sd = "latest"
 talosctl = "latest"
 uv = "latest"
 
@@ -12,3 +13,14 @@ rack2 = "192.168.1.30"
 
 KUBECONFIG = "{{'./.secrets/dev/kubeconfig' | absolute}}"
 TALOSCONFIG = "{{'./.secrets/dev/talosconfig' | absolute}}"
+
+[settings]
+python.uv_venv_auto = "create|source"
+
+[tasks.sync]
+description = "sync secrets to local"
+run = "fnox sync --provider age --config fnox.local.toml"
+
+[tasks.secrets]
+description = "render k8s secrets to secrets.yaml"
+run = "fnox export --format yaml > secrets.yaml"

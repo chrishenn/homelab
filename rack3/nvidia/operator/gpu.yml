@@ -1,0 +1,25 @@
+operator:
+  defaultRuntime: containerd
+driver:
+  enabled: false
+toolkit:
+  enabled: false
+devicePlugin:
+  enabled: true
+dcgmExporter:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+gfd:
+  enabled: true
+nfd:
+  enabled: true
+#validator:
+#  driver:
+#    env:
+#      - name: DISABLE_DEV_CHAR_SYMLINK_CREATION
+#        value: 'true'
+# only relevant for A100/A30/H100 GPUs
+migManager:
+  enabled: false
+nvidiaDriverRoot: /usr/local/glibc/lib

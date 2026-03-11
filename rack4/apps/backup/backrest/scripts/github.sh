@@ -69,7 +69,7 @@ function main {
 	for repo in "${repos[@]}"; do
 		echo "syncing: $repo"
 		if repo_update $owner $host $dst $repo; then
-			i=$((i+1))
+			i=$((i + 1))
 		fi
 	done
 
