@@ -25,11 +25,10 @@ workers: rack2
 - [x] cert-manager
     - [x] integrate with traefik
 - [x] nvidia gpu
+- [x] loosen seccomp
 - [ ] autoscaler
     - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
     - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server
-- [ ] loosen seccomp
-    - https://docs.siderolabs.com/kubernetes-guides/security/seccomp-profiles
 
 apps
 
@@ -73,6 +72,8 @@ more
 
 # manual steps
 
+## talos image
+
 https://factory.talos.dev/
 
 - grab a talos linux iso from their "image factory"
@@ -103,12 +104,13 @@ the image you spec is then installed to disk).
 So I ran a manual upgrade to install an image with the patches included
 
 ```bash
-# rack3 (control plane) gets newt; worker (rack2) does not
 talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5"
 talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.5"
 ```
 
-starting from the beginning
+---
+
+env setup
 
 ```bash
 pulumi new
@@ -116,19 +118,16 @@ pulumi plugin install resource talos
 uv add pulumiverse-talos
 uv add pulumi-cloudflare
 uv add pulumi-kubernetes
-uv add pulumi_kubernetes_cert_manager
 ```
 
-boot from iso. grab ip from kvm gui. using talosctl:
+boot from iso. grab ip from kvm gui. then
+
 
 ```bash
+# populate the node ip and disk name into the config
 talosctl get disks --insecure --nodes $rack3
 talosctl get ethtool --insecure --nodes $rack3
-```
 
-populate the node ip and disk name into the config
-
-```bash
 # 'health' won't work for worker nodes (?). instead use dashboard
 talosctl -n $rack3 health
 talosctl dashboard
@@ -141,7 +140,11 @@ talosctl shutdown
 
 # see current talos machine configuration
 talosctl -n $rack3 get mc -o yaml
+```
 
+taint
+
+```bash
 # manual untaint control plane nodes. had to specify the node names to untaint
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 kubectl taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule-
@@ -183,7 +186,6 @@ k get svc -n traefik-system
 cert-manager
 
 ```bash
-# todo: where does this secret live? appears not to persist the way I expected (kubeconfig file?)
 kubectl create secret generic cloudflare-credentials \
     --namespace cert-manager \
     --from-literal=token=$(op read "op://homelab/cloudflare/token")
@@ -195,12 +197,7 @@ k get -n default certificates
 newt
 
 ```bash
-# todo: create this secret using pulumi/fnox apis - this method sucks and I don't want to keep track of env files
-# The pod won't come up until secrets are in, but secrets can't go into namespace until chart is applied ?
-# I did pulumi up and then also simultaneously created the secret
-op inject -i newt/cred.env -o newt/secrets.env -f
-kubectl create secret generic newt-cred -n newt --from-env-file=newt_/secrets.env
-rm newt/secrets.env
+kubectl create secret generic newt-cred -n newt --from-env-file=<(fnox export -P newt --no-defaults | sd 'export ' '' | sd "'" '')
 ```
 
 nvidia
@@ -241,6 +238,14 @@ kubectl run \
 
 secrets
 
+- pulumi 1password provider
+    - not great. Items only - have to access by vault and uuid, can't just grab from secret ref.
+- pulumi secrets provider
+    - rigid. Can't have secrets embedded into nested configuration objects without them being wholly decrypted into
+      plaintext, or the whole configuration object is encrypted
+      
+Trying out something like this. We'll see how it goes
+
 ```bash
 # quotes are not allowed; spaces are fine in values for 'key=value w space'
 kubectl create secret generic dev-secrets --from-env-file=<(fnox export | sd 'export ' '' | sd "'" '')
@@ -256,17 +261,7 @@ kubectl delete secret dev-secrets
   debugging your infra stack - to reset the host for a new k8s bootstrap, you'll need to boot from iso and select
   the "reset disk" option
 
-### notes on secrets
-
-- pulumi 1password provider
-    - not great. Items only - have to access by vault and uuid, can't just grab from secret ref.
-- pulumi secrets provider
-    - rigid. Can't have secrets embedded into nested configuration objects without them being wholly decrypted into
-      plaintext, or the whole configuration object is encrypted
-
----
-
-# pxe booting
+### pxe booting
 
 ipxe script - this worked on the first try, somehow. That NEVER happens. I booted to netbootxyz, selected "ipxe shell",
 and typed the following. It downloaded from image factory and booted.
