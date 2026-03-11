@@ -7,7 +7,7 @@ owner='chrishenn'
 host='github.com'
 dst='/mnt/h/github'
 
-repo_reset() {
+function repo_reset {
 	# find name of default branch using github api
 	dbr=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
 	[[ -z "$dbr" ]] && echo 'error: default branch not found' && return 1 || true
@@ -24,7 +24,7 @@ repo_reset() {
 	git reset --hard $hash && return 0 || echo 'error: git reset failed' && return 1
 }
 
-repo_update() {
+function repo_update {
 	declare owner=$1
 	shift
 	declare host=$1
@@ -44,7 +44,7 @@ repo_update() {
 	repo_reset && popd && return 0 || popd && return 1
 }
 
-main() {
+function main {
 	# git and ssh setup
 	mkdir -p "$HOME/.ssh"
 	git config --global --add safe.directory '*'
