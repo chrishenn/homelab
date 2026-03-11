@@ -37,6 +37,10 @@ services:
           :drive:/
           /mnt/h/gdrive
         && chown -R 1000:1000 /mnt/h/gdrive
+      SCRIPT_GITHUB: |
+        . /scripts/deps.sh
+        && /scripts/github.sh
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/backrest/data:/data
