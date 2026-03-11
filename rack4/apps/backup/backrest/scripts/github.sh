@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euox pipefail
 
 owner='chrishenn'
 host='github.com'
