@@ -77,9 +77,9 @@ https://factory.talos.dev/
 hit the image factory api with the yml above, and get the image id in response. The image id goes in the image url
 
 ```bash
-curl -X POST --data-binary @images/image.yml https://factory.talos.dev/schematics
+curl -X POST --data-binary @talos/image.yml https://factory.talos.dev/schematics
 # edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096
-curl -X POST --data-binary @images/image_newt.yml https://factory.talos.dev/schematics
+curl -X POST --data-binary @talos/image_newt.yml https://factory.talos.dev/schematics
 # 4e2d8806d9ee1965e2e3513c36a65fed1964cfcc41f2e482aa158af9fe851f2b
 
 # image url and pxe url formats
@@ -112,7 +112,7 @@ uv add pulumi-kubernetes
 uv add pulumi_kubernetes_cert_manager
 ```
 
-boot from iso. grab ip. using talosctl:
+boot from iso. grab ip from kvm gui. using talosctl:
 
 ```bash
 export node="192.168.1.30"
@@ -123,9 +123,6 @@ talosctl get ethtool --insecure --nodes $node
 populate the node ip and disk name into the config
 
 ```bash
-export KUBECONFIG=$kcfg
-export TALOSCONFIG=$tcfg
-
 # 'health' won't work for worker nodes (?). instead use dashboard
 talosctl -n $rack3 health
 talosctl dashboard
@@ -140,7 +137,12 @@ talosctl shutdown
 talosctl -n $rack3 get mc -o yaml
 
 # manual untaint control plane nodes
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl label nodes --all node.kubernetes.io/exclude-from-external-load-balancers-
+
+# check taints 
+kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
+kubectl describe node <node-name> | grep -A5 Taints
 ```
 
 longhorn

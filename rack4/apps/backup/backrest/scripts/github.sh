@@ -40,7 +40,7 @@ function repo_update {
 	fi
 
 	pushd $bpath
-	git pull && popd && return 0
+	git pull --force && popd && return 0
 	repo_reset && popd && return 0 || popd && return 1
 }
 
