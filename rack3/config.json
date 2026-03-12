@@ -9,6 +9,7 @@
       "secrets": null,
       "nodes": [
         {
+          "name": "",
           "disk": "/dev/nvme0n1",
           "image": "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5",
           "i": 0,

@@ -1,6 +1,6 @@
 import json
 import os
-from enum import StrEnum
+from enum import StrEnum, auto
 from pathlib import Path
 
 import pulumi
@@ -185,6 +185,10 @@ class NodeType(StrEnum):
     worker = "worker"
 
 
+class NodeCap(StrEnum):
+    gpu = auto()
+
+
 class Newt(BaseModel):
     pangolin_endpoint: str
     newt_id: str | None
@@ -192,8 +196,10 @@ class Newt(BaseModel):
 
 
 class Node(BaseModel):
-    nodetype: NodeType
     i: int
+    name: str
+    caps: set[NodeCap]
+    nodetype: NodeType
     ip: str
     disk: str
     image: str
