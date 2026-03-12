@@ -314,7 +314,7 @@ def load_yaml(path: Path) -> dict:
         return yaml.load(f, SafeLoader)
 
 
-def patch_machine(node: Node) -> str:
+def patch_cmn(node: Node) -> str:
     patch = {
         "machine": {
             "install": {"disk": node.disk, "image": node.image},
@@ -337,7 +337,10 @@ def patch_machine(node: Node) -> str:
                 ],
             },
         },
-        "cluster": {"proxy": {"extraArgs": {"ipvs-strict-arp": True}}},
+        "cluster": {
+            "proxy": {"extraArgs": {"ipvs-strict-arp": True}},
+            "allowSchedulingOnControlPlanes": True,
+        },
     }
     return json.dumps(patch)
 
@@ -379,7 +382,7 @@ def nvidia(deps: list[Resource]) -> list[Resource]:
 
 
 def patch_nvidia(node: Node) -> str:
-    if node.nodetype != NodeType.controlplane:
+    if NodeCap.gpu not in node.caps:
         return ""
     patch = {
         "machine": {
@@ -400,7 +403,7 @@ def patch_nvidia(node: Node) -> str:
 def node_cfg(cluster: Cluster, node: Node) -> Resource:
     assert cluster.secrets is not None
 
-    mc = [patch_machine(node), patch_taint(), patch_nvidia(node)]
+    mc = [patch_cmn(node), patch_taint(), patch_nvidia(node)]
     mc = list(filter(bool, mc))
 
     nodecfg = talos.machine.get_configuration_output(

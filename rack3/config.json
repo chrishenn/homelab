@@ -9,13 +9,14 @@
       "secrets": null,
       "nodes": [
         {
-          "name": "",
-          "disk": "/dev/nvme0n1",
-          "image": "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5",
           "i": 0,
-          "ifc": "enp10s0np0",
-          "ip": "192.168.1.29",
+          "name": "rack3",
           "nodetype": "controlplane",
+          "caps": ["gpu"],
+          "image": "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5",
+          "ip": "192.168.1.29",
+          "disk": "/dev/nvme0n1",
+          "ifc": "enp10s0np0",
           "newt": {
             "pangolin_endpoint": "https://pangolin.chenn.dev",
             "newt_id": null,
@@ -24,12 +25,14 @@
           "dhcp": true
         },
         {
-          "disk": "/dev/nvme0n1",
-          "image": "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.4",
           "i": 1,
-          "ifc": "enp9s0f1np1",
-          "ip": "192.168.1.30",
+          "name": "rack2",
           "nodetype": "worker",
+          "caps": [],
+          "image": "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.5",
+          "ip": "192.168.1.30",
+          "disk": "/dev/nvme0n1",
+          "ifc": "enp9s0f1np1",
           "newt": {
             "pangolin_endpoint": "https://pangolin.chenn.dev",
             "newt_id": null,
