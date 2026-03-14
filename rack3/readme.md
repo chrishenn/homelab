@@ -1,7 +1,7 @@
 # Pulumi Talos K8s cluster on {Rack2, Rack3}
 
-control planes: rack3
-workers: rack2
+control planes: {rack3}
+workers: {rack2}
 
 ---
 
@@ -32,12 +32,17 @@ workers: rack2
 
 apps
 
-- [x] newt
+- [ ] pangolin
+    - [ ] pangolin
+    - [x] newt
 - [x] uptime-kuma
 - [ ] beszel (https://beszel.dev/guide/advanced-deployment)
     - [ ] beszel server
     - [x] beszel agents for each node
     - [x] gpu monitoring
+- [ ] local container registry pull-through cache
+    - [x] docker's official registry (hosted on rack4 compose)
+    - [ ] configure talos clients to use the cache
 - [ ] oath2-proxy + pocketid
 - [ ] grafana/loki
     - https://github.com/timothystewart6/launchpad/tree/152d6bbcba239f98ea8cfa136a98841dc3cd30cd/kubernetes/kube-prometheus-stack
@@ -115,13 +120,9 @@ env setup
 ```bash
 pulumi new
 pulumi plugin install resource talos
-uv add pulumiverse-talos
-uv add pulumi-cloudflare
-uv add pulumi-kubernetes
 ```
 
 boot from iso. grab ip from kvm gui. then
-
 
 ```bash
 # populate the node ip and disk name into the config
@@ -243,7 +244,7 @@ secrets
 - pulumi secrets provider
     - rigid. Can't have secrets embedded into nested configuration objects without them being wholly decrypted into
       plaintext, or the whole configuration object is encrypted
-      
+
 Trying out something like this. We'll see how it goes
 
 ```bash

@@ -17,11 +17,6 @@
           "ip": "192.168.1.29",
           "disk": "/dev/nvme0n1",
           "ifc": "enp10s0np0",
-          "newt": {
-            "pangolin_endpoint": "https://pangolin.chenn.dev",
-            "newt_id": null,
-            "newt_secret": null
-          },
           "dhcp": true
         },
         {
@@ -33,11 +28,6 @@
           "ip": "192.168.1.30",
           "disk": "/dev/nvme0n1",
           "ifc": "enp9s0f1np1",
-          "newt": {
-            "pangolin_endpoint": "https://pangolin.chenn.dev",
-            "newt_id": null,
-            "newt_secret": null
-          },
           "dhcp": true
         }
       ]

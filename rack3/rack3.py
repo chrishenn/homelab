@@ -12,6 +12,7 @@ from pulumi_kubernetes.helm.v4 import Chart, RepositoryOptsArgs
 from pulumi_kubernetes.meta.v1 import ObjectMetaArgs
 from pulumi_kubernetes.yaml.v2 import ConfigGroup
 from pydantic import BaseModel
+from rich.console import Console
 from yaml import SafeLoader
 
 
@@ -181,18 +182,12 @@ def longhorn() -> list[Resource]:
 
 
 class NodeType(StrEnum):
-    controlplane = "controlplane"
-    worker = "worker"
+    controlplane = auto()
+    worker = auto()
 
 
 class NodeCap(StrEnum):
     gpu = auto()
-
-
-class Newt(BaseModel):
-    pangolin_endpoint: str
-    newt_id: str | None
-    newt_secret: str | None
 
 
 class Node(BaseModel):
@@ -205,7 +200,6 @@ class Node(BaseModel):
     image: str
     ifc: str
     dhcp: bool
-    newt: Newt
 
 
 class Cluster(BaseModel):
@@ -469,6 +463,9 @@ def main() -> None:
 
     with cfgf.open() as f:
         cfg = Clusters.model_validate_json(f.read())
+
+    console = Console(width=200)
+    console.print(cfg.clusters[0])
 
     list(map(cluster_val, cfg.clusters))
     list(map(cluster_cfg, cfg.clusters))
