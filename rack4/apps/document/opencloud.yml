@@ -4,7 +4,7 @@
 x-oc_env: &oc_env
   OC_DOMAIN: oc.henn.dev
   OC_URL: https://oc.henn.dev:443
-  COLLABORA_DOMAIN: collabora.henn.dev
+
   TRAEFIK_PORT_HTTPS: 443
   NATS_NATS_HOST: 0.0.0.0
   GATEWAY_GRPC_ADDR: 0.0.0.0:9142
@@ -59,6 +59,7 @@ x-oc_env: &oc_env
   COLLABORATION_LOG_LEVEL: info
 
   WOPISERVER_DOMAIN: wopi.henn.dev
+  COLLABORA_DOMAIN: collabora.henn.dev
   COLLABORA_ADMIN_USER: ${USER}
   COLLABORA_ADMIN_PASSWORD: ${PASS}
   COLLABORA_SSL_ENABLE: false
