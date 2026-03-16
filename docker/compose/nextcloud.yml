@@ -1,3 +1,6 @@
+# This feels like an amazing project with a rich ecosystem ... from a bygone era.
+# VERY difficult to configure, deploy; extremely touchy, manual, inflexible.
+
 # pycharm $DATA/nextcloud/config/www/nextcloud/config/config.php
 
 # docker exec nextcloud occ maintenance:repair --include-expensive
@@ -93,7 +96,7 @@ services:
 
   nextcloud_db:
     profiles: [nextcloud]
-    image: postgres:16
+    image: postgres:18-alpine
     container_name: nextcloud_db
     restart: unless-stopped
     environment:
@@ -101,7 +104,7 @@ services:
       POSTGRES_USER: nextcloud
       POSTGRES_PASSWORD: nextcloud
     volumes:
-      - $DATA/nextcloud/nextcloud_db:/var/lib/postgresql/data
+      - $DATA/nextcloud/nextcloud_db:/var/lib/postgresql
     healthcheck:
       test: ['CMD', 'pg_isready', '-q', '-d', 'nextcloud', '-U', 'nextcloud']
     networks: [nextcloud]

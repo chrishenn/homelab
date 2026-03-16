@@ -10,8 +10,6 @@ account = "my.1password.com"
 [secrets]
 OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
 CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
-SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
-PROWLARR_API_KEY = { provider = "onepass", value = "op://homelab/prowlarr/credential" }
 
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
@@ -22,18 +20,8 @@ SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host"
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }
 SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
 
-HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
-NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
-TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
-SEARXNG_SECRET = { provider = "onepass", value = "op://homelab/searxng/credential" }
-WIREGUARD_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/proton/VPN/wireguard_private_key" }
-NEXTCLOUD_HARP_KEY = { provider = "onepass", value = "op://homelab/Nextcloud/harp_key" }
-POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_key" }
-MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license" }
-VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
-RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
-DAWARICH_SECRET = { provider = "onepass", value = "op://homelab/dawarich/secret" }
-CLOUDREVE_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/cloudreve/meili_key" }
+N8N_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/n8n/encryption_key" }
+N8N_LICENSE = { provider = "onepass", value = "op://homelab/n8n/license" }
 
 TRACEARR_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_secret" }
 TRACEARR_COOKIE_SECRET = { provider = "onepass", value = "op://homelab/tracearr/tracearr_cookie_secret" }
@@ -41,15 +29,8 @@ TRACEARR_AUTH_USER = { provider = "onepass", value = "op://homelab/tracearr/trac
 TRACEARR_AUTH_PASS = { provider = "onepass", value = "op://homelab/tracearr/tracearr_auth_pass" }
 
 SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
+SEAFILE_SECRET_KEY = { provider = "onepass", value = "op://homelab/seafile/secret_key" }
 SEAFILE_PASS = { provider = "onepass", value = "op://homelab/seafile/password" }
-SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc_client" }
-SEAFILE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/seafile/oidc_secret" }
-SEAFILE_OIDC_REDIRECT = { provider = "onepass", value = "op://homelab/seafile/oidc_redirect" }
-SEAFILE_OIDC_DOMAIN = { provider = "onepass", value = "op://homelab/seafile/oidc_domain" }
-SEAFILE_OIDC_PROVIDER = { provider = "onepass", value = "op://homelab/seafile/oidc_provider" }
-SEAFILE_OIDC_AUTH_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_auth_url" }
-SEAFILE_OIDC_TOKEN_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_token_url" }
-SEAFILE_OIDC_USER_URL = { provider = "onepass", value = "op://homelab/seafile/oidc_user_url" }
 
 ARCANE_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/arcane/encryption_key" }
 ARCANE_API_KEY = { provider = "onepass", value = "op://homelab/arcane/api_key" }
@@ -66,12 +47,6 @@ RADARR_URL = { provider = "onepass", value = "op://homelab/radarr/url" }
 RADARR_KEY = { provider = "onepass", value = "op://homelab/radarr/credential" }
 SONARR_URL = { provider = "onepass", value = "op://homelab/sonarr/url" }
 SONARR_KEY = { provider = "onepass", value = "op://homelab/sonarr/credential" }
-
-DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
-DOCMOST_DBURL = { provider = "onepass", value = "op://homelab/docmost/dburl" }
-
-RXRESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/rxresume/credential" }
-RXRESUME_PGURL = { provider = "onepass", value = "op://homelab/rxresume/pgurl" }
 
 PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
 PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
@@ -111,16 +86,30 @@ IMMICH_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/immich
 KARAKEEP_NEXTAUTH_SECRET = { provider = "onepass", value = "op://homelab/karakeep/nextauth_secret" }
 KARAKEEP_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/karakeep/meili_master_key" }
 
-BYTESTASH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bytestash/oidc_client" }
-BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/oidc_secret" }
-BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }
-
 JICOFO_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JICOFO_AUTH_PASSWORD" }
 JVB_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JVB_AUTH_PASSWORD" }
 JIGASI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_XMPP_PASSWORD" }
 JIGASI_TRANSCRIBER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_TRANSCRIBER_PASSWORD" }
 JIBRI_RECORDER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_RECORDER_PASSWORD" }
 JIBRI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_XMPP_PASSWORD" }
+
+HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
+NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
+TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
+SEARXNG_SECRET = { provider = "onepass", value = "op://homelab/searxng/credential" }
+WIREGUARD_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/proton/VPN/wireguard_private_key" }
+NEXTCLOUD_HARP_KEY = { provider = "onepass", value = "op://homelab/Nextcloud/harp_key" }
+POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_key" }
+MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/MaxMind/license" }
+VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
+RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
+DAWARICH_SECRET = { provider = "onepass", value = "op://homelab/dawarich/secret" }
+CLOUDREVE_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/cloudreve/meili_key" }
+SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
+PROWLARR_API_KEY = { provider = "onepass", value = "op://homelab/prowlarr/credential" }
+DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
+RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
+BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -158,9 +147,15 @@ STIRLING_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/stirling/oi
 STIRLING_OIDC_SECRET = { provider = "onepass", value = "op://homelab/stirling/oidc_secret" }
 GITLAB_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gitlab/oidc_client" }
 GITLAB_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gitlab/oidc_secret" }
-RXRESUME_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/rxresume/oidc_client" }
-RXRESUME_OIDC_SECRET = { provider = "onepass", value = "op://homelab/rxresume/oidc_secret" }
+RESUME_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/resume/oidc_client" }
+RESUME_OIDC_SECRET = { provider = "onepass", value = "op://homelab/resume/oidc_secret" }
 DAWARICH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/dawarich/oidc_client" }
 DAWARICH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/dawarich/oidc_secret" }
 MM_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/mediamanager/oidc_client" }
 MM_OIDC_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/oidc_secret" }
+KESTRA_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kestra/oidc_client" }
+KESTRA_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kestra/oidc_secret" }
+SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc_client" }
+SEAFILE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/seafile/oidc_secret" }
+BYTESTASH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bytestash/oidc_client" }
+BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/oidc_secret" }

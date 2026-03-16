@@ -9,14 +9,26 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
-      SITE_ROOT: https://healthchecks.henn.dev
-      SITE_NAME: 'Chicken Vibes'
-      DEFAULT_FROM_EMAIL: ${EMAIL}
+      SECRET_KEY: very_secret_site_key
+      SITE_ROOT: https://healthchecks.chenn.dev
+      SITE_NAME: Healthy Chicken
+      SUPERUSER_EMAIL: ${EMAIL}
+      SUPERUSER_PASSWORD: ${PASS}
+      ALLOWED_HOSTS: healthchecks.chenn.dev,healthchecks.henn.dev
+      APPRISE_ENABLED: False
+      CSRF_TRUSTED_ORIGINS: '["healthchecks.chenn.dev", "healthchecks.henn.dev"]'
+      DEBUG: True
+      DEFAULT_FROM_EMAIL: healthchecks@henn.dev
+      EMAIL_HOST: $SMTP_HOST
+      EMAIL_PORT: 465
+      EMAIL_HOST_USER: $SMTP_USER
+      EMAIL_HOST_PASSWORD: $SMTP_TOKEN
+      EMAIL_USE_TLS: True
+      INTEGRATIONS_ALLOW_PRIVATE_IPS: False
+      PING_EMAIL_DOMAIN: henn.dev
+      SITE_LOGO_URL:
     volumes:
       - $DATA/healthchecks/config:/config
-    depends_on:
-      - healthchecks_db
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uwsgi /opt/healthchecks/docker/uwsgi.ini'
     networks: [traefik]
     labels:
       traefik.enable: true
@@ -24,13 +36,3 @@ services:
       traefik.http.routers.healthchecks.entrypoints: websecure
       traefik.http.routers.healthchecks.tls.certresolver: cf
       traefik.http.services.healthchecks.loadbalancer.server.port: 8000
-
-  healthchecks_db:
-    profiles: [healthchecks]
-    image: postgres:16
-    container_name: healthchecks_db
-    environment:
-      POSTGRES_DB: healthchecks
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - $DATA/healthchecks/db:/var/lib/postgresql/data

@@ -25,8 +25,8 @@ services:
       traefik.http.services.handbrake.loadbalancer.server.port: 9999
 
       pangolin.public-resources.handbrake.name: handbrake
-      pangolin.public-resources.handbrake.protocol: http
       pangolin.public-resources.handbrake.full-domain: handbrake.chenn.dev
+      pangolin.public-resources.handbrake.protocol: http
       pangolin.public-resources.handbrake.ssl: true
       pangolin.public-resources.handbrake.targets[0].method: http
       pangolin.public-resources.handbrake.targets[0].port: 9999

@@ -29,12 +29,11 @@ services:
       traefik.http.services.pairdrop.loadbalancer.server.port: 3000
 
       pangolin.public-resources.pairdrop.name: pairdrop
-      pangolin.public-resources.pairdrop.protocol: http
       pangolin.public-resources.pairdrop.full-domain: pairdrop.chenn.dev
+      pangolin.public-resources.pairdrop.protocol: http
       pangolin.public-resources.pairdrop.ssl: true
       pangolin.public-resources.pairdrop.targets[0].method: http
       pangolin.public-resources.pairdrop.targets[0].port: 3000
-
       pangolin.public-resources.pairdrop.auth.sso-enabled: true
       pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
       pangolin.public-resources.pairdrop.rules[0].action: pass

@@ -21,8 +21,8 @@ services:
       traefik.http.services.chartdb.loadbalancer.server.port: 80
 
       pangolin.public-resources.chartdb.name: chartdb
-      pangolin.public-resources.chartdb.protocol: http
       pangolin.public-resources.chartdb.full-domain: chart.chenn.dev
+      pangolin.public-resources.chartdb.protocol: http
       pangolin.public-resources.chartdb.ssl: true
       pangolin.public-resources.chartdb.targets[0].method: http
       pangolin.public-resources.chartdb.targets[0].port: 80

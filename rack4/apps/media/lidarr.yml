@@ -31,15 +31,13 @@ services:
       traefik.http.services.lidarr.loadbalancer.server.port: 8686
 
       pangolin.public-resources.lidarr.name: lidarr
-      pangolin.public-resources.lidarr.protocol: http
       pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev
+      pangolin.public-resources.lidarr.protocol: http
       pangolin.public-resources.lidarr.ssl: true
       pangolin.public-resources.lidarr.targets[0].method: http
       pangolin.public-resources.lidarr.targets[0].port: 8686
-
       pangolin.public-resources.lidarr.auth.sso-enabled: true
       pangolin.public-resources.lidarr.auth.sso-roles[0]: Member
-
       pangolin.public-resources.lidarr.rules[0].action: allow
       pangolin.public-resources.lidarr.rules[0].match: path
       pangolin.public-resources.lidarr.rules[0].value: /api/*

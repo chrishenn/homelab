@@ -28,12 +28,11 @@ services:
       traefik.http.services.seerr.loadbalancer.server.port: 5055
 
       pangolin.public-resources.seerr.name: seerr
-      pangolin.public-resources.seerr.protocol: http
       pangolin.public-resources.seerr.full-domain: seerr.chenn.dev
+      pangolin.public-resources.seerr.protocol: http
       pangolin.public-resources.seerr.ssl: true
       pangolin.public-resources.seerr.targets[0].method: http
       pangolin.public-resources.seerr.targets[0].port: 5055
-
       pangolin.public-resources.seerr.auth.sso-enabled: true
       pangolin.public-resources.seerr.auth.sso-roles[0]: Member
       pangolin.public-resources.seerr.rules[0].action: pass

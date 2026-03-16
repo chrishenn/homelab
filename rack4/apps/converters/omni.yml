@@ -21,12 +21,11 @@ services:
       traefik.http.services.omni.loadbalancer.server.port: 80
 
       pangolin.public-resources.omni.name: omni
-      pangolin.public-resources.omni.protocol: http
       pangolin.public-resources.omni.full-domain: omni.chenn.dev
+      pangolin.public-resources.omni.protocol: http
       pangolin.public-resources.omni.ssl: true
       pangolin.public-resources.omni.targets[0].method: http
       pangolin.public-resources.omni.targets[0].port: 80
-
       pangolin.public-resources.omni.auth.sso-enabled: true
       pangolin.public-resources.omni.auth.sso-roles[0]: Member
       pangolin.public-resources.omni.rules[0].action: pass

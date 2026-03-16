@@ -23,12 +23,11 @@ services:
       traefik.http.services.metube.loadbalancer.server.port: 8081
 
       pangolin.public-resources.metube.name: metube
-      pangolin.public-resources.metube.protocol: http
       pangolin.public-resources.metube.full-domain: metube.chenn.dev
+      pangolin.public-resources.metube.protocol: http
       pangolin.public-resources.metube.ssl: true
       pangolin.public-resources.metube.targets[0].method: http
       pangolin.public-resources.metube.targets[0].port: 8081
-
       pangolin.public-resources.metube.auth.sso-enabled: true
       pangolin.public-resources.metube.auth.sso-roles[0]: Member
       pangolin.public-resources.metube.rules[0].action: pass

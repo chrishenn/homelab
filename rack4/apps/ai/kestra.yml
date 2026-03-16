@@ -1,6 +1,8 @@
 # to use curl to launch an execution
 # curl -u <email> -X post ...
 # curl will prompt for password
+
+# SSO is enterprise-only
 ---
 services:
   kestra:
@@ -43,11 +45,11 @@ services:
           url: http://localhost:8080/
     networks: [kestra, traefik]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Kestra
-      homepage.instance.private.icon: kestra.png
-      homepage.instance.private.href: https://kestra.henn.dev
-      homepage.instance.private.description: Workflow Orchestration
+      homepage.group: AI
+      homepage.name: Kestra
+      homepage.icon: kestra.png
+      homepage.href: https://kestra.chenn.dev
+      homepage.description: Workflow Orchestration
 
       traefik.enable: true
       traefik.http.routers.kestra.rule: Host(`kestra.henn.dev`)
@@ -56,13 +58,30 @@ services:
       traefik.http.routers.kestra.tls.certresolver: cf
       traefik.http.services.kestra.loadbalancer.server.port: 8080
 
+      pangolin.public-resources.kestra.name: kestra
+      pangolin.public-resources.kestra.full-domain: kestra.chenn.dev
+      pangolin.public-resources.kestra.protocol: http
+      pangolin.public-resources.kestra.ssl: true
+      pangolin.public-resources.kestra.targets[0].method: http
+      pangolin.public-resources.kestra.targets[0].port: 8080
+      pangolin.public-resources.kestra.auth.sso-enabled: true
+      pangolin.public-resources.kestra.auth.sso-roles[0]: Member
+      pangolin.public-resources.kestra.rules[0].action: pass
+      pangolin.public-resources.kestra.rules[0].match: country
+      pangolin.public-resources.kestra.rules[0].value: US
+      pangolin.public-resources.kestra.rules[0].priority: 0
+      pangolin.public-resources.kestra.rules[1].action: deny
+      pangolin.public-resources.kestra.rules[1].match: country
+      pangolin.public-resources.kestra.rules[1].value: ALL
+      pangolin.public-resources.kestra.rules[1].priority: 10
+
   kestra_pg:
     profiles: [kestra]
-    image: postgres:16
+    image: postgres:18-alpine
     container_name: kestra_pg
     restart: unless-stopped
     volumes:
-      - $DATA/kestra/kestra_pg:/var/lib/postgresql/data
+      - $DATA/kestra/kestra_pg:/var/lib/postgresql
     environment:
       POSTGRES_DB: kestra
       POSTGRES_USER: kestra

@@ -14,7 +14,12 @@ services:
       CR_CONF_Database.User: cloudreve
       CR_CONF_Database.Name: cloudreve
       CR_CONF_Database.Port: 5432
+
       CR_CONF_Redis.Server: cloudreve_redis:6379
+
+      CR_CONF_CORS.AllowOrigins: https://cloudreve.chenn.dev
+      CR_CONF_CORS.AllowHeaders: https://cloudreve.chenn.dev
+
       CR_SETTING_DEFAULT_fts_meilisearch_api_key: ${CLOUDREVE_MEILI_MASTER_KEY}
       CR_SETTING_DEFAULT_fts_meilisearch_endpoint: http://cloudreve_meilisearch:7700
       CR_SETTING_DEFAULT_fts_enabled: 1
@@ -29,7 +34,6 @@ services:
       pangolin.public-resources.cloudreve.ssl: true
       pangolin.public-resources.cloudreve.targets[0].method: http
       pangolin.public-resources.cloudreve.targets[0].port: 5212
-
       pangolin.public-resources.cloudreve.rules[0].action: pass
       pangolin.public-resources.cloudreve.rules[0].match: country
       pangolin.public-resources.cloudreve.rules[0].value: US
@@ -59,15 +63,15 @@ services:
 
   cloudreve_pg:
     profiles: [cloudreve]
-    image: postgres:17
-    container_name: postgresql
+    image: postgres:18-alpine
+    container_name: cloudreve_pg
     restart: unless-stopped
     environment:
       POSTGRES_USER: cloudreve
       POSTGRES_DB: cloudreve
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - $DATA/cloudreve/pg:/var/lib/postgresql/data
+      - $DATA/cloudreve/pg:/var/lib/postgresql
     networks: [cloudreve]
 
   cloudreve_redis:

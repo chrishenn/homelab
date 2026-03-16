@@ -43,12 +43,11 @@ services:
       homepage.description: Private Bitwarden
 
       pangolin.public-resources.warden.name: warden
-      pangolin.public-resources.warden.protocol: http
       pangolin.public-resources.warden.full-domain: warden.chenn.dev
+      pangolin.public-resources.warden.protocol: http
       pangolin.public-resources.warden.ssl: true
       pangolin.public-resources.warden.targets[0].method: http
       pangolin.public-resources.warden.targets[0].port: 80
-
       pangolin.public-resources.warden.auth.sso-enabled: true
       pangolin.public-resources.warden.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.warden.rules[0].action: pass

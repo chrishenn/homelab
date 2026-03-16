@@ -1,0 +1,6 @@
+{
+  "openIdConnect": {
+    "authority": "https://pocketid.chenn.dev",
+    "metadata_url": "https://pocketid.chenn.dev/api/oidc/userinfo"
+  }
+}

@@ -32,10 +32,10 @@ services:
       COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
       NATS_NATS_HOST: 0.0.0.0
       GATEWAY_GRPC_ADDR: 0.0.0.0:9142
-      MICRO_REGISTRY: 'nats-js-kv'
-      MICRO_REGISTRY_ADDRESS: 'opencloud:9233'
+      MICRO_REGISTRY: nats-js-kv
+      MICRO_REGISTRY_ADDRESS: opencloud:9233
 
-      FRONTEND_ARCHIVER_MAX_SIZE: '10000000000'
+      FRONTEND_ARCHIVER_MAX_SIZE: 10000000000
       FRONTEND_CHECK_FOR_UPDATES: false
 
       IDM_CREATE_DEMO_USERS: false
@@ -51,11 +51,11 @@ services:
       NOTIFICATIONS_SMTP_ENCRYPTION: tls
 
       COLLABORA_DOMAIN: collabora.henn.dev
-      TRAEFIK_PORT_HTTPS: ':443'
+      TRAEFIK_PORT_HTTPS: :443
       FRONTEND_APP_HANDLER_SECURE_VIEW_APP_ADDR: eu.opencloud.api.collaboration
       COLLABORATION_WOPI_SRC: https://wopi.henn.dev
-      COLLABORATION_APP_NAME: 'CollaboraOnline'
-      COLLABORATION_APP_PRODUCT: 'Collabora'
+      COLLABORATION_APP_NAME: CollaboraOnline
+      COLLABORATION_APP_PRODUCT: Collabora
       COLLABORATION_APP_ADDR: https://collabora.henn.dev
       COLLABORATION_APP_ICON: https://collabora.henn.dev/favicon.ico
       COLLABORATION_APP_INSECURE: false
@@ -93,7 +93,7 @@ services:
 
   collabora:
     profiles: [opencloud]
-    image: collabora/code:25.04.9.2.1
+    image: collabora/code:latest
     container_name: opencloud_collabora
     restart: unless-stopped
     cap_add: [SYS_ADMIN, MKNOD]
@@ -105,8 +105,6 @@ services:
       password: ${PASS}
       server_name: collabora.henn.dev
       aliasgroup1: https://wopi.henn.dev
-      aliasgroup2: https://oc.henn.dev
-      aliasgroup3: https://collabora.henn.dev
       DONT_GEN_SSL_CERT: YES
       extra_params: |
         --o:ssl.enable=false \

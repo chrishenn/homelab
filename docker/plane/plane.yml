@@ -299,7 +299,7 @@ services:
 
   plane-db:
     profiles: [plane]
-    image: postgres:15.7-alpine
+    image: postgres:18-alpine
     command: postgres -c 'max_connections=1000'
     environment:
       <<: [*pg-env]
@@ -307,7 +307,7 @@ services:
     deploy:
       replicas: 1
     volumes:
-      - $DATA/plane/data/db:/var/lib/postgresql/data
+      - $DATA/plane/data/db:/var/lib/postgresql
     networks: [traefik]
 
   plane-redis:

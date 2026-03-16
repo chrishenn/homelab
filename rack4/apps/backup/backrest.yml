@@ -67,12 +67,11 @@ services:
       traefik.http.services.backrest.loadbalancer.server.port: 9898
 
       pangolin.public-resources.backrest.name: backrest
-      pangolin.public-resources.backrest.protocol: http
       pangolin.public-resources.backrest.full-domain: backrest.chenn.dev
+      pangolin.public-resources.backrest.protocol: http
       pangolin.public-resources.backrest.ssl: true
       pangolin.public-resources.backrest.targets[0].method: http
       pangolin.public-resources.backrest.targets[0].port: 9898
-
       pangolin.public-resources.backrest.auth.sso-enabled: true
       pangolin.public-resources.backrest.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.backrest.rules[0].action: pass

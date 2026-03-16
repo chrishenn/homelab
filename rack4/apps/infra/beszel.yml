@@ -28,8 +28,8 @@ services:
       traefik.http.services.beszel.loadbalancer.server.port: 8090
 
       pangolin.public-resources.beszel.name: beszel
-      pangolin.public-resources.beszel.protocol: http
       pangolin.public-resources.beszel.full-domain: beszel.chenn.dev
+      pangolin.public-resources.beszel.protocol: http
       pangolin.public-resources.beszel.ssl: true
       pangolin.public-resources.beszel.targets[0].method: http
       pangolin.public-resources.beszel.targets[0].port: 8090

@@ -1,3 +1,4 @@
+---
 x-seafile_env: &seafile_env
   SEAFILE_SERVER_HOSTNAME: seafile.chenn.dev
   SEAFILE_SERVER_PROTOCOL: https
@@ -7,7 +8,7 @@ x-seafile_env: &seafile_env
   NOTIFICATION_SERVER_URL: https://seafile.chenn.dev/notification
   INNER_NOTIFICATION_SERVER_URL: http://seafile_notify:8083
   JWT_PRIVATE_KEY: $SEAFILE_SECRET
-  SEAFILE_AI_SECRET_KEY: $SEAFILE_SECRET
+  SECRET_KEY: $SEAFILE_SECRET_KEY
   TIME_ZONE: $TZ
   TZ: $TZ
   SITE_ROOT: /
@@ -84,12 +85,12 @@ x-seafile_env: &seafile_env
 
   OIDC_CLIENT: $SEAFILE_OIDC_CLIENT
   OIDC_SECRET: $SEAFILE_OIDC_SECRET
-  OIDC_REDIRECT: $SEAFILE_OIDC_REDIRECT
-  OIDC_DOMAIN: $SEAFILE_OIDC_DOMAIN
-  OIDC_PROVIDER: $SEAFILE_OIDC_PROVIDER
-  OIDC_AUTH_URL: $SEAFILE_OIDC_AUTH_URL
-  OIDC_TOKEN_URL: $SEAFILE_OIDC_TOKEN_URL
-  OIDC_USER_URL: $SEAFILE_OIDC_USER_URL
+  OIDC_REDIRECT: https://seafile.chenn.dev/oauth/callback
+  OIDC_DOMAIN: pocketid.chenn.dev
+  OIDC_PROVIDER: https://pocketid.chenn.dev
+  OIDC_AUTH_URL: https://pocketid.chenn.dev/authorize
+  OIDC_TOKEN_URL: https://pocketid.chenn.dev/api/oidc/token
+  OIDC_USER_URL: https://pocketid.chenn.dev/api/oidc/userinfo
 
   SMTP_HOST: $SMTP_HOST
   SMTP_USER: $SMTP_USER
@@ -108,8 +109,8 @@ services:
       DONT_GEN_SSL_CERT: true
       LC_CTYPE: C.UTF-8
       dictionaries: en_US
-      aliasgroup1: https://seafile.chenn.dev
       server_name: collabora.chenn.dev
+      aliasgroup1: https://seafile.chenn.dev
       extra_params: |
         --o:admin_console.enable=false \
         --o:ssl.enable=false \
@@ -119,17 +120,15 @@ services:
     networks: [seafile, newt]
     labels:
       pangolin.public-resources.seafile_collabora.name: seafile_collabora
-      pangolin.public-resources.seafile_collabora.protocol: http
       pangolin.public-resources.seafile_collabora.full-domain: collabora.chenn.dev
+      pangolin.public-resources.seafile_collabora.protocol: http
       pangolin.public-resources.seafile_collabora.ssl: true
       pangolin.public-resources.seafile_collabora.targets[0].method: http
       pangolin.public-resources.seafile_collabora.targets[0].port: 9980
-
       pangolin.public-resources.seafile_collabora.rules[0].action: allow
       pangolin.public-resources.seafile_collabora.rules[0].match: country
       pangolin.public-resources.seafile_collabora.rules[0].value: US
       pangolin.public-resources.seafile_collabora.rules[0].priority: 10
-
       pangolin.public-resources.seafile_collabora.rules[1].action: deny
       pangolin.public-resources.seafile_collabora.rules[1].match: country
       pangolin.public-resources.seafile_collabora.rules[1].value: ALL
@@ -144,6 +143,9 @@ services:
       <<: *seafile_env
     volumes:
       - $DATA/seafile/data:/shared
+      - ./seafile/seafdav.conf:/shared/seafile/conf/seafdav.conf
+      - ./seafile/seafevents.conf:/shared/seafile/conf/seafevents.conf
+      - ./seafile/seahub_settings.py:/shared/seafile/conf/seahub_settings.py
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:80 || exit 1']
       interval: 30s
@@ -158,8 +160,8 @@ services:
     networks: [seafile, newt]
     labels:
       pangolin.public-resources.seafile.name: seafile
-      pangolin.public-resources.seafile.protocol: http
       pangolin.public-resources.seafile.full-domain: seafile.chenn.dev
+      pangolin.public-resources.seafile.protocol: http
       pangolin.public-resources.seafile.ssl: true
 
       pangolin.public-resources.seafile.auth.sso-enabled: true
@@ -262,6 +264,9 @@ services:
         condition: service_healthy
     volumes:
       - $DATA/seafile/data:/shared
+      - ./seafile/seafdav.conf:/shared/seafile/conf/seafdav.conf
+      - ./seafile/seafevents.conf:/shared/seafile/conf/seafevents.conf
+      - ./seafile/seahub_settings.py:/shared/seafile/conf/seahub_settings.py
     networks: [seafile, newt]
     labels:
       pangolin.public-resources.seafile.targets[4].path-match: prefix
@@ -278,6 +283,9 @@ services:
       <<: *seafile_env
     volumes:
       - $DATA/seafile/data:/shared
+      - ./seafile/seafdav.conf:/shared/seafile/conf/seafdav.conf
+      - ./seafile/seafevents.conf:/shared/seafile/conf/seafevents.conf
+      - ./seafile/seahub_settings.py:/shared/seafile/conf/seahub_settings.py
     depends_on:
       seafile_db:
         condition: service_healthy

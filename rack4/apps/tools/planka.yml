@@ -1,7 +1,7 @@
 services:
   planka:
     profiles: [planka]
-    image: ghcr.io/plankanban/planka:2.0.0-rc.4
+    image: ghcr.io/plankanban/planka:latest
     container_name: planka
     restart: unless-stopped
     volumes:
@@ -22,12 +22,23 @@ services:
       DEFAULT_ADMIN_EMAIL: ${EMAIL}
       DEFAULT_ADMIN_NAME: ${USER}
 
+      SMTP_HOST: $SMTP_HOST
+      SMTP_PORT: 465
+      SMTP_SECURE: true
+      SMTP_TLS_REJECT_UNAUTHORIZED: true
+      SMTP_USER: $SMTP_USER
+      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_FROM: planka@henn.dev
+
       OIDC_ISSUER: $OIDC
       OIDC_CLIENT_ID: $PLANKA_OIDC_CLIENT
       OIDC_CLIENT_SECRET: $PLANKA_OIDC_SECRET
       OIDC_SCOPES: openid profile email groups
       OIDC_ROLES_ATTRIBUTE: groups
       OIDC_ADMIN_ROLES: admin
+    depends_on:
+      planka_db:
+        condition: service_healthy
     healthcheck:
       test: ['CMD-SHELL', 'wget -qO --no-verbose http://127.0.0.1:1337']
     networks: [traefik]
@@ -39,12 +50,11 @@ services:
       homepage.description: Private Trello
 
       pangolin.public-resources.planka.name: planka
-      pangolin.public-resources.planka.protocol: http
       pangolin.public-resources.planka.full-domain: planka.chenn.dev
+      pangolin.public-resources.planka.protocol: http
       pangolin.public-resources.planka.ssl: true
       pangolin.public-resources.planka.targets[0].method: http
       pangolin.public-resources.planka.targets[0].port: 1337
-
       pangolin.public-resources.planka.auth.sso-enabled: true
       pangolin.public-resources.planka.auth.sso-roles[0]: Member
       pangolin.public-resources.planka.rules[0].action: pass
@@ -58,11 +68,11 @@ services:
 
   planka_db:
     profiles: [planka]
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: planka_db
     restart: unless-stopped
     volumes:
-      - $DATA/planka/db-data:/var/lib/postgresql/data
+      - $DATA/planka/db-data:/var/lib/postgresql
     environment:
       POSTGRES_DB: planka
       POSTGRES_HOST_AUTH_METHOD: trust

@@ -27,12 +27,11 @@ services:
       traefik.http.services.memos.loadbalancer.server.port: 5230
 
       pangolin.public-resources.memos.name: memos
-      pangolin.public-resources.memos.protocol: http
       pangolin.public-resources.memos.full-domain: memos.chenn.dev
+      pangolin.public-resources.memos.protocol: http
       pangolin.public-resources.memos.ssl: true
       pangolin.public-resources.memos.targets[0].method: http
       pangolin.public-resources.memos.targets[0].port: 5230
-
       pangolin.public-resources.memos.auth.sso-enabled: true
       pangolin.public-resources.memos.auth.sso-roles[0]: Member
       pangolin.public-resources.memos.rules[0].action: pass

@@ -76,12 +76,11 @@ services:
       traefik.http.services.documenso.loadbalancer.server.port: 3000
 
       pangolin.public-resources.documenso.name: documenso
-      pangolin.public-resources.documenso.protocol: http
       pangolin.public-resources.documenso.full-domain: documenso.chenn.dev
+      pangolin.public-resources.documenso.protocol: http
       pangolin.public-resources.documenso.ssl: true
       pangolin.public-resources.documenso.targets[0].method: http
       pangolin.public-resources.documenso.targets[0].port: 3000
-
       pangolin.public-resources.documenso.auth.sso-enabled: true
       pangolin.public-resources.documenso.auth.sso-roles[0]: Member
       pangolin.public-resources.documenso.rules[0].action: pass

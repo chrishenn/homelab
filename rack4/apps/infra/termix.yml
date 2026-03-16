@@ -33,12 +33,11 @@ services:
       traefik.http.services.termix.loadbalancer.server.port: 8080
 
       pangolin.public-resources.termix.name: termix
-      pangolin.public-resources.termix.protocol: http
       pangolin.public-resources.termix.full-domain: termix.chenn.dev
+      pangolin.public-resources.termix.protocol: http
       pangolin.public-resources.termix.ssl: true
       pangolin.public-resources.termix.targets[0].method: http
       pangolin.public-resources.termix.targets[0].port: 8080
-
       pangolin.public-resources.termix.auth.sso-enabled: true
       pangolin.public-resources.termix.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.termix.rules[0].action: pass

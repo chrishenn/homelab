@@ -54,9 +54,9 @@ include:
   - apps/document/openresume.yml
   - apps/document/pairdrop.yml
   - apps/document/paperless.yml
-  - apps/document/rxresume.yml
+  - apps/document/resume.yml
   - apps/document/stirling.yml
-  - apps/document/opencloud.yml
+  - apps/document/seafile.yml
   - apps/document/cloudreve.yml
 
   - apps/games/wordle.yml

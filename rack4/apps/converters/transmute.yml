@@ -23,8 +23,8 @@ services:
       traefik.http.services.transmute.loadbalancer.server.port: 3313
 
       pangolin.public-resources.transmute.name: transmute
-      pangolin.public-resources.transmute.protocol: http
       pangolin.public-resources.transmute.full-domain: transmute.chenn.dev
+      pangolin.public-resources.transmute.protocol: http
       pangolin.public-resources.transmute.ssl: true
       pangolin.public-resources.transmute.targets[0].method: http
       pangolin.public-resources.transmute.targets[0].port: 3313

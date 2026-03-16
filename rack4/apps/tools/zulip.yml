@@ -77,7 +77,7 @@ services:
 
     volumes:
       - $DATA/zulip/data:/data:rw
-    # must match LOADBALANCER_IPS above
+    # subnet must match LOADBALANCER_IPS above
     networks: [zulip, traefik]
     labels:
       homepage.group: Tools
@@ -87,12 +87,11 @@ services:
       homepage.description: Private Slack
 
       pangolin.public-resources.zulip.name: zulip
-      pangolin.public-resources.zulip.protocol: http
       pangolin.public-resources.zulip.full-domain: zulip.chenn.dev
+      pangolin.public-resources.zulip.protocol: http
       pangolin.public-resources.zulip.ssl: true
       pangolin.public-resources.zulip.targets[0].method: http
       pangolin.public-resources.zulip.targets[0].port: 80
-
       pangolin.public-resources.zulip.auth.sso-enabled: true
       pangolin.public-resources.zulip.auth.sso-roles[0]: Member
       pangolin.public-resources.zulip.rules[0].action: pass
@@ -106,7 +105,7 @@ services:
 
   zulip_pg:
     profiles: [zulip]
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     container_name: zulip_pg
     restart: unless-stopped
     environment:
@@ -115,7 +114,7 @@ services:
       POSTGRES_USER: zulip
       POSTGRES_PASSWORD: REPLACE_WITH_SECURE_POSTGRES_PASSWORD
     volumes:
-      - $DATA/zulip/zulip_pg:/var/lib/postgresql/data:rw
+      - $DATA/zulip/zulip_pg:/var/lib/postgresql
     networks: [zulip]
 
   zulip_memcached:
@@ -146,7 +145,7 @@ services:
       RABBITMQ_DEFAULT_USER: zulip
       RABBITMQ_DEFAULT_PASS: REPLACE_WITH_SECURE_RABBITMQ_PASSWORD
     volumes:
-      - $DATA/zulip/zulip_rabbitmq:/var/lib/rabbitmq:rw
+      - $DATA/zulip/zulip_rabbitmq:/var/lib/rabbitmq
     networks: [zulip]
 
   zulip_redis:
@@ -163,7 +162,7 @@ services:
     environment:
       REDIS_PASSWORD: REPLACE_WITH_SECURE_REDIS_PASSWORD
     volumes:
-      - $DATA/zulip/zulip_redis:/data:rw
+      - $DATA/zulip/zulip_redis:/data
     networks: [zulip]
 
 networks:

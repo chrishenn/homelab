@@ -31,12 +31,11 @@ services:
       traefik.http.services.sab.loadbalancer.server.port: 8080
 
       pangolin.public-resources.sab.name: sab
-      pangolin.public-resources.sab.protocol: http
       pangolin.public-resources.sab.full-domain: sab.chenn.dev
+      pangolin.public-resources.sab.protocol: http
       pangolin.public-resources.sab.ssl: true
       pangolin.public-resources.sab.targets[0].method: http
       pangolin.public-resources.sab.targets[0].port: 8080
-
       pangolin.public-resources.sab.auth.sso-enabled: true
       pangolin.public-resources.sab.auth.sso-roles[0]: Member
       pangolin.public-resources.sab.rules[0].action: pass

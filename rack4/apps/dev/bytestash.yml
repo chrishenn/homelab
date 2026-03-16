@@ -42,12 +42,11 @@ services:
       traefik.http.services.stash.loadbalancer.server.port: 5000
 
       pangolin.public-resources.stash.name: stash
-      pangolin.public-resources.stash.protocol: http
       pangolin.public-resources.stash.full-domain: stash.chenn.dev
+      pangolin.public-resources.stash.protocol: http
       pangolin.public-resources.stash.ssl: true
       pangolin.public-resources.stash.targets[0].method: http
       pangolin.public-resources.stash.targets[0].port: 5000
-
       pangolin.public-resources.stash.auth.sso-enabled: true
       pangolin.public-resources.stash.auth.sso-roles[0]: Member
       pangolin.public-resources.stash.rules[0].action: pass

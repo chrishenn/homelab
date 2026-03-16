@@ -1,0 +1,78 @@
+# this file has a nonworking collabora setup
+
+# you get to manually type in the db connection string on first boot
+# hardcoded user/pass for initial admin acct. feels ... dated. the styling ... yuck! who uses mysql?
+# Go to Cells Console > Application Parameters > All Plugins and enable the Collabora Online plugin.
+---
+services:
+  pydio:
+    profiles: [pydio]
+    image: pydio/cells:latest
+    container_name: pydio
+    restart: unless-stopped
+    environment:
+      CELLS_SITE_EXTERNAL: https://pydio.chenn.dev
+      CELLS_SITE_BIND: :80
+      CELLS_SITE_NO_TLS: 1
+    volumes:
+      - $DATA/pydio/data:/var/cells
+    networks: [newt, pydio]
+    labels:
+      pangolin.public-resources.pydio.name: pydio
+      pangolin.public-resources.pydio.full-domain: pydio.chenn.dev
+      pangolin.public-resources.pydio.protocol: http
+      pangolin.public-resources.pydio.ssl: true
+      pangolin.public-resources.pydio.targets[0].method: http
+      pangolin.public-resources.pydio.targets[0].port: 80
+      pangolin.public-resources.pydio.rules[0].action: pass
+      pangolin.public-resources.pydio.rules[0].match: country
+      pangolin.public-resources.pydio.rules[0].value: US
+      pangolin.public-resources.pydio.rules[0].priority: 0
+      pangolin.public-resources.pydio.rules[1].action: deny
+      pangolin.public-resources.pydio.rules[1].match: country
+      pangolin.public-resources.pydio.rules[1].value: ALL
+      pangolin.public-resources.pydio.rules[1].priority: 10
+
+  pydio_db:
+    profiles: [pydio]
+    image: mysql:8
+    container_name: pydio_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_DATABASE: cells
+      MYSQL_USER: pydio
+      MYSQL_PASSWORD: secret_password
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+    volumes:
+      - $DATA/pydio/db:/var/lib/mysql
+    networks: [pydio]
+
+  collabora_pydio:
+    profiles: [pydio]
+    image: collabora/code:latest
+    container_name: collabora_pydio
+    restart: unless-stopped
+    cap_add: [MKNOD]
+    environment:
+      username: ${USER}
+      password: ${PASS}
+      DONT_GEN_SSL_CERT: YES
+      server_name: collabora_pydio.chenn.dev
+      aliasgroup1: https://pydio.chenn.dev
+      extra_params: |
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+    networks: [newt]
+    labels:
+      pangolin.public-resources.collabora_pydio.name: collabora_pydio
+      pangolin.public-resources.collabora_pydio.protocol: http
+      pangolin.public-resources.collabora_pydio.full-domain: collabora_pydio.chenn.dev
+      pangolin.public-resources.collabora_pydio.ssl: true
+      pangolin.public-resources.collabora_pydio.targets[0].method: http
+      pangolin.public-resources.collabora_pydio.targets[0].port: 9980
+
+networks:
+  pydio:

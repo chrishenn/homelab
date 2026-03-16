@@ -1,7 +1,7 @@
 ---
 services:
   filebrowser:
-    profiles: [files]
+    profiles: [filebrowser]
     image: gtstef/filebrowser
     container_name: filebrowser
     restart: unless-stopped
@@ -16,15 +16,32 @@ services:
       - /mnt/f:/mnt/f
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: File Browser
-      homepage.instance.private.icon: filebrowser-quantum.png
-      homepage.instance.private.href: https://files.henn.dev
-      homepage.instance.private.description: File Browser
+      homepage.group: Infra
+      homepage.name: File Browser
+      homepage.icon: filebrowser-quantum.png
+      homepage.href: https://files.henn.dev
+      homepage.description: File Browser
 
       traefik.enable: true
-      traefik.http.routers.files.rule: Host(`files.henn.dev`)
-      traefik.http.routers.files.entrypoints: websecure
-      traefik.http.routers.files.middlewares: hdrs@file
-      traefik.http.routers.files.tls.certresolver: cf
-      traefik.http.services.files.loadbalancer.server.port: 80
+      traefik.http.routers.filebrowser.rule: Host(`files.henn.dev`)
+      traefik.http.routers.filebrowser.entrypoints: websecure
+      traefik.http.routers.filebrowser.middlewares: hdrs@file
+      traefik.http.routers.filebrowser.tls.certresolver: cf
+      traefik.http.services.filebrowser.loadbalancer.server.port: 80
+
+      pangolin.public-resources.filebrowser.name: filebrowser
+      pangolin.public-resources.filebrowser.full-domain: files.chenn.dev
+      pangolin.public-resources.filebrowser.protocol: http
+      pangolin.public-resources.filebrowser.ssl: true
+      pangolin.public-resources.filebrowser.targets[0].method: http
+      pangolin.public-resources.filebrowser.targets[0].port: 80
+      pangolin.public-resources.filebrowser.auth.sso-enabled: true
+      pangolin.public-resources.filebrowser.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.filebrowser.rules[0].action: pass
+      pangolin.public-resources.filebrowser.rules[0].match: country
+      pangolin.public-resources.filebrowser.rules[0].value: US
+      pangolin.public-resources.filebrowser.rules[0].priority: 0
+      pangolin.public-resources.filebrowser.rules[1].action: deny
+      pangolin.public-resources.filebrowser.rules[1].match: country
+      pangolin.public-resources.filebrowser.rules[1].value: ALL
+      pangolin.public-resources.filebrowser.rules[1].priority: 10

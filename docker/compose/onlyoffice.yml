@@ -50,11 +50,11 @@ onlyoffice-rabbitmq:
 onlyoffice-postgresql:
   profiles: []
   container_name: onlyoffice-postgresql
-  image: postgres:15
+  image: postgres:18-alpine
   environment:
-    - POSTGRES_DB=onlyoffice
-    - POSTGRES_USER=onlyoffice
-    - POSTGRES_HOST_AUTH_METHOD=trust
+    POSTGRES_DB: onlyoffice
+    POSTGRES_USER: onlyoffice
+    POSTGRES_HOST_AUTH_METHOD: trust
   restart: always
   expose:
     - '5432'

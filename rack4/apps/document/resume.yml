@@ -1,15 +1,15 @@
 ---
 services:
-  rxresume:
-    profiles: [rxresume]
+  resume:
+    profiles: [resume]
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
-    container_name: rxresume
+    container_name: resume
     environment:
       APP_URL: https://resume.chenn.dev
-      PRINTER_ENDPOINT: http://rxresume_chrome:3000?token=1234567890
-      DATABASE_URL: ${RXRESUME_PGURL}
-      AUTH_SECRET: ${RXRESUME_AUTH_SECRET}
+      PRINTER_ENDPOINT: http://resume_chrome:3000?token=1234567890
+      DATABASE_URL: postgresql://postgres:postgres@resume_pg:5432/postgres
+      AUTH_SECRET: ${RESUME_AUTH_SECRET}
       TZ: ${TZ}
       NODE_ENV: production
 
@@ -28,20 +28,20 @@ services:
 
       OAUTH_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
       OAUTH_PROVIDER_NAME: PocketID
-      OAUTH_CLIENT_ID: ${RXRESUME_OIDC_CLIENT}
-      OAUTH_CLIENT_SECRET: ${RXRESUME_OIDC_SECRET}
+      OAUTH_CLIENT_ID: ${RESUME_OIDC_CLIENT}
+      OAUTH_CLIENT_SECRET: ${RESUME_OIDC_SECRET}
     volumes:
-      - $DATA/rxresume/data:/app/data
+      - $DATA/resume/data:/app/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
     depends_on:
-      rxresume_pg:
+      resume_pg:
         condition: service_healthy
-      rxresume_chrome:
+      resume_chrome:
         condition: service_healthy
       seaweedfs_create_bucket:
         condition: service_completed_successfully
-    networks: [traefik]
+    networks: [resume, traefik]
     labels:
       homepage.group: File Editors
       homepage.name: Reactive Resume
@@ -49,20 +49,28 @@ services:
       homepage.href: https://resume.chenn.dev
       homepage.description: Resume Editor
 
-      pangolin.public-resources.rxresume.name: rxresume
-      pangolin.public-resources.rxresume.protocol: http
-      pangolin.public-resources.rxresume.full-domain: resume.chenn.dev
-      pangolin.public-resources.rxresume.ssl: true
-      pangolin.public-resources.rxresume.targets[0].method: http
-      pangolin.public-resources.rxresume.targets[0].port: 3000
-      pangolin.public-resources.rxresume.auth.sso-enabled: true
-      pangolin.public-resources.rxresume.auth.sso-roles[0]: Member
+      pangolin.public-resources.resume.name: resume
+      pangolin.public-resources.resume.full-domain: resume.chenn.dev
+      pangolin.public-resources.resume.protocol: http
+      pangolin.public-resources.resume.ssl: true
+      pangolin.public-resources.resume.targets[0].method: http
+      pangolin.public-resources.resume.targets[0].port: 3000
+      pangolin.public-resources.resume.auth.sso-enabled: true
+      pangolin.public-resources.resume.auth.sso-roles[0]: Member
+      pangolin.public-resources.resume.rules[0].action: pass
+      pangolin.public-resources.resume.rules[0].match: country
+      pangolin.public-resources.resume.rules[0].value: US
+      pangolin.public-resources.resume.rules[0].priority: 0
+      pangolin.public-resources.resume.rules[1].action: deny
+      pangolin.public-resources.resume.rules[1].match: country
+      pangolin.public-resources.resume.rules[1].value: ALL
+      pangolin.public-resources.resume.rules[1].priority: 10
 
-  rxresume_chrome:
-    profiles: [rxresume]
+  resume_chrome:
+    profiles: [resume]
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
-    container_name: rxresume_chrome
+    container_name: resume_chrome
     environment:
       QUEUED: 10
       HEALTH: true
@@ -70,25 +78,25 @@ services:
       TOKEN: 1234567890
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/pressure?token=1234567890']
-    networks: [traefik]
+    networks: [resume]
 
-  rxresume_pg:
-    profiles: [rxresume]
-    image: postgres:16-alpine
-    container_name: rxresume_pg
+  resume_pg:
+    profiles: [resume]
+    image: postgres:18-alpine
+    container_name: resume_pg
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - $DATA/rxresume/rxresume_pg:/var/lib/postgresql/data
+      - $DATA/resume/resume_pg:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
-    networks: [traefik]
+    networks: [resume]
 
   seaweedfs:
-    profiles: [rxresume]
+    profiles: [resume]
     image: chrislusf/seaweedfs:latest
     container_name: seaweedfs
     restart: unless-stopped
@@ -97,17 +105,17 @@ services:
       AWS_ACCESS_KEY_ID: seaweedfs
       AWS_SECRET_ACCESS_KEY: seaweedfs
     volumes:
-      - $DATA/rxresume/seaweedfs:/data
+      - $DATA/resume/seaweedfs:/data
     healthcheck:
       test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8888']
       start_period: 10s
       interval: 30s
       timeout: 10s
       retries: 3
-    networks: [traefik]
+    networks: [resume]
 
   seaweedfs_create_bucket:
-    profiles: [rxresume]
+    profiles: [resume]
     image: quay.io/minio/mc:latest
     container_name: seaweedfs_create_bucket
     restart: on-failure
@@ -121,4 +129,7 @@ services:
     depends_on:
       seaweedfs:
         condition: service_healthy
-    networks: [traefik]
+    networks: [resume]
+
+networks:
+  resume:

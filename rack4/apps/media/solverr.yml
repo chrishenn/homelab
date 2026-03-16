@@ -30,15 +30,13 @@ services:
       traefik.http.services.solverr.loadbalancer.server.port: 8191
 
       pangolin.public-resources.solverr.name: solverr
-      pangolin.public-resources.solverr.protocol: http
       pangolin.public-resources.solverr.full-domain: solverr.chenn.dev
+      pangolin.public-resources.solverr.protocol: http
       pangolin.public-resources.solverr.ssl: true
       pangolin.public-resources.solverr.targets[0].method: http
       pangolin.public-resources.solverr.targets[0].port: 8191
-
       pangolin.public-resources.solverr.auth.sso-enabled: true
       pangolin.public-resources.solverr.auth.sso-users[0]: ${EMAIL}
-
       pangolin.public-resources.solverr.rules[0].action: pass
       pangolin.public-resources.solverr.rules[0].match: country
       pangolin.public-resources.solverr.rules[0].value: US

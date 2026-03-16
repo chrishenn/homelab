@@ -52,12 +52,11 @@ services:
       homepage.description: Docker Manager (Rack 4)
 
       pangolin.public-resources.arcane.name: arcane
-      pangolin.public-resources.arcane.protocol: http
       pangolin.public-resources.arcane.full-domain: arcane.chenn.dev
+      pangolin.public-resources.arcane.protocol: http
       pangolin.public-resources.arcane.ssl: true
       pangolin.public-resources.arcane.targets[0].method: http
       pangolin.public-resources.arcane.targets[0].port: 3552
-
       pangolin.public-resources.arcane.auth.sso-enabled: true
       pangolin.public-resources.arcane.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.arcane.rules[0].action: pass

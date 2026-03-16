@@ -35,12 +35,11 @@ services:
       traefik.http.services.perplexica.loadbalancer.server.port: 3000
 
       pangolin.public-resources.perplexica.name: perplexica
-      pangolin.public-resources.perplexica.protocol: http
       pangolin.public-resources.perplexica.full-domain: perplexica.chenn.dev
+      pangolin.public-resources.perplexica.protocol: http
       pangolin.public-resources.perplexica.ssl: true
       pangolin.public-resources.perplexica.targets[0].method: http
       pangolin.public-resources.perplexica.targets[0].port: 3000
-
       pangolin.public-resources.perplexica.auth.sso-enabled: true
       pangolin.public-resources.perplexica.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.perplexica.rules[0].action: pass

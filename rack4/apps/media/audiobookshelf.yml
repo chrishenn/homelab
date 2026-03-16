@@ -28,15 +28,13 @@ services:
       traefik.http.services.audiobookshelf.loadbalancer.server.port: 80
 
       pangolin.public-resources.audiobookshelf.name: audiobookshelf
-      pangolin.public-resources.audiobookshelf.protocol: http
       pangolin.public-resources.audiobookshelf.full-domain: audiobookshelf.chenn.dev
+      pangolin.public-resources.audiobookshelf.protocol: http
       pangolin.public-resources.audiobookshelf.ssl: true
       pangolin.public-resources.audiobookshelf.targets[0].method: http
       pangolin.public-resources.audiobookshelf.targets[0].port: 80
-
       pangolin.public-resources.audiobookshelf.auth.sso-enabled: true
       pangolin.public-resources.audiobookshelf.auth.sso-roles[0]: Member
-
       pangolin.public-resources.audiobookshelf.rules[0].action: pass
       pangolin.public-resources.audiobookshelf.rules[0].match: country
       pangolin.public-resources.audiobookshelf.rules[0].value: US

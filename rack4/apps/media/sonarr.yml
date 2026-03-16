@@ -32,8 +32,8 @@ services:
       traefik.http.services.sonarr.loadbalancer.server.port: 8989
 
       pangolin.public-resources.sonarr.name: sonarr
-      pangolin.public-resources.sonarr.protocol: http
       pangolin.public-resources.sonarr.full-domain: sonarr.chenn.dev
+      pangolin.public-resources.sonarr.protocol: http
       pangolin.public-resources.sonarr.ssl: true
       pangolin.public-resources.sonarr.targets[0].method: http
       pangolin.public-resources.sonarr.targets[0].port: 8989

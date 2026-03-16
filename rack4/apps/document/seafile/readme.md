@@ -13,10 +13,8 @@ That being said:
 ## deploy
 
 NOTE: WEBDAV SERVER HAS NO PASSWORD BY DEFAULT!! HAVE TO SET THE WEBDAV PASSWORD MANUALLY IN THE UI!!
-sudo chmod -R 777 /mnt/k/docker/seafile/data/seafile/conf
-manually add configuration/secrets
 
-The env vars are obviously a dumpster fire. Make sure you meticulously find all the stuff that needs change for your
+The env vars are obviously a dumpster fire. Make sure you meticulously find all the stuff that needs to change for your
 hosting domain, storage, etc
 
 ## problems

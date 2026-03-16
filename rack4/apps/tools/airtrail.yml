@@ -37,12 +37,11 @@ services:
       traefik.http.services.airtrail.loadbalancer.server.port: 3000
 
       pangolin.public-resources.airtrail.name: airtrail
-      pangolin.public-resources.airtrail.protocol: http
       pangolin.public-resources.airtrail.full-domain: airtrail.chenn.dev
+      pangolin.public-resources.airtrail.protocol: http
       pangolin.public-resources.airtrail.ssl: true
       pangolin.public-resources.airtrail.targets[0].method: http
       pangolin.public-resources.airtrail.targets[0].port: 3000
-
       pangolin.public-resources.airtrail.auth.sso-enabled: true
       pangolin.public-resources.airtrail.auth.sso-roles[0]: Member
       pangolin.public-resources.airtrail.rules[0].action: pass
@@ -56,7 +55,7 @@ services:
 
   airtrail_db:
     profiles: [airtrail]
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: airtrail_db
     restart: unless-stopped
     environment:
@@ -64,7 +63,7 @@ services:
       POSTGRES_USER: airtrail
       POSTGRES_PASSWORD: airtrail
     volumes:
-      - $DATA/airtrail/airtrail_db:/var/lib/postgresql/data
+      - $DATA/airtrail/airtrail_db:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
     networks: [airtrail]

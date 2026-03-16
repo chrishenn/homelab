@@ -25,8 +25,8 @@ services:
       traefik.http.services.kuma.loadbalancer.server.port: 3001
 
       pangolin.public-resources.kuma.name: kuma
-      pangolin.public-resources.kuma.protocol: http
       pangolin.public-resources.kuma.full-domain: kuma.chenn.dev
+      pangolin.public-resources.kuma.protocol: http
       pangolin.public-resources.kuma.ssl: true
       pangolin.public-resources.kuma.targets[0].method: http
       pangolin.public-resources.kuma.targets[0].port: 3001

@@ -85,8 +85,8 @@ services:
       homepage.description: Geolocation for Immich
 
       pangolin.public-resources.dawarich.name: dawarich
-      pangolin.public-resources.dawarich.protocol: http
       pangolin.public-resources.dawarich.full-domain: dawarich.chenn.dev
+      pangolin.public-resources.dawarich.protocol: http
       pangolin.public-resources.dawarich.ssl: true
       pangolin.public-resources.dawarich.targets[0].method: http
       pangolin.public-resources.dawarich.targets[0].port: 3000

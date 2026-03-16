@@ -199,14 +199,14 @@ services:
 
   plane-db:
     profiles: [plane]
-    image: postgres:15.7-alpine
+    image: postgres:18-alpine
     container_name: plane-db
     restart: unless-stopped
     command: postgres -c 'max_connections=1000'
     environment:
       <<: *db-env
     volumes:
-      - $DATA/plane/pgdata:/var/lib/postgresql/data
+      - $DATA/plane/pgdata:/var/lib/postgresql
     networks: [plane]
 
   plane-redis:

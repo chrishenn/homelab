@@ -21,11 +21,11 @@ gitlab_rails['redis_port'] = 6379
 ```yml
 gitlab_pg:
     profiles: [gitlab]
-    image: postgres:16
+    image: postgres:18-alpine
     container_name: gitlab_pg
     restart: unless-stopped
     volumes:
-        - $DATA/gitlab/gitlab_pg:/var/lib/postgresql/data
+        - $DATA/gitlab/gitlab_pg:/var/lib/postgresql
     environment:
         POSTGRES_DB: gitlab
         POSTGRES_USER: gitlab

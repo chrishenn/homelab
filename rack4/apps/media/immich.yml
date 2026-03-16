@@ -1,3 +1,6 @@
+# to encode a base64 header ("Authorization: Basic <base64-enc user:pass>")
+# echo user:pass | base64 -w 0
+# my base64 cli pads with garbage instead of '=' - probably not an issue?
 ---
 x-immich_env: &immich_env
   TZ: $TZ
@@ -51,17 +54,16 @@ services:
       traefik.http.services.immich.loadbalancer.server.port: 2283
 
       pangolin.public-resources.immich.name: immich
-      pangolin.public-resources.immich.protocol: http
       pangolin.public-resources.immich.full-domain: immich.chenn.dev
+      pangolin.public-resources.immich.protocol: http
       pangolin.public-resources.immich.ssl: true
       pangolin.public-resources.immich.targets[0].method: http
       pangolin.public-resources.immich.targets[0].port: 2283
 
-      pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.immich.auth.basic-auth.password: ${IMMICH_PANGOLIN_AUTH_PASS}
-
       pangolin.public-resources.immich.auth.sso-enabled: true
       pangolin.public-resources.immich.auth.sso-roles[0]: Member
+      pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.immich.auth.basic-auth.password: ${IMMICH_PANGOLIN_AUTH_PASS}
 
       pangolin.public-resources.immich.rules[0].action: pass
       pangolin.public-resources.immich.rules[0].match: country

@@ -50,12 +50,11 @@ services:
       homepage.description: AI Chat
 
       pangolin.public-resources.ollama.name: ollama
-      pangolin.public-resources.ollama.protocol: http
       pangolin.public-resources.ollama.full-domain: ollama.chenn.dev
+      pangolin.public-resources.ollama.protocol: http
       pangolin.public-resources.ollama.ssl: true
       pangolin.public-resources.ollama.targets[0].method: http
       pangolin.public-resources.ollama.targets[0].port: 8080
-
       pangolin.public-resources.ollama.auth.sso-enabled: true
       pangolin.public-resources.ollama.auth.sso-roles[0]: Member
       pangolin.public-resources.ollama.rules[0].action: pass

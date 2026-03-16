@@ -14,14 +14,14 @@ directives:
   frame-src:
     - "'self'"
     - 'blob:'
-    - 'https://collabora.henn.dev/'
+    - 'https://collabora.chenn.dev/'
     - 'https://embed.diagrams.net/'
     - 'https://docs.opencloud.eu'
   img-src:
     - "'self'"
     - 'data:'
     - 'blob:'
-    - 'https://collabora.henn.dev/'
+    - 'https://collabora.chenn.dev/'
   manifest-src:
     - "'self'"
   media-src:

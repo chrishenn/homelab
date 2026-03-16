@@ -30,12 +30,11 @@ services:
       traefik.http.services.gist.loadbalancer.server.port: 6157
 
       pangolin.public-resources.gist.name: gist
-      pangolin.public-resources.gist.protocol: http
       pangolin.public-resources.gist.full-domain: gist.chenn.dev
+      pangolin.public-resources.gist.protocol: http
       pangolin.public-resources.gist.ssl: true
       pangolin.public-resources.gist.targets[0].method: http
       pangolin.public-resources.gist.targets[0].port: 6157
-
       pangolin.public-resources.gist.auth.sso-enabled: true
       pangolin.public-resources.gist.auth.sso-roles[0]: Member
       pangolin.public-resources.gist.rules[0].action: pass

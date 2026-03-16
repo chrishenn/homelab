@@ -36,12 +36,11 @@ services:
       traefik.http.services.qui.loadbalancer.server.port: 7476
 
       pangolin.public-resources.qui.name: qui
-      pangolin.public-resources.qui.protocol: http
       pangolin.public-resources.qui.full-domain: qui.chenn.dev
+      pangolin.public-resources.qui.protocol: http
       pangolin.public-resources.qui.ssl: true
       pangolin.public-resources.qui.targets[0].method: http
       pangolin.public-resources.qui.targets[0].port: 7476
-
       pangolin.public-resources.qui.auth.sso-enabled: true
       pangolin.public-resources.qui.auth.sso-users[0]: ${EMAIL}
       pangolin.public-resources.qui.auth.sso-users[1]: ${USER1}

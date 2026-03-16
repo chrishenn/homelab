@@ -27,12 +27,11 @@ services:
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
       pangolin.public-resources.prowlarr.name: prowlarr
-      pangolin.public-resources.prowlarr.protocol: http
       pangolin.public-resources.prowlarr.full-domain: prowlarr.chenn.dev
+      pangolin.public-resources.prowlarr.protocol: http
       pangolin.public-resources.prowlarr.ssl: true
       pangolin.public-resources.prowlarr.targets[0].method: http
       pangolin.public-resources.prowlarr.targets[0].port: 9696
-
       pangolin.public-resources.prowlarr.auth.sso-enabled: true
       pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
       pangolin.public-resources.prowlarr.rules[0].action: pass

@@ -45,8 +45,8 @@ services:
       homepage.description: Book Server
 
       pangolin.public-resources.booklore.name: booklore
-      pangolin.public-resources.booklore.protocol: http
       pangolin.public-resources.booklore.full-domain: booklore.chenn.dev
+      pangolin.public-resources.booklore.protocol: http
       pangolin.public-resources.booklore.ssl: true
       pangolin.public-resources.booklore.targets[0].method: http
       pangolin.public-resources.booklore.targets[0].port: 6060

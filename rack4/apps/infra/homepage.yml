@@ -15,8 +15,8 @@ services:
     networks: [traefik, newt]
     labels:
       pangolin.public-resources.homepage_pub.name: homepage_pub
-      pangolin.public-resources.homepage_pub.protocol: http
       pangolin.public-resources.homepage_pub.full-domain: home.chenn.dev
+      pangolin.public-resources.homepage_pub.protocol: http
       pangolin.public-resources.homepage_pub.ssl: true
       pangolin.public-resources.homepage_pub.targets[0].method: http
       pangolin.public-resources.homepage_pub.targets[0].port: 3000

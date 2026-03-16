@@ -26,12 +26,11 @@ services:
       traefik.http.services.convertx.loadbalancer.server.port: 3000
 
       pangolin.public-resources.convertx.name: convertx
-      pangolin.public-resources.convertx.protocol: http
       pangolin.public-resources.convertx.full-domain: convertx.chenn.dev
+      pangolin.public-resources.convertx.protocol: http
       pangolin.public-resources.convertx.ssl: true
       pangolin.public-resources.convertx.targets[0].method: http
       pangolin.public-resources.convertx.targets[0].port: 3000
-
       pangolin.public-resources.convertx.auth.sso-enabled: true
       pangolin.public-resources.convertx.auth.sso-roles[0]: Member
       pangolin.public-resources.convertx.rules[0].action: pass

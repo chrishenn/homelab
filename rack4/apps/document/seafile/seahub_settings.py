@@ -1,6 +1,9 @@
 import os
 
 
+SECRET_KEY = os.environ["SECRET_KEY"]
+TIME_ZONE = "America/Chicago"
+
 # collabora
 ENABLE_OFFICE_WEB_APP = True
 OFFICE_SERVER_TYPE = "CollaboraOffice"

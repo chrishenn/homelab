@@ -45,12 +45,11 @@ services:
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
 
       pangolin.public-resources.jellyfin.name: jellyfin
-      pangolin.public-resources.jellyfin.protocol: http
       pangolin.public-resources.jellyfin.full-domain: jellyfin.chenn.dev
+      pangolin.public-resources.jellyfin.protocol: http
       pangolin.public-resources.jellyfin.ssl: true
       pangolin.public-resources.jellyfin.targets[0].method: http
       pangolin.public-resources.jellyfin.targets[0].port: 8096
-
       pangolin.public-resources.jellyfin.auth.sso-enabled: true
       pangolin.public-resources.jellyfin.auth.sso-roles[0]: Member
       pangolin.public-resources.jellyfin.rules[0].action: pass

@@ -21,12 +21,11 @@ services:
       traefik.http.services.wordle.loadbalancer.server.port: 80
 
       pangolin.public-resources.wordle.name: wordle
-      pangolin.public-resources.wordle.protocol: http
       pangolin.public-resources.wordle.full-domain: wordle.chenn.dev
+      pangolin.public-resources.wordle.protocol: http
       pangolin.public-resources.wordle.ssl: true
       pangolin.public-resources.wordle.targets[0].method: http
       pangolin.public-resources.wordle.targets[0].port: 80
-
       pangolin.public-resources.wordle.auth.sso-enabled: true
       pangolin.public-resources.wordle.auth.sso-roles[0]: Member
       pangolin.public-resources.wordle.rules[0].action: pass

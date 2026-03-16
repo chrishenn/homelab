@@ -35,12 +35,11 @@ services:
       traefik.http.services.sear.loadbalancer.server.port: 8080
 
       pangolin.public-resources.searx.name: searx
-      pangolin.public-resources.searx.protocol: http
       pangolin.public-resources.searx.full-domain: searx.chenn.dev
+      pangolin.public-resources.searx.protocol: http
       pangolin.public-resources.searx.ssl: true
       pangolin.public-resources.searx.targets[0].method: http
       pangolin.public-resources.searx.targets[0].port: 8080
-
       pangolin.public-resources.searx.auth.sso-enabled: true
       pangolin.public-resources.searx.auth.sso-roles[0]: Member
       pangolin.public-resources.searx.rules[0].action: pass

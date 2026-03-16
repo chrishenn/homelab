@@ -120,12 +120,11 @@ services:
       homepage.description: Gitlab
 
       pangolin.public-resources.gitlab.name: gitlab
-      pangolin.public-resources.gitlab.protocol: http
       pangolin.public-resources.gitlab.full-domain: gitlab.chenn.dev
+      pangolin.public-resources.gitlab.protocol: http
       pangolin.public-resources.gitlab.ssl: true
       pangolin.public-resources.gitlab.targets[0].method: http
       pangolin.public-resources.gitlab.targets[0].port: 80
-
       pangolin.public-resources.gitlab.rules[0].action: allow
       pangolin.public-resources.gitlab.rules[0].match: country
       pangolin.public-resources.gitlab.rules[0].value: US
@@ -136,12 +135,11 @@ services:
       pangolin.public-resources.gitlab.rules[1].priority: 20
 
       pangolin.public-resources.gitlab_r.name: gitlab_r
-      pangolin.public-resources.gitlab_r.protocol: http
       pangolin.public-resources.gitlab_r.full-domain: registry.gitlab.chenn.dev
+      pangolin.public-resources.gitlab_r.protocol: http
       pangolin.public-resources.gitlab_r.ssl: true
       pangolin.public-resources.gitlab_r.targets[0].method: http
       pangolin.public-resources.gitlab_r.targets[0].port: 5050
-
       pangolin.public-resources.gitlab_r.rules[0].action: allow
       pangolin.public-resources.gitlab_r.rules[0].match: country
       pangolin.public-resources.gitlab_r.rules[0].value: US

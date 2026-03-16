@@ -9,10 +9,10 @@ services:
     networks: [traefik]
     labels:
       homepage.group: File Editors
-      homepage.instance.private.name: openresume
-      homepage.instance.private.icon: open-resume.png
-      homepage.instance.private.href: https://openresume.henn.dev
-      homepage.instance.private.description: Resume Generator
+      homepage.name: openresume
+      homepage.icon: open-resume.png
+      homepage.href: https://openresume.chenn.dev
+      homepage.description: Resume Generator
 
       traefik.enable: true
       traefik.http.routers.openresume.rule: Host(`openresume.henn.dev`)
@@ -20,3 +20,20 @@ services:
       traefik.http.routers.openresume.middlewares: hdrs@file
       traefik.http.routers.openresume.tls.certresolver: cf
       traefik.http.services.openresume.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.openresume.name: openresume
+      pangolin.public-resources.openresume.full-domain: openresume.chenn.dev
+      pangolin.public-resources.openresume.protocol: http
+      pangolin.public-resources.openresume.ssl: true
+      pangolin.public-resources.openresume.targets[0].method: http
+      pangolin.public-resources.openresume.targets[0].port: 3000
+      pangolin.public-resources.openresume.auth.sso-enabled: true
+      pangolin.public-resources.openresume.auth.sso-roles[0]: Member
+      pangolin.public-resources.openresume.rules[0].action: pass
+      pangolin.public-resources.openresume.rules[0].match: country
+      pangolin.public-resources.openresume.rules[0].value: US
+      pangolin.public-resources.openresume.rules[0].priority: 0
+      pangolin.public-resources.openresume.rules[1].action: deny
+      pangolin.public-resources.openresume.rules[1].match: country
+      pangolin.public-resources.openresume.rules[1].value: ALL
+      pangolin.public-resources.openresume.rules[1].priority: 10
