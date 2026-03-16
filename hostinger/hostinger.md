@@ -1,5 +1,13 @@
 # Hostinger Server Setup (Pangolin)
 
+adding a port for a service
+
+- hostinger firewall rule
+- pangolin docker-compose gerbil service port
+- entrypoint in config/traefik/traefik-config.yml
+    - pangolin uses naming convention: protocol-port (eg tcp-2525)
+- bounce the stack
+
 sshd config
 
 ```bash

@@ -22,7 +22,7 @@ services:
     profiles: [immich]
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich
-    restart: always
+    restart: unless-stopped
     environment:
       <<: *immich_env
     runtime: nvidia
@@ -83,7 +83,7 @@ services:
     profiles: [immich]
     image: ghcr.io/immich-app/immich-machine-learning:release-cuda
     container_name: immich_ml
-    restart: always
+    restart: unless-stopped
     environment:
       <<: *immich_env
     runtime: nvidia
@@ -98,25 +98,22 @@ services:
       - $DATA/immich/immich_ml:/cache
     networks: [traefik]
 
-  immich_redis:
-    profiles: [immich]
-    image: docker.io/valkey/valkey:9
-    container_name: immich_redis
-    restart: always
-    environment:
-      <<: *immich_env
-    healthcheck:
-      test: redis-cli ping || exit 1
-    networks: [traefik]
-
   immich_db:
     profiles: [immich]
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     container_name: immich_db
-    restart: always
+    restart: unless-stopped
     environment:
       <<: *immich_env
     volumes:
-      # NETWORK SHARES ARE NOT SUPPORTED FOR DATABASE STORAGE
       - $DATA/immich/postgres:/var/lib/postgresql/data
+    networks: [traefik]
+
+  immich_redis:
+    profiles: [immich]
+    image: docker.io/valkey/valkey:9
+    container_name: immich_redis
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping || exit 1
     networks: [traefik]

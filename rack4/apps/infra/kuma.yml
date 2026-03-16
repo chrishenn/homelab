@@ -1,3 +1,17 @@
+# name|url|hostname|port
+# Rack4|https://|192.168.1.142|
+# Rack0|https://|192.168.1.70|
+# PiKVM|https://|192.168.1.31|
+# KVM0|https://|192.168.1.22|
+# Zyxel Wifi AP|https://|192.168.1.12|
+# Brother Printer|https://|192.168.1.9|
+# DNS Rack4|https://|home.henn.dev|53
+# DNS Rack0|https://|home.henn.dev|53
+# DNS Load Balancer|https://|home.henn.dev|53
+# Traefik Load Balancer|http://192.168.1.4:8080/ping
+# Traefik Rack4|http://192.168.1.142:8080/ping
+# Traefik Rack0|http://192.168.1.70:8080/ping
+
 ---
 services:
   kuma:
@@ -5,11 +19,18 @@ services:
     image: louislam/uptime-kuma:2
     container_name: kuma
     restart: unless-stopped
+    environment:
+      UPTIME_KUMA_DB_TYPE: mariadb
+      UPTIME_KUMA_DB_HOSTNAME: kuma_db
+      UPTIME_KUMA_DB_PORT: 3306
+      UPTIME_KUMA_DB_NAME: kuma
+      UPTIME_KUMA_DB_USERNAME: kuma
+      UPTIME_KUMA_DB_PASSWORD: kuma
     volumes:
-      - $DATA/kuma:/app/data
+      - $DATA/kuma/data:/app/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3001']
-    networks: [traefik]
+    networks: [kuma, traefik]
     labels:
       homepage.group: Infra
       homepage.name: Uptime Kuma
@@ -40,3 +61,20 @@ services:
       pangolin.public-resources.kuma.rules[1].match: country
       pangolin.public-resources.kuma.rules[1].value: ALL
       pangolin.public-resources.kuma.rules[1].priority: 10
+
+  kuma_db:
+    profiles: [kuma]
+    image: mariadb:latest
+    container_name: kuma_db
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: kuma
+      MYSQL_ROOT_PASSWORD: kuma
+      MYSQL_DATABASE: kuma
+      MYSQL_PASSWORD: kuma
+    volumes:
+      - $DATA/kuma/db:/var/lib/mysql
+    networks: [kuma]
+
+networks:
+  kuma:

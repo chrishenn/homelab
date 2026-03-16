@@ -1,0 +1,23 @@
+---
+services:
+  databasus:
+    profiles: [databasus]
+    image: databasus/databasus:latest
+    container_name: databasus
+    restart: unless-stopped
+    volumes:
+      - $DATA/databasus/data:/databasus-data
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Dev
+      homepage.instance.private.name: Databasus
+      homepage.instance.private.icon: databasus.png
+      homepage.instance.private.href: https://databasus.henn.dev
+      homepage.instance.private.description: Database Backup GUI
+
+      traefik.enable: true
+      traefik.http.routers.databasus.rule: Host(`databasus.henn.dev`)
+      traefik.http.routers.databasus.entrypoints: websecure
+      traefik.http.routers.databasus.middlewares: hdrs@file
+      traefik.http.routers.databasus.tls.certresolver: cf
+      traefik.http.services.databasus.loadbalancer.server.port: 4005

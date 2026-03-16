@@ -1,0 +1,97 @@
+---
+name: pangolin
+services:
+  pangolin:
+    image: docker.io/fosrl/pangolin:ee-latest
+    container_name: pangolin
+    restart: unless-stopped
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: "10s"
+      timeout: "10s"
+      retries: 15
+
+  gerbil:
+    image: docker.io/fosrl/gerbil:latest
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - "51820:51820/udp"
+      - "21820:21820/udp"
+      - "443:443"
+      - "80:80"
+      - "2424:2424"
+      - "2525:2525"
+      - "2626:2626"
+      - "10000:10000/udp"
+      - "40000:40000/tcp"
+      - "40001:40001/tcp"
+      - "40002:40002/tcp"
+      - "40003:40003/tcp"
+      - "40004:40004/tcp"
+      - "40005:40005/tcp"
+      - "40006:40006/tcp"
+      - "40007:40007/tcp"
+      - "40008:40008/tcp"
+      - "40009:40009/tcp"
+      - "40000:40000/udp"
+      - "40001:40001/udp"
+      - "40002:40002/udp"
+      - "40003:40003/udp"
+      - "40004:40004/udp"
+      - "40005:40005/udp"
+      - "40006:40006/udp"
+      - "40007:40007/udp"
+      - "40008:40008/udp"
+      - "40009:40009/udp"
+
+  traefik:
+    image: docker.io/traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro
+      - ./config/letsencrypt:/letsencrypt
+      - ./config/traefik/logs:/var/log/traefik
+
+  beszel-agent:
+    image: henrygd/beszel-agent
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./beszel_agent_data:/var/lib/beszel-agent
+    environment:
+      LISTEN: 45876
+      KEY: $VPS0_BESZEL_KEY
+      TOKEN: $VPS0_BESZEL_TOKEN
+      HUB_URL: $VPS0_BESZEL_HUB_URL
+
+networks:
+  default:
+    driver: bridge
+    name: pangolin
+    enable_ipv6: true

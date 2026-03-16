@@ -1,0 +1,26 @@
+---
+services:
+  pgadmin:
+    profiles: [pgadmin]
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PASS}
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: True
+      PGADMIN_CONFIG_LOGIN_BANNER: '"Chicken PgAdmin"'
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
+    networks: [traefik]
+    labels:
+      homepage.instance.private.group: Dev
+      homepage.instance.private.name: PgAdmin
+      homepage.instance.private.icon: pgadmin.png
+      homepage.instance.private.href: https://pgadmin.henn.dev
+      homepage.instance.private.description: Postgres GUI
+
+      traefik.enable: true
+      traefik.http.routers.pgadmin.rule: Host(`pgadmin.henn.dev`)
+      traefik.http.routers.pgadmin.entrypoints: websecure
+      traefik.http.routers.pgadmin.middlewares: hdrs@file
+      traefik.http.routers.pgadmin.tls.certresolver: cf
+      traefik.http.services.pgadmin.loadbalancer.server.port: 80

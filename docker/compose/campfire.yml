@@ -13,17 +13,18 @@ services:
       - $DATA/campfire:/rails/storage
     networks: [traefik]
     labels:
+      homepage.group: Tools
+      homepage.name: Campfire
+      homepage.icon: firebase.png
+      homepage.href: https://campfire.henn.dev
+      homepage.description: Private Slack
+
       traefik.enable: true
       docker-volume-backup.stop-during-backup: campfire
       traefik.http.routers.campfire.rule: Host(`campfire.henn.dev`)
       traefik.http.routers.campfire.entrypoints: websecure
       traefik.http.routers.campfire.tls.certresolver: cf
       traefik.http.services.campfire.loadbalancer.server.port: 80
-      homepage.group: Tools
-      homepage.name: Campfire
-      homepage.icon: firebase.png
-      homepage.href: https://campfire.henn.dev
-      homepage.description: Private Slack
 
   campfire_backup:
     profiles: [campfire]

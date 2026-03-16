@@ -110,6 +110,7 @@ PROWLARR_API_KEY = { provider = "onepass", value = "op://homelab/prowlarr/creden
 DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
 RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
 BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }
+OXICLOUD_JWT = { provider = "onepass", value = "op://homelab/oxicloud/jwt" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -159,3 +160,5 @@ SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc
 SEAFILE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/seafile/oidc_secret" }
 BYTESTASH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bytestash/oidc_client" }
 BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/oidc_secret" }
+OXICLOUD_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/oxicloud/oidc_client" }
+OXICLOUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/oxicloud/oidc_secret" }

@@ -1,0 +1,76 @@
+# the cli tool `tod` does not have repo management like glab/gh/berg
+# that also means that pangolin SSO can be enabled in front without breaking the cli api
+---
+services:
+  onedev:
+    profiles: [onedev]
+    image: 1dev/server
+    container_name: onedev
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/onedev/data:/opt/onedev
+    environment:
+      initial_user: ${USER}
+      initial_password: ${PASS}
+      initial_email: ${EMAIL}
+      initial_server_url: https://onedev.chenn.dev
+      initial_ssh_root_url: ssh://onedev.chenn.dev:2626
+
+      hibernate_dialect: io.onedev.server.persistence.PostgreSQLDialect
+      hibernate_connection_driver_class: org.postgresql.Driver
+      hibernate_connection_url: jdbc:postgresql://onedev_db:5432/onedev
+      hibernate_connection_username: onedev
+      hibernate_connection_password: onedev
+    networks: [onedev, newt]
+    labels:
+      homepage.group: Dev
+      homepage.name: Onedev
+      homepage.icon: onedev.png
+      homepage.href: https://onedev.chenn.dev
+      homepage.description: Git Server
+
+      pangolin.public-resources.onedev.name: onedev
+      pangolin.public-resources.onedev.full-domain: onedev.chenn.dev
+      pangolin.public-resources.onedev.protocol: http
+      pangolin.public-resources.onedev.ssl: true
+      pangolin.public-resources.onedev.targets[0].method: http
+      pangolin.public-resources.onedev.targets[0].port: 6610
+      pangolin.public-resources.onedev.auth.sso-enabled: true
+      pangolin.public-resources.onedev.auth.sso-roles[0]: Member
+      pangolin.public-resources.onedev.rules[0].action: pass
+      pangolin.public-resources.onedev.rules[0].match: country
+      pangolin.public-resources.onedev.rules[0].value: US
+      pangolin.public-resources.onedev.rules[0].priority: 0
+      pangolin.public-resources.onedev.rules[1].action: deny
+      pangolin.public-resources.onedev.rules[1].match: country
+      pangolin.public-resources.onedev.rules[1].value: ALL
+      pangolin.public-resources.onedev.rules[1].priority: 10
+
+      pangolin.public-resources.onedev_ssh.name: onedev_ssh
+      pangolin.public-resources.onedev_ssh.protocol: tcp
+      pangolin.public-resources.onedev_ssh.proxy-port: 2626
+      pangolin.public-resources.onedev_ssh.targets[0].port: 6611
+
+  onedev_db:
+    profiles: [onedev]
+    image: postgres:18-alpine
+    container_name: onedev_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: onedev
+      POSTGRES_USER: onedev
+      POSTGRES_DB: onedev
+    volumes:
+      - $DATA/onedev/db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks: [onedev]
+
+networks:
+  onedev:

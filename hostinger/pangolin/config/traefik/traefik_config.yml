@@ -1,0 +1,117 @@
+api:
+  insecure: true
+  dashboard: true
+
+http:
+  encodedcharacters:
+    allowEncodedSlash: true
+    allowEncodedQuestionMark: true
+    allowencodedbackslash: true
+    allowencodednullcharacter: true
+    allowencodedsemicolon: true
+    allowencodedpercent: true
+    allowencodedhash: true
+
+providers:
+  http:
+    endpoint: "http://pangolin:3001/api/v1/traefik-config"
+    pollInterval: "5s"
+  file:
+    filename: "/etc/traefik/dynamic_config.yml"
+
+experimental:
+  plugins:
+    badger:
+      moduleName: "github.com/fosrl/badger"
+      version: "v1.3.1"
+
+log:
+  level: "INFO"
+  format: "common"
+  maxSize: 100
+  maxBackups: 3
+  maxAge: 3
+  compress: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      dnsChallenge:
+        provider: "cloudflare"
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+      storage: "/letsencrypt/acme.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+    transport:
+      respondingTimeouts:
+        readTimeout: '30m'
+        writeTimeout: '30m'
+        idleTimeout: '30m'
+    http:
+      tls:
+        certResolver: "letsencrypt"
+  udp-10000:
+    address: ":10000/udp"
+  tcp-2424:
+    address: ":2424/tcp"
+  tcp-2525:
+    address: ":2525/tcp"
+  tcp-2626:
+    address: ":2626/tcp"
+  tcp-40000:
+    address: ":40000/tcp"
+  tcp-40001:
+    address: ":40001/tcp"
+  tcp-40002:
+    address: ":40002/tcp"
+  tcp-40003:
+    address: ":40003/tcp"
+  tcp-40004:
+    address: ":40004/tcp"
+  tcp-40005:
+    address: ":40005/tcp"
+  tcp-40006:
+    address: ":40006/tcp"
+  tcp-40007:
+    address: ":40007/tcp"
+  tcp-40008:
+    address: ":40008/tcp"
+  tcp-40009:
+    address: ":40009/tcp"
+  tcp-40010:
+    address: ":40010/tcp"
+  udp-40000:
+    address: ":40000/udp"
+  udp-40001:
+    address: ":40001/udp"
+  udp-40002:
+    address: ":40002/udp"
+  udp-40003:
+    address: ":40003/udp"
+  udp-40004:
+    address: ":40004/udp"
+  udp-40005:
+    address: ":40005/udp"
+  udp-40006:
+    address: ":40006/udp"
+  udp-40007:
+    address: ":40007/udp"
+  udp-40008:
+    address: ":40008/udp"
+  udp-40009:
+    address: ":40009/udp"
+  udp-40010:
+    address: ":40010/udp"
+
+serversTransport:
+  insecureSkipVerify: true
+
+ping:
+  entryPoint: "web"

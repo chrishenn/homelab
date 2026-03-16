@@ -1,0 +1,133 @@
+# early days still - but very promising
+# - no button to create a document in the interface; have to upload docs to create them
+# - no way to open a doc editor in a new tab
+
+# I already trust the security of this project more than the others. OIDC config was trivial.
+
+# boot once to create initial admin in UI - then disable password login
+---
+services:
+  oxicloud:
+    profiles: [oxicloud]
+    image: $REGISTRY/oxicloud:latest
+    build: https://github.com/DioCrafts/OxiCloud.git
+    container_name: oxicloud
+    restart: unless-stopped
+    environment:
+      OXICLOUD_BASE_URL: https://oxicloud.chenn.dev
+      OXICLOUD_DB_CONNECTION_STRING: postgres://postgres:postgres@oxicloud_db/oxicloud
+      OXICLOUD_ENABLE_AUTH: true
+      OXICLOUD_JWT_SECRET: ${OXICLOUD_JWT}
+
+      OXICLOUD_OIDC_ENABLED: true
+      OXICLOUD_OIDC_ISSUER_URL: $OIDC
+      OXICLOUD_OIDC_CLIENT_ID: $OXICLOUD_OIDC_CLIENT
+      OXICLOUD_OIDC_CLIENT_SECRET: $OXICLOUD_OIDC_SECRET
+      OXICLOUD_OIDC_REDIRECT_URI: http://oxicloud.chenn.dev/api/auth/oidc/callback
+      OXICLOUD_OIDC_SCOPES: openid profile email groups
+      OXICLOUD_OIDC_FRONTEND_URL: http://oxicloud.chenn.dev
+      OXICLOUD_OIDC_AUTO_PROVISION: true
+      OXICLOUD_OIDC_ADMIN_GROUPS: admin
+      OXICLOUD_OIDC_DISABLE_PASSWORD_LOGIN: true
+      OXICLOUD_OIDC_PROVIDER_NAME: PocketID
+
+      OXICLOUD_WOPI_ENABLED: true
+      OXICLOUD_WOPI_DISCOVERY_URL: https://oxicloud.chenn.dev/hosting/discovery
+    volumes:
+      - $DATA/oxicloud/data:/app/storage
+    depends_on:
+      oxicloud_db:
+        condition: service_healthy
+    networks: [oxicloud, newt]
+    labels:
+      pangolin.public-resources.oxicloud.name: oxicloud
+      pangolin.public-resources.oxicloud.full-domain: oxicloud.chenn.dev
+      pangolin.public-resources.oxicloud.protocol: http
+      pangolin.public-resources.oxicloud.ssl: true
+
+      pangolin.public-resources.oxicloud.targets[0].method: http
+      pangolin.public-resources.oxicloud.targets[0].path-match: prefix
+      pangolin.public-resources.oxicloud.targets[0].path: /
+      pangolin.public-resources.oxicloud.targets[0].port: 8086
+      pangolin.public-resources.oxicloud.targets[0].priority: 100
+
+      pangolin.public-resources.oxicloud.auth.sso-enabled: true
+      pangolin.public-resources.oxicloud.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.oxicloud.rules[0].action: pass
+      pangolin.public-resources.oxicloud.rules[0].match: path
+      pangolin.public-resources.oxicloud.rules[0].value: /login
+      pangolin.public-resources.oxicloud.rules[0].priority: 0
+      pangolin.public-resources.oxicloud.rules[1].action: pass
+      pangolin.public-resources.oxicloud.rules[1].match: path
+      pangolin.public-resources.oxicloud.rules[1].value: /admin
+      pangolin.public-resources.oxicloud.rules[1].priority: 10
+      pangolin.public-resources.oxicloud.rules[2].action: pass
+      pangolin.public-resources.oxicloud.rules[2].match: path
+      pangolin.public-resources.oxicloud.rules[2].value: /profile
+      pangolin.public-resources.oxicloud.rules[2].priority: 20
+
+      pangolin.public-resources.oxicloud.rules[3].action: allow
+      pangolin.public-resources.oxicloud.rules[3].match: country
+      pangolin.public-resources.oxicloud.rules[3].value: US
+      pangolin.public-resources.oxicloud.rules[3].priority: 30
+      pangolin.public-resources.oxicloud.rules[4].action: deny
+      pangolin.public-resources.oxicloud.rules[4].match: country
+      pangolin.public-resources.oxicloud.rules[4].value: ALL
+      pangolin.public-resources.oxicloud.rules[4].priority: 40
+
+  oxicloud_db:
+    profiles: [oxicloud]
+    image: postgres:18-alpine
+    container_name: oxicloud_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oxicloud
+    volumes:
+      - $DATA/oxicloud/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [oxicloud]
+
+  oxicloud_collabora:
+    profiles: [oxicloud]
+    image: collabora/code:latest
+    container_name: oxicloud_collabora
+    restart: unless-stopped
+    cap_add: [MKNOD]
+    environment:
+      DONT_GEN_SSL_CERT: YES
+      server_name: oxicloud.chenn.dev
+      aliasgroup1: https://oxicloud.chenn.dev
+      extra_params: >-
+        --o:ssl.enable=false
+        --o:ssl.termination=true
+        --o:ssl.ssl_verification=true
+        --o:admin_console.enable=false
+    networks: [newt]
+    labels:
+      pangolin.public-resources.oxicloud.targets[1].method: http
+      pangolin.public-resources.oxicloud.targets[1].path-match: prefix
+      pangolin.public-resources.oxicloud.targets[1].path: /browser
+      pangolin.public-resources.oxicloud.targets[1].port: 9980
+      pangolin.public-resources.oxicloud.targets[1].priority: 110
+
+      pangolin.public-resources.oxicloud.targets[2].method: http
+      pangolin.public-resources.oxicloud.targets[2].path-match: prefix
+      pangolin.public-resources.oxicloud.targets[2].path: /hosting
+      pangolin.public-resources.oxicloud.targets[2].port: 9980
+      pangolin.public-resources.oxicloud.targets[2].priority: 120
+
+      pangolin.public-resources.oxicloud.targets[3].method: http
+      pangolin.public-resources.oxicloud.targets[3].path-match: prefix
+      pangolin.public-resources.oxicloud.targets[3].path: /cool
+      pangolin.public-resources.oxicloud.targets[3].port: 9980
+      pangolin.public-resources.oxicloud.targets[3].priority: 130
+
+networks:
+  oxicloud:

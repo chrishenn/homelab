@@ -46,6 +46,9 @@ include:
   - apps/dev/gist.yml
   - apps/dev/gitlab.yml
   - apps/dev/ittools.yml
+  - apps/dev/pgadmin.yml
+  - apps/dev/databasus.yml
+  - apps/dev/onedev.yml
 
   - apps/document/docmost.yml
   - apps/document/documenso.yml
@@ -58,6 +61,7 @@ include:
   - apps/document/stirling.yml
   - apps/document/seafile.yml
   - apps/document/cloudreve.yml
+  - apps/document/oxicloud.yml
 
   - apps/games/wordle.yml
 
