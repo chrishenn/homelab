@@ -21,7 +21,7 @@ set up a fresh linux desktop
 - cfg: konsole
 - cfg: sysmon
 - cfg: dolphin
-- fix: v4l2loopback
+- cfg: v4l2loopback
 - fstab network mounts
 
 - settings gui
@@ -40,6 +40,7 @@ set up a fresh linux desktop
     - system fonts
         - size
         - firacode
+    - keyboard repeat (200/50)
 
 AV Verification
 
@@ -50,5 +51,3 @@ AV Verification
     - bluetooth
     - main interface
     - usb dongle
-
-Secure Boot
