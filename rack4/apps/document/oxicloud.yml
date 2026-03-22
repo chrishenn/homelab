@@ -1,3 +1,5 @@
+# CHROME ONLY FOR COLLABORA TO WORK. "NEW TAB" OPEN IS A NO-GO
+
 # early days still - but very promising
 # - no button to create a document in the interface; have to upload docs to create them
 # - no way to open a doc editor in a new tab
@@ -9,7 +11,7 @@
 services:
   oxicloud:
     profiles: [oxicloud]
-    image: $REGISTRY/oxicloud:latest
+    image: ${REGISTRY}/oxicloud:latest
     build: https://github.com/DioCrafts/OxiCloud.git
     container_name: oxicloud
     restart: unless-stopped
@@ -20,6 +22,7 @@ services:
       OXICLOUD_JWT_SECRET: ${OXICLOUD_JWT}
 
       OXICLOUD_OIDC_ENABLED: true
+      OXICLOUD_OIDC_PROVIDER_NAME: PocketID
       OXICLOUD_OIDC_ISSUER_URL: $OIDC
       OXICLOUD_OIDC_CLIENT_ID: $OXICLOUD_OIDC_CLIENT
       OXICLOUD_OIDC_CLIENT_SECRET: $OXICLOUD_OIDC_SECRET
@@ -29,7 +32,6 @@ services:
       OXICLOUD_OIDC_AUTO_PROVISION: true
       OXICLOUD_OIDC_ADMIN_GROUPS: admin
       OXICLOUD_OIDC_DISABLE_PASSWORD_LOGIN: true
-      OXICLOUD_OIDC_PROVIDER_NAME: PocketID
 
       OXICLOUD_WOPI_ENABLED: true
       OXICLOUD_WOPI_DISCOVERY_URL: https://oxicloud.chenn.dev/hosting/discovery

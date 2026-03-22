@@ -75,8 +75,8 @@ services:
       dawarich_redis:
         condition: service_healthy
         restart: true
-    # integration with immich requires treafik network
-    networks: [dawarich, traefik]
+    # integration with immich requires a shared network
+    networks: [dawarich, newt]
     labels:
       homepage.group: Media
       homepage.name: Dawarich
@@ -92,6 +92,7 @@ services:
       pangolin.public-resources.dawarich.targets[0].port: 3000
       pangolin.public-resources.dawarich.auth.sso-enabled: true
       pangolin.public-resources.dawarich.auth.sso-roles[0]: Member
+
       pangolin.public-resources.dawarich.rules[0].action: pass
       pangolin.public-resources.dawarich.rules[0].match: country
       pangolin.public-resources.dawarich.rules[0].value: US

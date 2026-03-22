@@ -18,7 +18,7 @@ services:
       - $DATA/ldr/rag_cache:/data/cache/rag_indices
       # Mount your document directories here to search them with LDR.
       - $DATA/ldr/local_collections:/local_collections/research_papers/
-    networks: [traefik]
+    networks: [traefik, ollama]
     labels:
       homepage.instance.private.group: AI
       homepage.instance.private.name: Local Deep Research

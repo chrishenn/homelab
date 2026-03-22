@@ -1,0 +1,43 @@
+---
+services:
+  mdrm:
+    profiles: [mdrm]
+    image: ghcr.io/wow-signal-dev/metadata-remote:latest
+    container_name: mdrm
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      SHOW_HIDDEN_FILES: true
+    volumes:
+      - $MEDIA/Music:/music/Library0
+    healthcheck:
+      test: wget --spider -q http://0.0.0.0:8338/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Metadata-Remote
+      homepage.icon: https://raw.githubusercontent.com/wow-signal-dev/metadata-remote/refs/heads/main/static/favicon.ico
+      homepage.href: https://mdrm.chenn.dev
+      homepage.description: Music Metadata Editor
+
+      pangolin.public-resources.mdrm.name: mdrm
+      pangolin.public-resources.mdrm.full-domain: mdrm.chenn.dev
+      pangolin.public-resources.mdrm.protocol: http
+      pangolin.public-resources.mdrm.ssl: true
+      pangolin.public-resources.mdrm.targets[0].method: http
+      pangolin.public-resources.mdrm.targets[0].port: 8338
+      pangolin.public-resources.mdrm.auth.sso-enabled: true
+      pangolin.public-resources.mdrm.auth.sso-roles[0]: Member
+      pangolin.public-resources.mdrm.rules[0].action: pass
+      pangolin.public-resources.mdrm.rules[0].match: country
+      pangolin.public-resources.mdrm.rules[0].value: US
+      pangolin.public-resources.mdrm.rules[0].priority: 0
+      pangolin.public-resources.mdrm.rules[1].action: deny
+      pangolin.public-resources.mdrm.rules[1].match: country
+      pangolin.public-resources.mdrm.rules[1].value: ALL
+      pangolin.public-resources.mdrm.rules[1].priority: 10

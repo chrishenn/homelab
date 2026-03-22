@@ -1,0 +1,118 @@
+# seems amateurish to have a one-time migration container, but the project looks legit otherwise
+---
+x-affine_env: &affine_env
+  REDIS_SERVER_HOST: affine_redis
+  DATABASE_URL: postgresql://affine:affine@affine_db:5432/affine
+  AFFINE_INDEXER_ENABLED: false
+  PORT: 3010
+  AFFINE_SERVER_EXTERNAL_URL: https://affine.chenn.dev
+
+  DB_USERNAME: affine
+  DB_PASSWORD: affine
+  DB_DATABASE: affine
+
+  POSTGRES_USER: affine
+  POSTGRES_PASSWORD: affine
+  POSTGRES_DB: affine
+  POSTGRES_INITDB_ARGS: '--data-checksums'
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+  MAILER_HOST: ${SMTP_HOST}
+  MAILER_PORT: 465
+  MAILER_USER: ${SMTP_USER}
+  MAILER_PASSWORD: ${SMTP_TOKEN}
+  MAILER_SENDER: ${SMTP_USER}
+  MAILER_IGNORE_TLS: false
+
+services:
+  affine:
+    profiles: [affine]
+    image: ghcr.io/toeverything/affine:stable
+    container_name: affine
+    restart: unless-stopped
+    depends_on:
+      affine_redis:
+        condition: service_healthy
+      affine_db:
+        condition: service_healthy
+    #      affine_migration:
+    #        condition: service_completed_successfully
+    volumes:
+      - $DATA/affine/storage:/root/.affine/storage
+      - $DATA/affine/config:/root/.affine/config
+    environment:
+      <<: *affine_env
+    networks: [affine, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Affine
+      homepage.icon: affine.png
+      homepage.href: https://affine.chenn.dev
+      homepage.description: Private Wiki
+
+      pangolin.public-resources.affine.name: affine
+      pangolin.public-resources.affine.full-domain: affine.chenn.dev
+      pangolin.public-resources.affine.protocol: http
+      pangolin.public-resources.affine.ssl: true
+      pangolin.public-resources.affine.targets[0].method: http
+      pangolin.public-resources.affine.targets[0].port: 3010
+      pangolin.public-resources.affine.auth.sso-enabled: true
+      pangolin.public-resources.affine.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.affine.rules[0].action: pass
+      pangolin.public-resources.affine.rules[0].match: country
+      pangolin.public-resources.affine.rules[0].value: US
+      pangolin.public-resources.affine.rules[0].priority: 0
+      pangolin.public-resources.affine.rules[1].action: deny
+      pangolin.public-resources.affine.rules[1].match: country
+      pangolin.public-resources.affine.rules[1].value: ALL
+      pangolin.public-resources.affine.rules[1].priority: 10
+
+  affine_redis:
+    profiles: [affine]
+    image: redis
+    container_name: affine_redis
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [affine]
+
+  affine_db:
+    profiles: [affine]
+    image: pgvector/pgvector:pg16
+    container_name: affine_db
+    restart: unless-stopped
+    volumes:
+      - $DATA/affine/db:/var/lib/postgresql/data
+    environment:
+      <<: *affine_env
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [affine]
+
+  #  affine_migration:
+  #    profiles: [affine]
+  #    image: ghcr.io/toeverything/affine:stable
+  #    container_name: affine_migration
+  #    restart: no
+  #    volumes:
+  #      - $DATA/affine/storage:/root/.affine/storage
+  #      - $DATA/affine/config:/root/.affine/config
+  #    command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
+  #    environment:
+  #      <<: *affine_env
+  #    depends_on:
+  #      affine_db:
+  #        condition: service_healthy
+  #      affine_redis:
+  #        condition: service_healthy
+  #    networks: [affine]
+
+networks:
+  affine:

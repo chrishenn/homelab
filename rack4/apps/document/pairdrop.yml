@@ -13,20 +13,13 @@ services:
       WS_FALLBACK: false
       RTC_CONFIG:
       DEBUG_MODE: false
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Pairdrop
       homepage.icon: pairdrop.png
       homepage.href: https://pairdrop.chenn.dev
       homepage.description: Private Airdrop
-
-      traefik.enable: true
-      traefik.http.routers.pairdrop.rule: Host(`pairdrop.henn.dev`)
-      traefik.http.routers.pairdrop.entrypoints: websecure
-      traefik.http.routers.pairdrop.middlewares: hdrs@file
-      traefik.http.routers.pairdrop.tls.certresolver: cf
-      traefik.http.services.pairdrop.loadbalancer.server.port: 3000
 
       pangolin.public-resources.pairdrop.name: pairdrop
       pangolin.public-resources.pairdrop.full-domain: pairdrop.chenn.dev
@@ -36,6 +29,7 @@ services:
       pangolin.public-resources.pairdrop.targets[0].port: 3000
       pangolin.public-resources.pairdrop.auth.sso-enabled: true
       pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
+
       pangolin.public-resources.pairdrop.rules[0].action: pass
       pangolin.public-resources.pairdrop.rules[0].match: country
       pangolin.public-resources.pairdrop.rules[0].value: US

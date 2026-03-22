@@ -21,20 +21,13 @@ services:
       MAIL_FROM_ADDRESS: $SMTP_USER
     volumes:
       - $DATA/docmost/docmost:/app/data/storage
-    networks: [docmost, traefik]
+    networks: [docmost, newt]
     labels:
       homepage.group: File Editors
       homepage.name: Docmost
       homepage.icon: docmost.png
       homepage.href: https://docmost.chenn.dev
       homepage.description: Document Collaboration
-
-      traefik.enable: true
-      traefik.http.routers.docmost.rule: Host(`docmost.henn.dev`)
-      traefik.http.routers.docmost.entrypoints: websecure
-      traefik.http.routers.docmost.middlewares: hdrs@file
-      traefik.http.routers.docmost.tls.certresolver: cf
-      traefik.http.services.docmost.loadbalancer.server.port: 3000
 
       pangolin.public-resources.docmost.name: docmost
       pangolin.public-resources.docmost.full-domain: docmost.chenn.dev
@@ -44,6 +37,7 @@ services:
       pangolin.public-resources.docmost.targets[0].port: 3000
       pangolin.public-resources.docmost.auth.sso-enabled: true
       pangolin.public-resources.docmost.auth.sso-roles[0]: Member
+
       pangolin.public-resources.docmost.rules[0].action: pass
       pangolin.public-resources.docmost.rules[0].match: country
       pangolin.public-resources.docmost.rules[0].value: US

@@ -1,0 +1,42 @@
+---
+services:
+  readmeabook:
+    profiles: [readmeabook]
+    image: ghcr.io/kikootwo/readmeabook:latest
+    container_name: readmeabook
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://readmeabook.chenn.dev
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - $MEDIA/Books:/media
+      - $DATA/readmeabook/config:/app/config
+      - $DATA/readmeabook/cache:/app/cache
+      - $DATA/readmeabook/pgdata:/var/lib/postgresql/data
+      - $DATA/readmeabook/redis:/var/lib/redis
+      - $DATA/qbit/downloads:/qbit/downloads
+    networks: [newt, arr]
+    labels:
+      homepage.group: Media
+      homepage.name: Readmeabook
+      homepage.icon: read-me-a-book.png
+      homepage.href: https://readmeabook.chenn.dev
+      homepage.description: Audiobook Management
+
+      pangolin.public-resources.readmeabook.name: readmeabook
+      pangolin.public-resources.readmeabook.full-domain: readmeabook.chenn.dev
+      pangolin.public-resources.readmeabook.protocol: http
+      pangolin.public-resources.readmeabook.ssl: true
+      pangolin.public-resources.readmeabook.targets[0].method: http
+      pangolin.public-resources.readmeabook.targets[0].port: 3030
+      pangolin.public-resources.readmeabook.auth.sso-enabled: true
+      pangolin.public-resources.readmeabook.auth.sso-roles[0]: Member
+      pangolin.public-resources.readmeabook.rules[0].action: pass
+      pangolin.public-resources.readmeabook.rules[0].match: country
+      pangolin.public-resources.readmeabook.rules[0].value: US
+      pangolin.public-resources.readmeabook.rules[0].priority: 0
+      pangolin.public-resources.readmeabook.rules[1].action: deny
+      pangolin.public-resources.readmeabook.rules[1].match: country
+      pangolin.public-resources.readmeabook.rules[1].value: ALL
+      pangolin.public-resources.readmeabook.rules[1].priority: 10

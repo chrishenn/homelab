@@ -15,20 +15,6 @@ services:
       - ./traefik/cfg:/cfg
       - $DATA/traefik/logs:/logs
       - $DATA/traefik/ssl:/ssl
-    networks: [traefik]
-    labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Traefik-Docker
-      homepage.instance.private.icon: traefik.png
-      homepage.instance.private.href: https://docker-traefik.henn.dev
-      homepage.instance.private.description: Docker Traefik Gui (Rack 4)
-
-      traefik.enable: true
-      traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
-      traefik.http.routers.dash.entrypoints: websecure
-      traefik.http.routers.dash.middlewares: hdrs@file
-      traefik.http.routers.dash.tls.certresolver: cf
-      traefik.http.routers.dash.service: api@internal
     ports:
       - '${SVC_IP}:80:80' # http
       - '${SVC_IP}:8080:8080' # traefik internal entrypoint
@@ -51,3 +37,26 @@ services:
       - '${TRAEFIK_VIP}:3128:3128' # spice
       - '${TRAEFIK_VIP}:61001:61001' # spice-tls
       - '${TRAEFIK_VIP}:10000:10000' #
+    labels:
+      homepage.instance.private.group: Infra
+      homepage.instance.private.name: Traefik-Docker
+      homepage.instance.private.icon: traefik.png
+      homepage.instance.private.href: https://docker-traefik.henn.dev
+      homepage.instance.private.description: Docker Traefik Gui (Rack 4)
+
+      traefik.enable: true
+      traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
+      traefik.http.routers.dash.entrypoints: websecure
+      traefik.http.routers.dash.middlewares: hdrs@file
+      traefik.http.routers.dash.tls.certresolver: cf
+      traefik.http.routers.dash.service: api@internal
+    networks: [traefik]
+
+networks:
+  traefik:
+    name: traefik
+    driver: bridge
+    ipam:
+      config:
+        - subnet: $TRAEFIK_SUBNET
+          gateway: $TRAEFIK_GATEWAY

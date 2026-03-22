@@ -11,20 +11,13 @@ services:
       - $DATA/memos/data:/var/opt/memos
     healthcheck:
       test: ['CMD-SHELL', 'apk add curl && curl -ILfSs http://localhost:5230']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Memos
       homepage.icon: memos.png
       homepage.href: https://memos.chenn.dev
       homepage.description: Simple Lists
-
-      traefik.enable: true
-      traefik.http.routers.memos.rule: Host(`memos.henn.dev`)
-      traefik.http.routers.memos.entrypoints: websecure
-      traefik.http.routers.memos.middlewares: hdrs@file
-      traefik.http.routers.memos.tls.certresolver: cf
-      traefik.http.services.memos.loadbalancer.server.port: 5230
 
       pangolin.public-resources.memos.name: memos
       pangolin.public-resources.memos.full-domain: memos.chenn.dev
@@ -34,6 +27,7 @@ services:
       pangolin.public-resources.memos.targets[0].port: 5230
       pangolin.public-resources.memos.auth.sso-enabled: true
       pangolin.public-resources.memos.auth.sso-roles[0]: Member
+
       pangolin.public-resources.memos.rules[0].action: pass
       pangolin.public-resources.memos.rules[0].match: country
       pangolin.public-resources.memos.rules[0].value: US

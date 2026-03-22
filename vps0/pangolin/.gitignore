@@ -1,0 +1,5 @@
+beszel_agent_data/
+config/db
+config/GeoLite2
+config/key
+config/letsencrypt

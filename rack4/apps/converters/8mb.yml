@@ -1,0 +1,43 @@
+---
+services:
+  8mb:
+    profiles: [8mb]
+    image: jms1717/8mblocal:latest
+    container_name: 8mb
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: compute,video,utility
+    volumes:
+      - $DATA/8mb/uploads:/app/uploads
+      - $DATA/8mb/outputs:/app/outputs
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: 8MB
+      homepage.icon: compreface.png
+      homepage.href: https://8MB.chenn.dev
+      homepage.description: Video Compressor
+
+      pangolin.public-resources.8mb.name: 8mb
+      pangolin.public-resources.8mb.full-domain: 8mb.chenn.dev
+      pangolin.public-resources.8mb.protocol: http
+      pangolin.public-resources.8mb.ssl: true
+      pangolin.public-resources.8mb.targets[0].method: http
+      pangolin.public-resources.8mb.targets[0].port: 8001
+      pangolin.public-resources.8mb.auth.sso-enabled: true
+      pangolin.public-resources.8mb.auth.sso-roles[0]: Member
+      pangolin.public-resources.8mb.rules[0].action: pass
+      pangolin.public-resources.8mb.rules[0].match: country
+      pangolin.public-resources.8mb.rules[0].value: US
+      pangolin.public-resources.8mb.rules[0].priority: 0
+      pangolin.public-resources.8mb.rules[1].action: deny
+      pangolin.public-resources.8mb.rules[1].match: country
+      pangolin.public-resources.8mb.rules[1].value: ALL
+      pangolin.public-resources.8mb.rules[1].priority: 10

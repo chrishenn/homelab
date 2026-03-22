@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/onedev/data:/opt/onedev
     environment:
       initial_user: ${USER}
@@ -39,6 +39,7 @@ services:
       pangolin.public-resources.onedev.targets[0].port: 6610
       pangolin.public-resources.onedev.auth.sso-enabled: true
       pangolin.public-resources.onedev.auth.sso-roles[0]: Member
+
       pangolin.public-resources.onedev.rules[0].action: pass
       pangolin.public-resources.onedev.rules[0].match: country
       pangolin.public-resources.onedev.rules[0].value: US
@@ -65,7 +66,7 @@ services:
     volumes:
       - $DATA/onedev/db:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
       timeout: 5s
       retries: 5

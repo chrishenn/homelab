@@ -9,20 +9,13 @@ services:
       - $DATA/nexterm:/app/data
     environment:
       ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Nexterm
       homepage.icon: nexterm.png
       homepage.href: https://nexterm.chenn.dev
       homepage.description: Server Manager
-
-      traefik.enable: true
-      traefik.http.routers.nexterm.rule: Host(`nexterm.henn.dev`)
-      traefik.http.routers.nexterm.entrypoints: websecure
-      traefik.http.routers.nexterm.middlewares: hdrs@file
-      traefik.http.routers.nexterm.tls.certresolver: cf
-      traefik.http.services.nexterm.loadbalancer.server.port: 6989
 
       pangolin.public-resources.nexterm.name: nexterm
       pangolin.public-resources.nexterm.full-domain: nexterm.chenn.dev

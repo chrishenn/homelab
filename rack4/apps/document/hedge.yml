@@ -36,7 +36,7 @@ services:
 
     volumes:
       - $DATA/hedge/config:/config
-    networks: [traefik]
+    networks: [hedge, newt]
     labels:
       homepage.group: File Editors
       homepage.name: Hedge Doc
@@ -52,6 +52,7 @@ services:
       pangolin.public-resources.hedge.targets[0].port: 3000
       pangolin.public-resources.hedge.auth.sso-enabled: true
       pangolin.public-resources.hedge.auth.sso-roles[0]: Member
+
       pangolin.public-resources.hedge.rules[0].action: pass
       pangolin.public-resources.hedge.rules[0].match: country
       pangolin.public-resources.hedge.rules[0].value: US
@@ -72,4 +73,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - $DATA/hedge/db:/var/lib/postgresql
-    networks: [traefik]
+    networks: [hedge]
+
+networks:
+  hedge:

@@ -1,21 +1,4 @@
-networks:
-  traefik:
-    name: traefik
-    driver: bridge
-    ipam:
-      config:
-        - subnet: $TRAEFIK_SUBNET
-          gateway: $TRAEFIK_GATEWAY
-  newt:
-    name: newt
-    driver: bridge
-    ipam:
-      config:
-        - subnet: $NEWT_SUBNET
-          gateway: $NEWT_GATEWAY
-
 include:
-  - apps/ai/cognito.yml
   - apps/ai/comfy.yml
   - apps/ai/kestra.yml
   - apps/ai/ldr.yml
@@ -28,12 +11,18 @@ include:
 
   - apps/backup/backrest.yml
   - apps/backup/rsync.yml
+  - apps/backup/pluton.yml
+  - apps/backup/repliqate.yml
+  - apps/backup/zerobyte.yml
 
   - apps/converters/convertx.yml
   - apps/converters/omni.yml
   - apps/converters/transmute.yml
   - apps/converters/vert.yml
   - apps/converters/handbrake.yml
+  - apps/converters/simg.yml
+  - apps/converters/8mb.yml
+  - apps/converters/mazanoke.yml
 
   - apps/dev/bytestash.yml
   - apps/dev/chartdb.yml
@@ -49,6 +38,9 @@ include:
   - apps/dev/pgadmin.yml
   - apps/dev/databasus.yml
   - apps/dev/onedev.yml
+  - apps/dev/portabase.yml
+  - apps/dev/penpot.yml
+  - apps/dev/scanopy.yml
 
   - apps/document/docmost.yml
   - apps/document/documenso.yml
@@ -59,9 +51,11 @@ include:
   - apps/document/paperless.yml
   - apps/document/resume.yml
   - apps/document/stirling.yml
-  - apps/document/seafile.yml
-  - apps/document/cloudreve.yml
   - apps/document/oxicloud.yml
+  - apps/document/bento.yml
+  - apps/document/etherpad.yml
+  - apps/document/bluefiles.yml
+  - apps/document/pdfding.yml
 
   - apps/games/wordle.yml
 
@@ -89,26 +83,29 @@ include:
   - apps/infra/traefik_k.yml
   - apps/infra/warden.yml
   - apps/infra/registry.yml
+  - apps/infra/dockscope.yml
+  - apps/infra/peekaping.yml
+  - apps/infra/autoheal.yml
+  - apps/infra/pulse.yml
 
+  - apps/media/arr.yml
   - apps/media/audiobookshelf.yml
-  - apps/media/bazarr.yml
   - apps/media/calibre.yml
   - apps/media/dawarich.yml
   - apps/media/immich.yml
   - apps/media/jellyfin.yml
-  - apps/media/lidarr.yml
   - apps/media/metube.yml
   - apps/media/navidrome.yml
-  - apps/media/prowlarr.yml
-  - apps/media/qbit.yml
-  - apps/media/radarr.yml
-  - apps/media/recyclarr.yml
-  - apps/media/sab.yml
-  - apps/media/seerr.yml
-  - apps/media/solverr.yml
-  - apps/media/sonarr.yml
+  - apps/media/download.yml
   - apps/media/tracearr.yml
-  - apps/media/booklore.yml
+  - apps/media/foldergram.yml
+  - apps/media/cinephage.yml
+  - apps/media/readmeabook.yml
+  - apps/media/grimmory.yml
+  - apps/media/ytp.yml
+  - apps/media/transcodarr.yml
+  - apps/media/mdrm.yml
+  - apps/media/mkvprio.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml
@@ -126,3 +123,12 @@ include:
   - apps/tools/tududi.yml
   - apps/tools/vikunja.yml
   - apps/tools/zulip.yml
+  - apps/tools/omnisearch.yml
+  - apps/tools/ops.yml
+  - apps/tools/affine.yml
+  - apps/tools/ideon.yml
+  - apps/tools/keeper.yml
+  - apps/tools/notediscovery.yml
+  - apps/tools/moocup.yml
+  - apps/tools/sure.yml
+  - apps/tools/nodebb.yml

@@ -34,7 +34,7 @@ services:
 
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Vaultwarden

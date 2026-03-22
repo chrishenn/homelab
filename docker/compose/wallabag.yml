@@ -1,0 +1,72 @@
+# depends on dozens of abandoned php packages. nope nope nope
+---
+services:
+  wallabag:
+    profiles: [wallabag]
+    image: wallabag/wallabag
+    container_name: wallabag
+    restart: unless-stopped
+    environment:
+      SYMFONY__ENV__DOMAIN_NAME: https://wallabag.chenn.dev
+      SYMFONY__ENV__SERVER_NAME: Chicken Wallabag
+
+      SYMFONY__ENV__MAILER_DSN: smtp://$SMTP_HOST
+      SYMFONY__ENV__FROM_EMAIL: $SMTP_USER
+
+      SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
+      SYMFONY__ENV__DATABASE_HOST: wallabag_db
+      SYMFONY__ENV__DATABASE_PORT: 5432
+      SYMFONY__ENV__DATABASE_NAME: wallabag
+      SYMFONY__ENV__DATABASE_USER: wallabag
+      SYMFONY__ENV__DATABASE_PASSWORD: wallabag
+
+      SYMFONY__ENV__REDIS_HOST: wallabag_redis
+
+    volumes:
+      - $DATA/wallabag/data:/var/www/wallabag/data
+      - $DATA/wallabag/images:/var/www/wallabag/web/assets/images
+    networks: [wallabag, newt]
+    labels:
+      pangolin.public-resources.wallabag.name: wallabag
+      pangolin.public-resources.wallabag.full-domain: wallabag.chenn.dev
+      pangolin.public-resources.wallabag.protocol: http
+      pangolin.public-resources.wallabag.ssl: true
+      pangolin.public-resources.wallabag.targets[0].method: http
+      pangolin.public-resources.wallabag.targets[0].port: 80
+      pangolin.public-resources.wallabag.auth.sso-enabled: true
+      pangolin.public-resources.wallabag.auth.sso-roles[0]: Member
+      pangolin.public-resources.wallabag.rules[0].action: pass
+      pangolin.public-resources.wallabag.rules[0].match: country
+      pangolin.public-resources.wallabag.rules[0].value: US
+      pangolin.public-resources.wallabag.rules[0].priority: 0
+      pangolin.public-resources.wallabag.rules[1].action: deny
+      pangolin.public-resources.wallabag.rules[1].match: country
+      pangolin.public-resources.wallabag.rules[1].value: ALL
+      pangolin.public-resources.wallabag.rules[1].priority: 10
+
+  wallabag_db:
+    profiles: [wallabag]
+    image: postgres:18-alpine
+    container_name: wallabag_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wallabag
+      POSTGRES_PASSWORD: wallabag
+
+    volumes:
+      - $DATA/wallabag/db:/var/lib/postgresql
+    networks: [wallabag]
+
+  wallabag_redis:
+    profiles: [wallabag]
+    image: redis:alpine
+    container_name: wallabag_redis
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 20s
+      timeout: 3s
+    networks: [wallabag]
+
+networks:
+  wallabag:

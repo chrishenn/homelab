@@ -4,6 +4,7 @@ services:
     profiles: [pgadmin]
     image: dpage/pgadmin4
     container_name: pgadmin
+    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PASS}

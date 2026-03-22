@@ -29,7 +29,7 @@ services:
       - '1900:1900/udp'
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8096']
-    networks: [traefik]
+    networks: [traefik, newt]
     labels:
       homepage.group: Media
       homepage.name: Jellyfin
@@ -52,6 +52,7 @@ services:
       pangolin.public-resources.jellyfin.targets[0].port: 8096
       pangolin.public-resources.jellyfin.auth.sso-enabled: true
       pangolin.public-resources.jellyfin.auth.sso-roles[0]: Member
+
       pangolin.public-resources.jellyfin.rules[0].action: pass
       pangolin.public-resources.jellyfin.rules[0].match: country
       pangolin.public-resources.jellyfin.rules[0].value: US

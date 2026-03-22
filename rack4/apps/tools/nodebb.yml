@@ -1,0 +1,50 @@
+---
+services:
+  nodebb:
+    profiles: [nodebb]
+    image: ghcr.io/nodebb/nodebb:latest
+    container_name: nodebb
+    restart: unless-stopped
+    user: root
+    volumes:
+      - $DATA/nodebb/build:/usr/src/app/build
+      - $DATA/nodebb/uploads:/usr/src/app/public/uploads
+      - $DATA/nodebb/config:/opt/config
+      - ./nodebb/config.json:/usr/src/app/setup.json
+    networks: [nodebb, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Nodebb
+      homepage.icon: nodebb.png
+      homepage.href: https://nodebb.chenn.dev
+      homepage.description: Forum
+
+      pangolin.public-resources.nodebb.name: nodebb
+      pangolin.public-resources.nodebb.full-domain: nodebb.chenn.dev
+      pangolin.public-resources.nodebb.protocol: http
+      pangolin.public-resources.nodebb.ssl: true
+      pangolin.public-resources.nodebb.targets[0].method: http
+      pangolin.public-resources.nodebb.targets[0].port: 4567
+      pangolin.public-resources.nodebb.auth.sso-enabled: true
+      pangolin.public-resources.nodebb.auth.sso-roles[0]: Member
+      pangolin.public-resources.nodebb.rules[0].action: pass
+      pangolin.public-resources.nodebb.rules[0].match: country
+      pangolin.public-resources.nodebb.rules[0].value: US
+      pangolin.public-resources.nodebb.rules[0].priority: 0
+      pangolin.public-resources.nodebb.rules[1].action: deny
+      pangolin.public-resources.nodebb.rules[1].match: country
+      pangolin.public-resources.nodebb.rules[1].value: ALL
+      pangolin.public-resources.nodebb.rules[1].priority: 10
+
+  nodebb_redis:
+    profiles: [nodebb]
+    image: redis:8-alpine
+    container_name: nodebb_redis
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes', '--loglevel', 'warning']
+    volumes:
+      - $DATA/nodebb/redis:/data
+    networks: [nodebb]
+
+networks:
+  nodebb:

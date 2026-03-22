@@ -10,20 +10,13 @@ services:
       ACCOUNT_REGISTRATION: true
     volumes:
       - $DATA/convertx:/app/data
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Converters
       homepage.name: Convertx
-      homepage.icon: vertiv-dark.png
+      homepage.icon: https://github.com/C4illin/ConvertX/raw/refs/heads/main/public/favicon.svg
       homepage.href: https://convertx.chenn.dev
       homepage.description: File Converter
-
-      traefik.enable: true
-      traefik.http.routers.convertx.rule: Host(`convertx.henn.dev`)
-      traefik.http.routers.convertx.entrypoints: websecure
-      traefik.http.routers.convertx.middlewares: hdrs@file
-      traefik.http.routers.convertx.tls.certresolver: cf
-      traefik.http.services.convertx.loadbalancer.server.port: 3000
 
       pangolin.public-resources.convertx.name: convertx
       pangolin.public-resources.convertx.full-domain: convertx.chenn.dev
@@ -33,6 +26,7 @@ services:
       pangolin.public-resources.convertx.targets[0].port: 3000
       pangolin.public-resources.convertx.auth.sso-enabled: true
       pangolin.public-resources.convertx.auth.sso-roles[0]: Member
+
       pangolin.public-resources.convertx.rules[0].action: pass
       pangolin.public-resources.convertx.rules[0].match: country
       pangolin.public-resources.convertx.rules[0].value: US

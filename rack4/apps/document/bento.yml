@@ -1,0 +1,36 @@
+---
+services:
+  bento:
+    profiles: [bento]
+    image: bentopdfteam/bentopdf:latest
+    container_name: bento
+    restart: unless-stopped
+    environment:
+      VITE_BRAND_NAME: Chicken Bento PDF
+      VITE_FOOTER_TEXT: '© 2026 Big Chicken Corp.'
+
+    networks: [newt]
+    labels:
+      homepage.group: File Editors
+      homepage.name: Bento PDF
+      homepage.icon: bentopdf.png
+      homepage.href: https://bento.chenn.dev
+      homepage.description: PDF Editing
+
+      pangolin.public-resources.bento.name: bento
+      pangolin.public-resources.bento.full-domain: bento.chenn.dev
+      pangolin.public-resources.bento.protocol: http
+      pangolin.public-resources.bento.ssl: true
+      pangolin.public-resources.bento.targets[0].method: http
+      pangolin.public-resources.bento.targets[0].port: 8080
+      pangolin.public-resources.bento.auth.sso-enabled: true
+      pangolin.public-resources.bento.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.bento.rules[0].action: pass
+      pangolin.public-resources.bento.rules[0].match: country
+      pangolin.public-resources.bento.rules[0].value: US
+      pangolin.public-resources.bento.rules[0].priority: 0
+      pangolin.public-resources.bento.rules[1].action: deny
+      pangolin.public-resources.bento.rules[1].match: country
+      pangolin.public-resources.bento.rules[1].value: ALL
+      pangolin.public-resources.bento.rules[1].priority: 10

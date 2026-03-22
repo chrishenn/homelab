@@ -1,0 +1,17 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
+
+SERVER_SECRET = { provider = "onepass", value = "op://homelab/vps0/pangolin_server_secret" }
+EMAIL_SMTP_PASS = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
+
+VPS0_BESZEL_KEY = { provider = "onepass", value = "op://homelab/vps0/beszel_key" }
+VPS0_BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/vps0/beszel_token" }
+VPS0_BESZEL_HUB_URL = { provider = "onepass", value = "op://homelab/vps0/beszel_hub_url" }
+
+MAXMIND_KEY = { provider = "onepass", value = "op://homelab/maxmind/license" }
+MAXMIND_ACCOUNT = { provider = "onepass", value = "op://homelab/maxmind/account_id" }

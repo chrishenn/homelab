@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rsync -a --progress --stats /mnt/q/media_library /mnt/f/backup/ || true
+# rsync -a --progress --stats /mnt/q/media_library /mnt/f/backup/ || true
 rsync -a --progress --stats /mnt/k/images /mnt/f/backup/ || true
 rsync -a --progress --stats /mnt/h/images /mnt/f/backup/ || true
 rsync -a --progress --stats /mnt/h/datasets /mnt/f/backup/ || true

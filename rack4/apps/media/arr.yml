@@ -1,0 +1,396 @@
+---
+services:
+  bazarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/bazarr:/config
+      - $MEDIA:/media_library
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Bazarr
+      homepage.icon: bazarr.png
+      homepage.href: https://bazarr.chenn.dev
+      homepage.description: Subtitle Manager
+
+      pangolin.public-resources.bazarr.name: bazarr
+      pangolin.public-resources.bazarr.full-domain: bazarr.chenn.dev
+      pangolin.public-resources.bazarr.protocol: http
+      pangolin.public-resources.bazarr.ssl: true
+      pangolin.public-resources.bazarr.targets[0].method: http
+      pangolin.public-resources.bazarr.targets[0].port: 6767
+      pangolin.public-resources.bazarr.auth.sso-enabled: true
+      pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.bazarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.bazarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.bazarr.rules[0].action: pass
+      pangolin.public-resources.bazarr.rules[0].match: country
+      pangolin.public-resources.bazarr.rules[0].value: US
+      pangolin.public-resources.bazarr.rules[0].priority: 0
+      pangolin.public-resources.bazarr.rules[1].action: deny
+      pangolin.public-resources.bazarr.rules[1].match: country
+      pangolin.public-resources.bazarr.rules[1].value: ALL
+      pangolin.public-resources.bazarr.rules[1].priority: 10
+
+  radarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      RADARR__AUTH__METHOD: External
+    volumes:
+      - $DATA/radarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Radarr
+      homepage.icon: radarr.png
+      homepage.href: https://radarr.chenn.dev
+      homepage.description: Movies
+
+      pangolin.public-resources.radarr.name: radarr
+      pangolin.public-resources.radarr.full-domain: radarr.chenn.dev
+      pangolin.public-resources.radarr.protocol: http
+      pangolin.public-resources.radarr.ssl: true
+      pangolin.public-resources.radarr.targets[0].method: http
+      pangolin.public-resources.radarr.targets[0].port: 7878
+      pangolin.public-resources.radarr.auth.sso-enabled: true
+      pangolin.public-resources.radarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.radarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.radarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.radarr.rules[0].action: allow
+      pangolin.public-resources.radarr.rules[0].match: path
+      pangolin.public-resources.radarr.rules[0].value: /api/*
+      pangolin.public-resources.radarr.rules[0].priority: 0
+      pangolin.public-resources.radarr.rules[1].action: pass
+      pangolin.public-resources.radarr.rules[1].match: country
+      pangolin.public-resources.radarr.rules[1].value: US
+      pangolin.public-resources.radarr.rules[1].priority: 10
+      pangolin.public-resources.radarr.rules[2].action: deny
+      pangolin.public-resources.radarr.rules[2].match: country
+      pangolin.public-resources.radarr.rules[2].value: ALL
+      pangolin.public-resources.radarr.rules[2].priority: 20
+
+  sonarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      SONARR__AUTH__METHOD: External
+    volumes:
+      - $DATA/sonarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Sonarr
+      homepage.icon: sonarr.png
+      homepage.href: https://sonarr.chenn.dev
+      homepage.description: TV
+
+      pangolin.public-resources.sonarr.name: sonarr
+      pangolin.public-resources.sonarr.full-domain: sonarr.chenn.dev
+      pangolin.public-resources.sonarr.protocol: http
+      pangolin.public-resources.sonarr.ssl: true
+      pangolin.public-resources.sonarr.targets[0].method: http
+      pangolin.public-resources.sonarr.targets[0].port: 8989
+      pangolin.public-resources.sonarr.auth.sso-enabled: true
+      pangolin.public-resources.sonarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.sonarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.sonarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.sonarr.rules[0].action: allow
+      pangolin.public-resources.sonarr.rules[0].match: path
+      pangolin.public-resources.sonarr.rules[0].value: /api/*
+      pangolin.public-resources.sonarr.rules[0].priority: 0
+      pangolin.public-resources.sonarr.rules[1].action: pass
+      pangolin.public-resources.sonarr.rules[1].match: country
+      pangolin.public-resources.sonarr.rules[1].value: US
+      pangolin.public-resources.sonarr.rules[1].priority: 10
+      pangolin.public-resources.sonarr.rules[2].action: deny
+      pangolin.public-resources.sonarr.rules[2].match: country
+      pangolin.public-resources.sonarr.rules[2].value: ALL
+      pangolin.public-resources.sonarr.rules[2].priority: 20
+
+  lidarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      LIDARR__AUTH__METHOD: External
+    volumes:
+      - $DATA/lidarr:/config
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Lidarr
+      homepage.icon: lidarr.png
+      homepage.href: https://lidarr.chenn.dev
+      homepage.description: Music Manager
+
+      pangolin.public-resources.lidarr.name: lidarr
+      pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev
+      pangolin.public-resources.lidarr.protocol: http
+      pangolin.public-resources.lidarr.ssl: true
+      pangolin.public-resources.lidarr.targets[0].method: http
+      pangolin.public-resources.lidarr.targets[0].port: 8686
+      pangolin.public-resources.lidarr.auth.sso-enabled: true
+      pangolin.public-resources.lidarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.lidarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.lidarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.lidarr.rules[0].action: allow
+      pangolin.public-resources.lidarr.rules[0].match: path
+      pangolin.public-resources.lidarr.rules[0].value: /api/*
+      pangolin.public-resources.lidarr.rules[0].priority: 0
+      pangolin.public-resources.lidarr.rules[1].action: pass
+      pangolin.public-resources.lidarr.rules[1].match: country
+      pangolin.public-resources.lidarr.rules[1].value: US
+      pangolin.public-resources.lidarr.rules[1].priority: 10
+      pangolin.public-resources.lidarr.rules[2].action: deny
+      pangolin.public-resources.lidarr.rules[2].match: country
+      pangolin.public-resources.lidarr.rules[2].value: ALL
+      pangolin.public-resources.lidarr.rules[2].priority: 20
+
+  seerr:
+    profiles: [arr]
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      LOG_LEVEL: debug
+    volumes:
+      - $DATA/seerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Seerr
+      homepage.icon: jellyseerr.png
+      homepage.href: https://seerr.chenn.dev
+      homepage.description: Media Requests
+
+      pangolin.public-resources.seerr.name: seerr
+      pangolin.public-resources.seerr.full-domain: seerr.chenn.dev
+      pangolin.public-resources.seerr.protocol: http
+      pangolin.public-resources.seerr.ssl: true
+      pangolin.public-resources.seerr.targets[0].method: http
+      pangolin.public-resources.seerr.targets[0].port: 5055
+      pangolin.public-resources.seerr.auth.sso-enabled: true
+      pangolin.public-resources.seerr.auth.sso-roles[0]: Member
+      pangolin.public-resources.seerr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.seerr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.seerr.rules[0].action: pass
+      pangolin.public-resources.seerr.rules[0].match: country
+      pangolin.public-resources.seerr.rules[0].value: US
+      pangolin.public-resources.seerr.rules[0].priority: 0
+      pangolin.public-resources.seerr.rules[1].action: deny
+      pangolin.public-resources.seerr.rules[1].match: country
+      pangolin.public-resources.seerr.rules[1].value: ALL
+      pangolin.public-resources.seerr.rules[1].priority: 10
+
+  prowlarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/prowlarr:/config
+    networks: [arr, newt, traefik]
+    labels:
+      homepage.group: Media
+      homepage.name: Prowlarr
+      homepage.icon: prowlarr.png
+      homepage.href: https://prowlarr.chenn.dev
+      homepage.description: Indexer Manager
+
+      # NZB360 apparently can't handle basic auth headers, even though they're in the settings
+      traefik.enable: true
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.middlewares: hdrs@file
+      traefik.http.routers.prowlarr.tls.certresolver: cf
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+      pangolin.public-resources.prowlarr.name: prowlarr
+      pangolin.public-resources.prowlarr.full-domain: prowlarr.chenn.dev
+      pangolin.public-resources.prowlarr.protocol: http
+      pangolin.public-resources.prowlarr.ssl: true
+      pangolin.public-resources.prowlarr.targets[0].method: http
+      pangolin.public-resources.prowlarr.targets[0].port: 9696
+      pangolin.public-resources.prowlarr.auth.sso-enabled: true
+      pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.prowlarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.prowlarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.prowlarr.rules[0].action: pass
+      pangolin.public-resources.prowlarr.rules[0].match: country
+      pangolin.public-resources.prowlarr.rules[0].value: US
+      pangolin.public-resources.prowlarr.rules[0].priority: 0
+      pangolin.public-resources.prowlarr.rules[1].action: deny
+      pangolin.public-resources.prowlarr.rules[1].match: country
+      pangolin.public-resources.prowlarr.rules[1].value: ALL
+      pangolin.public-resources.prowlarr.rules[1].priority: 10
+
+  mseerr:
+    profiles: [arr]
+    image: ghcr.io/habirabbu/musicseerr:latest
+    container_name: mseerr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: $TZ
+      PORT: 8688
+    volumes:
+      - $DATA/mseerr/config:/app/config
+      - $DATA/mseerr/cache:/app/cache
+      - $MEDIA/Music:/music:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8688/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Music Seerr
+      homepage.icon: https://github.com/HabiRabbu/Musicseerr/blob/main/Images/logo_icon.png?raw=true
+      homepage.href: https://mseerr.chenn.dev
+      homepage.description: Music Requests
+
+      pangolin.public-resources.mseerr.name: mseerr
+      pangolin.public-resources.mseerr.full-domain: mseerr.chenn.dev
+      pangolin.public-resources.mseerr.protocol: http
+      pangolin.public-resources.mseerr.ssl: true
+      pangolin.public-resources.mseerr.targets[0].method: http
+      pangolin.public-resources.mseerr.targets[0].port: 8688
+      pangolin.public-resources.mseerr.auth.sso-enabled: true
+      pangolin.public-resources.mseerr.auth.sso-roles[0]: Member
+      pangolin.public-resources.mseerr.rules[0].action: pass
+      pangolin.public-resources.mseerr.rules[0].match: country
+      pangolin.public-resources.mseerr.rules[0].value: US
+      pangolin.public-resources.mseerr.rules[0].priority: 0
+      pangolin.public-resources.mseerr.rules[1].action: deny
+      pangolin.public-resources.mseerr.rules[1].match: country
+      pangolin.public-resources.mseerr.rules[1].value: ALL
+      pangolin.public-resources.mseerr.rules[1].priority: 10
+
+  aurral:
+    profiles: [arr]
+    image: ghcr.io/lklynet/aurral:latest
+    container_name: aurral
+    restart: unless-stopped
+    environment:
+      DOWNLOAD_FOLDER: /app/downloads
+    volumes:
+      - $DATA/aurral/downloads:/app/downloads
+      - $DATA/aurral/data:/app/backend/data
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Aurral
+      homepage.icon: aurral.png
+      homepage.href: https://aurral.chenn.dev
+      homepage.description: Music Recommendations
+
+      pangolin.public-resources.aurral.name: aurral
+      pangolin.public-resources.aurral.full-domain: aurral.chenn.dev
+      pangolin.public-resources.aurral.protocol: http
+      pangolin.public-resources.aurral.ssl: true
+      pangolin.public-resources.aurral.targets[0].method: http
+      pangolin.public-resources.aurral.targets[0].port: 3001
+      pangolin.public-resources.aurral.auth.sso-enabled: true
+      pangolin.public-resources.aurral.auth.sso-roles[0]: Member
+      pangolin.public-resources.aurral.rules[0].action: pass
+      pangolin.public-resources.aurral.rules[0].match: country
+      pangolin.public-resources.aurral.rules[0].value: US
+      pangolin.public-resources.aurral.rules[0].priority: 0
+      pangolin.public-resources.aurral.rules[1].action: deny
+      pangolin.public-resources.aurral.rules[1].match: country
+      pangolin.public-resources.aurral.rules[1].value: ALL
+      pangolin.public-resources.aurral.rules[1].priority: 10
+
+  doplarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/doplarr:latest
+    container_name: doplarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+      DISCORD__TOKEN: ${DOPLARR_BOT_TOKEN}
+      SONARR__URL: ${SONARR_URL}
+      SONARR__API: ${SONARR_KEY}
+      RADARR__URL: ${RADARR_URL}
+      RADARR__API: ${RADARR_KEY}
+      OVERSEERR__API:
+      OVERSEERR__URL:
+
+      DISCORD__MAX_RESULTS: 25
+      DISCORD__REQUESTED_MSG_STYLE: :plain
+      SONARR__QUALITY_PROFILE:
+      RADARR__QUALITY_PROFILE:
+      SONARR__ROOTFOLDER:
+      RADARR__ROOTFOLDER:
+      SONARR__LANGUAGE_PROFILE:
+      OVERSEERR__DEFAULT_ID:
+      PARTIAL_SEASONS: true
+      LOG_LEVEL: :info
+      JAVA_OPTS:
+    volumes:
+      - $DATA/doplarr/config:/config
+    networks: [arr]
+
+  recyclarr:
+    profiles: [arr]
+    image: ghcr.io/recyclarr/recyclarr:latest
+    container_name: recyclarr
+    restart: unless-stopped
+    user: $PUID:$PGID
+    volumes:
+      - ./recyclarr:/config
+    environment:
+      TZ: $TZ
+      RECYCLARR_CREATE_CONFIG: true
+      RADARR_URL: ${RADARR_URL}
+      RADARR_KEY: ${RADARR_KEY}
+      SONARR_URL: ${SONARR_URL}
+      SONARR_KEY: ${SONARR_KEY}
+    networks: [arr]
+
+networks:
+  arr:

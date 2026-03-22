@@ -24,7 +24,7 @@ services:
         condition: service_healthy
       tracearr_redis:
         condition: service_healthy
-    networks: [tracearr, traefik]
+    networks: [tracearr, newt, arr]
     labels:
       homepage.group: Media
       homepage.name: Tracearr
@@ -40,6 +40,7 @@ services:
       pangolin.public-resources.tracearr.targets[0].port: 3000
       pangolin.public-resources.tracearr.auth.sso-enabled: true
       pangolin.public-resources.tracearr.auth.sso-roles[0]: Member
+
       pangolin.public-resources.tracearr.rules[0].action: pass
       pangolin.public-resources.tracearr.rules[0].match: country
       pangolin.public-resources.tracearr.rules[0].value: US

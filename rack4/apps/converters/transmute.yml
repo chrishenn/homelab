@@ -5,22 +5,22 @@ services:
     image: ghcr.io/transmute-app/transmute:main
     container_name: transmute
     restart: unless-stopped
+    environment:
+      OIDC_ISSUER_URL: ${OIDC}
+      OIDC_CLIENT_ID: ${TRANSMUTE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${TRANSMUTE_OIDC_SECRET}
+      OIDC_DISPLAY_NAME: Pocket ID
+      OIDC_AUTO_CREATE_USERS: true
+      OIDC_AUTO_LAUNCH: true
     volumes:
       - $DATA/transmute:/app/data
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Converters
       homepage.name: Transmute
-      homepage.icon: vertiv.png
+      homepage.icon: https://github.com/transmute-app/transmute/raw/refs/heads/main/assets/samples/svg.svg
       homepage.href: https://transmute.chenn.dev
       homepage.description: File Converters
-
-      traefik.enable: true
-      traefik.http.routers.transmute.rule: Host(`transmute.henn.dev`)
-      traefik.http.routers.transmute.entrypoints: websecure
-      traefik.http.routers.transmute.middlewares: hdrs@file
-      traefik.http.routers.transmute.tls.certresolver: cf
-      traefik.http.services.transmute.loadbalancer.server.port: 3313
 
       pangolin.public-resources.transmute.name: transmute
       pangolin.public-resources.transmute.full-domain: transmute.chenn.dev
@@ -30,6 +30,7 @@ services:
       pangolin.public-resources.transmute.targets[0].port: 3313
       pangolin.public-resources.transmute.auth.sso-enabled: true
       pangolin.public-resources.transmute.auth.sso-roles[0]: Member
+
       pangolin.public-resources.transmute.rules[0].action: pass
       pangolin.public-resources.transmute.rules[0].match: country
       pangolin.public-resources.transmute.rules[0].value: US

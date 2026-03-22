@@ -1,0 +1,202 @@
+---
+services:
+  qui:
+    profiles: [download]
+    image: ghcr.io/autobrr/qui:latest
+    container_name: qui
+    restart: unless-stopped
+    environment:
+      QUI__OIDC_ISSUER: $OIDC
+      QUI__OIDC_ENABLED: true
+      QUI__OIDC_CLIENT_ID: $QUI_OIDC_CLIENT
+      QUI__OIDC_CLIENT_SECRET: $QUI_OIDC_SECRET
+      QUI__OIDC_REDIRECT_URL: https://qui.chenn.dev/api/auth/oidc/callback
+      QUI__OIDC_DISABLE_BUILT_IN_LOGIN: true
+    volumes:
+      - $DATA/qui/config:/config
+      - $DATA/qui/torrents:/data/torrents
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $DATA/qbit_novpn:/qbit_novpn/downloads
+    healthcheck:
+      test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
+    networks: [newt, arr]
+    labels:
+      homepage.group: Media
+      homepage.name: Qui
+      homepage.icon: qui.png
+      homepage.href: https://qui.chenn.dev
+      homepage.description: Bittorrent GUI
+
+      pangolin.public-resources.qui.name: qui
+      pangolin.public-resources.qui.full-domain: qui.chenn.dev
+      pangolin.public-resources.qui.protocol: http
+      pangolin.public-resources.qui.ssl: true
+      pangolin.public-resources.qui.targets[0].method: http
+      pangolin.public-resources.qui.targets[0].port: 7476
+      pangolin.public-resources.qui.auth.sso-enabled: true
+      pangolin.public-resources.qui.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.qui.rules[0].action: pass
+      pangolin.public-resources.qui.rules[0].match: country
+      pangolin.public-resources.qui.rules[0].value: US
+      pangolin.public-resources.qui.rules[0].priority: 0
+      pangolin.public-resources.qui.rules[1].action: deny
+      pangolin.public-resources.qui.rules[1].match: country
+      pangolin.public-resources.qui.rules[1].value: ALL
+      pangolin.public-resources.qui.rules[1].priority: 10
+
+  gluetun:
+    profiles: [download]
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: unless-stopped
+    hostname: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      Timezone: $TZ
+      UPDATER_PERIOD: 24h
+      VPN_TYPE: wireguard
+      VPN_SERVICE_PROVIDER: protonvpn
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      SERVER_COUNTRIES: 'United States,Canada'
+    networks: [traefik, arr]
+    labels:
+      autoheal: true
+
+      homepage.instance.private.group: Media
+      homepage.instance.private.name: Gluetun
+      homepage.instance.private.icon: gluetun.png
+      homepage.instance.private.description: Qbittorrent VPN Tunnel
+
+      traefik.enable: true
+      traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
+      traefik.http.routers.qbit.entrypoints: websecure
+      traefik.http.routers.qbit.middlewares: hdrs@file
+      traefik.http.routers.qbit.tls.certresolver: cf
+      traefik.http.services.qbit.loadbalancer.server.port: 8080
+    ports:
+      - '6888:6888/tcp'
+      - '6888:6888/udp'
+      - '8388:8388/tcp'
+      - '8388:8388/udp'
+      - '8888:8888/tcp'
+      - '51413:51413/tcp'
+      - '51413:51413/udp'
+
+  qbit_vpn:
+    profiles: [download]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_vpn
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit/config:/config
+      - $DATA/qbit/downloads:/qbit/downloads
+    depends_on:
+      - gluetun
+    network_mode: service:gluetun
+    labels:
+      autoheal: true
+
+      homepage.instance.private.group: Media
+      homepage.instance.private.name: Qbittorrent (VPN)
+      homepage.instance.private.icon: qbittorrent.png
+      homepage.instance.private.href: https://vpn.qbit.henn.dev
+      homepage.instance.private.description: VPN Torrents
+
+  qbit_novpn:
+    profiles: [download]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_novpn
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit_novpn:/config
+      - $DATA/qbit_novpn:/qbit_novpn/downloads
+    networks: [traefik, arr]
+    labels:
+      autoheal: true
+
+      homepage.instance.private.group: Media
+      homepage.instance.private.name: QBittorrent (No VPN)
+      homepage.instance.private.icon: qbittorrent.png
+      homepage.instance.private.href: https://novpn.qbit.henn.dev
+      homepage.instance.private.description: Non-Vpn Torrents
+
+      traefik.enable: true
+      traefik.http.routers.qbit_novpn.rule: Host(`novpn.qbit.henn.dev`)
+      traefik.http.routers.qbit_novpn.entrypoints: websecure
+      traefik.http.routers.qbit_novpn.middlewares: hdrs@file
+      traefik.http.routers.qbit_novpn.tls.certresolver: cf
+      traefik.http.services.qbit_novpn.loadbalancer.server.port: 8080
+
+  sab:
+    profiles: [download]
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sab
+    restart: unless-stopped
+    hostname: sab
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/sab/incomplete:/incomplete
+      - $DATA/sab/config:/config
+    networks: [newt, arr]
+    labels:
+      homepage.group: Media
+      homepage.name: Sab
+      homepage.icon: sabnzbd.png
+      homepage.href: https://sab.chenn.dev
+      homepage.description: Usenet Downloads
+
+      pangolin.public-resources.sab.name: sab
+      pangolin.public-resources.sab.full-domain: sab.chenn.dev
+      pangolin.public-resources.sab.protocol: http
+      pangolin.public-resources.sab.ssl: true
+      pangolin.public-resources.sab.targets[0].method: http
+      pangolin.public-resources.sab.targets[0].port: 8080
+      pangolin.public-resources.sab.auth.sso-enabled: true
+      pangolin.public-resources.sab.auth.sso-roles[0]: Member
+      pangolin.public-resources.sab.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.sab.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.sab.rules[0].action: pass
+      pangolin.public-resources.sab.rules[0].match: country
+      pangolin.public-resources.sab.rules[0].value: US
+      pangolin.public-resources.sab.rules[0].priority: 0
+      pangolin.public-resources.sab.rules[1].action: deny
+      pangolin.public-resources.sab.rules[1].match: country
+      pangolin.public-resources.sab.rules[1].value: ALL
+      pangolin.public-resources.sab.rules[1].priority: 10
+
+  solverr:
+    profiles: [download]
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: solverr
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      LOG_LEVEL: info
+      LOG_HTML: false
+      CAPTCHA_SOLVER: none
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
+    networks: [arr]

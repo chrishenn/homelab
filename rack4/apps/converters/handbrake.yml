@@ -5,11 +5,12 @@ services:
     profiles: [handbrake]
     image: ghcr.io/thenickoftime/handbrake-web-server:latest
     container_name: handbrake
+    restart: unless-stopped
     user: $PUID:$PGID
     volumes:
       - $DATA/handbrake/data:/data
       - $DATA/handbrake/convert:/video
-    networks: [handbrake, newt]
+    networks: [handbrake, traefik, newt]
     labels:
       homepage.group: File Converters
       homepage.name: Handbrake
@@ -32,6 +33,7 @@ services:
       pangolin.public-resources.handbrake.targets[0].port: 9999
       pangolin.public-resources.handbrake.auth.sso-enabled: true
       pangolin.public-resources.handbrake.auth.sso-roles[0]: Member
+
       pangolin.public-resources.handbrake.rules[0].action: pass
       pangolin.public-resources.handbrake.rules[0].match: country
       pangolin.public-resources.handbrake.rules[0].value: US
@@ -45,6 +47,7 @@ services:
     profiles: [handbrake]
     image: ghcr.io/thenickoftime/handbrake-web-worker:latest
     container_name: handbrake_worker
+    restart: unless-stopped
     user: $PUID:$PGID
     deploy:
       resources:

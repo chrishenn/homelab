@@ -1,0 +1,88 @@
+# admin portal: grimmory.chenn.dev/login?local=true
+---
+x-grimmory_env: &grimmory_env
+  USER_ID: ${PUID}
+  GROUP_ID: ${PGID}
+  PUID: ${PUID}
+  PGID: ${PGID}
+  TZ: ${TZ}
+  API_DOCS_ENABLED: false
+  DISK_TYPE: LOCAL
+  SWAGGER_ENABLED: false
+  FORCE_DISABLE_OIDC: false
+  ALLOWED_ORIGINS: grimmory.chenn.dev
+
+  DATABASE_URL: jdbc:mariadb://grimmory_db:3306/grimmory
+  DATABASE_USERNAME: grimmory
+  DATABASE_PASSWORD: grimmory
+
+  MYSQL_DATABASE: grimmory
+  MYSQL_USER: grimmory
+  MYSQL_PASSWORD: grimmory
+  MYSQL_ROOT_PASSWORD: grimmory
+
+services:
+  grimmory:
+    profiles: [grimmory]
+    image: grimmory/grimmory:latest
+    container_name: grimmory
+    restart: unless-stopped
+    environment:
+      <<: *grimmory_env
+
+    volumes:
+      - $DATA/grimmory/data:/app/data
+      - $DATA/grimmory/books:/books
+      - $DATA/grimmory/bookdrop:/bookdrop
+    depends_on:
+      grimmory_db:
+        condition: service_healthy
+    healthcheck:
+      test: wget -q -O - http://localhost:6060/api/v1/healthcheck
+      interval: 60s
+      retries: 5
+      start_period: 60s
+      timeout: 10s
+    networks: [grimmory, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: grimmory
+      homepage.icon: booklore.png
+      homepage.href: https://grimmory.chenn.dev
+      homepage.description: Book Server
+
+      pangolin.public-resources.grimmory.name: grimmory
+      pangolin.public-resources.grimmory.full-domain: grimmory.chenn.dev
+      pangolin.public-resources.grimmory.protocol: http
+      pangolin.public-resources.grimmory.ssl: true
+      pangolin.public-resources.grimmory.targets[0].method: http
+      pangolin.public-resources.grimmory.targets[0].port: 6060
+      pangolin.public-resources.grimmory.auth.sso-enabled: true
+      pangolin.public-resources.grimmory.auth.sso-roles[0]: Member
+      pangolin.public-resources.grimmory.rules[0].action: pass
+      pangolin.public-resources.grimmory.rules[0].match: country
+      pangolin.public-resources.grimmory.rules[0].value: US
+      pangolin.public-resources.grimmory.rules[0].priority: 0
+      pangolin.public-resources.grimmory.rules[1].action: deny
+      pangolin.public-resources.grimmory.rules[1].match: country
+      pangolin.public-resources.grimmory.rules[1].value: ALL
+      pangolin.public-resources.grimmory.rules[1].priority: 10
+
+  grimmory_db:
+    profiles: [grimmory]
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: grimmory_db
+    restart: unless-stopped
+    environment:
+      <<: *grimmory_env
+    volumes:
+      - $DATA/grimmory/db/config:/config
+    healthcheck:
+      test: ['CMD', 'mariadb-admin', 'ping', '-h', 'localhost']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [grimmory]
+
+networks:
+  grimmory:

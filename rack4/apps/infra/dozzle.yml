@@ -6,7 +6,7 @@ services:
     container_name: dozzle
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [traefik]
     labels:
       homepage.instance.private.group: Infra

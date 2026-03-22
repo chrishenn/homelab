@@ -1,5 +1,38 @@
 ---
 services:
+  registry_ui:
+    profiles: [registry]
+    image: ghcr.io/eznix86/docker-registry-ui:latest
+    container_name: registry_ui
+    restart: unless-stopped
+    environment:
+      REGISTRY_URL: http://registry_docker:5000
+      REGISTRY_AUTH:
+    networks: [newt, traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Docker Registry UI
+      homepage.icon: docker.png
+      homepage.href: https://registry_ui.chenn.dev
+      homepage.description: Docker Registry UI
+
+      pangolin.public-resources.reg_ui.name: reg_ui
+      pangolin.public-resources.reg_ui.full-domain: reg_ui.chenn.dev
+      pangolin.public-resources.reg_ui.protocol: http
+      pangolin.public-resources.reg_ui.ssl: true
+      pangolin.public-resources.reg_ui.targets[0].method: http
+      pangolin.public-resources.reg_ui.targets[0].port: 80
+      pangolin.public-resources.reg_ui.auth.sso-enabled: true
+      pangolin.public-resources.reg_ui.auth.sso-roles[0]: Member
+      pangolin.public-resources.reg_ui.rules[0].action: pass
+      pangolin.public-resources.reg_ui.rules[0].match: country
+      pangolin.public-resources.reg_ui.rules[0].value: US
+      pangolin.public-resources.reg_ui.rules[0].priority: 0
+      pangolin.public-resources.reg_ui.rules[1].action: deny
+      pangolin.public-resources.reg_ui.rules[1].match: country
+      pangolin.public-resources.reg_ui.rules[1].value: ALL
+      pangolin.public-resources.reg_ui.rules[1].priority: 10
+
   registry_docker:
     profiles: [registry]
     image: registry:2

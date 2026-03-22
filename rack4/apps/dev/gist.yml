@@ -14,20 +14,13 @@ services:
       - $DATA/gist:/opengist
     healthcheck:
       test: ['CMD', 'curl', '-fs', 'http://localhost:6157/healthcheck']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Dev
       homepage.name: OpenGist
       homepage.icon: opengist.png
       homepage.href: https://gist.chenn.dev
       homepage.description: Private Gists
-
-      traefik.enable: true
-      traefik.http.routers.gist.rule: Host(`gist.henn.dev`)
-      traefik.http.routers.gist.entrypoints: websecure
-      traefik.http.routers.gist.middlewares: hdrs@file
-      traefik.http.routers.gist.tls.certresolver: cf
-      traefik.http.services.gist.loadbalancer.server.port: 6157
 
       pangolin.public-resources.gist.name: gist
       pangolin.public-resources.gist.full-domain: gist.chenn.dev
@@ -37,6 +30,7 @@ services:
       pangolin.public-resources.gist.targets[0].port: 6157
       pangolin.public-resources.gist.auth.sso-enabled: true
       pangolin.public-resources.gist.auth.sso-roles[0]: Member
+
       pangolin.public-resources.gist.rules[0].action: pass
       pangolin.public-resources.gist.rules[0].match: country
       pangolin.public-resources.gist.rules[0].value: US

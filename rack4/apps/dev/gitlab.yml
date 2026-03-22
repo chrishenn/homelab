@@ -111,7 +111,7 @@ services:
       - $DATA/gitlab/data:/var/opt/gitlab
       - $DATA/gitlab/logs:/var/log/gitlab
       - $DATA/gitlab/config:/etc/gitlab
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Dev
       homepage.name: Gitlab

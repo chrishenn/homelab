@@ -1,0 +1,61 @@
+---
+services:
+  bluefiles:
+    profiles: [bluefiles]
+    image: ghcr.io/bludood/files:latest
+    container_name: bluefiles
+    restart: unless-stopped
+    volumes:
+      - $DATA/bluefiles/data:/data
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@bluefiles_db:5432/postgres
+      STORAGE_DIR: /data
+      TRUST_PROXY: true
+    depends_on:
+      bluefiles_db:
+        condition: service_healthy
+    networks: [bluefiles, newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: BluFiles
+      homepage.icon: https://github.com/BluDood/BluFiles/blob/main/web/static/assets/BluFiles.png?raw=true
+      homepage.href: https://bluefiles.chenn.dev
+      homepage.description: File Browser
+
+      pangolin.public-resources.bluefiles.name: bluefiles
+      pangolin.public-resources.bluefiles.full-domain: bluefiles.chenn.dev
+      pangolin.public-resources.bluefiles.protocol: http
+      pangolin.public-resources.bluefiles.ssl: true
+      pangolin.public-resources.bluefiles.targets[0].method: http
+      pangolin.public-resources.bluefiles.targets[0].port: 1337
+      pangolin.public-resources.bluefiles.auth.sso-enabled: true
+      pangolin.public-resources.bluefiles.auth.sso-roles[0]: Member
+      pangolin.public-resources.bluefiles.rules[0].action: pass
+      pangolin.public-resources.bluefiles.rules[0].match: country
+      pangolin.public-resources.bluefiles.rules[0].value: US
+      pangolin.public-resources.bluefiles.rules[0].priority: 0
+      pangolin.public-resources.bluefiles.rules[1].action: deny
+      pangolin.public-resources.bluefiles.rules[1].match: country
+      pangolin.public-resources.bluefiles.rules[1].value: ALL
+      pangolin.public-resources.bluefiles.rules[1].priority: 10
+
+  bluefiles_db:
+    profiles: [bluefiles]
+    image: postgres:18-alpine
+    container_name: bluefiles_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - $DATA/bluefiles/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [bluefiles]
+
+networks:
+  bluefiles:

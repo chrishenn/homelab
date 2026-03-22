@@ -1,0 +1,71 @@
+---
+services:
+  etherpad:
+    profiles: [etherpad]
+    image: ghcr.io/ether/etherpad-go:develop
+    container_name: etherpad
+    restart: unless-stopped
+    environment:
+      ETHERPAD_PLUGINS_EP_ALIGN_ENABLED: true
+      ETHERPAD_PLUGINS_EP_CURSORTRACE_ENABLED: true
+      ETHERPAD_PLUGINS_EP_CLEAR_FORMATTING_ENABLED: true
+      ETHERPAD_PLUGINS_EP_FONT_COLOR_ENABLED: true
+      ETHERPAD_PLUGINS_EP_FONT_FAMILY_ENABLED: true
+      ETHERPAD_PLUGINS_EP_FONT_SIZE_ENABLED: true
+      ETHERPAD_PLUGINS_EP_HEADING_ENABLED: true
+      ETHERPAD_PLUGINS_EP_MARKDOWN_ENABLED: true
+      ETHERPAD_PLUGINS_EP_PRINT_ENABLED: true
+      ETHERPAD_PLUGINS_EP_SPELLCHECK_ENABLED: true
+
+      ETHERPAD_DBTYPE: postgres
+      ETHERPAD_DBSETTINGS_HOST: etherpad_db
+      ETHERPAD_DBSETTINGS_PORT: 5432
+      ETHERPAD_DBSETTINGS_DATABASE: mydb
+      ETHERPAD_DBSETTINGS_USER: myuser
+      ETHERPAD_DBSETTINGS_PASSWORD: mypassword
+
+    networks: [etherpad, newt]
+    labels:
+      homepage.group: File Editors
+      homepage.name: Etherpad
+      homepage.icon: etherpad.png
+      homepage.href: https://etherpad.chenn.dev
+      homepage.description: Realtime Document Editor
+
+      pangolin.public-resources.etherpad.name: etherpad
+      pangolin.public-resources.etherpad.full-domain: etherpad.chenn.dev
+      pangolin.public-resources.etherpad.protocol: http
+      pangolin.public-resources.etherpad.ssl: true
+      pangolin.public-resources.etherpad.targets[0].method: http
+      pangolin.public-resources.etherpad.targets[0].port: 9001
+      pangolin.public-resources.etherpad.auth.sso-enabled: true
+      pangolin.public-resources.etherpad.auth.sso-roles[0]: Member
+      pangolin.public-resources.etherpad.rules[0].action: pass
+      pangolin.public-resources.etherpad.rules[0].match: country
+      pangolin.public-resources.etherpad.rules[0].value: US
+      pangolin.public-resources.etherpad.rules[0].priority: 0
+      pangolin.public-resources.etherpad.rules[1].action: deny
+      pangolin.public-resources.etherpad.rules[1].match: country
+      pangolin.public-resources.etherpad.rules[1].value: ALL
+      pangolin.public-resources.etherpad.rules[1].priority: 10
+
+  etherpad_db:
+    profiles: [etherpad]
+    image: postgres:18-alpine
+    container_name: etherpad_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - $DATA/etherpad/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U myuser -d mydb || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [etherpad]
+
+networks:
+  etherpad:

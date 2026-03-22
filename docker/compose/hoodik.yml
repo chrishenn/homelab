@@ -1,4 +1,4 @@
-# addresserror in the logs - no idea what it's from. not cooked yet
+# it looks like you'll need to build from source to get this to work at all
 ---
 services:
   hoodik:
@@ -8,19 +8,23 @@ services:
     restart: unless-stopped
     environment:
       APP_URL: https://hoodik.chenn.dev
-      HTTP_ADDRESS: 0.0.0.0
+      APP_CLIENT_URL: https://hoodik.chenn.dev
       HTTP_PORT: 5443
+      HTTP_ADDRESS: 0.0.0.0
       SSL_DISABLED: true
-      DATABASE_URL: postgresql://hoodik:hoodik@hoodik_pg:5432/hoodik
+
+      DATABASE_URL: postgresql://postgres:postgres@hoodik_db:5432/postgres
+      STORAGE_PROVIDER: local
       DATA_DIR: /data
+
       MAILER_TYPE: smtp
-      SMTP_ADDRESS: $SMTP_HOST
-      SMTP_USERNAME: $SMTP_USER
-      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_ADDRESS: ${SMTP_HOST}
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_TOKEN}
       SMTP_PORT: 465
     volumes:
       - $DATA/hoodik/data:/data
-    networks: [newt, hoodik]
+    networks: [hoodik, newt]
     labels:
       pangolin.public-resources.hoodik.name: hoodik
       pangolin.public-resources.hoodik.protocol: http
@@ -29,7 +33,7 @@ services:
       pangolin.public-resources.hoodik.targets[0].method: http
       pangolin.public-resources.hoodik.targets[0].port: 5443
       pangolin.public-resources.hoodik.auth.sso-enabled: true
-      pangolin.public-resources.hoodik.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.hoodik.auth.sso-roles[0]: Member
       pangolin.public-resources.hoodik.rules[0].action: pass
       pangolin.public-resources.hoodik.rules[0].match: country
       pangolin.public-resources.hoodik.rules[0].value: US
@@ -39,17 +43,20 @@ services:
       pangolin.public-resources.hoodik.rules[1].value: ALL
       pangolin.public-resources.hoodik.rules[1].priority: 10
 
-  hoodik_pg:
+  hoodik_db:
     profiles: [hoodik]
     image: postgres:18-alpine
-    container_name: hoodik_pg
-    restart: unless-stopped
     environment:
-      POSTGRES_USER: hoodik
-      POSTGRES_DB: hoodik
-      POSTGRES_PASSWORD: hoodik
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - $DATA/hoodik/pg:/var/lib/postgresql
+      - $DATA/hoodik/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [hoodik]
 
 networks:

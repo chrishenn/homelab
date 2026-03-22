@@ -46,20 +46,13 @@ services:
         condition: service_healthy
       n8n_postgres:
         condition: service_healthy
-    networks: [n8n, traefik]
+    networks: [n8n, newt]
     labels:
       homepage.group: AI
       homepage.name: N8n
       homepage.icon: n8n.png
       homepage.href: https://n8n.chenn.dev
       homepage.description: GUI Data Flow
-
-      traefik.enable: true
-      traefik.http.routers.n8n.rule: Host(`n8n.henn.dev`)
-      traefik.http.routers.n8n.entrypoints: websecure
-      traefik.http.routers.n8n.middlewares: hdrs@file
-      traefik.http.routers.n8n.tls.certresolver: cf
-      traefik.http.services.n8n.loadbalancer.server.port: 5678
 
       pangolin.public-resources.n8n.name: n8n
       pangolin.public-resources.n8n.full-domain: n8n.chenn.dev
@@ -69,6 +62,7 @@ services:
       pangolin.public-resources.n8n.targets[0].port: 5678
       pangolin.public-resources.n8n.auth.sso-enabled: true
       pangolin.public-resources.n8n.auth.sso-roles[0]: Member
+
       pangolin.public-resources.n8n.rules[0].action: pass
       pangolin.public-resources.n8n.rules[0].match: country
       pangolin.public-resources.n8n.rules[0].value: US

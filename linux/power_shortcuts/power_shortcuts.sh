@@ -2,7 +2,7 @@
 
 sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
 
-function pwr_install {
+function power_install {
 	# copy files over the installed ones
 	sudo chmod a+x $sdir/pwr/*.sh
 	cp -f $sdir/pwr/* $HOME/.local/share/applications/

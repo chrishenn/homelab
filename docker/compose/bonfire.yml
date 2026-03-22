@@ -1,0 +1,131 @@
+# this is a turbo-nerd research project, which is not really ready for prod
+# the server is constantly asking for too many dbconnections. why
+---
+x-bonfire_env: &bonfire_env
+  HOSTNAME: bonfire.chenn.dev
+  SERVER_PORT: 4000
+  PUBLIC_PORT: 80
+  PLUG_SERVER: cowboy
+  ENABLE_SSO_PROVIDER: false
+
+  FLAVOUR: community
+  WITH_DOCKER: total
+  MIX_ENV: prod
+  ENV_ENV: prod
+  CI: false
+  APP_NAME: Chicken Bonfire
+  APP_DOCKER_REPO: bonfirenetworks/bonfire
+  APP_DOCKER_REPO_ALT: "ghcr.io/bonfire-networks/bonfire-app"
+  ARCH: amd64
+  NUM_CPU: 32
+  PG_MAX_CONNECTIONS: 300
+
+  UPLOAD_LIMIT: 20
+  UPLOAD_LIMIT_IMAGES: 5
+  UPLOAD_LIMIT_VIDEOS: 20
+
+  POSTGRES_HOST: bonfire_db
+  SEARCH_MEILI_INSTANCE: http://bonfire_meili:7700
+  POSTGRES_USER: postgres
+  POSTGRES_DB: bonfire_db
+  DB_MIGRATE_INDEXES_CONCURRENTLY: false
+  
+  LANG: en_US.UTF-8
+  LANGUAGE: en_US.UTF-8
+  ACME_AGREE: true
+  REPLACE_OS_VARS: true
+  
+  LIVEVIEW_ENABLED: true
+  WITH_API_GRAPHQL: 1
+  WITH_LV_NATIVE: 0
+  WITH_IMAGE_VIX: 0
+  WITH_AI: 0
+  SHOW_DEBUG_IN_DEV: true
+
+  SECRET_KEY_BASE:  <set>
+  SIGNING_SALT: <set>
+  ENCRYPTION_SALT: <set>
+  ERLANG_COOKIE: <set>
+  POSTGRES_PASSWORD: <set>
+  MEILI_MASTER_KEY: <set>
+
+  MAIL_BACKEND: smtp
+  MAIL_DOMAIN: $SMTP_HOST
+  MAIL_KEY: $SMTP_TOKEN
+  MAIL_FROM: $SMTP_USER
+
+  OPENID_1_DISCOVERY: https://pocketid.chenn.dev/.well-known/openid-configuration
+  OPENID_1_DISPLAY_NAME: Pocket ID
+  OPENID_1_CLIENT_ID: ${BONFIRE_OIDC_CLIENT}
+  OPENID_1_CLIENT_SECRET: ${BONFIRE_OIDC_SECRET}
+  OPENID_1_SCOPE: openid profile email groups
+  OPENID_1_RESPONSE_TYPE: code
+  # ^ can be code, token or id_token
+
+  OTEL_ENABLED: 0
+  SEEDS_USER: root
+
+  WEB_PUSH_SUBJECT: mailto:bonfire@example.com
+  # WEB_PUSH_PUBLIC_KEY: 
+  # WEB_PUSH_PRIVATE_KEY: 
+  # GEOLOCATE_OPENCAGEDATA: 
+  MAPBOX_API_KEY: pk.eyJ1IjoibWF5ZWwiLCJhIjoiY2tlMmxzNXF5MGFpaDJ0bzR2M29id2EzOCJ9.QsmjD-zypsE0_wonLGCYlA
+  # GITHUB_TOKEN: 
+  # TX_TOKEN: 
+  # AKISMET_API_KEY: 
+
+services:
+  bonfire:
+    profiles: [bonfire]
+    image: bonfirenetworks/bonfire:latest-alpha-community-amd64
+    container_name: bonfire
+    restart: unless-stopped
+    environment:
+      <<: *bonfire_env
+    volumes:
+      - $DATA/bonfire/uploads:/opt/app/data/uploads
+    networks: [bonfire, newt]
+    labels:
+      pangolin.public-resources.bonfire.name: bonfire
+      pangolin.public-resources.bonfire.full-domain: bonfire.chenn.dev
+      pangolin.public-resources.bonfire.protocol: http
+      pangolin.public-resources.bonfire.ssl: true
+      pangolin.public-resources.bonfire.targets[0].method: http
+      pangolin.public-resources.bonfire.targets[0].port: 4000
+      pangolin.public-resources.bonfire.auth.sso-enabled: true
+      pangolin.public-resources.bonfire.auth.sso-roles[0]: Member
+      pangolin.public-resources.bonfire.rules[0].action: pass
+      pangolin.public-resources.bonfire.rules[0].match: country
+      pangolin.public-resources.bonfire.rules[0].value: US
+      pangolin.public-resources.bonfire.rules[0].priority: 0
+      pangolin.public-resources.bonfire.rules[1].action: deny
+      pangolin.public-resources.bonfire.rules[1].match: country
+      pangolin.public-resources.bonfire.rules[1].value: ALL
+      pangolin.public-resources.bonfire.rules[1].priority: 10
+
+  bonfire_db:
+    profiles: [bonfire]
+    image: postgis/postgis:17-3.5-alpine
+    container_name: bonfire_db
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "/opt/bonfire/deploy/postgres-entrypoint.sh"]
+    environment:
+      <<: *bonfire_env
+    volumes:
+      - $DATA/bonfire/db:/var/lib/postgresql/data
+      - ./bonfire:/opt/bonfire/deploy:ro
+    networks: [bonfire]
+
+  bonfire_meili:
+    profiles: [bonfire]
+    image: getmeili/meilisearch:v1.11
+    container_name: bonfire_meili
+    restart: unless-stopped
+    environment:
+      <<: *bonfire_env
+    volumes:
+      - $DATA/bonfire/meili:/meili_data
+    networks: [bonfire]
+
+networks:
+  bonfire:

@@ -1,0 +1,41 @@
+---
+services:
+  foldergram:
+    profiles: [foldergram]
+    image: ghcr.io/foldergram/foldergram:latest
+    container_name: foldergram
+    restart: unless-stopped
+    environment:
+      IMAGE_DETAIL_SOURCE: preview
+      DERIVATIVE_MODE: eager
+      CSRF_TRUSTED_ORIGINS: https://foldergram.chenn.dev
+    volumes:
+      - $DATA/foldergram/db:/app/data/db
+      - $DATA/foldergram/gallery:/app/data/gallery
+      - $DATA/foldergram/thumbnails:/app/data/thumbnails
+      - $DATA/foldergram/previews:/app/data/previews
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Foldergram
+      homepage.icon: instagram.png
+      homepage.href: https://foldergram.chenn.dev
+      homepage.description: Private Instagram
+
+      pangolin.public-resources.foldergram.name: foldergram
+      pangolin.public-resources.foldergram.full-domain: foldergram.chenn.dev
+      pangolin.public-resources.foldergram.protocol: http
+      pangolin.public-resources.foldergram.ssl: true
+      pangolin.public-resources.foldergram.targets[0].method: http
+      pangolin.public-resources.foldergram.targets[0].port: 4141
+      pangolin.public-resources.foldergram.auth.sso-enabled: true
+      pangolin.public-resources.foldergram.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.foldergram.rules[0].action: pass
+      pangolin.public-resources.foldergram.rules[0].match: country
+      pangolin.public-resources.foldergram.rules[0].value: US
+      pangolin.public-resources.foldergram.rules[0].priority: 0
+      pangolin.public-resources.foldergram.rules[1].action: deny
+      pangolin.public-resources.foldergram.rules[1].match: country
+      pangolin.public-resources.foldergram.rules[1].value: ALL
+      pangolin.public-resources.foldergram.rules[1].priority: 10

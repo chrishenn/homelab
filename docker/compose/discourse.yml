@@ -1,0 +1,96 @@
+# typical ruby crap. Nothing works, terrible defaults, 30 layers of nonsense, and everything is slow as hell to make fixing a nightmare
+# documentation is some forum garbage mixed in with posts and guides
+# no page with explanations of environment vars. have to use poorly-explained example config file
+# smtp errors aren't logged. I hate these ruby apps jesus christ people get it together
+# smtp blocked a thread for 30 seconds and then crashed. JESUS CHRIS WHAT
+# THIS IS THE SIMPLEST FUKCING THING. HOW CAN I EXPECT THE OTHER SHIT TO WORK IF YOU CAN'T HANDLE A SIMPLE AUTH ERROR
+# pulling icons from some made-up http address for no reason
+# initial setup for admin account failed on email verification, but let me log in anyway. great job
+# docker container doesn't log to stdout, and there's no obvious way to change it
+# no way to change log level? WHAT THE F@#$%@#$%
+# no obvious way to set SMTP to use SSL. WHY DO I NEED TO ENABLE TLS MANUALLY AND THE CONFIG HAS FORCE IN IT WHEN IT SHOULD BE DEFAULT!!!!
+---
+services:
+  discourse:
+    profiles: [discourse]
+    image: discourse/discourse:latest
+    container_name: discourse
+    restart: unless-stopped
+    environment:
+      DISCOURSE_HOSTNAME: discourse.chenn.dev
+      DISCOURSE_DEVELOPER_EMAILS: ${EMAIL}
+
+      DISCOURSE_DB_HOST: discourse_db
+      DISCOURSE_DB_PASSWORD: discourse
+      DISCOURSE_REDIS_HOST: discourse_redis
+
+      DISCOURSE_SMTP_DOMAIN: henn.dev
+      DISCOURSE_SMTP_ADDRESS: '$SMTP_HOST'
+      DISCOURSE_SMTP_PORT: 465
+      DISCOURSE_SMTP_USER_NAME: '$SMTP_USER'
+      DISCOURSE_SMTP_PASSWORD: '$SMTP_TOKEN'
+      DISCOURSE_SMTP_ENABLE_START_TLS: false
+      DISCOURSE_SMTP_FORCE_TLS: true
+      DISCOURSE_SMTP_AUTHENTICATION: login
+      DISCOURSE_SMTP_OPENSSL_VERIFY_MODE: peer
+
+      DISCOURSE_OPENID_CONNECT_ENABLED: true
+      DISCOURSE_OPENID_CONNECT_DISCOVERY_DOCUMENT: https://pocketid.chenn.dev/.well-known/openid-configuration
+      DISCOURSE_OPENID_CONNECT_CLIENT_ID: 8a7fc023-5ec9-4518-9c30-02b298282f69
+      DISCOURSE_OPENID_CONNECT_USE_PKCE: true
+      DISCOURSE_OPENID_CONNECT_ALLOW_ASSOCIATION_CHANGE: true
+      DISCOURSE_OPENID_CONNECT_AUTHORIZE_SCOPE: openid profile email groups
+      DISCOURSE_OPENID_CONNECT_GROUPS_CLAIM: groups
+
+      DISCOURSE_MAXMIND_ACCOUNT_ID: ${MAXMIND_ACCT_ID}
+      DISCOURSE_MAXMIND_LICENSE_KEY: ${MAXMIND_LICENSE}
+
+    volumes:
+      - $DATA/discourse/data:/shared
+    networks: [discourse, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Discourse
+      homepage.icon: discourse.png
+      homepage.href: https://discourse.chenn.dev
+      homepage.description: Forum
+
+      pangolin.public-resources.discourse.name: discourse
+      pangolin.public-resources.discourse.full-domain: discourse.chenn.dev
+      pangolin.public-resources.discourse.protocol: http
+      pangolin.public-resources.discourse.ssl: true
+      pangolin.public-resources.discourse.targets[0].method: http
+      pangolin.public-resources.discourse.targets[0].port: 80
+      pangolin.public-resources.discourse.auth.sso-enabled: true
+      pangolin.public-resources.discourse.auth.sso-roles[0]: Member
+      pangolin.public-resources.discourse.rules[0].action: pass
+      pangolin.public-resources.discourse.rules[0].match: country
+      pangolin.public-resources.discourse.rules[0].value: US
+      pangolin.public-resources.discourse.rules[0].priority: 0
+      pangolin.public-resources.discourse.rules[1].action: deny
+      pangolin.public-resources.discourse.rules[1].match: country
+      pangolin.public-resources.discourse.rules[1].value: ALL
+      pangolin.public-resources.discourse.rules[1].priority: 10
+
+  discourse_db:
+    profiles: [discourse]
+    image: discourse/postgres
+    container_name: discourse_db
+    restart: unless-stopped
+    environment:
+      DB_PASSWORD: discourse
+    volumes:
+      - $DATA/discourse/db:/var/lib/postgresql
+    networks: [discourse]
+
+  discourse_redis:
+    profiles: [discourse]
+    image: redis
+    container_name: discourse_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/discourse/redis:/data
+    networks: [discourse]
+
+networks:
+  discourse:

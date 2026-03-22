@@ -18,7 +18,6 @@ services:
       APPRISE_ENABLED: False
       CSRF_TRUSTED_ORIGINS: '["healthchecks.chenn.dev", "healthchecks.henn.dev"]'
       DEBUG: True
-      DEFAULT_FROM_EMAIL: healthchecks@henn.dev
       EMAIL_HOST: $SMTP_HOST
       EMAIL_PORT: 465
       EMAIL_HOST_USER: $SMTP_USER

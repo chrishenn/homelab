@@ -1,0 +1,31 @@
+---
+services:
+  moocup:
+    profiles: [moocup]
+    image: jellydeck/moocup:latest
+    container_name: moocup
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Moocup
+      homepage.icon: https://github.com/jellydeck/moocup/raw/refs/heads/main/static/favicon.svg
+      homepage.href: https://moocup.chenn.dev
+      homepage.description: Screenshot Editor
+
+      pangolin.public-resources.moocup.name: moocup
+      pangolin.public-resources.moocup.full-domain: moocup.chenn.dev
+      pangolin.public-resources.moocup.protocol: http
+      pangolin.public-resources.moocup.ssl: true
+      pangolin.public-resources.moocup.targets[0].method: http
+      pangolin.public-resources.moocup.targets[0].port: 80
+      pangolin.public-resources.moocup.auth.sso-enabled: true
+      pangolin.public-resources.moocup.auth.sso-roles[0]: Member
+      pangolin.public-resources.moocup.rules[0].action: pass
+      pangolin.public-resources.moocup.rules[0].match: country
+      pangolin.public-resources.moocup.rules[0].value: US
+      pangolin.public-resources.moocup.rules[0].priority: 0
+      pangolin.public-resources.moocup.rules[1].action: deny
+      pangolin.public-resources.moocup.rules[1].match: country
+      pangolin.public-resources.moocup.rules[1].value: ALL
+      pangolin.public-resources.moocup.rules[1].priority: 10

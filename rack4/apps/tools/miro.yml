@@ -100,20 +100,13 @@ services:
       EMAIL_PASSWORD: your_password
       EMAIL_FROM:
       EMAIL_SEND_TO: p2p.mirotalk@gmail.com
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
       homepage.icon: miro.png
       homepage.href: https://miro.chenn.dev
       homepage.description: P2P Video Chat
-
-      traefik.enable: true
-      traefik.http.routers.miro.rule: Host(`miro.henn.dev`)
-      traefik.http.routers.miro.entrypoints: websecure
-      traefik.http.routers.miro.middlewares: hdrs@file
-      traefik.http.routers.miro.tls.certresolver: cf
-      traefik.http.services.miro.loadbalancer.server.port: 3000
 
       pangolin.public-resources.miro.name: miro
       pangolin.public-resources.miro.full-domain: miro.chenn.dev
@@ -123,6 +116,7 @@ services:
       pangolin.public-resources.miro.targets[0].port: 3000
       pangolin.public-resources.miro.auth.sso-enabled: true
       pangolin.public-resources.miro.auth.sso-roles[0]: Member
+
       pangolin.public-resources.miro.rules[0].action: pass
       pangolin.public-resources.miro.rules[0].match: country
       pangolin.public-resources.miro.rules[0].value: US
@@ -449,7 +443,7 @@ services:
       MEDIASOUP_ROUTER_AUDIO_LEVEL_OBSERVER_ENABLED: true # Enable audio level observer (true|false)
       MEDIASOUP_ROUTER_ACTIVE_SPEAKER_OBSERVER_ENABLED: false # Enable active speaker observer (true|false)
       MEDIASOUP_LOG_LEVEL: error # Mediasoup log level (debug, warn, error)
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
@@ -465,6 +459,7 @@ services:
       pangolin.public-resources.miros.targets[0].port: 3010
       pangolin.public-resources.miros.auth.sso-enabled: true
       pangolin.public-resources.miros.auth.sso-roles[0]: Member
+
       pangolin.public-resources.miros.rules[0].action: pass
       pangolin.public-resources.miros.rules[0].match: country
       pangolin.public-resources.miros.rules[0].value: US

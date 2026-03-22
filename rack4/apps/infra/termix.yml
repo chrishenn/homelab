@@ -17,20 +17,13 @@ services:
       OIDC_AUTHORIZATION_URL: https://pocketid.chenn.dev/authorize
       OIDC_TOKEN_URL: https://pocketid.chenn.dev/api/oidc/token
       OIDC_USERINFO_URL: https://pocketid.chenn.dev/api/oidc/userinfo
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Termix
       homepage.icon: termix.png
       homepage.href: https://termix.chenn.dev
       homepage.description: Server Manager
-
-      traefik.enable: true
-      traefik.http.routers.termix.rule: Host(`termix.henn.dev`)
-      traefik.http.routers.termix.entrypoints: websecure
-      traefik.http.routers.termix.middlewares: hdrs@file
-      traefik.http.routers.termix.tls.certresolver: cf
-      traefik.http.services.termix.loadbalancer.server.port: 8080
 
       pangolin.public-resources.termix.name: termix
       pangolin.public-resources.termix.full-domain: termix.chenn.dev

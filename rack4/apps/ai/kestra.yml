@@ -13,7 +13,7 @@ services:
     user: root
     command: server standalone
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/kestra/kestra:/app/storage
       - $DATA/kestra/tmp/:/tmp/kestra-wd
     environment:
@@ -43,20 +43,13 @@ services:
             tmpDir:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:8080/
-    networks: [kestra, traefik]
+    networks: [kestra, newt]
     labels:
       homepage.group: AI
       homepage.name: Kestra
       homepage.icon: kestra.png
       homepage.href: https://kestra.chenn.dev
       homepage.description: Workflow Orchestration
-
-      traefik.enable: true
-      traefik.http.routers.kestra.rule: Host(`kestra.henn.dev`)
-      traefik.http.routers.kestra.entrypoints: websecure
-      traefik.http.routers.kestra.middlewares: hdrs@file
-      traefik.http.routers.kestra.tls.certresolver: cf
-      traefik.http.services.kestra.loadbalancer.server.port: 8080
 
       pangolin.public-resources.kestra.name: kestra
       pangolin.public-resources.kestra.full-domain: kestra.chenn.dev
@@ -66,6 +59,7 @@ services:
       pangolin.public-resources.kestra.targets[0].port: 8080
       pangolin.public-resources.kestra.auth.sso-enabled: true
       pangolin.public-resources.kestra.auth.sso-roles[0]: Member
+
       pangolin.public-resources.kestra.rules[0].action: pass
       pangolin.public-resources.kestra.rules[0].match: country
       pangolin.public-resources.kestra.rules[0].value: US

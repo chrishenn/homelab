@@ -1,5 +1,5 @@
 # rdma notes
 
-for nfs rdam config, see ./nfs/nfs.sh
+for nfs rdma config, see ./nfs/
 
 https://github.com/Mellanox/gpu_direct_rdma_access

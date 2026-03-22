@@ -1,0 +1,37 @@
+---
+services:
+  peekaping:
+    profiles: [peekaping]
+    image: 0xfurai/peekaping-bundle-postgres:latest
+    container_name: peekaping
+    restart: unless-stopped
+    environment:
+      DB_NAME: peekaping
+      DB_USER: peekaping
+      DB_PASS: peekaping
+    volumes:
+      - $DATA/peekaping/db:/var/lib/postgresql/data
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Peekaping
+      homepage.icon: https://github.com/0xfurai/peekaping/raw/refs/heads/main/apps/docs/static/img/logo.svg
+      homepage.href: https://peekaping.chenn.dev
+      homepage.description: Service Monitoring
+
+      pangolin.public-resources.peekaping.name: peekaping
+      pangolin.public-resources.peekaping.full-domain: peekaping.chenn.dev
+      pangolin.public-resources.peekaping.protocol: http
+      pangolin.public-resources.peekaping.ssl: true
+      pangolin.public-resources.peekaping.targets[0].method: http
+      pangolin.public-resources.peekaping.targets[0].port: 8383
+      pangolin.public-resources.peekaping.auth.sso-enabled: true
+      pangolin.public-resources.peekaping.auth.sso-roles[0]: Member
+      pangolin.public-resources.peekaping.rules[0].action: pass
+      pangolin.public-resources.peekaping.rules[0].match: country
+      pangolin.public-resources.peekaping.rules[0].value: US
+      pangolin.public-resources.peekaping.rules[0].priority: 0
+      pangolin.public-resources.peekaping.rules[1].action: deny
+      pangolin.public-resources.peekaping.rules[1].match: country
+      pangolin.public-resources.peekaping.rules[1].value: ALL
+      pangolin.public-resources.peekaping.rules[1].priority: 10

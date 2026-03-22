@@ -1,0 +1,72 @@
+---
+services:
+  ideon:
+    profiles: [ideon]
+    image: ghcr.io/3xpyth0n/ideon:latest
+    container_name: ideon
+    restart: unless-stopped
+    environment:
+      APP_URL: https://ideon.chenn.dev
+      APP_PORT: 3000
+      SECRET_KEY: secure_key
+      TIMEZONE: $TZ
+
+      DB_HOST: ideon_db
+      DB_PORT: 5432
+      DB_USER: ideon
+      DB_PASS: ideon
+      DB_NAME: ideon
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: 465
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_FROM_EMAIL: ${SMTP_USER}
+      SMTP_USE_TLS: true
+    volumes:
+      - $DATA/ideon/data:/app/storage
+    networks: [ideon, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Ideon
+      homepage.icon: jira.png
+      homepage.href: https://ideon.chenn.dev
+      homepage.description: Collaborative Workspace Tool
+
+      pangolin.public-resources.ideon.name: ideon
+      pangolin.public-resources.ideon.full-domain: ideon.chenn.dev
+      pangolin.public-resources.ideon.protocol: http
+      pangolin.public-resources.ideon.ssl: true
+      pangolin.public-resources.ideon.targets[0].method: http
+      pangolin.public-resources.ideon.targets[0].port: 3000
+      pangolin.public-resources.ideon.auth.sso-enabled: true
+      pangolin.public-resources.ideon.auth.sso-roles[0]: Member
+      pangolin.public-resources.ideon.rules[0].action: pass
+      pangolin.public-resources.ideon.rules[0].match: country
+      pangolin.public-resources.ideon.rules[0].value: US
+      pangolin.public-resources.ideon.rules[0].priority: 0
+      pangolin.public-resources.ideon.rules[1].action: deny
+      pangolin.public-resources.ideon.rules[1].match: country
+      pangolin.public-resources.ideon.rules[1].value: ALL
+      pangolin.public-resources.ideon.rules[1].priority: 10
+
+  ideon_db:
+    profiles: [ideon]
+    image: postgres:18-alpine
+    container_name: ideon_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ideon
+      POSTGRES_PASSWORD: ideon
+      POSTGRES_DB: ideon
+    volumes:
+      - $DATA/ideon/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ideon']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [ideon]
+
+networks:
+  ideon:

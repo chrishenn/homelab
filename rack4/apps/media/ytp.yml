@@ -1,0 +1,41 @@
+# sudo mkdir -p $DATA/ytp/config $DATA/ytp/downloads
+# sudo chown -R 1000:1000 $DATA/ytp/config $DATA/ytp/downloads
+# sudo mkdir -p $DATA/ytp/downloads/tmp $DATA/ytp/downloads/files
+# sudo chown -R 1000:1000 $DATA/ytp/downloads/tmp $DATA/ytp/downloads/files
+---
+services:
+  ytp:
+    profiles: [ytp]
+    image: ghcr.io/arabcoders/ytptube:latest
+    container_name: ytp
+    restart: unless-stopped
+    environment:
+      YTP_TEMP_PATH: /downloads/tmp
+      YTP_DOWNLOAD_PATH: /downloads/files
+    volumes:
+      - $DATA/ytp/config:/config:rw
+      - $DATA/ytp/downloads:/downloads:rw
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Ytp
+      homepage.icon: https://github.com/arabcoders/ytptube/blob/dev/ui/public/images/favicon.png?raw=true
+      homepage.href: https://ytp.chenn.dev
+      homepage.description: Youtube Downloader
+
+      pangolin.public-resources.ytp.name: ytp
+      pangolin.public-resources.ytp.full-domain: ytp.chenn.dev
+      pangolin.public-resources.ytp.protocol: http
+      pangolin.public-resources.ytp.ssl: true
+      pangolin.public-resources.ytp.targets[0].method: http
+      pangolin.public-resources.ytp.targets[0].port: 8081
+      pangolin.public-resources.ytp.auth.sso-enabled: true
+      pangolin.public-resources.ytp.auth.sso-roles[0]: Member
+      pangolin.public-resources.ytp.rules[0].action: pass
+      pangolin.public-resources.ytp.rules[0].match: country
+      pangolin.public-resources.ytp.rules[0].value: US
+      pangolin.public-resources.ytp.rules[0].priority: 0
+      pangolin.public-resources.ytp.rules[1].action: deny
+      pangolin.public-resources.ytp.rules[1].match: country
+      pangolin.public-resources.ytp.rules[1].value: ALL
+      pangolin.public-resources.ytp.rules[1].priority: 10

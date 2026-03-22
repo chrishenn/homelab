@@ -47,8 +47,15 @@ j pullup
 
 # ref
 
-https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/docker-compose.yml
-https://github.com/juftin/homelab/blob/main/docker-compose.yaml
-https://github.com/bluepuma77/traefik-best-practice
-https://github.com/easyselfhost/self-host/blob/main/apps/webtop/docker-compose.yml
-https://devhints.io/docker-compose
+- https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/docker-compose.yml
+- https://github.com/juftin/homelab/blob/main/docker-compose.yaml
+- https://github.com/bluepuma77/traefik-best-practice
+- https://github.com/easyselfhost/self-host/blob/main/apps/webtop/docker-compose.yml
+- https://devhints.io/docker-compose
+
+generate secrets
+
+```bash
+python3 -c "import secrets; print(secrets.token_urlsafe(64))"
+openssl rand -base64 32
+```

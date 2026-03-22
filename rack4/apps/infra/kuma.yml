@@ -30,20 +30,13 @@ services:
       - $DATA/kuma/data:/app/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3001']
-    networks: [kuma, traefik]
+    networks: [kuma, newt]
     labels:
       homepage.group: Infra
       homepage.name: Uptime Kuma
       homepage.icon: uptime-kuma.png
       homepage.href: https://kuma.chenn.dev
       homepage.description: Uptime Tracker
-
-      traefik.enable: true
-      traefik.http.routers.kuma.rule: Host(`kuma.henn.dev`)
-      traefik.http.routers.kuma.entrypoints: websecure
-      traefik.http.routers.kuma.middlewares: hdrs@file
-      traefik.http.routers.kuma.tls.certresolver: cf
-      traefik.http.services.kuma.loadbalancer.server.port: 3001
 
       pangolin.public-resources.kuma.name: kuma
       pangolin.public-resources.kuma.full-domain: kuma.chenn.dev

@@ -38,7 +38,7 @@ services:
       - $DATA/immich/library:/usr/src/app/upload
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:2283']
-    networks: [traefik]
+    networks: [immich, traefik, newt]
     labels:
       homepage.group: Media
       homepage.name: Immich
@@ -62,6 +62,7 @@ services:
 
       pangolin.public-resources.immich.auth.sso-enabled: true
       pangolin.public-resources.immich.auth.sso-roles[0]: Member
+
       pangolin.public-resources.immich.auth.basic-auth.user: ${IMMICH_PANGOLIN_AUTH_USER}
       pangolin.public-resources.immich.auth.basic-auth.password: ${IMMICH_PANGOLIN_AUTH_PASS}
 
@@ -96,7 +97,7 @@ services:
               capabilities: [gpu]
     volumes:
       - $DATA/immich/immich_ml:/cache
-    networks: [traefik]
+    networks: [immich]
 
   immich_db:
     profiles: [immich]
@@ -107,7 +108,7 @@ services:
       <<: *immich_env
     volumes:
       - $DATA/immich/postgres:/var/lib/postgresql/data
-    networks: [traefik]
+    networks: [immich]
 
   immich_redis:
     profiles: [immich]
@@ -116,4 +117,7 @@ services:
     restart: unless-stopped
     healthcheck:
       test: redis-cli ping || exit 1
-    networks: [traefik]
+    networks: [immich]
+
+networks:
+  immich:

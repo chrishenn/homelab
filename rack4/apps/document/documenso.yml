@@ -29,6 +29,7 @@ services:
     profiles: [documenso]
     image: documenso/documenso:latest
     container_name: documenso
+    restart: unless-stopped
     environment:
       PORT: 3000
       NEXTAUTH_SECRET: ${DOCU_SECRET}
@@ -60,20 +61,13 @@ services:
       - $DATA/documenso/cert.p12:/opt/documenso/cert.p12:ro
     healthcheck:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:3000/api/health']
-    networks: [traefik]
+    networks: [documenso, newt]
     labels:
       homepage.group: File Editors
       homepage.name: Documenso
       homepage.icon: documenso.png
       homepage.href: https://documenso.chenn.dev
       homepage.description: Free Docusign
-
-      traefik.enable: true
-      traefik.http.routers.documenso.rule: Host(`documenso.henn.dev`)
-      traefik.http.routers.documenso.entrypoints: websecure
-      traefik.http.routers.documenso.middlewares: hdrs@file
-      traefik.http.routers.documenso.tls.certresolver: cf
-      traefik.http.services.documenso.loadbalancer.server.port: 3000
 
       pangolin.public-resources.documenso.name: documenso
       pangolin.public-resources.documenso.full-domain: documenso.chenn.dev
@@ -83,6 +77,7 @@ services:
       pangolin.public-resources.documenso.targets[0].port: 3000
       pangolin.public-resources.documenso.auth.sso-enabled: true
       pangolin.public-resources.documenso.auth.sso-roles[0]: Member
+
       pangolin.public-resources.documenso.rules[0].action: pass
       pangolin.public-resources.documenso.rules[0].match: country
       pangolin.public-resources.documenso.rules[0].value: US
@@ -96,6 +91,7 @@ services:
     profiles: [documenso]
     image: postgres:18
     container_name: documenso_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -104,4 +100,7 @@ services:
       - $DATA/documenso/documenso_db:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
-    networks: [traefik]
+    networks: [documenso]
+
+networks:
+  documenso:

@@ -19,20 +19,13 @@ services:
     volumes:
       - $DATA/searx/app:/etc/searxng:rw
       - $DATA/searx/cache:/var/cache/searxng:rw
-    networks: [traefik]
+    networks: [searx, newt]
     labels:
       homepage.group: AI
       homepage.name: Searx
       homepage.icon: searxng.png
       homepage.href: https://searx.chenn.dev
       homepage.description: Private Google
-
-      traefik.enable: true
-      traefik.http.routers.sear.rule: Host(`searx.henn.dev`)
-      traefik.http.routers.sear.entrypoints: websecure
-      traefik.http.routers.sear.middlewares: hdrs@file
-      traefik.http.routers.sear.tls.certresolver: cf
-      traefik.http.services.sear.loadbalancer.server.port: 8080
 
       pangolin.public-resources.searx.name: searx
       pangolin.public-resources.searx.full-domain: searx.chenn.dev
@@ -42,6 +35,7 @@ services:
       pangolin.public-resources.searx.targets[0].port: 8080
       pangolin.public-resources.searx.auth.sso-enabled: true
       pangolin.public-resources.searx.auth.sso-roles[0]: Member
+
       pangolin.public-resources.searx.rules[0].action: pass
       pangolin.public-resources.searx.rules[0].match: country
       pangolin.public-resources.searx.rules[0].value: US
@@ -59,4 +53,7 @@ services:
     command: valkey-server --save 30 1 --loglevel warning
     volumes:
       - $DATA/searx/redis:/data
-    networks: [traefik]
+    networks: [searx]
+
+networks:
+  searx:

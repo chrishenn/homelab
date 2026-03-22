@@ -51,20 +51,13 @@ services:
       - /mnt/h:/mnt/h
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Backrest
       homepage.icon: backrest.png
       homepage.href: https://backrest.chenn.dev
       homepage.description: Backup Automation Server
-
-      traefik.enable: true
-      traefik.http.routers.backrest.rule: Host(`backrest.henn.dev`)
-      traefik.http.routers.backrest.entrypoints: websecure
-      traefik.http.routers.backrest.middlewares: hdrs@file
-      traefik.http.routers.backrest.tls.certresolver: cf
-      traefik.http.services.backrest.loadbalancer.server.port: 9898
 
       pangolin.public-resources.backrest.name: backrest
       pangolin.public-resources.backrest.full-domain: backrest.chenn.dev

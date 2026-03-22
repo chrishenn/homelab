@@ -1,0 +1,69 @@
+---
+services:
+  transcodarr:
+    profiles: [transcodarr]
+    build: https://github.com/reedylab/transcodarr.git
+    image: ${REGISTRY}/transcodarr:latest
+    container_name: transcodarr
+    restart: unless-stopped
+    environment:
+      WATCH_FOLDER: /downloads
+      OUTPUT_FOLDER: /output
+      MEDIA_TEMP_FOLDER: /temp
+
+      FLASK_SECRET: $TRANSCODARR_SECRET
+      ADMIN_API_KEY: $TRANSCODARR_API_KEY
+
+      POSTGRES_HOST: transcodarr_db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: transcodarr
+      POSTGRES_USER: transcodarr
+      POSTGRES_PASSWORD: transcodarr
+    volumes:
+      - $DATA/transcodarr/downloads:/downloads
+      - $DATA/transcodarr/output:/output
+      - $DATA/transcodarr/temp:/temp
+      - $DATA/transcodarr/logs:/app/logs
+      - $DATA/transcodarr/data:/app/data
+      - $DATA/transcodarr/config:/app/config
+
+    networks: [transcodarr, arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Transcodarr
+      homepage.icon: https://raw.githubusercontent.com/reedylab/transcodarr/refs/heads/main/web/static/favicon.svg
+      homepage.href: https://transcodarr.chenn.dev
+      homepage.description: Automatic Video Transcode
+
+      pangolin.public-resources.transcodarr.name: transcodarr
+      pangolin.public-resources.transcodarr.full-domain: transcodarr.chenn.dev
+      pangolin.public-resources.transcodarr.protocol: http
+      pangolin.public-resources.transcodarr.ssl: true
+      pangolin.public-resources.transcodarr.targets[0].method: http
+      pangolin.public-resources.transcodarr.targets[0].port: 5025
+      pangolin.public-resources.transcodarr.auth.sso-enabled: true
+      pangolin.public-resources.transcodarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.transcodarr.rules[0].action: pass
+      pangolin.public-resources.transcodarr.rules[0].match: country
+      pangolin.public-resources.transcodarr.rules[0].value: US
+      pangolin.public-resources.transcodarr.rules[0].priority: 0
+      pangolin.public-resources.transcodarr.rules[1].action: deny
+      pangolin.public-resources.transcodarr.rules[1].match: country
+      pangolin.public-resources.transcodarr.rules[1].value: ALL
+      pangolin.public-resources.transcodarr.rules[1].priority: 10
+
+  transcodarr_db:
+    profiles: [transcodarr]
+    image: postgres:18-alpine
+    container_name: transcodarr_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: transcodarr
+      POSTGRES_USER: transcodarr
+      POSTGRES_PASSWORD: transcodarr
+    volumes:
+      - $DATA/transcodarr/db:/var/lib/postgresql
+    networks: [transcodarr]
+
+networks:
+  transcodarr:

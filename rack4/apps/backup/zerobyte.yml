@@ -1,0 +1,44 @@
+---
+services:
+  zerobyte:
+    profiles: [zerobyte]
+    image: ghcr.io/nicotsx/zerobyte:latest
+    container_name: zerobyte
+    restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    environment:
+      TZ: $TZ
+      BASE_URL: https://zerobyte.chenn.dev
+      TRUSTED_ORIGINS: https://zerobyte.chenn.dev,https://pocketid.chenn.dev
+      APP_SECRET: $ZEROBYTE_SECRET
+      TRUST_PROXY: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/zerobyte/data:/var/lib/zerobyte
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Zerobyte
+      homepage.icon: zerobyte.png
+      homepage.href: https://zerobyte.chenn.dev
+      homepage.description: Backup Automation
+
+      pangolin.public-resources.zerobyte.name: zerobyte
+      pangolin.public-resources.zerobyte.full-domain: zerobyte.chenn.dev
+      pangolin.public-resources.zerobyte.protocol: http
+      pangolin.public-resources.zerobyte.ssl: true
+      pangolin.public-resources.zerobyte.targets[0].method: http
+      pangolin.public-resources.zerobyte.targets[0].port: 4096
+      pangolin.public-resources.zerobyte.auth.sso-enabled: true
+      pangolin.public-resources.zerobyte.auth.sso-roles[0]: Member
+      pangolin.public-resources.zerobyte.rules[0].action: pass
+      pangolin.public-resources.zerobyte.rules[0].match: country
+      pangolin.public-resources.zerobyte.rules[0].value: US
+      pangolin.public-resources.zerobyte.rules[0].priority: 0
+      pangolin.public-resources.zerobyte.rules[1].action: deny
+      pangolin.public-resources.zerobyte.rules[1].match: country
+      pangolin.public-resources.zerobyte.rules[1].value: ALL
+      pangolin.public-resources.zerobyte.rules[1].priority: 10

@@ -1,6 +1,6 @@
 ---
 services:
-  # first login: admin/admin123
+  # admin/admin123
   calibre:
     profiles: [calibre]
     image: crocodilestick/calibre-web-automated:latest
@@ -17,20 +17,13 @@ services:
       - $DATA/calibre/ingest:/cwa-book-ingest
       - $DATA/calibre/library:/calibre-library
       - $DATA/calibre/plugins:/config/.config/calibre/plugins
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Calibre
       homepage.icon: calibre.png
       homepage.href: https://calibre.chenn.dev
       homepage.description: Book Server
-
-      traefik.enable: true
-      traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
-      traefik.http.routers.calibre.entrypoints: websecure
-      traefik.http.routers.calibre.middlewares: hdrs@file
-      traefik.http.routers.calibre.tls.certresolver: cf
-      traefik.http.services.calibre.loadbalancer.server.port: 8083
 
       pangolin.public-resources.calibre.name: calibre
       pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
@@ -40,6 +33,7 @@ services:
       pangolin.public-resources.calibre.targets[0].port: 8083
       pangolin.public-resources.calibre.auth.sso-enabled: true
       pangolin.public-resources.calibre.auth.sso-roles[0]: Member
+
       pangolin.public-resources.calibre.rules[0].action: pass
       pangolin.public-resources.calibre.rules[0].match: country
       pangolin.public-resources.calibre.rules[0].value: US
@@ -48,6 +42,45 @@ services:
       pangolin.public-resources.calibre.rules[1].match: country
       pangolin.public-resources.calibre.rules[1].value: ALL
       pangolin.public-resources.calibre.rules[1].priority: 10
+
+  # admin/admin123
+  autocaliweb:
+    profiles: [calibre]
+    image: gelbphoenix/autocaliweb:latest
+    container_name: autocaliweb
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $DATA/autocaliweb/config:/config
+      - $DATA/autocaliweb/ingest:/acw-book-ingest
+      - $DATA/autocaliweb/library:/calibre-library
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Autocaliweb
+      homepage.icon: https://codeberg.org/gelbphoenix/autocaliweb/raw/branch/main/cps/static/favicon.ico
+      homepage.href: https://autocaliweb.chenn.dev
+      homepage.description: Book Server
+
+      pangolin.public-resources.autocaliweb.name: autocaliweb
+      pangolin.public-resources.autocaliweb.full-domain: autocaliweb.chenn.dev
+      pangolin.public-resources.autocaliweb.protocol: http
+      pangolin.public-resources.autocaliweb.ssl: true
+      pangolin.public-resources.autocaliweb.targets[0].method: http
+      pangolin.public-resources.autocaliweb.targets[0].port: 8083
+      pangolin.public-resources.autocaliweb.auth.sso-enabled: true
+      pangolin.public-resources.autocaliweb.auth.sso-roles[0]: Member
+      pangolin.public-resources.autocaliweb.rules[0].action: pass
+      pangolin.public-resources.autocaliweb.rules[0].match: country
+      pangolin.public-resources.autocaliweb.rules[0].value: US
+      pangolin.public-resources.autocaliweb.rules[0].priority: 0
+      pangolin.public-resources.autocaliweb.rules[1].action: deny
+      pangolin.public-resources.autocaliweb.rules[1].match: country
+      pangolin.public-resources.autocaliweb.rules[1].value: ALL
+      pangolin.public-resources.autocaliweb.rules[1].priority: 10
 
   shelfmark:
     profiles: [calibre]
@@ -68,20 +101,13 @@ services:
       - $DATA/shelfmark/config:/config
       - $DATA/calibre/ingest:/books
       - $DATA/calibre/config/app.db:/auth/app.db:ro
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Shelfmark
       homepage.icon: shelfmark.png
       homepage.href: https://shelfmark.chenn.dev
       homepage.description: Book Downloader
-
-      traefik.enable: true
-      traefik.http.routers.shelfmark.rule: Host(`shelfmark.henn.dev`)
-      traefik.http.routers.shelfmark.entrypoints: websecure
-      traefik.http.routers.shelfmark.middlewares: hdrs@file
-      traefik.http.routers.shelfmark.tls.certresolver: cf
-      traefik.http.services.shelfmark.loadbalancer.server.port: 8084
 
       pangolin.public-resources.shelfmark.name: shelfmark
       pangolin.public-resources.shelfmark.full-domain: shelfmark.chenn.dev
@@ -91,6 +117,7 @@ services:
       pangolin.public-resources.shelfmark.targets[0].port: 8084
       pangolin.public-resources.shelfmark.auth.sso-enabled: true
       pangolin.public-resources.shelfmark.auth.sso-roles[0]: Member
+
       pangolin.public-resources.shelfmark.rules[0].action: pass
       pangolin.public-resources.shelfmark.rules[0].match: country
       pangolin.public-resources.shelfmark.rules[0].value: US

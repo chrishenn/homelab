@@ -50,28 +50,13 @@ services:
       - $DATA/forgejo/data:/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
-    networks: [forgejo, traefik]
+    networks: [forgejo, newt]
     labels:
-      docker-volume-backup.stop-during-backup: forgejo
-
       homepage.group: Dev
       homepage.name: Forgejo
       homepage.icon: forgejo.png
       homepage.href: https://forgejo.chenn.dev
       homepage.description: Git Server
-
-      traefik.enable: true
-      traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)
-      traefik.http.routers.forgejo.entrypoints: websecure
-      traefik.http.routers.forgejo.middlewares: hdrs@file
-      traefik.http.routers.forgejo.tls.certresolver: cf
-      traefik.http.routers.forgejo.service: forgejo
-      traefik.http.services.forgejo.loadbalancer.server.port: 3000
-
-      traefik.tcp.routers.forgejo_ssh.rule: HostSNI(`*`)
-      traefik.tcp.routers.forgejo_ssh.entrypoints: tcp-2424
-      traefik.tcp.routers.forgejo_ssh.service: forgejo_ssh
-      traefik.tcp.services.forgejo_ssh.loadbalancer.server.port: 22
 
       pangolin.public-resources.forgejo.name: forgejo
       pangolin.public-resources.forgejo.full-domain: forgejo.chenn.dev
@@ -120,27 +105,6 @@ services:
     volumes:
       - $DATA/forgejo/db:/var/lib/postgresql
     networks: [forgejo]
-    labels:
-      docker-volume-backup.stop-during-backup: forgejo_db
-
-  forgejo_backup:
-    profiles: [forgejo]
-    image: offen/docker-volume-backup:latest
-    container_name: forgejo_backup
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - $DATA/forgejo/data:/backup/forgejo/data:ro
-      - $DATA/forgejo/db:/backup/forgejo/db:ro
-      - $BACKUP/forgejo:/archive
-    environment:
-      TZ: $TZ
-      BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
-      BACKUP_CRON_EXPRESSION: '@daily'
-      BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
-      BACKUP_PRUNING_PREFIX: 'forgejo-'
-      BACKUP_RETENTION_DAYS: 2
 
 networks:
   forgejo:

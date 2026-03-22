@@ -1,4 +1,4 @@
-# not read yet - qbittorrent client can't create category successfully - probably needs to bypass auth (blank user no worky)
+# not ready yet - qbittorrent client can't create category successfully - probably needs to bypass auth (blank user no worky)
 # sudo chown -R 1000:1000 $DATA/mediamanager/images
 ---
 services:
@@ -61,6 +61,7 @@ services:
 
       pangolin.public-resources.mm.auth.sso-enabled: true
       pangolin.public-resources.mm.auth.sso-roles[0]: Member
+
       pangolin.public-resources.mm.rules[0].action: pass
       pangolin.public-resources.mm.rules[0].match: country
       pangolin.public-resources.mm.rules[0].value: US

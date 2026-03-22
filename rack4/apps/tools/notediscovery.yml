@@ -1,0 +1,33 @@
+---
+services:
+  notediscovery:
+    profiles: [notediscovery]
+    image: ghcr.io/gamosoft/notediscovery:latest
+    container_name: notediscovery
+    restart: unless-stopped
+    volumes:
+      - $DATA/notediscovery/data:/app/data
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: notediscovery
+      homepage.icon: notediscovery.png
+      homepage.href: https://notediscovery.chenn.dev
+      homepage.description: Note Server
+
+      pangolin.public-resources.notediscovery.name: notediscovery
+      pangolin.public-resources.notediscovery.full-domain: notediscovery.chenn.dev
+      pangolin.public-resources.notediscovery.protocol: http
+      pangolin.public-resources.notediscovery.ssl: true
+      pangolin.public-resources.notediscovery.targets[0].method: http
+      pangolin.public-resources.notediscovery.targets[0].port: 8000
+      pangolin.public-resources.notediscovery.auth.sso-enabled: true
+      pangolin.public-resources.notediscovery.auth.sso-roles[0]: Member
+      pangolin.public-resources.notediscovery.rules[0].action: pass
+      pangolin.public-resources.notediscovery.rules[0].match: country
+      pangolin.public-resources.notediscovery.rules[0].value: US
+      pangolin.public-resources.notediscovery.rules[0].priority: 0
+      pangolin.public-resources.notediscovery.rules[1].action: deny
+      pangolin.public-resources.notediscovery.rules[1].match: country
+      pangolin.public-resources.notediscovery.rules[1].value: ALL
+      pangolin.public-resources.notediscovery.rules[1].priority: 10

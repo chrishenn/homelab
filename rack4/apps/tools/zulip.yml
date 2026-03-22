@@ -29,7 +29,7 @@ services:
       SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev",]'
       SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev",]'
 
-      LOADBALANCER_IPS: '$TRAEFIK_SUBNET'
+      LOADBALANCER_IPS: '$NEWT_SUBNET'
       SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
       SSL_CERTIFICATE_GENERATION: 'self-signed'
       SETTING_CERTIFICATES: 'self-signed'
@@ -78,7 +78,7 @@ services:
     volumes:
       - $DATA/zulip/data:/data:rw
     # subnet must match LOADBALANCER_IPS above
-    networks: [zulip, traefik]
+    networks: [zulip, newt]
     labels:
       homepage.group: Tools
       homepage.name: Zulip
@@ -94,6 +94,7 @@ services:
       pangolin.public-resources.zulip.targets[0].port: 80
       pangolin.public-resources.zulip.auth.sso-enabled: true
       pangolin.public-resources.zulip.auth.sso-roles[0]: Member
+
       pangolin.public-resources.zulip.rules[0].action: pass
       pangolin.public-resources.zulip.rules[0].match: country
       pangolin.public-resources.zulip.rules[0].value: US

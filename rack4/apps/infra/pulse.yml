@@ -1,0 +1,43 @@
+# It's cool that their reporting agent supports k8s, proxmox, and docker
+# The way you pull down an install script as root to install an agent is not my favorite
+# Looks like pangolin SSO will completely break their agent installer and probably their agent api as well
+---
+services:
+  pulse:
+    profiles: [pulse]
+    image: rcourtman/pulse:latest
+    container_name: pulse
+    restart: unless-stopped
+    volumes:
+      - $DATA/pulse/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PULSE_PUBLIC_URL: https://pulse.chenn.dev
+      ALLOWED_ORIGINS: pulse.chenn.dev
+      TZ: $TZ
+
+      PULSE_AUTH_USER: ${USER}
+      PULSE_AUTH_PASS: ${PULSE_AUTH_PASS}
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: ${PULSE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${PULSE_OIDC_SECRET}
+      OIDC_GROUPS_CLAIM: groups
+      OIDC_SCOPES: openid,profile,email,groups
+      OIDC_GROUP_ROLE_MAPPINGS: admin=admin,user=operator
+
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Pulse
+      homepage.icon: pulse.png
+      homepage.href: https://pulse.chenn.dev
+      homepage.description: Unified Dash
+
+      pangolin.public-resources.pulse.name: pulse
+      pangolin.public-resources.pulse.full-domain: pulse.chenn.dev
+      pangolin.public-resources.pulse.protocol: http
+      pangolin.public-resources.pulse.ssl: true
+      pangolin.public-resources.pulse.targets[0].method: http
+      pangolin.public-resources.pulse.targets[0].port: 7655

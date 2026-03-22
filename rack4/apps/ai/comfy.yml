@@ -28,20 +28,13 @@ services:
       - $DATA/comfy/workflows:/root/ComfyUI/user/default/workflows
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8188']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: AI
       homepage.name: ComfyUI
       homepage.icon: comfy-ui.png
       homepage.href: https://comfy.chenn.dev
       homepage.description: Image Gen
-
-      traefik.enable: true
-      traefik.http.routers.comfy.rule: Host(`comfy.henn.dev`)
-      traefik.http.routers.comfy.entrypoints: websecure
-      traefik.http.routers.comfy.middlewares: hdrs@file
-      traefik.http.routers.comfy.tls.certresolver: cf
-      traefik.http.services.comfy.loadbalancer.server.port: 8188
 
       pangolin.public-resources.comfy.name: comfy
       pangolin.public-resources.comfy.full-domain: comfy.chenn.dev
@@ -51,7 +44,6 @@ services:
       pangolin.public-resources.comfy.targets[0].port: 8188
       pangolin.public-resources.comfy.auth.sso-enabled: true
       pangolin.public-resources.comfy.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.comfy.auth.sso-users[1]: ${USER1}
       pangolin.public-resources.comfy.rules[0].action: pass
       pangolin.public-resources.comfy.rules[0].match: country
       pangolin.public-resources.comfy.rules[0].value: US
