@@ -4,7 +4,7 @@ function system_configs {
 	# firewall
 	sudo ufw disable
 
-	# note that custom sources from manually-installed debs will not work
+	# apt cache. note: custom sources from manually-installed debs will break
 	sudo tee -a /etc/apt/apt.conf.d/00proxy >/dev/null <<-'END'
 		Acquire::HTTP::Proxy "http://192.168.1.4:3142";
 		Acquire::HTTPS::Proxy "http://192.168.1.4:3142/HTTPS";
@@ -24,6 +24,7 @@ function system_configs {
 	# grub menu
 	sudo sd -n 1 '^GRUB_TIMEOUT_STYLE=.*$' 'GRUB_TIMEOUT_STYLE=menu' /etc/default/grub
 	sudo sd -n 1 '^GRUB_TIMEOUT=.*$' 'GRUB_TIMEOUT=3' /etc/default/grub
+	sudo os-prober
 	sudo update-grub
 }
 
@@ -42,7 +43,8 @@ function docker {
 }
 
 function nvidia_container {
-	curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg &&
+	curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey |
+		sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg &&
 		curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list |
 		sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' |
 			sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
@@ -68,7 +70,7 @@ function package_managers {
 
 function tools {
 	sudo apt install -y \
-		"linux-headers-$(uname -r)" build-essential dkms \
+		linux-headers-generic build-essential dkms \
 		git 7zip sd \
 		curl openssl gawk net-tools \
 		input-remapper-gtk easyeffects
@@ -83,16 +85,19 @@ function tools {
 		dev.zed.Zed
 	flatpak override --user --device=all com.obsproject.Studio
 
+	# signal
 	sudo flatpak remote-add --if-not-exists signal-flatpak https://signalflatpak.github.io/signal/signal.flatpakrepo
 	flatpak install -y signal-flatpak org.signal.Signal
 
 	# albert
-	echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_25.04/ /' | sudo tee /etc/apt/sources.list.d/home:manuelschneid3r.list
-	curl -fsSL https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_25.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg >/dev/null
+	echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_25.10/ /' |
+		sudo tee /etc/apt/sources.list.d/home:manuelschneid3r.list
+	curl -fsSL https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_25.10/Release.key |
+		gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg >/dev/null
 	sudo apt update && sudo apt install -y albert
 
 	# jetbrains toolbox
-	curl -Lo pkg.tar.gz https://download.jetbrains.com/toolbox/jetbrains-toolbox-2.9.0.56191.tar.gz
+	curl -Lo pkg.tar.gz https://download.jetbrains.com/toolbox/jetbrains-toolbox-3.4.0.77112.tar.gz
 	tar -xvf pkg.tar.gz -C ~/.local/share
 	pushd ~/.local/share/jetbrains*
 	./bin/jetbrains-toolbox
@@ -102,7 +107,6 @@ function tools {
 	# 1password GUI and CLI. note: other installs will not integrate with browsers
 	curl -L https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb -o 1pass.deb &&
 		sudo apt install -y ./1pass.deb &&
-		sudo apt update &&
 		sudo apt install -y 1password-cli &&
 		rm 1pass.deb
 
@@ -128,8 +132,8 @@ function chezmoi_init {
 }
 
 function v4l2loopback {
-	sudo apt -y install v4l2loopback-dkms v4l2loopback-utils linux-generic linux-headers-generic
-	echo 'options v4l2loopback devices=6 video_nr=0,1,2,3,4,5 card_label=video0,video1,video2,video3,video4,video5 exclusive_caps=1,1,1,1,1,1' |
+	sudo apt -y install v4l2loopback-dkms v4l2loopback-utils linux-headers-generic
+	echo 'options v4l2loopback devices=4 video_nr=0,1,2,3 card_label=video0,video1,video2,video3 exclusive_caps=1,1,1,1' |
 		sudo tee /etc/modprobe.d/v4l2loopback.conf
 	echo 'v4l2loopback' | sudo tee /etc/modules-load.d/v4l2loopback.conf
 	sudo modprobe -r v4l2loopback
@@ -174,7 +178,7 @@ function theme {
 # apparmor=0
 
 # zen browser
-# - see zen_browser/
+# - use zentool
 
 # configs
 # - settings dolphin
