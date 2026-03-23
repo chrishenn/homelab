@@ -20,6 +20,11 @@ function system_configs {
 		net.ipv6.conf.all.disable_ipv6=1
 	END
 	sudo sysctl --system
+
+	# grub menu
+	sudo sd -n 1 '^GRUB_TIMEOUT_STYLE=.*$' 'GRUB_TIMEOUT_STYLE=menu' /etc/default/grub
+	sudo sd -n 1 '^GRUB_TIMEOUT=.*$' 'GRUB_TIMEOUT=3' /etc/default/grub
+	sudo update-grub
 }
 
 function nvidia_driver_open {
@@ -63,7 +68,8 @@ function package_managers {
 
 function tools {
 	sudo apt install -y \
-		"linux-headers-$(uname -r)" build-essential dkms git 7zip \
+		"linux-headers-$(uname -r)" build-essential dkms \
+		git 7zip sd \
 		curl openssl gawk net-tools \
 		input-remapper-gtk easyeffects
 
@@ -135,10 +141,10 @@ function nfs {
 	sudo mkdir -p /mnt/h /mnt/k /mnt/f /mnt/q
 
 	sudo tee -a /etc/fstab >/dev/null <<-'END'
-	192.168.1.142:/mnt/h /mnt/h nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/k /mnt/k nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/f /mnt/f nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/q /mnt/q nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+		192.168.1.142:/mnt/h /mnt/h nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+		192.168.1.142:/mnt/k /mnt/k nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+		192.168.1.142:/mnt/f /mnt/f nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
+		192.168.1.142:/mnt/q /mnt/q nfs defaults,proto=rdma,port=20049,async,noatime,nodiratime 0 0
 	END
 
 	sudo systemctl daemon-reload

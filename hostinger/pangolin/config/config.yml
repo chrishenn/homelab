@@ -1,38 +1,38 @@
 gerbil:
-    start_port: 51820
-    base_endpoint: "pangolin.chenn.dev"
+  start_port: 51820
+  base_endpoint: 'pangolin.chenn.dev'
 
 app:
-    dashboard_url: "https://pangolin.chenn.dev"
-    log_level: "info"
-    telemetry:
-        anonymous_usage: true
+  dashboard_url: 'https://pangolin.chenn.dev'
+  log_level: 'info'
+  telemetry:
+    anonymous_usage: true
 
 domains:
-    domain1:
-        base_domain: "chenn.dev"
-        prefer_wildcard_cert: true
+  domain1:
+    base_domain: 'chenn.dev'
+    prefer_wildcard_cert: true
 
 server:
-    secret: $VPS0_PANGOLIN_SERVER_SECRET
-    cors:
-        origins: ["https://pangolin.chenn.dev"]
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
-        allowed_headers: ["X-CSRF-Token", "Content-Type"]
-        credentials: false
-    maxmind_db_path: "./config/GeoLite2-Country.mmdb"
+  secret: $VPS0_PANGOLIN_SERVER_SECRET
+  cors:
+    origins: ['https://pangolin.chenn.dev']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+    allowed_headers: ['X-CSRF-Token', 'Content-Type']
+    credentials: false
+  maxmind_db_path: './config/GeoLite2-Country.mmdb'
 
 flags:
-    require_email_verification: false
-    disable_signup_without_invite: true
-    disable_user_create_org: false
-    allow_raw_resources: true
+  require_email_verification: false
+  disable_signup_without_invite: true
+  disable_user_create_org: false
+  allow_raw_resources: true
 
 email:
-    smtp_host: $SMTP_HOST
-    smtp_port: 465
-    smtp_user: $SMTP_USER
-    smtp_pass: $SMTP_TOKEN
-    no_reply: pangolin@henn.dev
-    smtp_secure: true
-    smtp_tls_reject_unauthorized: true
+  smtp_host: $SMTP_HOST
+  smtp_port: 465
+  smtp_user: $SMTP_USER
+  smtp_pass: $SMTP_TOKEN
+  no_reply: pangolin@henn.dev
+  smtp_secure: true
+  smtp_tls_reject_unauthorized: true

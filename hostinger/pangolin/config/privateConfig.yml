@@ -1,2 +1,2 @@
 app:
-  identity_provider_mode: "global"
+  identity_provider_mode: 'global'
