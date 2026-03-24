@@ -1,0 +1,37 @@
+# dogwater. falls over constantly
+---
+services:
+  cognito:
+    profiles: [cognito]
+    image: kekepower/cognito-ai-search:latest
+    container_name: cognito
+    restart: unless-stopped
+    environment:
+      SEARXNG_API_URL: http://searx:8080
+      OLLAMA_API_URL: http://ollama:11434
+      DEFAULT_OLLAMA_MODEL: llama3.1:8b
+      NODE_ENV: production
+    networks: [newt]
+    labels:
+      homepage.group: AI
+      homepage.name: Cognito
+      homepage.icon: meilisearch.png
+      homepage.href: https://cognito.chenn.dev
+      homepage.description: Private AI Google
+
+      pangolin.public-resources.cognito.name: cognito
+      pangolin.public-resources.cognito.full-domain: cognito.chenn.dev
+      pangolin.public-resources.cognito.protocol: http
+      pangolin.public-resources.cognito.ssl: true
+      pangolin.public-resources.cognito.targets[0].method: http
+      pangolin.public-resources.cognito.targets[0].port: 3000
+      pangolin.public-resources.cognito.auth.sso-enabled: true
+      pangolin.public-resources.cognito.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.cognito.rules[0].action: pass
+      pangolin.public-resources.cognito.rules[0].match: country
+      pangolin.public-resources.cognito.rules[0].value: US
+      pangolin.public-resources.cognito.rules[0].priority: 0
+      pangolin.public-resources.cognito.rules[1].action: deny
+      pangolin.public-resources.cognito.rules[1].match: country
+      pangolin.public-resources.cognito.rules[1].value: ALL
+      pangolin.public-resources.cognito.rules[1].priority: 10

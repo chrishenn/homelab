@@ -15,7 +15,6 @@ networks:
           gateway: $NEWT_GATEWAY
 
 include:
-  - apps/ai/cognito.yml
   - apps/ai/comfy.yml
   - apps/ai/kestra.yml
   - apps/ai/ldr.yml

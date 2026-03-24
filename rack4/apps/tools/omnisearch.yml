@@ -1,6 +1,6 @@
 ---
 services:
-  omnisearch:    
+  omnisearch:
     profiles: [omnisearch]
     image: vivianverdant/omnisearch_but_gay:latest
     container_name: omnisearch
@@ -10,6 +10,12 @@ services:
       - $DATA/omnisearch/cache:/cache
     networks: [newt]
     labels:
+      homepage.group: Tools
+      homepage.name: Omnisearch
+      homepage.icon: quickwit.png
+      homepage.href: https://omnisearch.chenn.dev
+      homepage.description: Private Google
+
       pangolin.public-resources.omnisearch.name: omnisearch
       pangolin.public-resources.omnisearch.full-domain: omnisearch.chenn.dev
       pangolin.public-resources.omnisearch.protocol: http
