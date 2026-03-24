@@ -126,3 +126,4 @@ include:
   - apps/tools/tududi.yml
   - apps/tools/vikunja.yml
   - apps/tools/zulip.yml
+  - apps/tools/omnisearch.yml
