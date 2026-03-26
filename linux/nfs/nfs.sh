@@ -3,6 +3,12 @@
 # status: PFC is nonworking because I cannot get the mellanox ofed driver to build.
 # without the ofed driver, I cannot set the nic to mark traffic_class 3 with prio3 pause PFC/ECN markers
 
+# status: I was able to install doca-host, doca-ofed, and doca-roce. However, the kernel modules rpcrdma and nvmet_rdma
+# will not load because of "unknown symbol" errors in dmesg. This is probably because the entire network stack has not
+# been replaced by doca packages. Why not install doca-networking or a larger package 'profile' (package set)? Well,
+# one of the packages in doca-networking depends on some apt package libcppjson25, which does not ship in ubuntu 25.10 -
+# it's been replaced with libcppjson26.
+
 # https://manpages.ubuntu.com/manpages/noble/man1/nfstest_rdma.1.html
 # http://www.unstructureddatatips.com/onefs-nfs-over-rdma-client-configuration/
 # https://forum.level1techs.com/t/does-anybody-here-have-experience-setting-up-nfsordma-in-ubuntu-18-04-lts-with-the-inbox-driver/152774/33
@@ -10,6 +16,11 @@
 # https://blog.sparktour.me/en/posts/2023/08/24/mount-nfs-via-rdma-on-mlnx-card/
 # https://blog.mylab.cc/2023/07/24/Enable-L3-PFC-DCQCN-for-RoCE-on-Mellanox-ConnectX-NICs/
 # https://github.com/Mellanox/mlnx-tools
+
+# https://enterprise-support.nvidia.com/s/article/How-To-Enable-Verify-and-Troubleshoot-RDMA
+# https://enterprise-support.nvidia.com/s/article/mellanox-linux-driver-modules-relationship--mlnx-ofed-x
+# https://enterprise-support.nvidia.com/s/article/howto-configure-nfs-over-rdma--roce-x
+# https://enterprise-support.nvidia.com/s/article/howto-configure-nvme-over-fabrics
 
 # - The rpcrdma kernel module must be loaded on both the server and the client
 #     - add rpcrdma to /etc/modules-load.d/rdma.conf
@@ -36,6 +47,15 @@ sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev 
 	librados2 libibnetdisc5 ibverbs-providers nfs-kernel-server
 
 # Client
+sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev \
+	rdmacm-utils librdmacm1 ibacm libibmad-dev libibmad5 libibumad-dev libibumad3 \
+	ibverbs-utils libibverbs-dev libibverbs1 rdma-core opensm librbd1 \
+	librados2 libibnetdisc5 ibverbs-providers nfs-kernel-server
+
+echo 'rpcrdma' | sudo tee /etc/modules-load.d/rdma.conf
+sudo modprobe rpcrdma
+# lsmod | grep rpcrdma
+
 # verify rdma link status
 rdma link
 # Verify RDMA device information. Ensure the device state is PORT_ACTIVE and link layer is Ethernet
@@ -85,8 +105,9 @@ sudo systemctl restart nfs-kernel-server
 sudo apt install -y nfs-common
 
 echo 'rpcrdma' | sudo tee /etc/modules-load.d/rdma.conf
-sudo modprobe rpcrdma
-lsmod | grep rpcrdma
+echo 'rdma 20049' | sudo tee /proc/fs/nfsd/portlist
+sudo modprobe rpcrdma svcrdma xprtrdma
+# lsmod | grep rpcrdma
 
 # mount
 sudo mkdir -p /mnt/tmp
@@ -109,7 +130,8 @@ cd mlnx-tools
 
 # workstation
 export ifname=enp15s0np0
-export dev=rocep15s0
+export dev=mlx5_0
+# export dev=rocep15s0
 
 # rack4 server
 export ifname=nic0
@@ -126,9 +148,9 @@ sudo ./python/mlnx_qos -i $ifname --pfc 0,0,0,1,0,0,0,0
 
 # need ofed to work
 # clear Traffic Class (TC) settings
-# echo "tclass=-1" | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
+echo "tclass=-1" | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
 # set default ToS (= DSCP value * 4) for RoCE traffic
-# echo 106 | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
+echo 106 | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class
 
 # set default ToS for RoCE traffic
 sudo ./sbin/cma_roce_tos -d $dev -t 106
