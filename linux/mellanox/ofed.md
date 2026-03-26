@@ -6,9 +6,6 @@ sudo apt install -y dkms gcc make perl mokutil linux-headers-generic \
 	build-essential debhelper fakeroot autoconf automake quilt pkgconf apt-utils
 
 # deb install
-
-# doca-networking does not install;
-#   the version of libcppjson that ships with ubuntu 25.10 is too new, and there was no option to install it
 wget -O doca.deb https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host_3.3.0-088000-26.01-ubuntu2404_amd64.deb
 sudo dpkg -i doca.deb
 sudo apt update
@@ -17,8 +14,6 @@ sudo apt install -y doca-ofed
 sudo systemctl daemon-reload && sudo systemctl enable --now rshim
 
 # dkms build
-# this is what I did, but you could just as easily install doca-ofed from the deb package above
-# build dkms module against currently-running kernel
 wget -O doca.deb https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host_3.3.0-088000-26.01-ubuntu2404_amd64.deb
 sudo dpkg -i doca.deb
 sudo apt install -y doca-extra
@@ -29,7 +24,7 @@ sudo apt update
 sudo apt install -y doca-ofed
 
 # automatically updates mellanox firmware
-mlnx-fw-updater
+sudo apt install -y mlnx-fw-updater
 ```
 
 uninstall doca packages
@@ -43,9 +38,9 @@ sudo apt autoremove --purge
 install base networking packages
 
 ```bash
-sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev rdmacm-utils librdmacm1 ibacm 
+sudo apt install -y infiniband-diags srptools perftest opensm-doc librdmacm-dev rdmacm-utils librdmacm1 ibacm
   libibmad-dev libibmad5 libibumad-dev libibumad3 ibverbs-utils libibverbs-dev libibverbs1 rdma-core opensm librbd1 \
-  librados2 libibnetdisc5 ibverbs-providers 
+  librados2 libibnetdisc5 ibverbs-providers
 ```
 
 verify rdma

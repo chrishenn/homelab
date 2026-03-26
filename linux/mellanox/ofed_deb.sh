@@ -6,7 +6,6 @@ sudo ./mlnxofedinstall --add-kernel-support --with-nfsrdma --skip-distro-check
 
 # abandoning ofed for now
 
-
 ip a
 # enp15s0np0
 
