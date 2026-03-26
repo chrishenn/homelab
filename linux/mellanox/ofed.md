@@ -63,6 +63,7 @@ rping -c -C 10 -a 192.168.1.142
 ```
 
 verify kernel modules
+
 ```bash
 $ lsmod | grep '\(^ib\|^rdma\)'
 rdma_ucm               24576  0
