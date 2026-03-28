@@ -26,6 +26,7 @@ https://enterprise-support.nvidia.com/s/article/howto-configure-nvme-over-fabric
 
 # troubleshooting
 
+```bash
 cat /proc/fs/nfsd/portlist
 sudo ibstat
 sudo iblinkinfo
@@ -57,13 +58,13 @@ sudo cat /proc/fs/nfsd/threads
 sudo cat /proc/fs/nfsd/versions
 ps axf | grep nfsd
 ps axf | grep lockd
+```
 
 ---
 
 # NFS RDMA
 
 ```bash
-
 # set up PFC on mellanox nics
 # https://enterprise-support.nvidia.com/s/article/lossless-roce-configuration-for-linux-drivers-in-dscp-based-qos-mode
 # assumes that the switch is using pfc on prio3 traffic

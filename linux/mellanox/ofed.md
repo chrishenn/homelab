@@ -5,20 +5,18 @@ doca-host
 sudo apt install -y dkms gcc make perl mokutil linux-headers-generic \
 	build-essential debhelper fakeroot autoconf automake quilt pkgconf apt-utils
 
-# deb install
-wget -O doca.deb https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host_3.3.0-088000-26.01-ubuntu2404_amd64.deb
+# this package only has doca-ofed and doca-roce, not the larger profiles {networking, all}
+url="https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host_3.3.0-088000-26.01-ubuntu2510_amd64.deb"
+wget -O doca.deb $url
 sudo dpkg -i doca.deb
+
+# deb install
 sudo apt update
 sudo apt install -y doca-ofed
 
-sudo systemctl daemon-reload && sudo systemctl enable --now rshim
-
-# dkms build
-wget -O doca.deb https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host_3.3.0-088000-26.01-ubuntu2404_amd64.deb
-sudo dpkg -i doca.deb
+# dkms build and install
 sudo apt install -y doca-extra
 /opt/mellanox/doca/tools/doca-kernel-support
-
 sudo dpkg -i /tmp/DOCA.8jIe6eR5vO/doca-kernel-repo-26.01-1.0.0.0-6.17.0.19.generic_26.01.1.0.0.0_amd64.deb
 sudo apt update
 sudo apt install -y doca-ofed
@@ -70,4 +68,10 @@ ib_ipoib              114688  0
 ib_cm                  45056  2 rdma_cm,ib_ipoib
 rdmavt                 57344  1 hfi1
 ib_core               208896  11 ib_iser,ib_cm,rdma_cm,ib_umad,ib_uverbs,rpcrdma,ib_ipoib,iw_cm,rdmavt,rdma_ucm,hfi1
+```
+
+unload rpcrmda
+```bash
+# lsmod | grep rpcrdma
+sudo modprobe -r rpcrdma rdma_cm sunrpc ib_core
 ```
