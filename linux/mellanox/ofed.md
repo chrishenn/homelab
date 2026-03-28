@@ -1,4 +1,13 @@
-doca-host
+# ofed: doca
+
+https://forums.developer.nvidia.com/t/how-to-use-nfs-over-rdma-with-mlnx-ofed-solution/207263
+https://forums.developer.nvidia.com/t/how-to-compile-nvme-modules-with-doca-installation/332754
+
+https://enterprise-support.nvidia.com/s/article/howto-configure-nfs-over-rdma--roce-x
+https://enterprise-support.nvidia.com/s/article/howto-configure-nvme-over-fabrics
+https://enterprise-support.nvidia.com/s/article/How-To-Enable-Verify-and-Troubleshoot-RDMA
+
+https://docs.nvidia.com/doca/sdk/doca-profiles/index.html
 
 ```bash
 # 1. install kernel headers. make sure the gcc is installed that the kernel was built with
@@ -29,7 +38,7 @@ uninstall doca packages
 
 ```bash
 # apt list --installed | grep -i doca
-sudo apt purge doca-host doca-ofed doca-kernel-repo-26.01-1.0.0.0-6.17.0.19.generic
+sudo apt purge doca-host doca-ofed 
 sudo apt autoremove --purge
 ```
 
@@ -68,10 +77,4 @@ ib_ipoib              114688  0
 ib_cm                  45056  2 rdma_cm,ib_ipoib
 rdmavt                 57344  1 hfi1
 ib_core               208896  11 ib_iser,ib_cm,rdma_cm,ib_umad,ib_uverbs,rpcrdma,ib_ipoib,iw_cm,rdmavt,rdma_ucm,hfi1
-```
-
-unload rpcrmda
-```bash
-# lsmod | grep rpcrdma
-sudo modprobe -r rpcrdma rdma_cm sunrpc ib_core
 ```
