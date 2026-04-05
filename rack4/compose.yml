@@ -46,7 +46,6 @@ include:
   - apps/document/paperless.yml
   - apps/document/resume.yml
   - apps/document/stirling.yml
-  - apps/document/seafile.yml
   - apps/document/cloudreve.yml
   - apps/document/oxicloud.yml
   - apps/document/bento.yml
