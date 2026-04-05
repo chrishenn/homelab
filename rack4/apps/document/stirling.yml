@@ -35,7 +35,7 @@ services:
     networks: [traefik]
     labels:
       homepage.group: File Editors
-      homepage.name: Stirling
+      homepage.name: Stirling PDF
       homepage.icon: stirling-pdf.png
       homepage.href: https://stirling.chenn.dev
       homepage.description: PDF Editing

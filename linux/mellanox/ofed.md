@@ -38,7 +38,7 @@ uninstall doca packages
 
 ```bash
 # apt list --installed | grep -i doca
-sudo apt purge doca-host doca-ofed 
+sudo apt purge doca-host doca-ofed
 sudo apt autoremove --purge
 ```
 

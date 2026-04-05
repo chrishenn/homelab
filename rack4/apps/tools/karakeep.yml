@@ -42,7 +42,7 @@ services:
       <<: *karakeep_env
     volumes:
       - $DATA/karakeep/data:/data
-    networks: [traefik, karakeep]
+    networks: [karakeep, traefik]
     labels:
       homepage.group: Tools
       homepage.name: Karakeep

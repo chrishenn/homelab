@@ -31,7 +31,7 @@ services:
       <<: *rally_env
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
-    networks: [traefik, rally]
+    networks: [rally, traefik]
     labels:
       homepage.group: Tools
       homepage.name: Rally

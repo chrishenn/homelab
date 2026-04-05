@@ -83,10 +83,10 @@ services:
       - $DATA/cloudreve/redis:/data
     networks: [cloudreve]
 
-  collabora_reve:
+  cloudreve_collabora:
     profiles: [cloudreve]
     image: collabora/code:latest
-    container_name: collabora_reve
+    container_name: cloudreve_collabora
     restart: unless-stopped
     cap_add: [MKNOD]
     environment:
@@ -107,12 +107,12 @@ services:
       retries: 5
     networks: [newt]
     labels:
-      pangolin.public-resources.collabora_reve.name: collabora_reve
-      pangolin.public-resources.collabora_reve.protocol: http
-      pangolin.public-resources.collabora_reve.full-domain: collab.chenn.dev
-      pangolin.public-resources.collabora_reve.ssl: true
-      pangolin.public-resources.collabora_reve.targets[0].method: http
-      pangolin.public-resources.collabora_reve.targets[0].port: 9980
+      pangolin.public-resources.cloudreve_collabora.name: cloudreve_collabora
+      pangolin.public-resources.cloudreve_collabora.protocol: http
+      pangolin.public-resources.cloudreve_collabora.full-domain: collab.chenn.dev
+      pangolin.public-resources.cloudreve_collabora.ssl: true
+      pangolin.public-resources.cloudreve_collabora.targets[0].method: http
+      pangolin.public-resources.cloudreve_collabora.targets[0].port: 9980
 
 networks:
   cloudreve:

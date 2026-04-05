@@ -61,6 +61,7 @@ include:
   - apps/document/seafile.yml
   - apps/document/cloudreve.yml
   - apps/document/oxicloud.yml
+  - apps/document/bento.yml
 
   - apps/games/wordle.yml
 
