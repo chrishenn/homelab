@@ -4,8 +4,6 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-pass = { provider = "onepass", value = "op://homelab/vps0/chris_pass_env" }
-
 CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
 
 SERVER_SECRET = { provider = "onepass", value = "op://homelab/vps0/pangolin_server_secret" }

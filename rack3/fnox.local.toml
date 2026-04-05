@@ -1,7 +1,5 @@
 #:schema https://fnox.jdx.dev/schema.json
 
-# fnox sync --provider age --config fnox.local.toml
-
 [providers.age]
 type = "age"
 recipients = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL"]
