@@ -23,9 +23,9 @@ server:
   maxmind_asn_path: "./config/GeoLite2/GeoLite2-ASN.mmdb"
 
 flags:
-  require_email_verification: false
+  require_email_verification: true
   disable_signup_without_invite: true
-  disable_user_create_org: false
+  disable_user_create_org: true
   allow_raw_resources: true
 
 email:
