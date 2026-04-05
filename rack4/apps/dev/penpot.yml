@@ -1,0 +1,144 @@
+---
+x-penpot_env: &penpot_env
+  PENPOT_FLAGS: >-
+    enable-smtp enable-prepl-server enable-login-with-oidc enable-secure-session-cookies enable-oidc-registration
+    disable-onboarding disable-login-with-password
+  PENPOT_PUBLIC_URI: https://penpot.chenn.dev
+  PENPOT_HTTP_SERVER_MAX_BODY_SIZE: 367001600
+  PENPOT_HTTP_SERVER_MAX_BODY: 367001600
+  PENPOT_SECRET_KEY: ${PENPOT_SECRET}
+
+  PENPOT_BACKEND_URI: http://penpot_backend:6060
+  PENPOT_EXPORTER_URI: http://penpot_exporter:6061
+
+  PENPOT_DATABASE_URI: postgresql://penpot_db/penpot
+  PENPOT_DATABASE_USERNAME: penpot
+  PENPOT_DATABASE_PASSWORD: penpot
+
+  POSTGRES_DB: penpot
+  POSTGRES_USER: penpot
+  POSTGRES_PASSWORD: penpot
+  POSTGRES_INITDB_ARGS: --data-checksums
+
+  PENPOT_REDIS_URI: redis://penpot_valkey/0
+
+  PENPOT_OBJECTS_STORAGE_BACKEND: fs
+  PENPOT_OBJECTS_STORAGE_FS_DIRECTORY: /opt/data/assets
+
+  PENPOT_TELEMETRY_ENABLED: false
+  PENPOT_TELEMETRY_REFERER: compose
+
+  PENPOT_SMTP_DEFAULT_FROM: ${SMTP_USER}
+  PENPOT_SMTP_DEFAULT_REPLY_TO: ${SMTP_USER}
+  PENPOT_SMTP_HOST: ${SMTP_HOST}
+  PENPOT_SMTP_PORT: 465
+  PENPOT_SMTP_USERNAME: ${SMTP_USER}
+  PENPOT_SMTP_PASSWORD: ${SMTP_TOKEN}
+  PENPOT_SMTP_TLS: false
+  PENPOT_SMTP_SSL: true
+
+  PENPOT_OIDC_BASE_URI: ${OIDC}
+  PENPOT_OIDC_CLIENT_ID: ${PENPOT_OIDC_CLIENT}
+  PENPOT_OIDC_CLIENT_SECRET: ${PENPOT_OIDC_SECRET}
+
+services:
+  penpot:
+    profiles: [penpot]
+    image: penpotapp/frontend:latest
+    container_name: penpot
+    restart: unless-stopped
+    environment:
+      <<: *penpot_env
+    volumes:
+      - $DATA/penpot/assets:/opt/data/assets
+    depends_on:
+      - penpot_backend
+      - penpot_exporter
+    networks: [penpot, newt]
+    labels:
+      homepage.group: Dev
+      homepage.name: PenPot
+      homepage.icon: penpot.png
+      homepage.href: https://penpot.chenn.dev
+      homepage.description: Collaborative Design
+
+      pangolin.public-resources.penpot.name: penpot
+      pangolin.public-resources.penpot.full-domain: penpot.chenn.dev
+      pangolin.public-resources.penpot.protocol: http
+      pangolin.public-resources.penpot.ssl: true
+      pangolin.public-resources.penpot.targets[0].method: http
+      pangolin.public-resources.penpot.targets[0].port: 8080
+      pangolin.public-resources.penpot.auth.sso-enabled: true
+      pangolin.public-resources.penpot.auth.sso-roles[0]: Member
+      pangolin.public-resources.penpot.rules[0].action: pass
+      pangolin.public-resources.penpot.rules[0].match: country
+      pangolin.public-resources.penpot.rules[0].value: US
+      pangolin.public-resources.penpot.rules[0].priority: 0
+      pangolin.public-resources.penpot.rules[1].action: deny
+      pangolin.public-resources.penpot.rules[1].match: country
+      pangolin.public-resources.penpot.rules[1].value: ALL
+      pangolin.public-resources.penpot.rules[1].priority: 10
+
+  penpot_backend:
+    profiles: [penpot]
+    image: penpotapp/backend:latest
+    container_name: penpot_backend
+    restart: unless-stopped
+    volumes:
+      - $DATA/penpot/assets:/opt/data/assets
+    depends_on:
+      penpot_db:
+        condition: service_healthy
+      penpot_valkey:
+        condition: service_healthy
+    environment:
+      <<: *penpot_env
+    networks: [penpot]
+
+  penpot_exporter:
+    profiles: [penpot]
+    image: penpotapp/exporter:latest
+    container_name: penpot_exporter
+    restart: unless-stopped
+    depends_on:
+      penpot_valkey:
+        condition: service_healthy
+    environment:
+      <<: *penpot_env
+    networks: [penpot]
+
+  penpot_db:
+    profiles: [penpot]
+    image: postgres:18-alpine
+    container_name: penpot_db
+    restart: unless-stopped
+    stop_signal: SIGINT
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U penpot']
+      interval: 2s
+      timeout: 10s
+      retries: 5
+      start_period: 2s
+    environment:
+      <<: *penpot_env
+    volumes:
+      - $DATA/penpot/db:/var/lib/postgresql
+    networks: [penpot]
+
+  penpot_valkey:
+    profiles: [penpot]
+    image: valkey/valkey:8.1
+    container_name: penpot_valkey
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'valkey-cli ping | grep PONG']
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    environment:
+      VALKEY_EXTRA_FLAGS: --maxmemory 128mb --maxmemory-policy volatile-lfu
+    networks: [penpot]
+
+networks:
+  penpot:

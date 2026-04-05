@@ -10,9 +10,9 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Dockscope
-      homepage.icon: dockscope.png
+      homepage.icon: docker-engine.png
       homepage.href: https://dockscope.chenn.dev
-      homepage.description:
+      homepage.description: 3D Docker Visualizer
 
       pangolin.public-resources.dockscope.name: dockscope
       pangolin.public-resources.dockscope.full-domain: dockscope.chenn.dev

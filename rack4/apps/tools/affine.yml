@@ -16,6 +16,13 @@ x-affine_env: &affine_env
   POSTGRES_INITDB_ARGS: '--data-checksums'
   POSTGRES_HOST_AUTH_METHOD: trust
 
+  MAILER_HOST: ${SMTP_HOST}
+  MAILER_PORT: 465
+  MAILER_USER: ${SMTP_USER}
+  MAILER_PASSWORD: ${SMTP_TOKEN}
+  MAILER_SENDER: ${SMTP_USER}
+  MAILER_IGNORE_TLS: false
+
 services:
   affine:
     profiles: [affine]
@@ -36,11 +43,11 @@ services:
       <<: *affine_env
     networks: [affine, newt]
     labels:
-      #      homepage.group: File Converters
-      #      homepage.name: Stirling Image
-      #      homepage.icon: vertiv.png
-      #      homepage.href: https://affine.chenn.dev
-      #      homepage.description: Image Converters
+      homepage.group: Tools
+      homepage.name: Affine
+      homepage.icon: affine.png
+      homepage.href: https://affine.chenn.dev
+      homepage.description: Private Wiki
 
       pangolin.public-resources.affine.name: affine
       pangolin.public-resources.affine.full-domain: affine.chenn.dev
@@ -98,7 +105,7 @@ services:
     environment:
       <<: *affine_env
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', '$${POSTGRES_USER}', '-d', '$${POSTGRES_DB}']
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5

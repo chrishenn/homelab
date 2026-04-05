@@ -1,3 +1,4 @@
+# nearly works. kinda heavy monkey for what it is
 ---
 x-seafile_env: &seafile_env
   SEAFILE_SERVER_HOSTNAME: seafile.chenn.dev

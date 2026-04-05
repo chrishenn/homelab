@@ -115,6 +115,7 @@ OXICLOUD_JWT = { provider = "onepass", value = "op://homelab/oxicloud/jwt" }
 PLUTON_KEY = { provider = "onepass", value = "op://homelab/pluton/key" }
 RXRESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
 PORTABASE_SECRET = { provider = "onepass", value = "op://homelab/portabase/secret" }
+PENPOT_SECRET = { provider = "onepass", value = "op://homelab/penpot/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -167,4 +168,5 @@ BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/
 OXICLOUD_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/oxicloud/oidc_client" }
 OXICLOUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/oxicloud/oidc_secret" }
 PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/oidc_client" }
-PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }
+PENPOT_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/penpot/oidc_client" }
+PENPOT_OIDC_SECRET = { provider = "onepass", value = "op://homelab/penpot/oidc_secret" }

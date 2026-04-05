@@ -35,6 +35,7 @@ include:
   - apps/dev/databasus.yml
   - apps/dev/onedev.yml
   - apps/dev/portabase.yml
+  - apps/dev/penpot.yml
 
   - apps/document/docmost.yml
   - apps/document/documenso.yml

@@ -9,7 +9,7 @@ services:
     volumes:
       - $DATA/handbrake/data:/data
       - $DATA/handbrake/convert:/video
-    networks: [handbrake, newt]
+    networks: [handbrake, traefik, newt]
     labels:
       homepage.group: File Converters
       homepage.name: Handbrake
