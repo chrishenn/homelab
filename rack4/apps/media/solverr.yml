@@ -14,20 +14,13 @@ services:
       CAPTCHA_SOLVER: none
     healthcheck:
       test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Solverr
       homepage.icon: flaresolverr.png
       homepage.href: https://solverr.chenn.dev
       homepage.description: Cloudflare Captcha Solver
-
-      traefik.enable: true
-      traefik.http.routers.solverr.rule: Host(`solverr.henn.dev`)
-      traefik.http.routers.solverr.entrypoints: websecure
-      traefik.http.routers.solverr.middlewares: hdrs@file
-      traefik.http.routers.solverr.tls.certresolver: cf
-      traefik.http.services.solverr.loadbalancer.server.port: 8191
 
       pangolin.public-resources.solverr.name: solverr
       pangolin.public-resources.solverr.full-domain: solverr.chenn.dev

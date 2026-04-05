@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/onedev/data:/opt/onedev
     environment:
       initial_user: ${USER}

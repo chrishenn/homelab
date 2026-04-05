@@ -15,6 +15,7 @@ USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
 EMAIL = { provider = "onepass", value = "op://homelab/chris/email" }
 USER1 = { provider = "onepass", value = "op://homelab/pangolin/user1" }
+VPS0_IP = { provider = "onepass", value = "op://homelab/vps0/ip" }
 
 SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host" }
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }

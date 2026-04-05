@@ -24,7 +24,7 @@ services:
         condition: service_healthy
       tracearr_redis:
         condition: service_healthy
-    networks: [tracearr, traefik]
+    networks: [tracearr, newt]
     labels:
       homepage.group: Media
       homepage.name: Tracearr

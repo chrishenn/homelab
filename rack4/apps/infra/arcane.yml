@@ -40,7 +40,7 @@ services:
       OIDC_ADMIN_VALUE: admin
     volumes:
       - $DATA/arcane:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3552/api/health']
     networks: [newt]

@@ -1,0 +1,33 @@
+---
+services:
+  dockscope:
+    profiles: [dockscope]
+    image: ghcr.io/manuelr-t/dockscope
+    container_name: dockscope
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Dockscope
+      homepage.icon: dockscope.png
+      homepage.href: https://dockscope.chenn.dev
+      homepage.description:
+
+      pangolin.public-resources.dockscope.name: dockscope
+      pangolin.public-resources.dockscope.full-domain: dockscope.chenn.dev
+      pangolin.public-resources.dockscope.protocol: http
+      pangolin.public-resources.dockscope.ssl: true
+      pangolin.public-resources.dockscope.targets[0].method: http
+      pangolin.public-resources.dockscope.targets[0].port: 4681
+      pangolin.public-resources.dockscope.auth.sso-enabled: true
+      pangolin.public-resources.dockscope.rules[0].action: pass
+      pangolin.public-resources.dockscope.rules[0].match: country
+      pangolin.public-resources.dockscope.rules[0].value: US
+      pangolin.public-resources.dockscope.rules[0].priority: 0
+      pangolin.public-resources.dockscope.rules[1].action: deny
+      pangolin.public-resources.dockscope.rules[1].match: country
+      pangolin.public-resources.dockscope.rules[1].value: ALL
+      pangolin.public-resources.dockscope.rules[1].priority: 10
+      
+    

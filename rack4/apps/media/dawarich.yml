@@ -75,8 +75,8 @@ services:
       dawarich_redis:
         condition: service_healthy
         restart: true
-    # integration with immich requires treafik network
-    networks: [dawarich, traefik]
+    # integration with immich requires a shared network
+    networks: [dawarich, newt]
     labels:
       homepage.group: Media
       homepage.name: Dawarich

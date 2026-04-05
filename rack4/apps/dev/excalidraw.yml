@@ -5,20 +5,13 @@ services:
     image: excalidraw/excalidraw:latest
     container_name: excalidraw
     restart: unless-stopped
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Dev
       homepage.name: Excalidraw
       homepage.icon: excalidraw.png
       homepage.href: https://draw.chenn.dev
       homepage.description: Draw Diagrams
-
-      traefik.enable: true
-      traefik.http.routers.excalidraw.rule: Host(`draw.henn.dev`)
-      traefik.http.routers.excalidraw.entrypoints: websecure
-      traefik.http.routers.excalidraw.middlewares: hdrs@file
-      traefik.http.routers.excalidraw.tls.certresolver: cf
-      traefik.http.services.excalidraw.loadbalancer.server.port: 80
 
       pangolin.public-resources.excalidraw.name: excalidraw
       pangolin.public-resources.excalidraw.full-domain: draw.chenn.dev

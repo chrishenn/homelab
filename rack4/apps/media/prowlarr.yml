@@ -11,20 +11,13 @@ services:
       TZ: ${TZ}
     volumes:
       - $DATA/prowlarr:/config
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Prowlarr
       homepage.icon: prowlarr.png
       homepage.href: https://prowlarr.chenn.dev
       homepage.description: Indexer Manager
-
-      traefik.enable: true
-      traefik.http.routers.prowlarr.rule: Host(`prowlarr.henn.dev`)
-      traefik.http.routers.prowlarr.entrypoints: websecure
-      traefik.http.routers.prowlarr.middlewares: hdrs@file
-      traefik.http.routers.prowlarr.tls.certresolver: cf
-      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
       pangolin.public-resources.prowlarr.name: prowlarr
       pangolin.public-resources.prowlarr.full-domain: prowlarr.chenn.dev

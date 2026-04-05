@@ -100,20 +100,13 @@ services:
       EMAIL_PASSWORD: your_password
       EMAIL_FROM:
       EMAIL_SEND_TO: p2p.mirotalk@gmail.com
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
       homepage.icon: miro.png
       homepage.href: https://miro.chenn.dev
       homepage.description: P2P Video Chat
-
-      traefik.enable: true
-      traefik.http.routers.miro.rule: Host(`miro.henn.dev`)
-      traefik.http.routers.miro.entrypoints: websecure
-      traefik.http.routers.miro.middlewares: hdrs@file
-      traefik.http.routers.miro.tls.certresolver: cf
-      traefik.http.services.miro.loadbalancer.server.port: 3000
 
       pangolin.public-resources.miro.name: miro
       pangolin.public-resources.miro.full-domain: miro.chenn.dev
@@ -449,7 +442,7 @@ services:
       MEDIASOUP_ROUTER_AUDIO_LEVEL_OBSERVER_ENABLED: true # Enable audio level observer (true|false)
       MEDIASOUP_ROUTER_ACTIVE_SPEAKER_OBSERVER_ENABLED: false # Enable active speaker observer (true|false)
       MEDIASOUP_LOG_LEVEL: error # Mediasoup log level (debug, warn, error)
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk

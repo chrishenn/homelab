@@ -6,20 +6,13 @@ services:
     build: https://github.com/xitanggg/open-resume.git
     container_name: openresume
     restart: unless-stopped
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Editors
       homepage.name: openresume
       homepage.icon: open-resume.png
       homepage.href: https://openresume.chenn.dev
       homepage.description: Resume Generator
-
-      traefik.enable: true
-      traefik.http.routers.openresume.rule: Host(`openresume.henn.dev`)
-      traefik.http.routers.openresume.entrypoints: websecure
-      traefik.http.routers.openresume.middlewares: hdrs@file
-      traefik.http.routers.openresume.tls.certresolver: cf
-      traefik.http.services.openresume.loadbalancer.server.port: 3000
 
       pangolin.public-resources.openresume.name: openresume
       pangolin.public-resources.openresume.full-domain: openresume.chenn.dev

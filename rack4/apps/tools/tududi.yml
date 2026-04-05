@@ -16,20 +16,13 @@ services:
     volumes:
       - $DATA/tududi/db:/app/backend/db
       - $DATA/tududi/uploads:/app/backend/uploads
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Tududi
       homepage.icon: atlassian.png
       homepage.href: https://tududi.chenn.dev
       homepage.description: Project Management
-
-      traefik.enable: true
-      traefik.http.routers.tududi.rule: Host(`tududi.henn.dev`)
-      traefik.http.routers.tududi.entrypoints: websecure
-      traefik.http.routers.tududi.middlewares: hdrs@file
-      traefik.http.routers.tududi.tls.certresolver: cf
-      traefik.http.services.tududi.loadbalancer.server.port: 3002
 
       pangolin.public-resources.tududi.name: tududi
       pangolin.public-resources.tududi.full-domain: tududi.chenn.dev

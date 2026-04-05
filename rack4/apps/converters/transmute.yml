@@ -7,20 +7,13 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/transmute:/app/data
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Converters
       homepage.name: Transmute
       homepage.icon: vertiv.png
       homepage.href: https://transmute.chenn.dev
       homepage.description: File Converters
-
-      traefik.enable: true
-      traefik.http.routers.transmute.rule: Host(`transmute.henn.dev`)
-      traefik.http.routers.transmute.entrypoints: websecure
-      traefik.http.routers.transmute.middlewares: hdrs@file
-      traefik.http.routers.transmute.tls.certresolver: cf
-      traefik.http.services.transmute.loadbalancer.server.port: 3313
 
       pangolin.public-resources.transmute.name: transmute
       pangolin.public-resources.transmute.full-domain: transmute.chenn.dev

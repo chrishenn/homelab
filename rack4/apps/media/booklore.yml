@@ -36,7 +36,7 @@ services:
       retries: 5
       start_period: 60s
       timeout: 10s
-    networks: [booklore, traefik]
+    networks: [booklore, newt]
     labels:
       homepage.group: Media
       homepage.name: Booklore

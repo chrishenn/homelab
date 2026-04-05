@@ -32,20 +32,13 @@ services:
       - $DATA/stirling/pipeline:/pipeline
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8080/api/v1/info/status']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Editors
       homepage.name: Stirling PDF
       homepage.icon: stirling-pdf.png
       homepage.href: https://stirling.chenn.dev
       homepage.description: PDF Editing
-
-      traefik.enable: true
-      traefik.http.routers.stirling.rule: Host(`stirling.henn.dev`)
-      traefik.http.routers.stirling.entrypoints: websecure
-      traefik.http.routers.stirling.middlewares: hdrs@file
-      traefik.http.routers.stirling.tls.certresolver: cf
-      traefik.http.services.stirling.loadbalancer.server.port: 8080
 
       pangolin.public-resources.stirling.name: stirling
       pangolin.public-resources.stirling.full-domain: stirling.chenn.dev

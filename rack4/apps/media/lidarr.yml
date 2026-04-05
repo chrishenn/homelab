@@ -15,20 +15,13 @@ services:
       - $DATA/sab/downloads:/sab/downloads
       - $DATA/qbit/downloads:/qbit/downloads
       - $MEDIA:/media_library
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Lidarr
       homepage.icon: lidarr.png
       homepage.href: https://lidarr.chenn.dev
       homepage.description: Music Manager
-
-      traefik.enable: true
-      traefik.http.routers.lidarr.rule: Host(`lidarr.henn.dev`)
-      traefik.http.routers.lidarr.entrypoints: websecure
-      traefik.http.routers.lidarr.middlewares: hdrs@file
-      traefik.http.routers.lidarr.tls.certresolver: cf
-      traefik.http.services.lidarr.loadbalancer.server.port: 8686
 
       pangolin.public-resources.lidarr.name: lidarr
       pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev

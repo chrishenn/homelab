@@ -7,20 +7,13 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/metube:/downloads
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Metube
       homepage.icon: metube.png
       homepage.href: https://metube.chenn.dev
       homepage.description: Youtube Downloader
-
-      traefik.enable: true
-      traefik.http.routers.metube.rule: Host(`metube.henn.dev`)
-      traefik.http.routers.metube.entrypoints: websecure
-      traefik.http.routers.metube.middlewares: hdrs@file
-      traefik.http.routers.metube.tls.certresolver: cf
-      traefik.http.services.metube.loadbalancer.server.port: 8081
 
       pangolin.public-resources.metube.name: metube
       pangolin.public-resources.metube.full-domain: metube.chenn.dev

@@ -11,5 +11,14 @@ services:
       NEWT_SECRET: ${NEWT_SECRET}
       DOCKER_SOCKET: /var/run/docker.sock
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks: [traefik, newt]
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [newt]
+
+networks:
+  newt:
+    name: newt
+    driver: bridge
+    ipam:
+      config:
+        - subnet: $NEWT_SUBNET
+          gateway: $NEWT_GATEWAY

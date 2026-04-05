@@ -9,20 +9,13 @@ services:
       VITE_BRAND_NAME: Chicken Bento PDF
       VITE_FOOTER_TEXT: '© 2026 Big Chicken Corp.'
 
-    networks: [newt, traefik]
+    networks: [newt]
     labels:
       homepage.group: File Editors
       homepage.name: Bento PDF
       homepage.icon: bentopdf.png
       homepage.href: https://bento.chenn.dev
       homepage.description: PDF Editing
-
-      traefik.enable: true
-      traefik.http.routers.bento.rule: Host(`bento.henn.dev`)
-      traefik.http.routers.bento.entrypoints: websecure
-      traefik.http.routers.bento.middlewares: hdrs@file
-      traefik.http.routers.bento.tls.certresolver: cf
-      traefik.http.services.bento.loadbalancer.server.port: 8080
 
       pangolin.public-resources.bento.name: bento
       pangolin.public-resources.bento.full-domain: bento.chenn.dev

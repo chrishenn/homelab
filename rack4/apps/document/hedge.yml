@@ -36,7 +36,7 @@ services:
 
     volumes:
       - $DATA/hedge/config:/config
-    networks: [traefik]
+    networks: [hedge, newt]
     labels:
       homepage.group: File Editors
       homepage.name: Hedge Doc
@@ -72,4 +72,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - $DATA/hedge/db:/var/lib/postgresql
-    networks: [traefik]
+    networks: [hedge]
+
+networks:
+  hedge:

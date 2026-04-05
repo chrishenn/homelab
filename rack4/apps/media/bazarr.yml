@@ -12,20 +12,13 @@ services:
     volumes:
       - $DATA/bazarr:/config
       - $MEDIA:/media_library
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Bazarr
       homepage.icon: bazarr.png
       homepage.href: https://bazarr.chenn.dev
       homepage.description: Subtitle Manager
-
-      traefik.enable: true
-      traefik.http.routers.bazarr.rule: Host(`bazarr.henn.dev`)
-      traefik.http.routers.bazarr.entrypoints: websecure
-      traefik.http.routers.bazarr.middlewares: hdrs@file
-      traefik.http.routers.bazarr.tls.certresolver: cf
-      traefik.http.services.bazarr.loadbalancer.server.port: 6767
 
       pangolin.public-resources.bazarr.name: bazarr
       pangolin.public-resources.bazarr.full-domain: bazarr.chenn.dev

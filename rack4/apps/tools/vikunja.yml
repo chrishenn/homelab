@@ -26,20 +26,13 @@ services:
     volumes:
       - $DATA/vikunja/files:/app/vikunja/files
       - $DATA/vikunja/db:/db
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Vikunja
       homepage.icon: vikunja.png
       homepage.href: https://vikunja.chenn.dev
       homepage.description: Project Planner
-
-      traefik.enable: true
-      traefik.http.routers.vikunja.rule: Host(`vikunja.henn.dev`)
-      traefik.http.routers.vikunja.entrypoints: websecure
-      traefik.http.routers.vikunja.middlewares: hdrs@file
-      traefik.http.routers.vikunja.tls.certresolver: cf
-      traefik.http.services.vikunja.loadbalancer.server.port: 3456
 
       pangolin.public-resources.vikunja.name: vikunja
       pangolin.public-resources.vikunja.full-domain: vikunja.chenn.dev

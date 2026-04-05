@@ -12,20 +12,13 @@ services:
       - $DATA/seerr:/app/config
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Seerr
       homepage.icon: jellyseerr.png
       homepage.href: https://seerr.chenn.dev
       homepage.description: Media Requests
-
-      traefik.enable: true
-      traefik.http.routers.seerr.rule: Host(`seerr.henn.dev`)
-      traefik.http.routers.seerr.entrypoints: websecure
-      traefik.http.routers.seerr.middlewares: hdrs@file
-      traefik.http.routers.seerr.tls.certresolver: cf
-      traefik.http.services.seerr.loadbalancer.server.port: 5055
 
       pangolin.public-resources.seerr.name: seerr
       pangolin.public-resources.seerr.full-domain: seerr.chenn.dev

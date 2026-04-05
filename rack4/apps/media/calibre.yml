@@ -17,20 +17,13 @@ services:
       - $DATA/calibre/ingest:/cwa-book-ingest
       - $DATA/calibre/library:/calibre-library
       - $DATA/calibre/plugins:/config/.config/calibre/plugins
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Calibre
       homepage.icon: calibre.png
       homepage.href: https://calibre.chenn.dev
       homepage.description: Book Server
-
-      traefik.enable: true
-      traefik.http.routers.calibre.rule: Host(`calibre.henn.dev`)
-      traefik.http.routers.calibre.entrypoints: websecure
-      traefik.http.routers.calibre.middlewares: hdrs@file
-      traefik.http.routers.calibre.tls.certresolver: cf
-      traefik.http.services.calibre.loadbalancer.server.port: 8083
 
       pangolin.public-resources.calibre.name: calibre
       pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
@@ -68,20 +61,13 @@ services:
       - $DATA/shelfmark/config:/config
       - $DATA/calibre/ingest:/books
       - $DATA/calibre/config/app.db:/auth/app.db:ro
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Shelfmark
       homepage.icon: shelfmark.png
       homepage.href: https://shelfmark.chenn.dev
       homepage.description: Book Downloader
-
-      traefik.enable: true
-      traefik.http.routers.shelfmark.rule: Host(`shelfmark.henn.dev`)
-      traefik.http.routers.shelfmark.entrypoints: websecure
-      traefik.http.routers.shelfmark.middlewares: hdrs@file
-      traefik.http.routers.shelfmark.tls.certresolver: cf
-      traefik.http.services.shelfmark.loadbalancer.server.port: 8084
 
       pangolin.public-resources.shelfmark.name: shelfmark
       pangolin.public-resources.shelfmark.full-domain: shelfmark.chenn.dev

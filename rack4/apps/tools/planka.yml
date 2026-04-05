@@ -28,7 +28,6 @@ services:
       SMTP_TLS_REJECT_UNAUTHORIZED: true
       SMTP_USER: $SMTP_USER
       SMTP_PASSWORD: $SMTP_TOKEN
-      SMTP_FROM: planka@henn.dev
 
       OIDC_ISSUER: $OIDC
       OIDC_CLIENT_ID: $PLANKA_OIDC_CLIENT
@@ -41,7 +40,7 @@ services:
         condition: service_healthy
     healthcheck:
       test: ['CMD-SHELL', 'wget -qO --no-verbose http://127.0.0.1:1337']
-    networks: [traefik]
+    networks: [planka, newt]
     labels:
       homepage.group: Tools
       homepage.name: Planka
@@ -78,4 +77,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d planka']
-    networks: [traefik]
+    networks: [planka]
+
+networks:
+  planka:

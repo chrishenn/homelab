@@ -7,20 +7,13 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: File Converters
       homepage.name: Vert
       homepage.icon: converse-light.png
       homepage.href: https://vert.chenn.dev
       homepage.description: Image + Video Converter
-
-      traefik.enable: true
-      traefik.http.routers.vert.rule: Host(`vert.henn.dev`)
-      traefik.http.routers.vert.entrypoints: websecure
-      traefik.http.routers.vert.middlewares: hdrs@file
-      traefik.http.routers.vert.tls.certresolver: cf
-      traefik.http.services.vert.loadbalancer.server.port: 80
 
       pangolin.public-resources.vert.name: vert
       pangolin.public-resources.vert.full-domain: vert.chenn.dev
@@ -58,15 +51,8 @@ services:
               count: all
     healthcheck:
       test: ['CMD', 'curl', 'http://localhost:24153/api/version']
-    networks: [traefik]
+    networks: [newt]
     labels:
-      traefik.enable: true
-      traefik.http.routers.vertd.rule: Host(`vertd.henn.dev`)
-      traefik.http.routers.vertd.entrypoints: websecure
-      traefik.http.routers.vertd.middlewares: hdrs@file
-      traefik.http.routers.vertd.tls.certresolver: cf
-      traefik.http.services.vertd.loadbalancer.server.port: 24153
-
       pangolin.public-resources.vertd.name: vertd
       pangolin.public-resources.vertd.full-domain: vertd.chenn.dev
       pangolin.public-resources.vertd.protocol: http

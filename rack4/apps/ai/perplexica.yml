@@ -19,20 +19,13 @@ services:
       - ./perplexica/config.toml:/home/perplexica/config.toml
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://perplexica:3000']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: AI
       homepage.name: Perplexica
       homepage.icon: perplexity-dark.png
       homepage.href: https://perplexica.chenn.dev
       homepage.description: Private AI Google
-
-      traefik.enable: true
-      traefik.http.routers.perplexica.rule: Host(`perplexica.henn.dev`)
-      traefik.http.routers.perplexica.entrypoints: websecure
-      traefik.http.routers.perplexica.middlewares: hdrs@file
-      traefik.http.routers.perplexica.tls.certresolver: cf
-      traefik.http.services.perplexica.loadbalancer.server.port: 3000
 
       pangolin.public-resources.perplexica.name: perplexica
       pangolin.public-resources.perplexica.full-domain: perplexica.chenn.dev

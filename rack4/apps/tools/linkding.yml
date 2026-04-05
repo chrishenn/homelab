@@ -24,20 +24,13 @@ services:
       - $DATA/linkding/data:/etc/linkding/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9090']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
       homepage.name: Linkding
       homepage.icon: linkding.png
       homepage.href: https://linkding.chenn.dev
       homepage.description: Bookmarks
-
-      traefik.enable: true
-      traefik.http.routers.linkding.rule: Host(`linkding.henn.dev`)
-      traefik.http.routers.linkding.entrypoints: websecure
-      traefik.http.routers.linkding.middlewares: hdrs@file
-      traefik.http.routers.linkding.tls.certresolver: cf
-      traefik.http.services.linkding.loadbalancer.server.port: 9090
 
       pangolin.public-resources.linkding.name: linkding
       pangolin.public-resources.linkding.full-domain: linkding.chenn.dev

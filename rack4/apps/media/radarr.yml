@@ -16,20 +16,13 @@ services:
       - $DATA/sab/downloads:/sab/downloads
       - $DATA/qbit/downloads:/qbit/downloads
       - $MEDIA:/media_library
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Radarr
       homepage.icon: radarr.png
       homepage.href: https://radarr.chenn.dev
       homepage.description: Movies
-
-      traefik.enable: true
-      traefik.http.routers.radarr.rule: Host(`radarr.henn.dev`)
-      traefik.http.routers.radarr.entrypoints: websecure
-      traefik.http.routers.radarr.middlewares: hdrs@file
-      traefik.http.routers.radarr.tls.certresolver: cf
-      traefik.http.services.radarr.loadbalancer.server.port: 7878
 
       pangolin.public-resources.radarr.name: radarr
       pangolin.public-resources.radarr.full-domain: radarr.chenn.dev

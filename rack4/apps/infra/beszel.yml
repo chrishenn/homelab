@@ -12,20 +12,13 @@ services:
       - $DATA/beszel/beszel_server/data:/beszel_data
     healthcheck:
       test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Infra
       homepage.name: Beszel
       homepage.icon: beszel.png
       homepage.href: https://beszel.chenn.dev
       homepage.description: Server Stats
-
-      traefik.enable: true
-      traefik.http.routers.beszel.rule: Host(`beszel.henn.dev`)
-      traefik.http.routers.beszel.entrypoints: websecure
-      traefik.http.routers.beszel.middlewares: hdrs@file
-      traefik.http.routers.beszel.tls.certresolver: cf
-      traefik.http.services.beszel.loadbalancer.server.port: 8090
 
       pangolin.public-resources.beszel.name: beszel
       pangolin.public-resources.beszel.full-domain: beszel.chenn.dev

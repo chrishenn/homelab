@@ -20,20 +20,13 @@ services:
       - $DATA/qbit_novpn:/qbit_novpn/downloads
     healthcheck:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Qui
       homepage.icon: qui.png
       homepage.href: https://qui.chenn.dev
       homepage.description: Bittorrent GUI
-
-      traefik.enable: true
-      traefik.http.routers.qui.rule: Host(`qui.henn.dev`)
-      traefik.http.routers.qui.entrypoints: websecure
-      traefik.http.routers.qui.middlewares: hdrs@file
-      traefik.http.routers.qui.tls.certresolver: cf
-      traefik.http.services.qui.loadbalancer.server.port: 7476
 
       pangolin.public-resources.qui.name: qui
       pangolin.public-resources.qui.full-domain: qui.chenn.dev
@@ -42,6 +35,7 @@ services:
       pangolin.public-resources.qui.targets[0].method: http
       pangolin.public-resources.qui.targets[0].port: 7476
       pangolin.public-resources.qui.auth.sso-enabled: true
+      pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
       pangolin.public-resources.qui.rules[0].action: pass
       pangolin.public-resources.qui.rules[0].match: country
       pangolin.public-resources.qui.rules[0].value: US

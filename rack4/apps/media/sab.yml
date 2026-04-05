@@ -15,20 +15,13 @@ services:
       - $DATA/sab/downloads:/sab/downloads
       - $DATA/sab/incomplete:/incomplete
       - $DATA/sab/config:/config
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Media
       homepage.name: Sab
       homepage.icon: sabnzbd.png
       homepage.href: https://sab.chenn.dev
       homepage.description: Usenet Downloads
-
-      traefik.enable: true
-      traefik.http.routers.sab.rule: Host(`sab.henn.dev`)
-      traefik.http.routers.sab.entrypoints: websecure
-      traefik.http.routers.sab.middlewares: hdrs@file
-      traefik.http.routers.sab.tls.certresolver: cf
-      traefik.http.services.sab.loadbalancer.server.port: 8080
 
       pangolin.public-resources.sab.name: sab
       pangolin.public-resources.sab.full-domain: sab.chenn.dev
