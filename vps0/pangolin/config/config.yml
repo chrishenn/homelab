@@ -14,7 +14,6 @@ domains:
     prefer_wildcard_cert: true
 
 server:
-  secret:
   cors:
     origins: ['https://pangolin.chenn.dev']
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']

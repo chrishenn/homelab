@@ -5,6 +5,9 @@ services:
     image: docker.io/fosrl/pangolin:ee-latest
     container_name: pangolin
     restart: unless-stopped
+    environment:
+      SERVER_SECRET: ${SERVER_SECRET}
+      EMAIL_SMTP_PASS: ${EMAIL_SMTP_PASS}
     volumes:
       - ./config:/app/config
     healthcheck:
