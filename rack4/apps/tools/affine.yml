@@ -34,7 +34,6 @@ services:
       - $DATA/affine/config:/root/.affine/config
     environment:
       <<: *affine_env
-
     networks: [affine, newt]
     labels:
       #      homepage.group: File Converters
