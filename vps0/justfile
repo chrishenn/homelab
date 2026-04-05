@@ -3,4 +3,4 @@ ssync:
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "mkdir -p ${REPO} && cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"

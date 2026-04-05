@@ -13,7 +13,7 @@ REPO = "/home/chris/Projects/homelab/"
 REPO_MACHINE = "/home/chris/Projects/homelab/rack4"
 
 [tools]
-"cargo:rustscan" = "latest"
+#"cargo:rustscan" = "latest"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
