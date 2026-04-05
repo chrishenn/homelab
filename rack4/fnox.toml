@@ -170,3 +170,5 @@ OXICLOUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/oxicloud/oi
 PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/oidc_client" }
 PENPOT_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/penpot/oidc_client" }
 PENPOT_OIDC_SECRET = { provider = "onepass", value = "op://homelab/penpot/oidc_secret" }
+TRANSMUTE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/transmute/oidc_client" }
+TRANSMUTE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/transmute/oidc_secret" }

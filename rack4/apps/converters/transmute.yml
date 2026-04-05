@@ -5,6 +5,13 @@ services:
     image: ghcr.io/transmute-app/transmute:main
     container_name: transmute
     restart: unless-stopped
+    environment:
+      OIDC_ISSUER_URL: ${OIDC}
+      OIDC_CLIENT_ID: ${TRANSMUTE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${TRANSMUTE_OIDC_SECRET}
+      OIDC_DISPLAY_NAME: Pocket ID
+      OIDC_AUTO_CREATE_USERS: true
+      OIDC_AUTO_LAUNCH: true
     volumes:
       - $DATA/transmute:/app/data
     networks: [newt]

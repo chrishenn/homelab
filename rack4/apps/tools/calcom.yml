@@ -1,0 +1,108 @@
+# not done yet
+---
+x-calcom_env: &calcom_env
+  DATABASE_URL: postgresql://calcom:calcom@calcom_db/calcom
+  DATABASE_DIRECT_URL: postgresql://calcom:calcom@calcom_db/calcom
+  DATABASE_READ_URL: postgresql://calcom:calcom@calcom_db/calcom
+  DATABASE_WRITE_URL: postgresql://calcom:calcom@calcom_db/calcom
+
+  POSTGRES_USER: calcom
+  POSTGRES_PASSWORD: calcom
+  POSTGRES_DB: calcom
+
+  NODE_ENV:
+  API_PORT: 80
+  API_URL:
+
+  NEXTAUTH_SECRET:
+  JWT_SECRET:
+  REDIS_URL:
+  LOG_LEVEL:
+  API_KEY_PREFIX:
+  WEB_APP_URL:
+  IS_E2E: false
+  REWRITE_API_V2_PREFIX: true
+  CALCOM_LICENSE_KEY:
+  NEXT_PUBLIC_VAPID_PUBLIC_KEY:
+  VAPID_PRIVATE_KEY:
+
+  STRIPE_API_KEY:
+  STRIPE_WEBHOOK_SECRET:
+  STRIPE_PRICE_ID_STARTER:
+  STRIPE_PRICE_ID_STARTER_OVERAGE:
+  STRIPE_PRICE_ID_ESSENTIALS:
+  STRIPE_PRICE_ID_ESSENTIALS_OVERAGE:
+  STRIPE_PRICE_ID_ENTERPRISE:
+  STRIPE_PRICE_ID_ENTERPRISE_OVERAGE:
+  STRIPE_TEAM_MONTHLY_PRICE_ID:
+  IS_TEAM_BILLING_ENABLED: false
+
+  AXIOM_DATASET:
+  AXIOM_TOKEN:
+  LOGGER_BRIDGE_LOG_LEVEL: $
+  DOCS_URL:
+  GET_LICENSE_KEY_URL:
+
+  NEXT_PUBLIC_WEBAPP_URL:
+  NEXT_PUBLIC_API_V2_URL:
+  NEXT_PUBLIC_LICENSE_CONSENT:
+  NEXT_PUBLIC_WEBSITE_TERMS_URL:
+  NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL:
+  NEXT_PUBLIC_SINGLE_ORG_SLUG:
+
+  ORGANIZATIONS_ENABLED:
+  CALCOM_TELEMETRY_DISABLED:
+  CALENDSO_ENCRYPTION_KEY:
+  CSP_POLICY:
+
+services:
+  calcom:
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    container_name: calcom
+    restart: unless-stopped
+    #    ports:
+    #      - 3000:3000
+    #    env_file: .env
+    environment:
+      <<: *calcom_env
+    depends_on:
+      - calcom_db
+    networks: [calcom]
+
+  calcom_api:
+    build:
+      context: https://github.com/calcom/cal.com.git
+      dockerfile: apps/api/v2/Dockerfile
+      args:
+        <<: *calcom_env
+    container_name: calcom_api
+    restart: unless-stopped
+    #    ports:
+    #      - "${API_PORT:-80}:${API_PORT:-80}"
+    #    env_file: .env
+    environment:
+      <<: *calcom_env
+    depends_on:
+      - calcom_db
+      - calcom_redis
+    networks: [calcom]
+
+  calcom_db:
+    image: postgres
+    container_name: calcom_db
+    restart: unless-stopped
+    environment:
+      <<: *calcom_env
+    volumes: $DATA/calcom/db:/var/lib/postgresql
+    networks: [calcom]
+
+  calcom_redis:
+    image: redis:latest
+    container_name: calcom_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/calcom/redis:/data
+    networks: [calcom]
+
+networks:
+  calcom:
