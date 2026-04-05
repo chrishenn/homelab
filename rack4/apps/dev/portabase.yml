@@ -1,0 +1,57 @@
+---
+services:
+
+  portabase:
+    profiles: [portabase]
+    image: portabase/portabase:latest
+    container_name: portabase
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PROJECT_URL: https://portabase.chenn.dev
+      PROJECT_SECRET: ${PORTABASE_SECRET}
+      DATABASE_URL: postgresql://portabase:portabase@portabase_db:5432/portabase?schema=public
+    volumes:
+      - $DATA/portabase/data:/data
+    depends_on:
+      portabase_db:
+        condition: service_healthy
+    networks: [portabase, newt]
+    labels:
+      pangolin.public-resources.portabase.name: portabase
+      pangolin.public-resources.portabase.full-domain: portabase.chenn.dev
+      pangolin.public-resources.portabase.protocol: http
+      pangolin.public-resources.portabase.ssl: true
+      pangolin.public-resources.portabase.targets[0].method: http
+      pangolin.public-resources.portabase.targets[0].port: 80
+      pangolin.public-resources.portabase.auth.sso-enabled: true
+      pangolin.public-resources.portabase.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.portabase.rules[0].action: pass
+      pangolin.public-resources.portabase.rules[0].match: country
+      pangolin.public-resources.portabase.rules[0].value: US
+      pangolin.public-resources.portabase.rules[0].priority: 0
+      pangolin.public-resources.portabase.rules[1].action: deny
+      pangolin.public-resources.portabase.rules[1].match: country
+      pangolin.public-resources.portabase.rules[1].value: ALL
+      pangolin.public-resources.portabase.rules[1].priority: 10
+
+  portabase_db:
+    profiles: [portabase]
+    image: postgres:18-alpine
+    container_name: portabase_db
+    restart: unless-stopped
+    volumes:
+      - $DATA/portabase/db:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: portabase
+      POSTGRES_USER: portabase
+      POSTGRES_PASSWORD: portabase
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [portabase]
+
+networks:
+  portabase:

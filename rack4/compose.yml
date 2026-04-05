@@ -11,6 +11,7 @@ include:
 
   - apps/backup/backrest.yml
   - apps/backup/rsync.yml
+  - apps/backup/pluton.yml
 
   - apps/converters/convertx.yml
   - apps/converters/omni.yml
@@ -32,6 +33,7 @@ include:
   - apps/dev/pgadmin.yml
   - apps/dev/databasus.yml
   - apps/dev/onedev.yml
+  - apps/dev/portabase.yml
 
   - apps/document/docmost.yml
   - apps/document/documenso.yml
@@ -75,25 +77,17 @@ include:
   - apps/infra/registry.yml
   - apps/infra/dockscope.yml
 
+  - apps/media/arr.yml
   - apps/media/audiobookshelf.yml
-  - apps/media/bazarr.yml
   - apps/media/calibre.yml
   - apps/media/dawarich.yml
   - apps/media/immich.yml
   - apps/media/jellyfin.yml
-  - apps/media/lidarr.yml
   - apps/media/metube.yml
   - apps/media/navidrome.yml
-  - apps/media/prowlarr.yml
-  - apps/media/qbit.yml
-  - apps/media/radarr.yml
-  - apps/media/recyclarr.yml
-  - apps/media/sab.yml
-  - apps/media/seerr.yml
-  - apps/media/solverr.yml
-  - apps/media/sonarr.yml
+  - apps/media/download.yml
   - apps/media/tracearr.yml
-  - apps/media/booklore.yml
+  - apps/media/foldergram.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml
@@ -112,3 +106,4 @@ include:
   - apps/tools/vikunja.yml
   - apps/tools/zulip.yml
   - apps/tools/omnisearch.yml
+  - apps/tools/ops.yml

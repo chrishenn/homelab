@@ -112,6 +112,9 @@ DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credentia
 RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
 BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }
 OXICLOUD_JWT = { provider = "onepass", value = "op://homelab/oxicloud/jwt" }
+PLUTON_KEY = { provider = "onepass", value = "op://homelab/pluton/key" }
+RXRESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
+PORTABASE_SECRET = { provider = "onepass", value = "op://homelab/portabase/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

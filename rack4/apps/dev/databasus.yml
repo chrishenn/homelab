@@ -7,17 +7,27 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/databasus/data:/databasus-data
-    networks: [traefik]
+    networks: [newt]
     labels:
-      homepage.instance.private.group: Dev
-      homepage.instance.private.name: Databasus
-      homepage.instance.private.icon: databasus.png
-      homepage.instance.private.href: https://databasus.henn.dev
-      homepage.instance.private.description: Database Backup GUI
-
-      traefik.enable: true
-      traefik.http.routers.databasus.rule: Host(`databasus.henn.dev`)
-      traefik.http.routers.databasus.entrypoints: websecure
-      traefik.http.routers.databasus.middlewares: hdrs@file
-      traefik.http.routers.databasus.tls.certresolver: cf
-      traefik.http.services.databasus.loadbalancer.server.port: 4005
+      homepage.group: Dev
+      homepage.name: Databasus
+      homepage.icon: databasus.png
+      homepage.href: https://databasus.chenn.dev
+      homepage.description: Database Backup GUI
+      
+      pangolin.public-resources.databasus.name: databasus
+      pangolin.public-resources.databasus.full-domain: databasus.chenn.dev
+      pangolin.public-resources.databasus.protocol: http
+      pangolin.public-resources.databasus.ssl: true
+      pangolin.public-resources.databasus.targets[0].method: http
+      pangolin.public-resources.databasus.targets[0].port: 4005
+      pangolin.public-resources.databasus.auth.sso-enabled: true
+      pangolin.public-resources.databasus.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.databasus.rules[0].action: pass
+      pangolin.public-resources.databasus.rules[0].match: country
+      pangolin.public-resources.databasus.rules[0].value: US
+      pangolin.public-resources.databasus.rules[0].priority: 0
+      pangolin.public-resources.databasus.rules[1].action: deny
+      pangolin.public-resources.databasus.rules[1].match: country
+      pangolin.public-resources.databasus.rules[1].value: ALL
+      pangolin.public-resources.databasus.rules[1].priority: 10

@@ -1,0 +1,49 @@
+---
+services:
+  ops:
+    profiles: [ops]
+    image: ghcr.io/dakheera47/job-ops:latest
+    container_name: ops
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      PYTHON_PATH: /usr/bin/python3
+      MODEL: google/gemini-3-flash-preview
+      RXRESUME_URL: http://resume:3000
+      RXRESUME_API_KEY: ${RXRESUME_KEY}
+      JOBOPS_PUBLIC_BASE_URL: https://ops.chenn.dev
+      JOBSPY_IS_REMOTE: 1
+    volumes:
+      - $DATA/ops/data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Job Ops
+      homepage.icon: atlassian-opsgenie.png
+      homepage.href: https://ops.chenn.dev
+      homepage.description: Job Search Automation
+
+      pangolin.public-resources.ops.name: ops
+      pangolin.public-resources.ops.full-domain: ops.chenn.dev
+      pangolin.public-resources.ops.protocol: http
+      pangolin.public-resources.ops.ssl: true
+      pangolin.public-resources.ops.targets[0].method: http
+      pangolin.public-resources.ops.targets[0].port: 3001
+      pangolin.public-resources.ops.auth.sso-enabled: true
+      pangolin.public-resources.ops.auth.sso-roles[0]: Member
+      pangolin.public-resources.ops.rules[0].action: pass
+      pangolin.public-resources.ops.rules[0].match: country
+      pangolin.public-resources.ops.rules[0].value: US
+      pangolin.public-resources.ops.rules[0].priority: 0
+      pangolin.public-resources.ops.rules[1].action: deny
+      pangolin.public-resources.ops.rules[1].match: country
+      pangolin.public-resources.ops.rules[1].value: ALL
+      pangolin.public-resources.ops.rules[1].priority: 10

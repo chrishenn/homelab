@@ -72,6 +72,7 @@ sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
     $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
 
+# sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 

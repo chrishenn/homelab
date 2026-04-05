@@ -18,7 +18,7 @@ services:
       OLLAMA_FLASH_ATTENTION: 1
     volumes:
       - $DATA/ollama:/root/.ollama
-    networks: [ollama, paperless]
+    networks: [ollama]
 
 networks:
   ollama:

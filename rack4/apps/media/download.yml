@@ -1,8 +1,8 @@
-# default user/pass: admin/{printed in the container logs}
 ---
 services:
+
   qui:
-    profiles: [qbit]
+    profiles: [download]
     image: ghcr.io/autobrr/qui:latest
     container_name: qui
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
       - $DATA/qbit_novpn:/qbit_novpn/downloads
     healthcheck:
       test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
-    networks: [newt]
+    networks: [newt, arr]
     labels:
       homepage.group: Media
       homepage.name: Qui
@@ -35,7 +35,7 @@ services:
       pangolin.public-resources.qui.targets[0].method: http
       pangolin.public-resources.qui.targets[0].port: 7476
       pangolin.public-resources.qui.auth.sso-enabled: true
-      pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.qui.auth.sso-roles[0]: Member
       pangolin.public-resources.qui.rules[0].action: pass
       pangolin.public-resources.qui.rules[0].match: country
       pangolin.public-resources.qui.rules[0].value: US
@@ -46,7 +46,7 @@ services:
       pangolin.public-resources.qui.rules[1].priority: 10
 
   gluetun:
-    profiles: [qbit]
+    profiles: [download]
     image: qmcgaw/gluetun:latest
     container_name: gluetun
     restart: unless-stopped
@@ -65,7 +65,7 @@ services:
       VPN_SERVICE_PROVIDER: protonvpn
       WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
       SERVER_COUNTRIES: 'United States,Canada'
-    networks: [traefik]
+    networks: [traefik, arr]
     labels:
       homepage.instance.private.group: Media
       homepage.instance.private.name: Gluetun
@@ -88,7 +88,7 @@ services:
       - '51413:51413/udp'
 
   qbit_vpn:
-    profiles: [qbit]
+    profiles: [download]
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbit_vpn
     restart: unless-stopped
@@ -100,6 +100,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit/config:/config
       - $DATA/qbit/downloads:/qbit/downloads
+    depends_on:
+      - gluetun
     network_mode: service:gluetun
     labels:
       homepage.instance.private.group: Media
@@ -109,7 +111,7 @@ services:
       homepage.instance.private.description: VPN Torrents
 
   qbit_novpn:
-    profiles: [qbit]
+    profiles: [download]
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbit_novpn
     restart: unless-stopped
@@ -121,7 +123,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit_novpn:/config
       - $DATA/qbit_novpn:/qbit_novpn/downloads
-    networks: [traefik]
+    networks: [traefik, arr]
     labels:
       homepage.instance.private.group: Media
       homepage.instance.private.name: QBittorrent (No VPN)
@@ -135,3 +137,42 @@ services:
       traefik.http.routers.qbit_novpn.middlewares: hdrs@file
       traefik.http.routers.qbit_novpn.tls.certresolver: cf
       traefik.http.services.qbit_novpn.loadbalancer.server.port: 8080
+
+  sab:
+    profiles: [download]
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sab
+    restart: unless-stopped
+    hostname: sab
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/sab/incomplete:/incomplete
+      - $DATA/sab/config:/config
+    networks: [newt, arr]
+    labels:
+      homepage.group: Media
+      homepage.name: Sab
+      homepage.icon: sabnzbd.png
+      homepage.href: https://sab.chenn.dev
+      homepage.description: Usenet Downloads
+
+      pangolin.public-resources.sab.name: sab
+      pangolin.public-resources.sab.full-domain: sab.chenn.dev
+      pangolin.public-resources.sab.protocol: http
+      pangolin.public-resources.sab.ssl: true
+      pangolin.public-resources.sab.targets[0].method: http
+      pangolin.public-resources.sab.targets[0].port: 8080
+      pangolin.public-resources.sab.auth.sso-enabled: true
+      pangolin.public-resources.sab.auth.sso-roles[0]: Member
+      pangolin.public-resources.sab.rules[0].action: pass
+      pangolin.public-resources.sab.rules[0].match: country
+      pangolin.public-resources.sab.rules[0].value: US
+      pangolin.public-resources.sab.rules[0].priority: 0
+      pangolin.public-resources.sab.rules[1].action: deny
+      pangolin.public-resources.sab.rules[1].match: country
+      pangolin.public-resources.sab.rules[1].value: ALL
+      pangolin.public-resources.sab.rules[1].priority: 10

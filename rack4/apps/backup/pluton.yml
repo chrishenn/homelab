@@ -1,0 +1,52 @@
+---
+services:
+  pluton:
+    profiles: [pluton]
+    image: plutonhq/pluton:latest
+    container_name: pluton
+    restart: unless-stopped
+    volumes:
+      - $DATA/pluton/data:/data
+      # mount folders to backup under /mnt/subfolder
+    environment:
+      ENCRYPTION_KEY: ${PLUTON_KEY}
+      USER_NAME: ${USER}
+      USER_PASSWORD: ${PASS}
+
+      APP_TITLE: Chicken Pluton
+      APP_URL: https://pluton.chenn.dev
+      SERVER_PORT: 5173
+      MAX_CONCURRENT_BACKUPS: 4
+      SESSION_DURATION: 7
+
+      ALLOW_CUSTOM_RESTORE_PATH: true
+      ALLOW_FILE_BROWSER: true
+      DISABLE_EVENT_SCRIPTS: false
+
+      NODE_ENV: production
+      IS_DOCKER: "true"
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Pluton
+      homepage.icon: restic.png
+      homepage.href: https://pluton.chenn.dev
+      homepage.description: Backup Automation
+
+      pangolin.public-resources.pluton.name: pluton
+      pangolin.public-resources.pluton.full-domain: pluton.chenn.dev
+      pangolin.public-resources.pluton.protocol: http
+      pangolin.public-resources.pluton.ssl: true
+      pangolin.public-resources.pluton.targets[0].method: http
+      pangolin.public-resources.pluton.targets[0].port: 5173
+      pangolin.public-resources.pluton.auth.sso-enabled: true
+      pangolin.public-resources.pluton.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.pluton.rules[0].action: pass
+      pangolin.public-resources.pluton.rules[0].match: country
+      pangolin.public-resources.pluton.rules[0].value: US
+      pangolin.public-resources.pluton.rules[0].priority: 0
+      pangolin.public-resources.pluton.rules[1].action: deny
+      pangolin.public-resources.pluton.rules[1].match: country
+      pangolin.public-resources.pluton.rules[1].value: ALL
+      pangolin.public-resources.pluton.rules[1].priority: 10
+

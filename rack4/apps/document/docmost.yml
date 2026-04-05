@@ -21,7 +21,7 @@ services:
       MAIL_FROM_ADDRESS: $SMTP_USER
     volumes:
       - $DATA/docmost/docmost:/app/data/storage
-    networks: [docmost]
+    networks: [docmost, newt]
     labels:
       homepage.group: File Editors
       homepage.name: Docmost
