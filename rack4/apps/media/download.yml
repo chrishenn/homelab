@@ -1,6 +1,5 @@
 ---
 services:
-
   qui:
     profiles: [download]
     image: ghcr.io/autobrr/qui:latest

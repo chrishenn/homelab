@@ -166,3 +166,5 @@ BYTESTASH_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bytestash/
 BYTESTASH_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bytestash/oidc_secret" }
 OXICLOUD_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/oxicloud/oidc_client" }
 OXICLOUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/oxicloud/oidc_secret" }
+PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/oidc_client" }
+PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }

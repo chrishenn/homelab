@@ -24,7 +24,7 @@ services:
       DISABLE_EVENT_SCRIPTS: false
 
       NODE_ENV: production
-      IS_DOCKER: "true"
+      IS_DOCKER: 'true'
     networks: [newt]
     labels:
       homepage.group: Infra
@@ -49,4 +49,3 @@ services:
       pangolin.public-resources.pluton.rules[1].match: country
       pangolin.public-resources.pluton.rules[1].value: ALL
       pangolin.public-resources.pluton.rules[1].priority: 10
-

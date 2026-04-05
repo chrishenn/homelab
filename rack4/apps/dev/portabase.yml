@@ -1,6 +1,5 @@
 ---
 services:
-
   portabase:
     profiles: [portabase]
     image: portabase/portabase:latest
@@ -10,7 +9,34 @@ services:
       TZ: $TZ
       PROJECT_URL: https://portabase.chenn.dev
       PROJECT_SECRET: ${PORTABASE_SECRET}
+      TRUSTED_DOMAINS: '*.chenn.dev'
       DATABASE_URL: postgresql://portabase:portabase@portabase_db:5432/portabase?schema=public
+
+      AUTH_EMAIL_PASSWORD_ENABLED: true
+      AUTH_SIGNUP_ENABLED: true
+      AUTH_PASSKEY_ENABLED: true
+
+      AUTH_OIDC_POCKET_ID: pocketid
+      AUTH_OIDC_POCKET_TITLE: Pocket ID
+      AUTH_OIDC_POCKET_DESC: Login with Pocket ID
+      AUTH_OIDC_POCKET_ICON: https://pocketid.chenn.dev/api/application-images/logo?light=false
+      AUTH_OIDC_POCKET_CLIENT: ${PORTABASE_OIDC_CLIENT}
+      AUTH_OIDC_POCKET_SECRET: ${PORTABASE_OIDC_SECRET}
+      AUTH_OIDC_POCKET_ISSUER_URL: ${OIDC}
+      AUTH_OIDC_POCKET_HOST: pocketid.chenn.dev
+      AUTH_OIDC_POCKET_SCOPES: 'openid profile email groups'
+      AUTH_OIDC_POCKET_PKCE: true
+      AUTH_OIDC_POCKET_ROLE_MAP: 'admin:admin,default:user'
+      AUTH_OIDC_POCKET_DISCOVERY_ENDPOINT: https://pocketid.chenn.dev/.well-known/openid-configuration
+      AUTH_OIDC_POCKET_JWKS_ENDPOINT: https://pocketid.chenn.dev/.well-known/jwks.json
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: 465
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_FROM: ${SMTP_USER}
+      SMTP_SECURE: true
+
     volumes:
       - $DATA/portabase/data:/data
     depends_on:
@@ -18,6 +44,12 @@ services:
         condition: service_healthy
     networks: [portabase, newt]
     labels:
+      homepage.group: Dev
+      homepage.name: Portabase
+      homepage.icon: postgres.png
+      homepage.href: https://portabase.chenn.dev
+      homepage.description: Database Backup GUI
+
       pangolin.public-resources.portabase.name: portabase
       pangolin.public-resources.portabase.full-domain: portabase.chenn.dev
       pangolin.public-resources.portabase.protocol: http
@@ -47,7 +79,7 @@ services:
       POSTGRES_USER: portabase
       POSTGRES_PASSWORD: portabase
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 10s
       timeout: 5s
       retries: 5

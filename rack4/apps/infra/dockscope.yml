@@ -29,5 +29,3 @@ services:
       pangolin.public-resources.dockscope.rules[1].match: country
       pangolin.public-resources.dockscope.rules[1].value: ALL
       pangolin.public-resources.dockscope.rules[1].priority: 10
-      
-    

@@ -14,7 +14,7 @@ services:
       homepage.icon: databasus.png
       homepage.href: https://databasus.chenn.dev
       homepage.description: Database Backup GUI
-      
+
       pangolin.public-resources.databasus.name: databasus
       pangolin.public-resources.databasus.full-domain: databasus.chenn.dev
       pangolin.public-resources.databasus.protocol: http

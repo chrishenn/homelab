@@ -1,6 +1,5 @@
 ---
 services:
-
   bazarr:
     profiles: [arr]
     image: lscr.io/linuxserver/bazarr:latest

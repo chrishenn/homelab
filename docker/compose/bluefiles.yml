@@ -14,7 +14,7 @@ services:
       TRUST_PROXY: true
     depends_on:
       bluefiles_db:
-        condition: service_healthy        
+        condition: service_healthy
     networks: [bluefiles, newt]
     labels:
       pangolin.public-resources.bluefiles.name: bluefiles
@@ -33,7 +33,7 @@ services:
       pangolin.public-resources.bluefiles.rules[1].match: country
       pangolin.public-resources.bluefiles.rules[1].value: ALL
       pangolin.public-resources.bluefiles.rules[1].priority: 10
-  
+
   bluefiles_db:
     profiles: [bluefiles]
     image: postgres:18-alpine
@@ -50,6 +50,6 @@ services:
       timeout: 5s
       retries: 5
     networks: [bluefiles]
-    
+
 networks:
   bluefiles:

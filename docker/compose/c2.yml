@@ -21,8 +21,8 @@ x-c2_env: &c2_env
 services:
   c2_db:
     image: mysql:8
-#    ports:
-#      - 3306:3306
+    #    ports:
+    #      - 3306:3306
     environment:
       <<: *c2_env
     networks: [c2]

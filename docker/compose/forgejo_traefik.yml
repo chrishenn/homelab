@@ -11,22 +11,22 @@ traefik.tcp.routers.forgejo_ssh.entrypoints: tcp-2424
 traefik.tcp.routers.forgejo_ssh.service: forgejo_ssh
 traefik.tcp.services.forgejo_ssh.loadbalancer.server.port: 22
 
-  forgejo_backup:
-    profiles: [forgejo]
-    image: offen/docker-volume-backup:latest
-    container_name: forgejo_backup
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - $DATA/forgejo/data:/backup/forgejo/data:ro
-      - $DATA/forgejo/db:/backup/forgejo/db:ro
-      - $BACKUP/forgejo:/archive
-    environment:
-      TZ: $TZ
-      BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
-      BACKUP_CRON_EXPRESSION: '@daily'
-      BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
-      BACKUP_PRUNING_PREFIX: 'forgejo-'
-      BACKUP_RETENTION_DAYS: 2
-    networks: [forgejo]
+forgejo_backup:
+  profiles: [forgejo]
+  image: offen/docker-volume-backup:latest
+  container_name: forgejo_backup
+  restart: unless-stopped
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /etc/localtime:/etc/localtime:ro
+    - $DATA/forgejo/data:/backup/forgejo/data:ro
+    - $DATA/forgejo/db:/backup/forgejo/db:ro
+    - $BACKUP/forgejo:/archive
+  environment:
+    TZ: $TZ
+    BACKUP_STOP_DURING_BACKUP_LABEL: forgejo
+    BACKUP_CRON_EXPRESSION: '@daily'
+    BACKUP_FILENAME: 'forgejo-%Y-%m-%dT%H-%M-%S.{{ .Extension }}'
+    BACKUP_PRUNING_PREFIX: 'forgejo-'
+    BACKUP_RETENTION_DAYS: 2
+  networks: [forgejo]

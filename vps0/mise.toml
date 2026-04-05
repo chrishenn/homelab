@@ -17,4 +17,3 @@ REPO_MACHINE = "/home/chris/Projects/homelab/rack4"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
-
