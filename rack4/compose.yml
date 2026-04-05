@@ -18,6 +18,7 @@ include:
   - apps/converters/transmute.yml
   - apps/converters/vert.yml
   - apps/converters/handbrake.yml
+  - apps/converters/simg.yml
 
   - apps/dev/bytestash.yml
   - apps/dev/chartdb.yml
@@ -107,3 +108,4 @@ include:
   - apps/tools/zulip.yml
   - apps/tools/omnisearch.yml
   - apps/tools/ops.yml
+  - apps/tools/affine.yml

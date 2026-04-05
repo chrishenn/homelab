@@ -206,6 +206,51 @@ services:
       pangolin.public-resources.seerr.rules[1].value: ALL
       pangolin.public-resources.seerr.rules[1].priority: 10
 
+  mseerr:
+    profiles: [arr]
+    image: ghcr.io/habirabbu/musicseerr:latest
+    container_name: mseerr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: $TZ
+      PORT: 8688
+    volumes:
+      - $DATA/mseerr/config:/app/config
+      - $DATA/mseerr/cache:/app/cache
+      - $MEDIA/Music:/music:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8688/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Music Seerr
+      homepage.icon: jellyseerr.png
+      homepage.href: https://mseerr.chenn.dev
+      homepage.description: Music Requests
+
+      pangolin.public-resources.mseerr.name: mseerr
+      pangolin.public-resources.mseerr.full-domain: mseerr.chenn.dev
+      pangolin.public-resources.mseerr.protocol: http
+      pangolin.public-resources.mseerr.ssl: true
+      pangolin.public-resources.mseerr.targets[0].method: http
+      pangolin.public-resources.mseerr.targets[0].port: 8688
+      pangolin.public-resources.mseerr.auth.sso-enabled: true
+      pangolin.public-resources.mseerr.auth.sso-roles[0]: Member
+      pangolin.public-resources.mseerr.rules[0].action: pass
+      pangolin.public-resources.mseerr.rules[0].match: country
+      pangolin.public-resources.mseerr.rules[0].value: US
+      pangolin.public-resources.mseerr.rules[0].priority: 0
+      pangolin.public-resources.mseerr.rules[1].action: deny
+      pangolin.public-resources.mseerr.rules[1].match: country
+      pangolin.public-resources.mseerr.rules[1].value: ALL
+      pangolin.public-resources.mseerr.rules[1].priority: 10
+
   prowlarr:
     profiles: [arr]
     image: lscr.io/linuxserver/prowlarr:latest

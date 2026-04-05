@@ -1,0 +1,42 @@
+services:
+  simg:
+    profiles: [simg]
+    image: stirlingimage/stirling-image:latest
+    container_name: simg
+    restart: unless-stopped
+    environment:
+      APP_NAME: Chicken Image
+      DEFAULT_THEME: dark
+
+      AUTH_ENABLED: false
+      DEFAULT_USERNAME: ${USER}
+      DEFAULT_PASSWORD: ${PASS}
+      CONCURRENT_JOBS: 8
+      MAX_MEGAPIXELS: 300
+    volumes:
+      - $DATA/simg/data:/data
+      - $DATA/simg/workspace:/tmp/workspace
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Stirling Image
+      homepage.icon: vertiv.png
+      homepage.href: https://simg.chenn.dev
+      homepage.description: Image Converters
+
+      pangolin.public-resources.simg.name: simg
+      pangolin.public-resources.simg.full-domain: simg.chenn.dev
+      pangolin.public-resources.simg.protocol: http
+      pangolin.public-resources.simg.ssl: true
+      pangolin.public-resources.simg.targets[0].method: http
+      pangolin.public-resources.simg.targets[0].port: 1349
+      pangolin.public-resources.simg.auth.sso-enabled: true
+      pangolin.public-resources.simg.auth.sso-roles[0]: Member
+      pangolin.public-resources.simg.rules[0].action: pass
+      pangolin.public-resources.simg.rules[0].match: country
+      pangolin.public-resources.simg.rules[0].value: US
+      pangolin.public-resources.simg.rules[0].priority: 0
+      pangolin.public-resources.simg.rules[1].action: deny
+      pangolin.public-resources.simg.rules[1].match: country
+      pangolin.public-resources.simg.rules[1].value: ALL
+      pangolin.public-resources.simg.rules[1].priority: 10
