@@ -1,7 +1,7 @@
 [project]
-name = "hostinger"
+name = "vps0"
 version = "0.1.0"
-description = "Add your description here"
+description = ""
 requires-python = ">=3.14"
 dependencies = [
     "pulumi>=3.217.0",

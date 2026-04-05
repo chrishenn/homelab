@@ -4,10 +4,12 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-VPS0_IP = { provider = "onepass", value = "op://homelab/vps0/ip" }
+pass = { provider = "onepass", value = "op://homelab/vps0/chris_pass_env" }
 
 CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
-ZONEID = { provider = "onepass", value = "op://homelab/cloudflare/zoneid/chenndev" }
+
+SERVER_SECRET = { provider = "onepass", value = "op://homelab/vps0/pangolin_server_secret" }
+EMAIL_SMTP_PASS = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
 
 VPS0_BESZEL_KEY = { provider = "onepass", value = "op://homelab/vps0/beszel_key" }
 VPS0_BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/vps0/beszel_token" }

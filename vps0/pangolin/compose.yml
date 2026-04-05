@@ -86,9 +86,9 @@ services:
       - ./beszel_agent_data:/var/lib/beszel-agent
     environment:
       LISTEN: 45876
-      KEY: $VPS0_BESZEL_KEY
-      TOKEN: $VPS0_BESZEL_TOKEN
-      HUB_URL: $VPS0_BESZEL_HUB_URL
+      KEY: ${VPS0_BESZEL_KEY}
+      TOKEN: ${VPS0_BESZEL_TOKEN}
+      HUB_URL: ${VPS0_BESZEL_HUB_URL}
 
 networks:
   default:

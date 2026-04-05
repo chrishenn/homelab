@@ -14,7 +14,6 @@ domains:
     prefer_wildcard_cert: true
 
 server:
-  secret: $VPS0_PANGOLIN_SERVER_SECRET
   cors:
     origins: ['https://pangolin.chenn.dev']
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
@@ -29,10 +28,9 @@ flags:
   allow_raw_resources: true
 
 email:
-  smtp_host: $SMTP_HOST
+  smtp_host: smtp.protonmail.ch
   smtp_port: 465
-  smtp_user: $SMTP_USER
-  smtp_pass: $SMTP_TOKEN
+  smtp_user: chris@henn.dev
   no_reply: pangolin@henn.dev
   smtp_secure: true
   smtp_tls_reject_unauthorized: true
