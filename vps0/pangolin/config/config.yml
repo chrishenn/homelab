@@ -32,6 +32,6 @@ email:
   smtp_host: smtp.protonmail.ch
   smtp_port: 465
   smtp_user: chris@henn.dev
-  no_reply: pangolin@henn.dev
+  no_reply: chris@henn.dev
   smtp_secure: true
   smtp_tls_reject_unauthorized: true
