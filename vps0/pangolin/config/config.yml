@@ -8,6 +8,9 @@ app:
   telemetry:
     anonymous_usage: true
 
+branding:
+  app_name: "Clucky Pangolin"
+
 domains:
   domain1:
     base_domain: 'chenn.dev'
