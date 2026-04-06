@@ -1,4 +1,4 @@
-# not read yet - qbittorrent client can't create category successfully - probably needs to bypass auth (blank user no worky)
+# not ready yet - qbittorrent client can't create category successfully - probably needs to bypass auth (blank user no worky)
 # sudo chown -R 1000:1000 $DATA/mediamanager/images
 ---
 services:
