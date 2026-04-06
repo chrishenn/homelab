@@ -109,4 +109,3 @@ include:
   - apps/tools/omnisearch.yml
   - apps/tools/ops.yml
   - apps/tools/affine.yml
-  - apps/tools/calcom.yml
