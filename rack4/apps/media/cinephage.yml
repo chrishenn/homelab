@@ -1,0 +1,40 @@
+---
+services:
+  cinephage:
+    profiles: [cinephage]
+    image: ghcr.io/moldytaint/cinephage:latest
+    container_name: cinephage
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      ORIGIN: http://cinephage.chenn.dev
+    volumes:
+      - $MEDIA:/media
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/cinephage/config:/config
+    networks: [newt, arr]
+    labels:
+      homepage.group: Media
+      homepage.name: Cinephage
+      homepage.icon: cinny.png
+      homepage.href: https://cinephage.chenn.dev
+      homepage.description: Media Management
+
+      pangolin.public-resources.cinephage.name: cinephage
+      pangolin.public-resources.cinephage.full-domain: cinephage.chenn.dev
+      pangolin.public-resources.cinephage.protocol: http
+      pangolin.public-resources.cinephage.ssl: true
+      pangolin.public-resources.cinephage.targets[0].method: http
+      pangolin.public-resources.cinephage.targets[0].port: 3000
+      pangolin.public-resources.cinephage.auth.sso-enabled: true
+      pangolin.public-resources.cinephage.rules[0].action: pass
+      pangolin.public-resources.cinephage.rules[0].match: country
+      pangolin.public-resources.cinephage.rules[0].value: US
+      pangolin.public-resources.cinephage.rules[0].priority: 0
+      pangolin.public-resources.cinephage.rules[1].action: deny
+      pangolin.public-resources.cinephage.rules[1].match: country
+      pangolin.public-resources.cinephage.rules[1].value: ALL
+      pangolin.public-resources.cinephage.rules[1].priority: 10

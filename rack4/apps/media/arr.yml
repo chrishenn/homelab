@@ -326,6 +326,40 @@ services:
       pangolin.public-resources.solverr.rules[1].value: ALL
       pangolin.public-resources.solverr.rules[1].priority: 10
 
+  aurral:
+    profiles: [arr]
+    image: ghcr.io/lklynet/aurral:latest
+    container_name: aurral
+    restart: unless-stopped
+    environment:
+      DOWNLOAD_FOLDER: /app/downloads
+    volumes:
+      - $DATA/aurral/downloads:/app/downloads
+      - $DATA/aurral/data:/app/backend/data
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Aurral
+      homepage.icon: aurral.png
+      homepage.href: https://aurral.chenn.dev
+      homepage.description: Music Recommendations
+
+      pangolin.public-resources.aurral.name: aurral
+      pangolin.public-resources.aurral.full-domain: aurral.chenn.dev
+      pangolin.public-resources.aurral.protocol: http
+      pangolin.public-resources.aurral.ssl: true
+      pangolin.public-resources.aurral.targets[0].method: http
+      pangolin.public-resources.aurral.targets[0].port: 3001
+      pangolin.public-resources.aurral.auth.sso-enabled: true
+      pangolin.public-resources.aurral.rules[0].action: pass
+      pangolin.public-resources.aurral.rules[0].match: country
+      pangolin.public-resources.aurral.rules[0].value: US
+      pangolin.public-resources.aurral.rules[0].priority: 0
+      pangolin.public-resources.aurral.rules[1].action: deny
+      pangolin.public-resources.aurral.rules[1].match: country
+      pangolin.public-resources.aurral.rules[1].value: ALL
+      pangolin.public-resources.aurral.rules[1].priority: 10
+
   fetcharr:
     profiles: [arr]
     image: egg82/fetcharr:latest

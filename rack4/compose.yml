@@ -12,6 +12,8 @@ include:
   - apps/backup/backrest.yml
   - apps/backup/rsync.yml
   - apps/backup/pluton.yml
+  - apps/backup/repliqate.yml
+  - apps/backup/zerobyte.yml
 
   - apps/converters/convertx.yml
   - apps/converters/omni.yml
@@ -19,6 +21,7 @@ include:
   - apps/converters/vert.yml
   - apps/converters/handbrake.yml
   - apps/converters/simg.yml
+  - apps/converters/8mb.yml
 
   - apps/dev/bytestash.yml
   - apps/dev/chartdb.yml
@@ -36,6 +39,7 @@ include:
   - apps/dev/onedev.yml
   - apps/dev/portabase.yml
   - apps/dev/penpot.yml
+  - apps/dev/scanopy.yml
 
   - apps/document/docmost.yml
   - apps/document/documenso.yml
@@ -49,6 +53,7 @@ include:
   - apps/document/cloudreve.yml
   - apps/document/oxicloud.yml
   - apps/document/bento.yml
+  - apps/document/etherpad.yml
 
   - apps/games/wordle.yml
 
@@ -89,6 +94,8 @@ include:
   - apps/media/download.yml
   - apps/media/tracearr.yml
   - apps/media/foldergram.yml
+  - apps/media/cinephage.yml
+  - apps/media/readmeabook.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml
@@ -109,3 +116,9 @@ include:
   - apps/tools/omnisearch.yml
   - apps/tools/ops.yml
   - apps/tools/affine.yml
+  - apps/tools/ideon.yml
+  - apps/tools/keeper.yml
+  - apps/tools/notediscovery.yml
+  - apps/tools/moocup.yml
+  - apps/tools/sure.yml
+  - apps/tools/opencut.yml

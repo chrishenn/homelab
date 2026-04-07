@@ -87,6 +87,9 @@ IMMICH_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/immich
 KARAKEEP_NEXTAUTH_SECRET = { provider = "onepass", value = "op://homelab/karakeep/nextauth_secret" }
 KARAKEEP_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/karakeep/meili_master_key" }
 
+FREESOUND_CLIENT = { provider = "onepass", value = "op://homelab/freesound/api_client" }
+FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_secret" }
+
 JICOFO_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JICOFO_AUTH_PASSWORD" }
 JVB_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JVB_AUTH_PASSWORD" }
 JIGASI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_XMPP_PASSWORD" }
@@ -116,6 +119,8 @@ PLUTON_KEY = { provider = "onepass", value = "op://homelab/pluton/key" }
 RXRESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
 PORTABASE_SECRET = { provider = "onepass", value = "op://homelab/portabase/secret" }
 PENPOT_SECRET = { provider = "onepass", value = "op://homelab/penpot/secret" }
+ZEROBYTE_SECRET = { provider = "onepass", value = "op://homelab/zerobyte/secret" }
+MARBLE_API_KEY = { provider = "onepass", value = "op://homelab/marblecms/api_key" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

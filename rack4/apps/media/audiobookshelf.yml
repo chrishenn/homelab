@@ -1,4 +1,3 @@
-# https://www.audiobookshelf.org/docs/
 ---
 services:
   audiobookshelf:
@@ -6,12 +5,12 @@ services:
     image: ghcr.io/advplyr/audiobookshelf:latest
     container_name: audiobookshelf
     restart: unless-stopped
-    volumes:
-      - $MEDIA:/media_library
-      - $DATA/audiobookshelf/config:/config
-      - $DATA/audiobookshelf/metadata:/metadata
     environment:
       TZ: $TZ
+    volumes:
+      - $MEDIA:/media
+      - $DATA/audiobookshelf/config:/config
+      - $DATA/audiobookshelf/metadata:/metadata
     networks: [newt]
     labels:
       homepage.group: Media

@@ -1,0 +1,52 @@
+# abandonware
+---
+services:
+  filewizard:
+    profiles: [filewizard]
+    image: ${REGISTRY}/filewizard
+    container_name: filewizard
+    build:
+      context: https://github.com/LoredCast/filewizard.git#0.4
+      args:
+        BUILD_TYPE: cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      LOCAL_ONLY: true
+      SECRET_KEY: secret_key
+      UPLOADS_DIR: /app/uploads
+      PROCESSED_DIR: /app/processed
+      OMP_NUM_THREADS: 4
+      DOWNLOAD_KOKORO_ON_STARTUP: true
+    volumes:
+      - $DATA/filewizard/config:/app/config
+      - $DATA/filewizard/uploads_data:/app/uploads
+      - $DATA/filewizard/processed_data:/app/processed
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Filewizard
+      homepage.icon: filewizard.png
+      homepage.href: https://filewizard.chenn.dev
+      homepage.description: File Converters
+
+      pangolin.public-resources.filewizard.name: filewizard
+      pangolin.public-resources.filewizard.full-domain: filewizard.chenn.dev
+      pangolin.public-resources.filewizard.protocol: http
+      pangolin.public-resources.filewizard.ssl: true
+      pangolin.public-resources.filewizard.targets[0].method: http
+      pangolin.public-resources.filewizard.targets[0].port: 8000
+      pangolin.public-resources.filewizard.auth.sso-enabled: true
+      pangolin.public-resources.filewizard.rules[0].action: pass
+      pangolin.public-resources.filewizard.rules[0].match: country
+      pangolin.public-resources.filewizard.rules[0].value: US
+      pangolin.public-resources.filewizard.rules[0].priority: 10
+      pangolin.public-resources.filewizard.rules[1].action: deny
+      pangolin.public-resources.filewizard.rules[1].match: country
+      pangolin.public-resources.filewizard.rules[1].value: ALL
+      pangolin.public-resources.filewizard.rules[1].priority: 20

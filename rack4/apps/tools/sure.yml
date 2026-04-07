@@ -1,0 +1,103 @@
+x-sure_env: &sure_env
+  POSTGRES_USER: sure
+  POSTGRES_PASSWORD: sure
+  POSTGRES_DB: sure
+
+  SECRET_KEY_BASE: a7523c3d0ae56415046ad8abae168d71074a79534a7062258f8d1d51ac2f76d3c3bc86d86b6b0b307df30d9a6a90a2066a3fa9e67c5e6f374dbd7dd4e0778e13
+  SELF_HOSTED: 'true'
+  RAILS_FORCE_SSL: 'false'
+  RAILS_ASSUME_SSL: 'true'
+  DB_HOST: sure_db
+  DB_PORT: 5432
+  REDIS_URL: redis://sure_redis:6379/1
+  OPENAI_ACCESS_TOKEN:
+
+services:
+  sure:
+    profiles: [sure]
+    image: ghcr.io/we-promise/sure:stable
+    container_name: sure
+    restart: unless-stopped
+    volumes:
+      - $DATA/sure/data:/rails/storage
+    environment:
+      <<: *sure_env
+    depends_on:
+      sure_db:
+        condition: service_healthy
+      sure_redis:
+        condition: service_healthy
+    networks: [sure, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Sure
+      homepage.icon: Sure.png
+      homepage.href: https://sure.chenn.dev
+      homepage.description: Finance Tracking
+
+      pangolin.public-resources.sure.name: sure
+      pangolin.public-resources.sure.full-domain: sure.chenn.dev
+      pangolin.public-resources.sure.protocol: http
+      pangolin.public-resources.sure.ssl: true
+      pangolin.public-resources.sure.targets[0].method: http
+      pangolin.public-resources.sure.targets[0].port: 3000
+      pangolin.public-resources.sure.auth.sso-enabled: true
+      pangolin.public-resources.sure.auth.sso-roles[0]: Member
+      pangolin.public-resources.sure.rules[0].action: pass
+      pangolin.public-resources.sure.rules[0].match: country
+      pangolin.public-resources.sure.rules[0].value: US
+      pangolin.public-resources.sure.rules[0].priority: 0
+      pangolin.public-resources.sure.rules[1].action: deny
+      pangolin.public-resources.sure.rules[1].match: country
+      pangolin.public-resources.sure.rules[1].value: ALL
+      pangolin.public-resources.sure.rules[1].priority: 10
+
+  sure_worker:
+    profiles: [sure]
+    image: ghcr.io/we-promise/sure:stable
+    container_name: sure_worker
+    restart: unless-stopped
+    command: bundle exec sidekiq
+    environment:
+      <<: *sure_env
+    volumes:
+      - $DATA/sure/data:/rails/storage
+    depends_on:
+      sure_db:
+        condition: service_healthy
+      sure_redis:
+        condition: service_healthy
+    networks: [sure]
+
+  sure_db:
+    profiles: [sure]
+    image: postgres:18-alpine
+    container_name: sure_db
+    restart: unless-stopped
+    environment:
+      <<: *sure_env
+    volumes:
+      - $DATA/sure/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [sure]
+
+  sure_redis:
+    profiles: [sure]
+    image: redis:latest
+    container_name: sure_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/sure/redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [sure]
+
+networks:
+  sure:

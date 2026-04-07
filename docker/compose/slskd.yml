@@ -1,0 +1,38 @@
+# soulseek is a semi-private semi-p2p network for music sharing - bit of a rabbithole
+
+# slskd/slskd
+slskd:
+  image: slskd/slskd
+  container_name: slskd
+  restart: unless-stopped
+  environment:
+    SLSKD_SLSK_USERNAME:
+    SLSKD_SLSK_PASSWORD:
+    SLSKD_REMOTE_CONFIGURATION: true
+  volumes:
+    - $DATA/slskd/downloads:/app/downloads
+  ports:
+    - '50300:50300'
+  networks: [newt]
+  labels:
+    homepage.group: Media
+    homepage.name: Slskd
+    homepage.icon: slskd.png
+    homepage.href: https://slskd.chenn.dev
+    homepage.description: Music Automation
+
+    pangolin.public-resources.slskd.name: slskd
+    pangolin.public-resources.slskd.full-domain: slskd.chenn.dev
+    pangolin.public-resources.slskd.protocol: http
+    pangolin.public-resources.slskd.ssl: true
+    pangolin.public-resources.slskd.targets[0].method: http
+    pangolin.public-resources.slskd.targets[0].port: 5030
+    pangolin.public-resources.slskd.auth.sso-enabled: true
+    pangolin.public-resources.slskd.rules[0].action: pass
+    pangolin.public-resources.slskd.rules[0].match: country
+    pangolin.public-resources.slskd.rules[0].value: US
+    pangolin.public-resources.slskd.rules[0].priority: 0
+    pangolin.public-resources.slskd.rules[1].action: deny
+    pangolin.public-resources.slskd.rules[1].match: country
+    pangolin.public-resources.slskd.rules[1].value: ALL
+    pangolin.public-resources.slskd.rules[1].priority: 10

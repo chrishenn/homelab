@@ -1,0 +1,72 @@
+---
+services:
+  keeper:
+    profiles: [keeper]
+    image: ghcr.io/ridafkih/keeper-services:latest
+    environment:
+      BETTER_AUTH_URL: https://keeper.chenn.dev
+      TRUSTED_ORIGINS: https://keeper.chenn.dev
+      DATABASE_URL: postgresql://keeper:keeper@keeper_db/keeper
+      REDIS_URL: redis://keeper_redis:6379
+      ENCRYPTION_KEY: secret_key
+      BETTER_AUTH_SECRET: secret_key
+
+    depends_on:
+      keeper_db:
+        condition: service_healthy
+      keeper_redis:
+        condition: service_healthy
+    networks: [newt, keeper]
+    labels:
+      homepage.group: Tools
+      homepage.name: Keeper
+      homepage.icon: keeper-security.png
+      homepage.href: https://keeper.chenn.dev
+      homepage.description: Calendar Automation
+
+      pangolin.public-resources.keeper.name: keeper
+      pangolin.public-resources.keeper.full-domain: keeper.chenn.dev
+      pangolin.public-resources.keeper.protocol: http
+      pangolin.public-resources.keeper.ssl: true
+      pangolin.public-resources.keeper.targets[0].method: http
+      pangolin.public-resources.keeper.targets[0].port: 3000
+      pangolin.public-resources.keeper.auth.sso-enabled: true
+      pangolin.public-resources.keeper.rules[0].action: pass
+      pangolin.public-resources.keeper.rules[0].match: country
+      pangolin.public-resources.keeper.rules[0].value: US
+      pangolin.public-resources.keeper.rules[0].priority: 0
+      pangolin.public-resources.keeper.rules[1].action: deny
+      pangolin.public-resources.keeper.rules[1].match: country
+      pangolin.public-resources.keeper.rules[1].value: ALL
+      pangolin.public-resources.keeper.rules[1].priority: 10
+
+  keeper_db:
+    profiles: [keeper]
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: keeper
+      POSTGRES_PASSWORD: keeper
+      POSTGRES_DB: keeper
+    volumes:
+      - $DATA/keeper/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U keeper -d keeper']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [keeper]
+
+  keeper_redis:
+    profiles: [keeper]
+    image: redis:7-alpine
+    volumes:
+      - $DATA/keeper/redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [keeper]
+
+networks:
+  keeper:
