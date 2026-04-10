@@ -8,6 +8,7 @@ https://enterprise-support.nvidia.com/s/article/howto-configure-nvme-over-fabric
 https://enterprise-support.nvidia.com/s/article/How-To-Enable-Verify-and-Troubleshoot-RDMA
 
 https://docs.nvidia.com/doca/sdk/doca-profiles/index.html
+https://developer.nvidia.com/doca-downloads
 
 ```bash
 # 1. install kernel headers. make sure the gcc is installed that the kernel was built with

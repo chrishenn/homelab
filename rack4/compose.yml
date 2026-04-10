@@ -22,6 +22,7 @@ include:
   - apps/converters/handbrake.yml
   - apps/converters/simg.yml
   - apps/converters/8mb.yml
+  - apps/converters/mazanoke.yml
 
   - apps/dev/bytestash.yml
   - apps/dev/chartdb.yml
@@ -96,6 +97,8 @@ include:
   - apps/media/foldergram.yml
   - apps/media/cinephage.yml
   - apps/media/readmeabook.yml
+  - apps/media/grimmory.yml
+  - apps/media/ytp.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml
@@ -121,4 +124,3 @@ include:
   - apps/tools/notediscovery.yml
   - apps/tools/moocup.yml
   - apps/tools/sure.yml
-  - apps/tools/opencut.yml
