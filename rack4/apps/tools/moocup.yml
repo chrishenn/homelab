@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Moocup
-      homepage.icon: moocup.png
+      homepage.icon: https://github.com/jellydeck/moocup/raw/refs/heads/main/static/favicon.svg
       homepage.href: https://moocup.chenn.dev
       homepage.description: Screenshot Editor
 

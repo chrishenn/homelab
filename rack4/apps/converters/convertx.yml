@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Convertx
-      homepage.icon: vertiv-dark.png
+      homepage.icon: https://github.com/C4illin/ConvertX/raw/refs/heads/main/public/favicon.svg
       homepage.href: https://convertx.chenn.dev
       homepage.description: File Converter
 

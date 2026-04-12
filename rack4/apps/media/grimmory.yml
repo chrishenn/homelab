@@ -76,7 +76,7 @@ services:
     volumes:
       - $DATA/grimmory/db/config:/config
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mariadb-admin', 'ping', '-h', 'localhost']
       interval: 5s
       timeout: 5s
       retries: 10

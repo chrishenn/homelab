@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Pluton
-      homepage.icon: restic.png
+      homepage.icon: https://github.com/plutonhq/pluton/blob/main/frontend/public/favicon.png?raw=true
       homepage.href: https://pluton.chenn.dev
       homepage.description: Backup Automation
 

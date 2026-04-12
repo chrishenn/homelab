@@ -11,9 +11,9 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Docker Registry UI
-      homepage.icon: registry.png
+      homepage.icon: docker.png
       homepage.href: https://registry_ui.chenn.dev
-      homepage.description: Docker Registry UIC
+      homepage.description: Docker Registry UI
 
       pangolin.public-resources.reg_ui.name: reg_ui
       pangolin.public-resources.reg_ui.full-domain: reg_ui.chenn.dev

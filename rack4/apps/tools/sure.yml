@@ -31,7 +31,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Sure
-      homepage.icon: Sure.png
+      homepage.icon: sure.png
       homepage.href: https://sure.chenn.dev
       homepage.description: Finance Tracking
 
@@ -42,7 +42,6 @@ services:
       pangolin.public-resources.sure.targets[0].method: http
       pangolin.public-resources.sure.targets[0].port: 3000
       pangolin.public-resources.sure.auth.sso-enabled: true
-      pangolin.public-resources.sure.auth.sso-roles[0]: Member
       pangolin.public-resources.sure.rules[0].action: pass
       pangolin.public-resources.sure.rules[0].match: country
       pangolin.public-resources.sure.rules[0].value: US

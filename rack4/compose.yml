@@ -51,10 +51,10 @@ include:
   - apps/document/paperless.yml
   - apps/document/resume.yml
   - apps/document/stirling.yml
-  - apps/document/cloudreve.yml
   - apps/document/oxicloud.yml
   - apps/document/bento.yml
   - apps/document/etherpad.yml
+  - apps/document/bluefiles.yml
 
   - apps/games/wordle.yml
 
@@ -83,6 +83,7 @@ include:
   - apps/infra/warden.yml
   - apps/infra/registry.yml
   - apps/infra/dockscope.yml
+  - apps/infra/peekaping.yml
 
   - apps/media/arr.yml
   - apps/media/audiobookshelf.yml

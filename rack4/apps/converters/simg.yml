@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Stirling Image
-      homepage.icon: vertiv.png
+      homepage.icon: https://github.com/stirling-image/stirling-image/raw/refs/heads/main/apps/web/public/logo-icon.svg
       homepage.href: https://simg.chenn.dev
       homepage.description: Image Converters
 

@@ -19,7 +19,7 @@ services:
       homepage.group: Infra
       homepage.name: File Browser
       homepage.icon: filebrowser-quantum.png
-      homepage.href: https://files.henn.dev
+      homepage.href: https://files.chenn.dev
       homepage.description: File Browser
 
       pangolin.public-resources.filebrowser.name: filebrowser

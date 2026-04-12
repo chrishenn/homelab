@@ -51,6 +51,7 @@ apps
 - [ ] gitops
     - forgejo repo
     - argo? something auto-deploys the cluster with pulumi, and the apps into the cluster
+- [ ] https://github.com/kite-org/kite
 
 annoyances
 

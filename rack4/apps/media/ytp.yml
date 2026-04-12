@@ -1,3 +1,7 @@
+# sudo mkdir -p $DATA/ytp/config $DATA/ytp/downloads
+# sudo chown -R 1000:1000 $DATA/ytp/config $DATA/ytp/downloads
+# sudo mkdir -p $DATA/ytp/downloads/tmp $DATA/ytp/downloads/files
+# sudo chown -R 1000:1000 $DATA/ytp/downloads/tmp $DATA/ytp/downloads/files
 ---
 services:
   ytp:
@@ -15,7 +19,7 @@ services:
     labels:
       homepage.group: Media
       homepage.name: Ytp
-      homepage.icon: ytptube.png
+      homepage.icon: https://github.com/arabcoders/ytptube/blob/dev/ui/public/images/favicon.png?raw=true
       homepage.href: https://ytp.chenn.dev
       homepage.description: Youtube Downloader
 

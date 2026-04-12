@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Transmute
-      homepage.icon: vertiv.png
+      homepage.icon: https://github.com/transmute-app/transmute/raw/refs/heads/main/assets/samples/svg.svg
       homepage.href: https://transmute.chenn.dev
       homepage.description: File Converters
 

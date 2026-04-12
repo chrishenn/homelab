@@ -1,3 +1,5 @@
+# you need to DIY a docker container for the main aplication
+# https://github.com/Cloud-City-Computing/c2
 ---
 x-c2_env: &c2_env
   MYSQL_ROOT_PASSWORD: pass

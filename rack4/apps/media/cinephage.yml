@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: Media
       homepage.name: Cinephage
-      homepage.icon: cinny.png
+      homepage.icon: https://github.com/MoldyTaint/Cinephage/blob/main/static/logo.png?raw=true
       homepage.href: https://cinephage.chenn.dev
       homepage.description: Media Management
 
