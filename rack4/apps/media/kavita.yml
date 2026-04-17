@@ -1,0 +1,36 @@
+---
+services:
+  kavita:
+    profiles: [kavita]
+    image: lscr.io/linuxserver/kavita:latest
+    container_name: kavita
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/kavita/config:/config
+      - $DATA/kavita/data:/data
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Kavita
+      homepage.icon: kavita.png
+      homepage.href: https://kavita.chenn.dev
+      homepage.description: Book Server
+
+      pangolin.public-resources.kavita.name: kavita
+      pangolin.public-resources.kavita.full-domain: kavita.chenn.dev
+      pangolin.public-resources.kavita.protocol: http
+      pangolin.public-resources.kavita.ssl: true
+      pangolin.public-resources.kavita.targets[0].method: http
+      pangolin.public-resources.kavita.targets[0].port: 5000
+      pangolin.public-resources.kavita.auth.sso-enabled: true
+      pangolin.public-resources.kavita.auth.sso-roles[0]: Member
+      pangolin.public-resources.kavita.rules[0].action: pass
+      pangolin.public-resources.kavita.rules[0].match: country
+      pangolin.public-resources.kavita.rules[0].value: US
+      pangolin.public-resources.kavita.rules[1].action: deny
+      pangolin.public-resources.kavita.rules[1].match: country
+      pangolin.public-resources.kavita.rules[1].value: ALL

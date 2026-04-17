@@ -104,7 +104,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
-      homepage.icon: miro.png
+      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miro.chenn.dev
       homepage.description: P2P Video Chat
 
@@ -116,15 +116,12 @@ services:
       pangolin.public-resources.miro.targets[0].port: 3000
       pangolin.public-resources.miro.auth.sso-enabled: true
       pangolin.public-resources.miro.auth.sso-roles[0]: Member
-
       pangolin.public-resources.miro.rules[0].action: pass
       pangolin.public-resources.miro.rules[0].match: country
       pangolin.public-resources.miro.rules[0].value: US
-      pangolin.public-resources.miro.rules[0].priority: 0
       pangolin.public-resources.miro.rules[1].action: deny
       pangolin.public-resources.miro.rules[1].match: country
       pangolin.public-resources.miro.rules[1].value: ALL
-      pangolin.public-resources.miro.rules[1].priority: 10
 
   miros:
     profiles: [miros]
@@ -447,7 +444,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
-      homepage.icon: miro.png
+      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miros.chenn.dev
       homepage.description: Group Video Chat
 
@@ -459,15 +456,12 @@ services:
       pangolin.public-resources.miros.targets[0].port: 3010
       pangolin.public-resources.miros.auth.sso-enabled: true
       pangolin.public-resources.miros.auth.sso-roles[0]: Member
-
       pangolin.public-resources.miros.rules[0].action: pass
       pangolin.public-resources.miros.rules[0].match: country
       pangolin.public-resources.miros.rules[0].value: US
-      pangolin.public-resources.miros.rules[0].priority: 0
       pangolin.public-resources.miros.rules[1].action: deny
       pangolin.public-resources.miros.rules[1].match: country
       pangolin.public-resources.miros.rules[1].value: ALL
-      pangolin.public-resources.miros.rules[1].priority: 10
 
       pangolin.public-resources.tcp-40000.name: tcp-40000
       pangolin.public-resources.tcp-40000.protocol: tcp

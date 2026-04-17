@@ -52,15 +52,12 @@ services:
       pangolin.public-resources.jellyfin.targets[0].port: 8096
       pangolin.public-resources.jellyfin.auth.sso-enabled: true
       pangolin.public-resources.jellyfin.auth.sso-roles[0]: Member
-
       pangolin.public-resources.jellyfin.rules[0].action: pass
       pangolin.public-resources.jellyfin.rules[0].match: country
       pangolin.public-resources.jellyfin.rules[0].value: US
-      pangolin.public-resources.jellyfin.rules[0].priority: 0
       pangolin.public-resources.jellyfin.rules[1].action: deny
       pangolin.public-resources.jellyfin.rules[1].match: country
       pangolin.public-resources.jellyfin.rules[1].value: ALL
-      pangolin.public-resources.jellyfin.rules[1].priority: 10
 
   jellyfin-discovery:
     profiles: [jellyfin]

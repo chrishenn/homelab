@@ -22,6 +22,10 @@ connectIPVersion: v4
 customDNS:
   customTTL: 1h
   filterUnmappedTypes: false
+  # lancache. according to https://github.com/uklans/cache-domains, this is the only domain we need to rewrite
+  mapping:
+    lancache.steamcontent.com: 192.168.1.143
+    steam.cache.lancache.net: 192.168.1.143
 
 blocking:
   # Note: if the same group has both allow/denylists, allowlists take precedence

@@ -26,7 +26,6 @@ services:
       OIDC_GROUPS_CLAIM: groups
       OIDC_SCOPES: openid,profile,email,groups
       OIDC_GROUP_ROLE_MAPPINGS: admin=admin,user=operator
-
     networks: [newt]
     labels:
       homepage.group: Infra
@@ -41,3 +40,16 @@ services:
       pangolin.public-resources.pulse.ssl: true
       pangolin.public-resources.pulse.targets[0].method: http
       pangolin.public-resources.pulse.targets[0].port: 7655
+      pangolin.public-resources.pulse.auth.sso-enabled: true
+      pangolin.public-resources.pulse.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.pulse.rules[0].action: allow
+      pangolin.public-resources.pulse.rules[0].match: path
+      pangolin.public-resources.pulse.rules[0].value: '/api/*'
+
+      pangolin.public-resources.pulse.rules[1].action: pass
+      pangolin.public-resources.pulse.rules[1].match: country
+      pangolin.public-resources.pulse.rules[1].value: US
+      pangolin.public-resources.pulse.rules[2].action: deny
+      pangolin.public-resources.pulse.rules[2].match: country
+      pangolin.public-resources.pulse.rules[2].value: ALL

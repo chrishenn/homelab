@@ -6,8 +6,8 @@ services:
     container_name: pangolin
     restart: unless-stopped
     environment:
-      SERVER_SECRET: ${SERVER_SECRET}
-      EMAIL_SMTP_PASS: ${EMAIL_SMTP_PASS}
+      SERVER_SECRET: ${PANGOLIN_SERVER_SECRET}
+      EMAIL_SMTP_PASS: ${SMTP_TOKEN}
     volumes:
       - ./config:/app/config
     healthcheck:
@@ -61,6 +61,17 @@ services:
       - '40007:40007/udp'
       - '40008:40008/udp'
       - '40009:40009/udp'
+      - '7881:7881/tcp'
+      - '50000:50000/udp'
+      - '50001:50001/udp'
+      - '50002:50002/udp'
+      - '50003:50003/udp'
+      - '50004:50004/udp'
+      - '50005:50005/udp'
+      - '50006:50006/udp'
+      - '50007:50007/udp'
+      - '50008:50008/udp'
+      - '50009:50009/udp'
 
   traefik:
     image: docker.io/traefik:latest
@@ -88,6 +99,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./beszel_agent_data:/var/lib/beszel-agent
     environment:
+      # do I need to open this on the vps firewall?
       LISTEN: 45876
       KEY: ${VPS0_BESZEL_KEY}
       TOKEN: ${VPS0_BESZEL_TOKEN}

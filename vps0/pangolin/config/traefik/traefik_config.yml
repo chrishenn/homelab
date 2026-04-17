@@ -57,14 +57,17 @@ entryPoints:
     http:
       tls:
         certResolver: 'letsencrypt'
+
   udp-10000:
     address: ':10000/udp'
+
   tcp-2424:
     address: ':2424/tcp'
   tcp-2525:
     address: ':2525/tcp'
   tcp-2626:
     address: ':2626/tcp'
+
   tcp-40000:
     address: ':40000/tcp'
   tcp-40001:
@@ -87,6 +90,7 @@ entryPoints:
     address: ':40009/tcp'
   tcp-40010:
     address: ':40010/tcp'
+
   udp-40000:
     address: ':40000/udp'
   udp-40001:
@@ -109,6 +113,30 @@ entryPoints:
     address: ':40009/udp'
   udp-40010:
     address: ':40010/udp'
+
+  tcp-7881:
+    address: ':7881/tcp'
+
+  udp-50000:
+    address: ':50000/udp'
+  udp-50001:
+    address: ':50001/udp'
+  udp-50002:
+    address: ':50002/udp'
+  udp-50003:
+    address: ':50003/udp'
+  udp-50004:
+    address: ':50004/udp'
+  udp-50005:
+    address: ':50005/udp'
+  udp-50006:
+    address: ':50006/udp'
+  udp-50007:
+    address: ':50007/udp'
+  udp-50008:
+    address: ':50008/udp'
+  udp-50009:
+    address: ':50009/udp'
 
 serversTransport:
   insecureSkipVerify: true

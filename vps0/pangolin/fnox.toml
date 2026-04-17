@@ -6,8 +6,7 @@ account = "my.1password.com"
 [secrets]
 CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
 
-SERVER_SECRET = { provider = "onepass", value = "op://homelab/vps0/pangolin_server_secret" }
-EMAIL_SMTP_PASS = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
+PANGOLIN_SERVER_SECRET = { provider = "onepass", value = "op://homelab/vps0/pangolin_server_secret" }
 
 VPS0_BESZEL_KEY = { provider = "onepass", value = "op://homelab/vps0/beszel_key" }
 VPS0_BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/vps0/beszel_token" }

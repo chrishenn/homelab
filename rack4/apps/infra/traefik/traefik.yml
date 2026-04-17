@@ -4,9 +4,12 @@ global:
 
 experimental:
   plugins:
+    fullUrlRewrite:
+      moduleName: github.com/e-flux-platform/full-url-rewrite-traefik-plugin
+      version: v0.0.7
     oidc:
-      moduleName: 'github.com/sevensolutions/traefik-oidc-auth'
-      version: 'v0.18.0'
+      moduleName: github.com/sevensolutions/traefik-oidc-auth
+      version: v0.19.0
 
 serversTransport:
   insecureSkipVerify: true

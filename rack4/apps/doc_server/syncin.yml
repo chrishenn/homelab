@@ -1,0 +1,177 @@
+# 10/10 incredible work. No more Google Drive for me!
+# - collabora works, even from mobile browser
+# - documentation is STELLAR
+
+# I have just the tiniest set of gripes
+# - mounting folders is clunky
+# - there's no straightforward way to put external auth (like pangolin SSO) in front
+# - UI is ugly and awkward
+#   - I can't put a bookmark to any location anywhere I'd like - I have to navigate to spaces -> spacename -> folder
+#       every time I log in
+#   - Can't disable recents. I hate recents with a fiery passion
+#   - UI bug: The chevron to collapse the "shared" section does not collapse the section
+#   - padding around UI elements is too small
+#   - tool and status bars are not hideable
+#   - user icon is on the incorrect (right) side of app
+#   - search section should not be its own top-level tab - should be rechable from anywhere with a hotkey (ctrl+k)
+#   - redundant "admin" and "account" icons
+#   - user settings menu is a side-panel instead of a menu
+#   - file nav requires a double-click - weird on mobile, and usually configurable on desktop
+#   - bug: can't add 2FA OTP if you use OIDC auto-created user (because there's no password)
+#   - bug: can't set password if you use OIDC auto-created user
+#   - big forward, back, and refresh buttons in the UI, while browser works just fine
+#   - non-standard logout icon
+#   - UI doesn't respect the delete key
+#   - file operations slide in a side panel instead of a success toast or icon. auto-hides very slowly
+#   - arrow keys don't work for image viewer navigation
+
+---
+services:
+  syncin:
+    profiles: [syncin]
+    image: syncin/server:latest
+    container_name: syncin
+    restart: unless-stopped
+    environment:
+      SYNCIN_AUTH_ENCRYPTIONKEY: ${SYNCIN_ENCRYPTION_KEY}
+      SYNCIN_AUTH_TOKEN_ACCESS_SECRET: ${SYNCIN_TOKEN_ACCESS_SECRET}
+      SYNCIN_AUTH_TOKEN_REFRESH_SECRET: ${SYNCIN_TOKEN_REFRESH_SECRET}
+      SYNCIN_SERVER_TRUSTPROXY: 1
+      PUID: ${PUID}
+      PGID: ${PGID}
+      # set INIT_ADMIN to empty to indicate 'false'. derp
+      INIT_ADMIN:
+      FORCE_PERMISSIONS: true
+      SYNCIN_MYSQL_URL: mysql://root:syncin@syncin_db:3306/syncin
+
+      SYNCIN_APPLICATIONS_FILES_DATAPATH: /app/data
+      SYNCIN_APPLICATIONS_FILES_SHOWHIDDENFILES: true
+
+      SYNCIN_APPLICATIONS_FILES_COLLABORA_ENABLED: true
+      SYNCIN_APPLICATIONS_FILES_ONLYOFFICE_ENABLED: false
+      SYNCIN_APPLICATIONS_FILES_ONLYOFFICE_SECRET:
+
+      SYNCIN_MAIL_HOST: $SMTP_HOST
+      SYNCIN_MAIL_PORT: 465
+      SYNCIN_MAIL_SENDER: $SMTP_USER
+      SYNCIN_MAIL_AUTH_USER: $SMTP_USER
+      SYNCIN_MAIL_AUTH_PASS: $SMTP_TOKEN
+      SYNCIN_MAIL_SECURE: true
+      SYNCIN_MAIL_REJECTUNAUTHORIZED: true
+
+      SYNCIN_AUTH_PROVIDER: oidc
+      SYNCIN_AUTH_OIDC_OPTIONS_ENABLEPASSWORDAUTH: false
+      SYNCIN_AUTH_OIDC_OPTIONS_BUTTONTEXT: Pocket ID
+      SYNCIN_AUTH_OIDC_ISSUERURL: https://pocketid.chenn.dev
+      SYNCIN_AUTH_OIDC_REDIRECTURI: https://syncin.chenn.dev/api/auth/oidc/callback
+      SYNCIN_AUTH_OIDC_CLIENTID: ${SYNCIN_OIDC_CLIENT}
+      SYNCIN_AUTH_OIDC_CLIENTSECRET: ${SYNCIN_OIDC_SECRET}
+      SYNCIN_AUTH_OIDC_OPTIONS_AUTOCREATEUSER: true
+      SYNCIN_AUTH_OIDC_OPTIONS_ADMINROLEORGROUP: admin
+      SYNCIN_AUTH_OIDC_OPTIONS_AUTOREDIRECT: true
+      SYNCIN_AUTH_OIDC_SECURITY_SCOPE: openid email profile groups
+      SYNCIN_AUTH_OIDC_SECURITY_SUPPORTPKCE: false
+    volumes:
+      - ./syncin/environment.yaml:/app/environment/environment.yaml
+      - $DATA/syncin/data:/app/data
+      - /mnt/h:/mnt/h
+      - /mnt/k:/mnt/k
+      - /mnt/q:/mnt/q
+    networks: [syncin, newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Sync-In
+      homepage.icon: https://raw.githubusercontent.com/Sync-in/server/refs/heads/main/frontend/src/assets/favicon.svg
+      homepage.href: https://syncin.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.syncin.name: syncin
+      pangolin.public-resources.syncin.full-domain: syncin.chenn.dev
+      pangolin.public-resources.syncin.protocol: http
+      pangolin.public-resources.syncin.ssl: true
+
+      pangolin.public-resources.syncin.targets[0].method: http
+      pangolin.public-resources.syncin.targets[0].path-match: prefix
+      pangolin.public-resources.syncin.targets[0].path: /
+      pangolin.public-resources.syncin.targets[0].port: 8080
+      pangolin.public-resources.syncin.targets[0].priority: 1
+
+      pangolin.public-resources.syncin.auth.sso-enabled: true
+      pangolin.public-resources.syncin.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.syncin.rules[0].action: allow
+      pangolin.public-resources.syncin.rules[0].match: path
+      pangolin.public-resources.syncin.rules[0].value: /browser/*
+
+      pangolin.public-resources.syncin.rules[1].action: allow
+      pangolin.public-resources.syncin.rules[1].match: path
+      pangolin.public-resources.syncin.rules[1].value: /hosting/*
+
+      pangolin.public-resources.syncin.rules[2].action: allow
+      pangolin.public-resources.syncin.rules[2].match: path
+      pangolin.public-resources.syncin.rules[2].value: /cool/*
+
+      pangolin.public-resources.syncin.rules[3].action: allow
+      pangolin.public-resources.syncin.rules[3].match: path
+      pangolin.public-resources.syncin.rules[3].value: /api/*
+
+      pangolin.public-resources.syncin.rules[4].action: allow
+      pangolin.public-resources.syncin.rules[4].match: path
+      pangolin.public-resources.syncin.rules[4].value: /wopi/*
+
+      pangolin.public-resources.syncin.rules[5].action: pass
+      pangolin.public-resources.syncin.rules[5].match: country
+      pangolin.public-resources.syncin.rules[5].value: US
+
+      pangolin.public-resources.syncin.rules[6].action: deny
+      pangolin.public-resources.syncin.rules[6].match: country
+      pangolin.public-resources.syncin.rules[6].value: ALL
+
+  syncin_db:
+    profiles: [syncin]
+    image: mariadb:11
+    container_name: syncin_db
+    restart: unless-stopped
+    command: --innodb_ft_cache_size=16000000 --max-allowed-packet=1G
+    environment:
+      MYSQL_ROOT_PASSWORD: syncin
+      MYSQL_DATABASE: syncin
+    volumes:
+      - $DATA/syncin/db:/var/lib/mysql
+    networks: [syncin]
+
+  syncin_collabora:
+    profiles: [syncin]
+    image: collabora/code:latest
+    container_name: syncin_collabora
+    restart: unless-stopped
+    environment:
+      extra_params: >-
+        --o:ssl.enable=false
+        --o:ssl.termination=true
+        --o:logging.disable_server_audit=true
+        --o:admin_console.enable=false
+    cap_drop: [ALL]
+    cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
+    networks: [syncin, newt]
+    labels:
+      pangolin.public-resources.syncin.targets[1].method: http
+      pangolin.public-resources.syncin.targets[1].path-match: prefix
+      pangolin.public-resources.syncin.targets[1].path: /browser
+      pangolin.public-resources.syncin.targets[1].port: 9980
+      pangolin.public-resources.syncin.targets[1].priority: 10
+
+      pangolin.public-resources.syncin.targets[2].method: http
+      pangolin.public-resources.syncin.targets[2].path-match: prefix
+      pangolin.public-resources.syncin.targets[2].path: /hosting
+      pangolin.public-resources.syncin.targets[2].port: 9980
+      pangolin.public-resources.syncin.targets[2].priority: 20
+
+      pangolin.public-resources.syncin.targets[3].method: http
+      pangolin.public-resources.syncin.targets[3].path-match: prefix
+      pangolin.public-resources.syncin.targets[3].path: /cool
+      pangolin.public-resources.syncin.targets[3].port: 9980
+      pangolin.public-resources.syncin.targets[3].priority: 30
+
+networks:
+  syncin:

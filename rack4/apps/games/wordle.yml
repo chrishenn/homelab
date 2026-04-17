@@ -21,12 +21,9 @@ services:
       pangolin.public-resources.wordle.targets[0].port: 80
       pangolin.public-resources.wordle.auth.sso-enabled: true
       pangolin.public-resources.wordle.auth.sso-roles[0]: Member
-
       pangolin.public-resources.wordle.rules[0].action: pass
       pangolin.public-resources.wordle.rules[0].match: country
       pangolin.public-resources.wordle.rules[0].value: US
-      pangolin.public-resources.wordle.rules[0].priority: 0
       pangolin.public-resources.wordle.rules[1].action: deny
       pangolin.public-resources.wordle.rules[1].match: country
       pangolin.public-resources.wordle.rules[1].value: ALL
-      pangolin.public-resources.wordle.rules[1].priority: 10

@@ -1,0 +1,14 @@
+---
+services:
+  cs2:
+    profiles: [cs2]
+    image: gameservermanagers/gameserver:cs2
+    container_name: cs2
+    restart: unless-stopped
+    volumes:
+      - $DATA/cs2:/data
+    ports:
+      - 27016:27015/tcp
+      - 27016:27015/udp
+      - 27021:27020/udp
+      - 27006:27005/udp

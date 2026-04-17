@@ -6,23 +6,30 @@
 services:
   forgejo:
     profiles: [forgejo]
-    image: data.forgejo.org/forgejo/forgejo:14
+    image: codeberg.org/forgejo/forgejo:15.0.0
     container_name: forgejo
     restart: unless-stopped
     environment:
+      FORGEJO____APP_NAME: Chicken Forge
+      ROOT_URL: https://forgejo.henn.dev
       USER_UID: $PUID
       USER_GID: $PGID
       FORGEJO__ui__DEFAULT_THEME: forgejo-auto-deuteranopia-protanopia
 
+      FORGEJO__service__ENABLE_INTERNAL_SIGNIN: false
       FORGEJO__service__DISABLE_REGISTRATION: false
       FORGEJO__service__REGISTER_MANUAL_CONFIRM: false
       FORGEJO__service__REGISTER_EMAIL_CONFIRM: false
-      FORGEJO__service__ENABLE_INTERNAL_SIGNIN: false
       FORGEJO__service__DEFAULT_KEEP_EMAIL_PRIVATE: true
 
       FORGEJO__openid__ENABLE_OPENID_SIGNUP: true
       FORGEJO__openid__ENABLE_OPENID_SIGNIN: true
       FORGEJO__openid__WHITELISTED_URIS: '["$OIDC",]'
+
+      FORGEJO__oauth2_client__OPENID_CONNECT_SCOPES: email profile groups
+      FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION: true
+      FORGEJO__oauth2_client__USERNAME: email
+      FORGEJO__oauth2_client__ACCOUNT_LINKING: auto
 
       FORGEJO__repository__ENABLE_PUSH_CREATE_USER: true
       FORGEJO__repository__ENABLE_PUSH_CREATE_ORG: true
@@ -43,14 +50,10 @@ services:
       FORGEJO__mailer__USER: $SMTP_USER
       FORGEJO__mailer__PASSWD: $SMTP_TOKEN
       FORGEJO__mailer__FROM: $SMTP_USER
-
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - $DATA/forgejo/data:/data
-    healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
-    networks: [forgejo, newt]
+    networks: [forgejo, traefik]
     labels:
       homepage.group: Dev
       homepage.name: Forgejo
@@ -58,44 +61,53 @@ services:
       homepage.href: https://forgejo.chenn.dev
       homepage.description: Git Server
 
-      pangolin.public-resources.forgejo.name: forgejo
-      pangolin.public-resources.forgejo.full-domain: forgejo.chenn.dev
-      pangolin.public-resources.forgejo.protocol: http
-      pangolin.public-resources.forgejo.ssl: true
-      pangolin.public-resources.forgejo.targets[0].method: http
-      pangolin.public-resources.forgejo.targets[0].port: 3000
+      # hopefully this will enable access on multiple urls: https://codeberg.org/forgejo/forgejo/issues/11840
+      traefik.enable: true
+      traefik.http.routers.forgejo.rule: Host(`forgejo.henn.dev`)
+      traefik.http.routers.forgejo.entrypoints: websecure
+      traefik.http.routers.forgejo.middlewares: hdrs@file
+      traefik.http.routers.forgejo.tls.certresolver: cf
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
 
-      pangolin.public-resources.forgejo.auth.sso-enabled: true
-      pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
+      traefik.tcp.routers.forgejo_ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.forgejo_ssh.entrypoints: tcp-2424
+      traefik.tcp.routers.forgejo_ssh.service: forgejo_ssh
+      traefik.tcp.services.forgejo_ssh.loadbalancer.server.port: 22
 
-      pangolin.public-resources.forgejo.rules[0].action: allow
-      pangolin.public-resources.forgejo.rules[0].match: path
-      pangolin.public-resources.forgejo.rules[0].value: /v2/*
-      pangolin.public-resources.forgejo.rules[0].priority: 0
-
-      pangolin.public-resources.forgejo.rules[1].action: allow
-      pangolin.public-resources.forgejo.rules[1].match: path
-      pangolin.public-resources.forgejo.rules[1].value: /api/*
-      pangolin.public-resources.forgejo.rules[1].priority: 5
-
-      pangolin.public-resources.forgejo.rules[2].action: pass
-      pangolin.public-resources.forgejo.rules[2].match: country
-      pangolin.public-resources.forgejo.rules[2].value: US
-      pangolin.public-resources.forgejo.rules[2].priority: 10
-
-      pangolin.public-resources.forgejo.rules[3].action: deny
-      pangolin.public-resources.forgejo.rules[3].match: country
-      pangolin.public-resources.forgejo.rules[3].value: ALL
-      pangolin.public-resources.forgejo.rules[3].priority: 20
-
-      pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
-      pangolin.public-resources.forgejo_ssh.protocol: tcp
-      pangolin.public-resources.forgejo_ssh.proxy-port: 2424
-      pangolin.public-resources.forgejo_ssh.targets[0].port: 22
+      # works - just has performance problems. Spin up a separate instance if you need public access
+  #      pangolin.public-resources.forgejo.name: forgejo
+  #      pangolin.public-resources.forgejo.full-domain: forgejo.chenn.dev
+  #      pangolin.public-resources.forgejo.protocol: http
+  #      pangolin.public-resources.forgejo.ssl: true
+  #      pangolin.public-resources.forgejo.targets[0].method: http
+  #      pangolin.public-resources.forgejo.targets[0].port: 3000
+  #
+  #      pangolin.public-resources.forgejo.auth.sso-enabled: true
+  #      pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
+  #
+  #      pangolin.public-resources.forgejo.rules[0].action: allow
+  #      pangolin.public-resources.forgejo.rules[0].match: path
+  #      pangolin.public-resources.forgejo.rules[0].value: /v2/*
+  #
+  #      pangolin.public-resources.forgejo.rules[1].action: allow
+  #      pangolin.public-resources.forgejo.rules[1].match: path
+  #      pangolin.public-resources.forgejo.rules[1].value: /api/*
+  #
+  #      pangolin.public-resources.forgejo.rules[2].action: pass
+  #      pangolin.public-resources.forgejo.rules[2].match: country
+  #      pangolin.public-resources.forgejo.rules[2].value: US
+  #      pangolin.public-resources.forgejo.rules[3].action: deny
+  #      pangolin.public-resources.forgejo.rules[3].match: country
+  #      pangolin.public-resources.forgejo.rules[3].value: ALL
+  #
+  #      pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
+  #      pangolin.public-resources.forgejo_ssh.protocol: tcp
+  #      pangolin.public-resources.forgejo_ssh.proxy-port: 2424
+  #      pangolin.public-resources.forgejo_ssh.targets[0].port: 22
 
   forgejo_db:
     profiles: [forgejo]
-    image: postgres:18
+    image: postgres:18-alpine
     container_name: forgejo_db
     restart: unless-stopped
     environment:

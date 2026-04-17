@@ -1,5 +1,19 @@
 ---
 services:
+  lancache:
+    profiles: [lancache]
+    image: lancachenet/monolithic:latest
+    container_name: lancache
+    restart: unless-stopped
+    environment:
+      CACHE_DISK_SIZE: 1000g
+    volumes:
+      - $DATA/lancache/cache:/data/cache
+      - $DATA/lancache/logs:/data/logs
+    ports:
+      - '${LANCACHE_IP}:80:80/tcp'
+      - '${LANCACHE_IP}:443:443/tcp'
+
   lancache_dns:
     profiles: [lancache]
     image: lancachenet/lancache-dns:latest
@@ -14,16 +28,14 @@ services:
       - '${LANCACHE_DNS}:53:53/udp'
       - '${LANCACHE_DNS}:53:53/tcp'
 
-  lancache:
+  # it did auto-detect the lancache server at LANCACHE_IP
+  # dc run --rm -it lancache_prefill select-apps
+  # dc run --rm -it lancache_prefill prefill
+  lancache_prefill:
     profiles: [lancache]
-    image: lancachenet/monolithic:latest
-    container_name: lancache
-    restart: unless-stopped
-    environment:
-      CACHE_DISK_SIZE: 1000g
+    image: tpill90/steam-lancache-prefill:latest
+    container_name: lancache_prefill
+    restart: no
+    network_mode: host
     volumes:
-      - $DATA/lancache/cache:/data/cache
-      - $DATA/lancache/logs:/data/logs
-    ports:
-      - '${LANCACHE_IP}:80:80/tcp'
-      - '${LANCACHE_IP}:443:443/tcp'
+      - $DATA/lancache/prefill:/Config

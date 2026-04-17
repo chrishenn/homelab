@@ -1,0 +1,42 @@
+# simple file browser that works well, with previews. I've removed the onlyoffice integration
+---
+services:
+  files:
+    profiles: [files]
+    image: gtstef/filebrowser:stable
+    container_name: files
+    restart: unless-stopped
+    environment:
+      FILEBROWSER_CONFIG: /config.yaml
+      FILEBROWSER_ADMIN_PASSWORD: ${FILES_PASS}
+      FILEBROWSER_OIDC_CLIENT_ID: ${FILES_OIDC_CLIENT}
+      FILEBROWSER_OIDC_CLIENT_SECRET: ${FILES_OIDC_SECRET}
+    volumes:
+      - ./files/config.yaml:/config.yaml
+      - $DATA/files/data:/home/filebrowser/data
+      - /mnt/k:/mnt/k
+      - /mnt/h:/mnt/h
+      - /mnt/q:/mnt/q
+      - /mnt/f:/mnt/f
+    networks: [newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Filebrowser Quantum
+      homepage.icon: filebrowser-quantum.png
+      homepage.href: https://files.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.files.name: files
+      pangolin.public-resources.files.full-domain: files.chenn.dev
+      pangolin.public-resources.files.protocol: http
+      pangolin.public-resources.files.ssl: true
+      pangolin.public-resources.files.targets[0].method: http
+      pangolin.public-resources.files.targets[0].port: 80
+      pangolin.public-resources.files.auth.sso-enabled: true
+      pangolin.public-resources.files.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.files.rules[0].action: pass
+      pangolin.public-resources.files.rules[0].match: country
+      pangolin.public-resources.files.rules[0].value: US
+      pangolin.public-resources.files.rules[1].action: deny
+      pangolin.public-resources.files.rules[1].match: country
+      pangolin.public-resources.files.rules[1].value: ALL

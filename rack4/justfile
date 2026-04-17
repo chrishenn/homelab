@@ -1,4 +1,5 @@
 # compose operations over {profiles, svcs}
+alias a := attach
 alias b := bounce
 alias f := follow
 alias s := sync

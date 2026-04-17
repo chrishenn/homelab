@@ -4,13 +4,6 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
-CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
-
-USER = { provider = "onepass", value = "op://homelab/chris/username" }
-PASS = { provider = "onepass", value = "op://homelab/chris/password" }
-DOCKERHUB_USER = { provider = "onepass", value = "op://homelab/dockerhub/username" }
-DOCKERHUB_PASS = { provider = "onepass", value = "op://homelab/dockerhub/password" }
 
 BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel/key" }
 BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel/token" }

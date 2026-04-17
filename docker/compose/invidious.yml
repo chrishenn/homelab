@@ -21,7 +21,7 @@ services:
           host: invidious_db
           port: 5432
         check_tables: true
-        signature_server: inv_sig_helper:12999
+        signature_server: invidious_helper:12999
         visitor_data: ${INVIDIOUS_VISITOR}
         po_token: ${INV_TOKEN}
         # external_port:
@@ -34,57 +34,52 @@ services:
       interval: 30s
       timeout: 5s
       retries: 2
-    logging:
-      options:
-        max-size: '1G'
-        max-file: '4'
-    depends_on:
-      - invidious_db
-    networks: [traefik]
+    networks: [invidious, traefik]
     labels:
-      traefik.enable: true
-      traefik.http.routers.invidious.rule: Host(`invidious.henn.dev`)
-      traefik.http.routers.invidious.entrypoints: websecure
-      traefik.http.routers.invidious.tls.certresolver: cf
-      traefik.http.services.invidious.loadbalancer.server.port: 3000
       homepage.group: Tools
       homepage.name: Invidious
       homepage.icon: invidious.png
       homepage.href: https://invidious.henn.dev
       homepage.description: Private Youtube Frontend
 
-  inv_sig_helper:
+      traefik.enable: true
+      traefik.http.routers.invidious.rule: Host(`invidious.henn.dev`)
+      traefik.http.routers.invidious.entrypoints: websecure
+      traefik.http.routers.invidious.tls.certresolver: cf
+      traefik.http.services.invidious.loadbalancer.server.port: 3000
+
+  invidious_helper:
     profiles: [invidious]
     image: quay.io/invidious/inv-sig-helper:latest
-    container_name: inv_sig_helper
+    container_name: invidious_helper
     restart: unless-stopped
     init: true
     command: ['--tcp', '0.0.0.0:12999']
     environment:
-      - RUST_LOG=info
+      RUST_LOG: info
     cap_drop:
       - ALL
     read_only: true
     security_opt:
       - no-new-privileges=true
-    networks: [traefik]
+    networks: [invidious]
 
   invidious_db:
     profiles: [invidious]
-    image: docker.io/library/postgres:14
+    image: postgres:18-alpine
     container_name: invidious_db
     restart: unless-stopped
-    volumes:
-      - postgresdata:/var/lib/postgresql/data
-      - ./invidious/sql:/config/sql
-      - ./invidious/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
     environment:
       POSTGRES_DB: invidious
       POSTGRES_USER: invidious
       POSTGRES_PASSWORD: invidious
+    volumes:
+      - $DATA/invidious/db:/var/lib/postgresql
+      - ./invidious/sql:/config/sql
+      - ./invidious/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
-    networks: [traefik]
+    networks: [invidious]
 
-volumes:
-  postgresdata:
+networks:
+  invidious:

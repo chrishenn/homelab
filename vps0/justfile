@@ -1,6 +1,17 @@
+alias s := sync
+
+repo := "/home/chris/Projects/homelab"
+ddir := "/home/chris/Projects/homelab/vps0"
+dusr := "chris"
+dip := env('VPS0_IP')
+dport := "2200"
+
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-sync message="sync":
+sync message="sync" usr=dusr ip=dip dir=repo port=dport:
     git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    ssh {{ usr }}@{{ ip }} -p {{ port }} -At "cd {{ dir }} && git commit -a -m '{{ message }}' || true && git pull && git push"
+
+ssh usr=dusr ip=dip dir=ddir port=dport:
+    ssh {{ usr }}@{{ ip }} -p {{ port }} -t "$(op read op://homelab/svc/bash) && cd {{ dir }} && exec bash -l"

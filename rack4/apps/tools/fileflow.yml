@@ -12,22 +12,43 @@ services:
       TZ: $TZ
       NVIDIA_DRIVER_CAPABILITIES: compute, video, utility
       NVIDIA_VISIBLE_DEVICES: all
+      FF_EULA_ACCEPTED: Yes
+
+      SmtpServer: $SMTP_HOST
+      SmtpPort: 465
+      SmtpSecurity: SSL
+      SmtpFrom: $SMTP_USER
+      SmtpFromAddress: $SMTP_USER
+      SmtpUser: $SMTP_USER
+      SmtpPassword: $SMTP_TOKEN
+
+      OidcAuthority: $OIDC
+      OidcClientId: ${FILEFLOW_OIDC_CLIENT}
+      OidcClientSecret: ${FILEFLOW_OIDC_SECRET}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /mnt/q/media_library:/media
       - $DATA/fileflow/fileflow:/app/Data
       - $DATA/fileflow/temp:/temp
-    networks: [traefik]
+    networks: [newt]
     labels:
       homepage.group: Tools
-      homepage.instance.private.name: Fileflow
-      homepage.instance.private.icon: fileflows.png
-      homepage.instance.private.href: https://fileflow.henn.dev
-      homepage.instance.private.description: Automatic File Flows
+      homepage.name: Fileflow
+      homepage.icon: fileflows.png
+      homepage.href: https://fileflow.chenn.dev
+      homepage.description: Automatic File Flows
 
-      traefik.enable: true
-      traefik.http.routers.fileflow.rule: Host(`fileflow.henn.dev`)
-      traefik.http.routers.fileflow.entrypoints: websecure
-      traefik.http.routers.fileflow.middlewares: hdrs@file
-      traefik.http.routers.fileflow.tls.certresolver: cf
-      traefik.http.services.fileflow.loadbalancer.server.port: 5000
+      pangolin.public-resources.fileflow.name: fileflow
+      pangolin.public-resources.fileflow.full-domain: fileflow.chenn.dev
+      pangolin.public-resources.fileflow.protocol: http
+      pangolin.public-resources.fileflow.ssl: true
+      pangolin.public-resources.fileflow.targets[0].method: http
+      pangolin.public-resources.fileflow.targets[0].port: 5000
+      pangolin.public-resources.fileflow.auth.sso-enabled: true
+      pangolin.public-resources.fileflow.auth.sso-roles[0]: Member
+      pangolin.public-resources.fileflow.rules[0].action: pass
+      pangolin.public-resources.fileflow.rules[0].match: country
+      pangolin.public-resources.fileflow.rules[0].value: US
+      pangolin.public-resources.fileflow.rules[1].action: deny
+      pangolin.public-resources.fileflow.rules[1].match: country
+      pangolin.public-resources.fileflow.rules[1].value: ALL

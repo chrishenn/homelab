@@ -1,9 +1,10 @@
 # compose operations over {profiles, svcs}
-
 alias b := bounce
 alias f := follow
 alias s := sync
 alias p := ps
+alias u := up
+alias d := down
 profile := "'*'"
 
 up profile=profile *svcs:

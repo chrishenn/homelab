@@ -3,6 +3,6 @@
 glab = "latest"
 
 [env]
-BERG_BASE_URL = "forgejo.chenn.dev"
+BERG_BASE_URL = "forgejo.henn.dev"
 BERG_SSH_PORT = "2424"
 BERG_USR = "chris"

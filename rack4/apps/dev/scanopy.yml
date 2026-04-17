@@ -40,17 +40,13 @@ services:
       pangolin.public-resources.scanopy.rules[0].action: allow
       pangolin.public-resources.scanopy.rules[0].match: path
       pangolin.public-resources.scanopy.rules[0].value: /api/*
-      pangolin.public-resources.scanopy.rules[0].priority: 0
 
       pangolin.public-resources.scanopy.rules[1].action: pass
       pangolin.public-resources.scanopy.rules[1].match: country
       pangolin.public-resources.scanopy.rules[1].value: US
-      pangolin.public-resources.scanopy.rules[1].priority: 10
-
       pangolin.public-resources.scanopy.rules[2].action: deny
       pangolin.public-resources.scanopy.rules[2].match: country
       pangolin.public-resources.scanopy.rules[2].value: ALL
-      pangolin.public-resources.scanopy.rules[2].priority: 20
 
   scanopy_daemon:
     profiles: [scanopy]
@@ -67,14 +63,14 @@ services:
       SCANOPY_NAME: scanopy-daemon-homelab
       SCANOPY_MODE: daemon_poll
       SCANOPY_LOG_FILE: /var/log/scanopy/scanopy-daemon-homelab.log
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/scanopy/daemon:/root/.config/daemon
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:60073/api/health || exit 1']
       interval: 5s
       timeout: 3s
       retries: 15
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DATA/scanopy/daemon:/root/.config/daemon
 
   scanopy_db:
     profiles: [scanopy]

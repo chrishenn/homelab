@@ -1,0 +1,12 @@
+[providers.onepass]
+type = "1password"
+vault = "homelab"
+account = "my.1password.com"
+
+[secrets]
+JICOFO_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JICOFO_AUTH_PASSWORD" }
+JVB_AUTH_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JVB_AUTH_PASSWORD" }
+JIGASI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_XMPP_PASSWORD" }
+JIGASI_TRANSCRIBER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIGASI_TRANSCRIBER_PASSWORD" }
+JIBRI_RECORDER_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_RECORDER_PASSWORD" }
+JIBRI_XMPP_PASSWORD = { provider = "onepass", value = "op://homelab/jitsi/JIBRI_XMPP_PASSWORD" }

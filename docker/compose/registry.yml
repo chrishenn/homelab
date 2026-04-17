@@ -1,23 +1,6 @@
-# OCI container registry, and a janky web frontend
+# janky web frontend for docker registry; do not use
 ---
 services:
-  registry:
-    profiles: [registry]
-    image: registry:latest
-    container_name: registry
-    restart: unless-stopped
-    environment:
-      REGISTRY_STORAGE_DELETE_ENABLED: true
-    volumes:
-      - $DATA/registry:/var/lib/registry
-    networks: [traefik]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.registry.rule: Host(`reg.henn.dev`)
-      traefik.http.routers.registry.entrypoints: websecure
-      traefik.http.routers.registry.tls.certresolver: cf
-      traefik.http.services.registry.loadbalancer.server.port: 5000
-
   registry_ui:
     profiles: [registry]
     image: joxit/docker-registry-ui:latest

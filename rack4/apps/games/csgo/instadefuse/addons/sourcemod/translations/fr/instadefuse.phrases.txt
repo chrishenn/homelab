@@ -1,0 +1,32 @@
+"Phrases"
+{
+    "InstaDefuseUnsuccessful"
+    {
+        "#format"	"{1:s},{2:N},{3:.2f}"
+        "fr"		"{1} {2} était à {3} secondes du désamorçage de la bombe."
+    }
+
+    "LiveNadeSomewhere"
+    {
+        "#format"    "{1:s}"
+        "fr"        "{1} Il y a une grenade dégoupillée quelque-part."
+    }
+
+    "MolotovTooClose"
+    {
+        "#format"    "{1:s}"
+        "fr"        "{1} Il y a du feu proche de la bombe."
+    }
+
+    "InstaDefuseSuccessful"
+    {
+        "#format"    "{1:s},{2:N},{3:.2f}"
+        "fr"        "{1} {2} désamorcé avec {3} secondes restantes!"
+    }
+
+    "TeammateHasDefuseKit"
+    {
+        "#format"    "{1:s}"
+        "fr"        "{1} Vous n'avez pas le temps ! Votre coéquipier a un kit de désamorçage !"
+    }
+}

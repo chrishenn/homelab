@@ -1,0 +1,32 @@
+"Phrases"
+{
+    "InstaDefuseUnsuccessful"
+    {
+        "#format"	"{1:s},{2:N},{3:.2f}"
+        "hu"		"{1} {2} {3} másodpercre volt a bomba hatástalanításától."
+    }
+
+    "LiveNadeSomewhere"
+    {
+        "#format"    "{1:s}"
+        "hu"        "{1} Egy gránát van közel a bombához."
+    }
+
+    "MolotovTooClose"
+    {
+        "#format"    "{1:s}"
+        "hu"        "{1} Egy molotov túl közel van a bombához!"
+    }
+
+    "InstaDefuseSuccessful"
+    {
+        "#format"    "{1:s},{2:N},{3:.2f}"
+        "hu"        "{1} {2} hatástalanított, {3} másodperc van hátra!"
+    }
+
+    "TeammateHasDefuseKit"
+    {
+        "#format"    "{1:s}"
+        "hu"        "{1} Nincs időd! Csapattársának van Defuse Kitje!"
+    }
+}

@@ -22,7 +22,7 @@ services:
       homepage.name: Readmeabook
       homepage.icon: read-me-a-book.png
       homepage.href: https://readmeabook.chenn.dev
-      homepage.description: Audiobook Management
+      homepage.description: Audiobook Manager
 
       pangolin.public-resources.readmeabook.name: readmeabook
       pangolin.public-resources.readmeabook.full-domain: readmeabook.chenn.dev
@@ -35,8 +35,6 @@ services:
       pangolin.public-resources.readmeabook.rules[0].action: pass
       pangolin.public-resources.readmeabook.rules[0].match: country
       pangolin.public-resources.readmeabook.rules[0].value: US
-      pangolin.public-resources.readmeabook.rules[0].priority: 0
       pangolin.public-resources.readmeabook.rules[1].action: deny
       pangolin.public-resources.readmeabook.rules[1].match: country
       pangolin.public-resources.readmeabook.rules[1].value: ALL
-      pangolin.public-resources.readmeabook.rules[1].priority: 10

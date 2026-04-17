@@ -1,0 +1,10 @@
+---
+services:
+  csgo:
+    profiles: [csgo]
+    image: gameservermanagers/gameserver:csgo
+    container_name: csgo
+    restart: unless-stopped
+    volumes:
+      - $DATA/csgo:/data
+    network_mode: host

@@ -24,13 +24,12 @@ include:
   - apps/converters/8mb.yml
   - apps/converters/mazanoke.yml
 
-  - apps/dev/bytestash.yml
+  - apps/dev/stash.yml
   - apps/dev/chartdb.yml
   - apps/dev/code.yml
   - apps/dev/cyberchef.yml
   - apps/dev/dumb.yml
   - apps/dev/excalidraw.yml
-  - apps/dev/focalboard.yml
   - apps/dev/forgejo.yml
   - apps/dev/gist.yml
   - apps/dev/gitlab.yml
@@ -41,23 +40,28 @@ include:
   - apps/dev/portabase.yml
   - apps/dev/penpot.yml
   - apps/dev/scanopy.yml
+  - apps/dev/wikijs.yml
 
-  - apps/document/docmost.yml
-  - apps/document/documenso.yml
-  - apps/document/filebrowser.yml
-  - apps/document/hedge.yml
-  - apps/document/openresume.yml
-  - apps/document/pairdrop.yml
-  - apps/document/paperless.yml
-  - apps/document/resume.yml
-  - apps/document/stirling.yml
-  - apps/document/oxicloud.yml
-  - apps/document/bento.yml
-  - apps/document/etherpad.yml
-  - apps/document/bluefiles.yml
-  - apps/document/pdfding.yml
+  - apps/doc_edit/bento.yml
+  - apps/doc_edit/docmost.yml
+  - apps/doc_edit/documenso.yml
+  - apps/doc_edit/pdfding.yml
+  - apps/doc_edit/stirling.yml
+  - apps/doc_edit/overleaf.yml
+
+  - apps/doc_server/etherpad.yml
+  - apps/doc_server/hedge.yml
+  - apps/doc_server/paperless.yml
+  - apps/doc_server/syncthing.yml
+  - apps/doc_server/files.yml
+  - apps/doc_server/syncin.yml
+
+  - apps/finance/actual.yml
+  - apps/finance/sure.yml
 
   - apps/games/wordle.yml
+  - apps/games/csgo.yml
+  - apps/games/cs2.yml
 
   - apps/infra/apprise.yml
   - apps/infra/aptcache.yml
@@ -106,8 +110,13 @@ include:
   - apps/media/transcodarr.yml
   - apps/media/mdrm.yml
   - apps/media/mkvprio.yml
+  - apps/media/recyclarr.yml
+  - apps/media/kavita.yml
+  - apps/media/flood.yml
 
-  - apps/tools/actual.yml
+  - apps/resume/openresume.yml
+  - apps/resume/resume.yml
+
   - apps/tools/airtrail.yml
   - apps/tools/fileflow.yml
   - apps/tools/karakeep.yml
@@ -130,5 +139,7 @@ include:
   - apps/tools/keeper.yml
   - apps/tools/notediscovery.yml
   - apps/tools/moocup.yml
-  - apps/tools/sure.yml
-  - apps/tools/nodebb.yml
+  - apps/tools/pairdrop.yml
+  - apps/tools/shlink.yml
+
+  - apps/forum/nodebb.yml

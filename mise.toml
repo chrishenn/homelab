@@ -38,14 +38,15 @@ RACK4_PORT = "2200"
 RACK4_DIR = "/home/chris/Projects/homelab/rack4"
 
 VPS0_USR = "chris"
-VPS0_IP = "76.13.30.83"
 VPS0_PORT = "2200"
 VPS0_DIR = "/home/chris/Projects/homelab/vps0"
 
 GITLAB_HOST = "gitlab.chenn.dev"
+REGISTRY = "forgejo.henn.dev/chris"
+REGISTRY_URL = "forgejo.henn.dev"
 
 BERG_USR = "chris"
-BERG_BASE_URL = "forgejo.chenn.dev"
+BERG_BASE_URL = "forgejo.henn.dev"
 BERG_SSH_PORT = 2424
 
 [tasks.pre-commit]

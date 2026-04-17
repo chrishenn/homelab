@@ -128,11 +128,9 @@ services:
       pangolin.public-resources.gitlab.rules[0].action: allow
       pangolin.public-resources.gitlab.rules[0].match: country
       pangolin.public-resources.gitlab.rules[0].value: US
-      pangolin.public-resources.gitlab.rules[0].priority: 10
       pangolin.public-resources.gitlab.rules[1].action: deny
       pangolin.public-resources.gitlab.rules[1].match: country
       pangolin.public-resources.gitlab.rules[1].value: ALL
-      pangolin.public-resources.gitlab.rules[1].priority: 20
 
       pangolin.public-resources.gitlab_r.name: gitlab_r
       pangolin.public-resources.gitlab_r.full-domain: registry.gitlab.chenn.dev
@@ -143,11 +141,9 @@ services:
       pangolin.public-resources.gitlab_r.rules[0].action: allow
       pangolin.public-resources.gitlab_r.rules[0].match: country
       pangolin.public-resources.gitlab_r.rules[0].value: US
-      pangolin.public-resources.gitlab_r.rules[0].priority: 10
       pangolin.public-resources.gitlab_r.rules[1].action: deny
       pangolin.public-resources.gitlab_r.rules[1].match: country
       pangolin.public-resources.gitlab_r.rules[1].value: ALL
-      pangolin.public-resources.gitlab_r.rules[1].priority: 20
 
       pangolin.public-resources.gitlab_ssh.name: gitlab_ssh
       pangolin.public-resources.gitlab_ssh.protocol: tcp

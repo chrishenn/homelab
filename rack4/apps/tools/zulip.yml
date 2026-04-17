@@ -23,6 +23,10 @@ services:
     image: zulip/docker-zulip:latest
     container_name: zulip
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
     environment:
       TZ: $TZ
       SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
@@ -74,7 +78,6 @@ services:
             "auto_signup": True,
           }
         }
-
     volumes:
       - $DATA/zulip/data:/data:rw
     # subnet must match LOADBALANCER_IPS above
@@ -94,15 +97,12 @@ services:
       pangolin.public-resources.zulip.targets[0].port: 80
       pangolin.public-resources.zulip.auth.sso-enabled: true
       pangolin.public-resources.zulip.auth.sso-roles[0]: Member
-
       pangolin.public-resources.zulip.rules[0].action: pass
       pangolin.public-resources.zulip.rules[0].match: country
       pangolin.public-resources.zulip.rules[0].value: US
-      pangolin.public-resources.zulip.rules[0].priority: 0
       pangolin.public-resources.zulip.rules[1].action: deny
       pangolin.public-resources.zulip.rules[1].match: country
       pangolin.public-resources.zulip.rules[1].value: ALL
-      pangolin.public-resources.zulip.rules[1].priority: 10
 
   zulip_pg:
     profiles: [zulip]

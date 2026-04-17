@@ -12,6 +12,7 @@ services:
     environment:
       YTP_TEMP_PATH: /downloads/tmp
       YTP_DOWNLOAD_PATH: /downloads/files
+      YTP_BROWSER_CONTROL_ENABLED: true
     volumes:
       - $DATA/ytp/config:/config:rw
       - $DATA/ytp/downloads:/downloads:rw
@@ -34,8 +35,6 @@ services:
       pangolin.public-resources.ytp.rules[0].action: pass
       pangolin.public-resources.ytp.rules[0].match: country
       pangolin.public-resources.ytp.rules[0].value: US
-      pangolin.public-resources.ytp.rules[0].priority: 0
       pangolin.public-resources.ytp.rules[1].action: deny
       pangolin.public-resources.ytp.rules[1].match: country
       pangolin.public-resources.ytp.rules[1].value: ALL
-      pangolin.public-resources.ytp.rules[1].priority: 10

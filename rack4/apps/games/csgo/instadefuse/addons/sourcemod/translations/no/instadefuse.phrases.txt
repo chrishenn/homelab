@@ -1,0 +1,32 @@
+"Phrases"
+{
+    "InstaDefuseUnsuccessful"
+    {
+        "#format"	"{1:s},{2:N},{3:.2f}"
+        "no"		"{1} {2} var {3} sekunder unna å uskadeliggjøre bomben."
+    }
+
+    "LiveNadeSomewhere"
+    {
+        "#format"    "{1:s}"
+        "no"        "{1} Det er en bombe en plass. Lykke til med å desarmere."
+    }
+
+    "MolotovTooClose"
+    {
+        "#format"    "{1:s}"
+        "no"        "{1} Det er en brannbombe for nære bomben. Lykke til med å desarmere."
+    }
+
+    "InstaDefuseSuccessful"
+    {
+        "#format"    "{1:s},{2:N},{3:.2f}"
+        "no"        "{1} {2} uskadeliggjort med {3} sekunder igjen!"
+    }
+
+    "TeammateHasDefuseKit"
+    {
+        "#format"    "{1:s}"
+        "no"        "{1} Du har ikke tid! Lagkameraten din har et Defuse Kit!"
+    }
+}

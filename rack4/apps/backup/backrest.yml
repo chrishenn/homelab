@@ -21,11 +21,12 @@ services:
       RCLONE_DRIVE_CLIENT_ID: ${GDRIVE_CLIENT_ID}
       RCLONE_DRIVE_CLIENT_SECRET: ${GDRIVE_CLIENT_SECRET}
       RCLONE_DRIVE_TOKEN: ${GDRIVE_ACCESS_TOKEN}
+      # note that the local folder is being pushed TO filen here
       RCLONE_FILEN: |
         . /scripts/deps.sh
         && rclone sync -P
-          :filen:/
           /mnt/h/filen
+          :filen:/
         && chown -R 1000:1000 /mnt/h/filen
       RCLONE_GDRIVE: |
         . /scripts/deps.sh
@@ -53,11 +54,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Backup
       homepage.name: Backrest
       homepage.icon: backrest.png
       homepage.href: https://backrest.chenn.dev
-      homepage.description: Backup Automation Server
+      homepage.description: Backup Automation
 
       pangolin.public-resources.backrest.name: backrest
       pangolin.public-resources.backrest.full-domain: backrest.chenn.dev
@@ -70,8 +71,6 @@ services:
       pangolin.public-resources.backrest.rules[0].action: pass
       pangolin.public-resources.backrest.rules[0].match: country
       pangolin.public-resources.backrest.rules[0].value: US
-      pangolin.public-resources.backrest.rules[0].priority: 0
       pangolin.public-resources.backrest.rules[1].action: deny
       pangolin.public-resources.backrest.rules[1].match: country
       pangolin.public-resources.backrest.rules[1].value: ALL
-      pangolin.public-resources.backrest.rules[1].priority: 10

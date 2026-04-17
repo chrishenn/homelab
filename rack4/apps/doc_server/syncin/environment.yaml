@@ -1,0 +1,14 @@
+auth:
+  oidc:
+    options:
+      autoCreatePermissions:
+        - personal_space
+        - spaces_access
+        - spaces_admin
+        - shares_access
+        - shares_admin
+        - guests_admin
+        - personal_groups_admin
+        - desktop_app_access
+        - desktop_app_sync
+        - webdav_access

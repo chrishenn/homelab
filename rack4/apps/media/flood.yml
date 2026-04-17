@@ -1,0 +1,55 @@
+---
+services:
+  flood:
+    profiles: [flood]
+    image: jesec/flood
+    container_name: flood
+    restart: unless-stopped
+    user: 1000:1001
+    command: --port 3000 --allowedpath /data
+    environment:
+      HOME: /config
+    volumes:
+      - ./flood:/config
+      - $DATA/flood/data:/data
+    networks: [flood, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Flood
+      homepage.icon: flood.png
+      homepage.href: https://flood.chenn.dev
+      homepage.description: Torrent Client
+
+      pangolin.public-resources.flood.name: flood
+      pangolin.public-resources.flood.full-domain: flood.chenn.dev
+      pangolin.public-resources.flood.protocol: http
+      pangolin.public-resources.flood.ssl: true
+      pangolin.public-resources.flood.targets[0].method: http
+      pangolin.public-resources.flood.targets[0].port: 3000
+      pangolin.public-resources.flood.auth.sso-enabled: true
+      pangolin.public-resources.flood.auth.sso-roles[0]: Member
+      pangolin.public-resources.flood.rules[0].action: pass
+      pangolin.public-resources.flood.rules[0].match: country
+      pangolin.public-resources.flood.rules[0].value: US
+      pangolin.public-resources.flood.rules[1].action: deny
+      pangolin.public-resources.flood.rules[1].match: country
+      pangolin.public-resources.flood.rules[1].value: ALL
+
+  rtorrent:
+    profiles: [flood]
+    image: jesec/rtorrent
+    container_name: rtorrent
+    restart: unless-stopped
+    user: 1000:1001
+    command: -o network.port_range.set=6881-6881,system.daemon.set=true
+    environment:
+      HOME: /config
+    volumes:
+      - ./flood:/config
+      - $DATA/flood/rtorrent:/data
+    ports:
+      - '6881:6881'
+    networks: [flood]
+
+networks:
+  flood:

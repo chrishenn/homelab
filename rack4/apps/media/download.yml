@@ -35,15 +35,12 @@ services:
       pangolin.public-resources.qui.targets[0].port: 7476
       pangolin.public-resources.qui.auth.sso-enabled: true
       pangolin.public-resources.qui.auth.sso-roles[0]: Member
-
       pangolin.public-resources.qui.rules[0].action: pass
       pangolin.public-resources.qui.rules[0].match: country
       pangolin.public-resources.qui.rules[0].value: US
-      pangolin.public-resources.qui.rules[0].priority: 0
       pangolin.public-resources.qui.rules[1].action: deny
       pangolin.public-resources.qui.rules[1].match: country
       pangolin.public-resources.qui.rules[1].value: ALL
-      pangolin.public-resources.qui.rules[1].priority: 10
 
   gluetun:
     profiles: [download]
@@ -65,14 +62,14 @@ services:
       VPN_SERVICE_PROVIDER: protonvpn
       WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
       SERVER_COUNTRIES: 'United States,Canada'
-    networks: [traefik, arr]
+    networks: [traefik, arr, newt]
     labels:
       autoheal: true
 
-      homepage.instance.private.group: Media
-      homepage.instance.private.name: Gluetun
-      homepage.instance.private.icon: gluetun.png
-      homepage.instance.private.description: Qbittorrent VPN Tunnel
+      homepage.group: Media
+      homepage.name: Gluetun
+      homepage.icon: gluetun.png
+      homepage.description: Qbittorrent VPN Tunnel
 
       traefik.enable: true
       traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
@@ -80,6 +77,21 @@ services:
       traefik.http.routers.qbit.middlewares: hdrs@file
       traefik.http.routers.qbit.tls.certresolver: cf
       traefik.http.services.qbit.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.qbit.name: qbit
+      pangolin.public-resources.qbit.full-domain: vpn.qbit.chenn.dev
+      pangolin.public-resources.qbit.protocol: http
+      pangolin.public-resources.qbit.ssl: true
+      pangolin.public-resources.qbit.targets[0].method: http
+      pangolin.public-resources.qbit.targets[0].port: 8080
+      pangolin.public-resources.qbit.auth.sso-enabled: true
+      pangolin.public-resources.qbit.auth.sso-roles[0]: Member
+      pangolin.public-resources.qbit.rules[0].action: pass
+      pangolin.public-resources.qbit.rules[0].match: country
+      pangolin.public-resources.qbit.rules[0].value: US
+      pangolin.public-resources.qbit.rules[1].action: deny
+      pangolin.public-resources.qbit.rules[1].match: country
+      pangolin.public-resources.qbit.rules[1].value: ALL
     ports:
       - '6888:6888/tcp'
       - '6888:6888/udp'
@@ -108,11 +120,11 @@ services:
     labels:
       autoheal: true
 
-      homepage.instance.private.group: Media
-      homepage.instance.private.name: Qbittorrent (VPN)
-      homepage.instance.private.icon: qbittorrent.png
-      homepage.instance.private.href: https://vpn.qbit.henn.dev
-      homepage.instance.private.description: VPN Torrents
+      homepage.group: Media
+      homepage.name: Qbittorrent (VPN)
+      homepage.icon: qbittorrent.png
+      homepage.href: https://vpn.qbit.chenn.dev
+      homepage.description: VPN Torrents
 
   qbit_novpn:
     profiles: [download]
@@ -127,15 +139,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit_novpn:/config
       - $DATA/qbit_novpn:/qbit_novpn/downloads
-    networks: [traefik, arr]
+    networks: [traefik, arr, newt]
     labels:
       autoheal: true
 
-      homepage.instance.private.group: Media
-      homepage.instance.private.name: QBittorrent (No VPN)
-      homepage.instance.private.icon: qbittorrent.png
-      homepage.instance.private.href: https://novpn.qbit.henn.dev
-      homepage.instance.private.description: Non-Vpn Torrents
+      homepage.group: Media
+      homepage.name: QBittorrent (No VPN)
+      homepage.icon: qbittorrent.png
+      homepage.href: https://novpn.qbit.chenn.dev
+      homepage.description: Torrent Client
 
       traefik.enable: true
       traefik.http.routers.qbit_novpn.rule: Host(`novpn.qbit.henn.dev`)
@@ -143,6 +155,21 @@ services:
       traefik.http.routers.qbit_novpn.middlewares: hdrs@file
       traefik.http.routers.qbit_novpn.tls.certresolver: cf
       traefik.http.services.qbit_novpn.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.qbit_novpn.name: qbit_novpn
+      pangolin.public-resources.qbit_novpn.full-domain: novpn.qbit.chenn.dev
+      pangolin.public-resources.qbit_novpn.protocol: http
+      pangolin.public-resources.qbit_novpn.ssl: true
+      pangolin.public-resources.qbit_novpn.targets[0].method: http
+      pangolin.public-resources.qbit_novpn.targets[0].port: 8080
+      pangolin.public-resources.qbit_novpn.auth.sso-enabled: true
+      pangolin.public-resources.qbit_novpn.auth.sso-roles[0]: Member
+      pangolin.public-resources.qbit_novpn.rules[0].action: pass
+      pangolin.public-resources.qbit_novpn.rules[0].match: country
+      pangolin.public-resources.qbit_novpn.rules[0].value: US
+      pangolin.public-resources.qbit_novpn.rules[1].action: deny
+      pangolin.public-resources.qbit_novpn.rules[1].match: country
+      pangolin.public-resources.qbit_novpn.rules[1].value: ALL
 
   sab:
     profiles: [download]
@@ -179,11 +206,9 @@ services:
       pangolin.public-resources.sab.rules[0].action: pass
       pangolin.public-resources.sab.rules[0].match: country
       pangolin.public-resources.sab.rules[0].value: US
-      pangolin.public-resources.sab.rules[0].priority: 0
       pangolin.public-resources.sab.rules[1].action: deny
       pangolin.public-resources.sab.rules[1].match: country
       pangolin.public-resources.sab.rules[1].value: ALL
-      pangolin.public-resources.sab.rules[1].priority: 10
 
   solverr:
     profiles: [download]

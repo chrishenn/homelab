@@ -48,17 +48,17 @@ services:
       - $DATA/pydio/db:/var/lib/mysql
     networks: [pydio]
 
-  collabora_pydio:
+  pydio_collabora:
     profiles: [pydio]
     image: collabora/code:latest
-    container_name: collabora_pydio
+    container_name: pydio_collabora
     restart: unless-stopped
     cap_add: [MKNOD]
     environment:
       username: ${USER}
       password: ${PASS}
       DONT_GEN_SSL_CERT: YES
-      server_name: collabora_pydio.chenn.dev
+      server_name: pydio_collabora.chenn.dev
       aliasgroup1: https://pydio.chenn.dev
       extra_params: |
         --o:ssl.enable=false \
@@ -67,12 +67,12 @@ services:
         --o:welcome.enable=false
     networks: [newt]
     labels:
-      pangolin.public-resources.collabora_pydio.name: collabora_pydio
-      pangolin.public-resources.collabora_pydio.protocol: http
-      pangolin.public-resources.collabora_pydio.full-domain: collabora_pydio.chenn.dev
-      pangolin.public-resources.collabora_pydio.ssl: true
-      pangolin.public-resources.collabora_pydio.targets[0].method: http
-      pangolin.public-resources.collabora_pydio.targets[0].port: 9980
+      pangolin.public-resources.pydio_collabora.name: pydio_collabora
+      pangolin.public-resources.pydio_collabora.protocol: http
+      pangolin.public-resources.pydio_collabora.full-domain: pydio_collabora.chenn.dev
+      pangolin.public-resources.pydio_collabora.ssl: true
+      pangolin.public-resources.pydio_collabora.targets[0].method: http
+      pangolin.public-resources.pydio_collabora.targets[0].port: 9980
 
 networks:
   pydio:

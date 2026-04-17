@@ -39,7 +39,7 @@ def local_arecords() -> None:
     Subdomain {A, wildcard} entries for services.
     Individual A records are unneeded when the parent domain has a wildcard cert via DNS challenge
     """
-    svcs = ["plane"]
+    svcs = []
 
     zoneid = env_valid("ZONEID")
     domain = env_valid("DOMAIN")
