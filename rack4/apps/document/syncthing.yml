@@ -1,0 +1,42 @@
+---
+services:
+  syncthing:
+    profiles: [syncthing]
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DATA/syncthing/config:/config
+      - /mnt/h/filen:/mnt/h/filen
+    ports:
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    networks: [newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Syncthing
+      homepage.icon: syncthing.png
+      homepage.href: https://syncthing.chenn.dev
+      homepage.description: File Sync
+
+      pangolin.public-resources.syncthing.name: syncthing
+      pangolin.public-resources.syncthing.full-domain: syncthing.chenn.dev
+      pangolin.public-resources.syncthing.protocol: http
+      pangolin.public-resources.syncthing.ssl: true
+      pangolin.public-resources.syncthing.targets[0].method: http
+      pangolin.public-resources.syncthing.targets[0].port: 8384
+      pangolin.public-resources.syncthing.auth.sso-enabled: true
+      pangolin.public-resources.syncthing.auth.sso-roles[0]: Member
+      pangolin.public-resources.syncthing.rules[0].action: pass
+      pangolin.public-resources.syncthing.rules[0].match: country
+      pangolin.public-resources.syncthing.rules[0].value: US
+      pangolin.public-resources.syncthing.rules[0].priority: 0
+      pangolin.public-resources.syncthing.rules[1].action: deny
+      pangolin.public-resources.syncthing.rules[1].match: country
+      pangolin.public-resources.syncthing.rules[1].value: ALL
+      pangolin.public-resources.syncthing.rules[1].priority: 10

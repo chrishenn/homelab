@@ -29,7 +29,6 @@ services:
       pangolin.public-resources.pairdrop.targets[0].port: 3000
       pangolin.public-resources.pairdrop.auth.sso-enabled: true
       pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
-
       pangolin.public-resources.pairdrop.rules[0].action: pass
       pangolin.public-resources.pairdrop.rules[0].match: country
       pangolin.public-resources.pairdrop.rules[0].value: US
