@@ -16,8 +16,6 @@ TWINGATE_LABEL_DEPLOYED_BY = { provider = "onepass", value = "op://homelab/twing
 SHLINK_SERVER_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
 SHLINK_GEOLITE_LICENSE_KEY = { provider = "onepass", value = "op://homelab/MaxMind/license" }
 
-CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
-
 OPENSIGN_PFX = { provider = "onepass", value = "op://homelab/Opensign/pfx"}
 OPENSIGN_PFX_PASS = { provider = "onepass", value = "op://homelab/Opensign/pfx_pass"}
 
@@ -26,3 +24,20 @@ TWINGATE_ACCESS_TOKEN = { provider = "onepass", value = "op://homelab/twingate/a
 TWINGATE_REFRESH_TOKEN = { provider = "onepass", value = "op://homelab/twingate/refresh_token" }
 TWINGATE_LABEL_HOSTNAME = { provider = "onepass", value = "op://homelab/twingate/label_hostname" }
 TWINGATE_LABEL_DEPLOYED_BY = { provider = "onepass", value = "op://homelab/twingate/deployed_by" }
+
+BONFIRE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bonfire/oidc_client" }
+BONFIRE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bonfire/oidc_secret" }
+
+CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
+CLOUDREVE_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/cloudreve/meili_key" }
+
+FREESOUND_CLIENT = { provider = "onepass", value = "op://homelab/freesound/api_client" }
+FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_secret" }
+
+SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
+SEAFILE_SECRET_KEY = { provider = "onepass", value = "op://homelab/seafile/secret_key" }
+SEAFILE_PASS = { provider = "onepass", value = "op://homelab/seafile/password" }
+SEAFILE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/seafile/oidc_client" }
+SEAFILE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/seafile/oidc_secret" }
+
+NEXTCLOUD_HARP_KEY = { provider = "onepass", value = "op://homelab/Nextcloud/harp_key" }

@@ -11,7 +11,7 @@ services:
       PYTHON_PATH: /usr/bin/python3
       MODEL: google/gemini-3-flash-preview
       RXRESUME_URL: http://resume:3000
-      RXRESUME_API_KEY: ${RXRESUME_KEY}
+      RXRESUME_API_KEY: ${RESUME_KEY}
       JOBOPS_PUBLIC_BASE_URL: https://ops.chenn.dev
       JOBSPY_IS_REMOTE: 1
     volumes:
