@@ -21,12 +21,6 @@ SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host"
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }
 SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_token" }
 
-DOPLARR_BOT_TOKEN = { provider = "onepass", value = "op://homelab/doplarr/bot_token" }
-
-PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" }
-
-ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
-
 N8N_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/n8n/encryption_key" }
 N8N_LICENSE = { provider = "onepass", value = "op://homelab/n8n/license" }
 
@@ -137,6 +131,9 @@ ZEROBYTE_SECRET = { provider = "onepass", value = "op://homelab/zerobyte/secret"
 MARBLE_API_KEY = { provider = "onepass", value = "op://homelab/marblecms/api_key" }
 PDFDING_SECRET = { provider = "onepass", value = "op://homelab/pdfding/secret" }
 CINEPHAGE_SECRET = { provider = "onepass", value = "op://homelab/cinephage/secret" }
+DOPLARR_BOT_TOKEN = { provider = "onepass", value = "op://homelab/doplarr/bot_token" }
+PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" }
+ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

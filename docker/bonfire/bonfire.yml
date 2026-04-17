@@ -15,7 +15,7 @@ x-bonfire_env: &bonfire_env
   CI: false
   APP_NAME: Chicken Bonfire
   APP_DOCKER_REPO: bonfirenetworks/bonfire
-  APP_DOCKER_REPO_ALT: "ghcr.io/bonfire-networks/bonfire-app"
+  APP_DOCKER_REPO_ALT: 'ghcr.io/bonfire-networks/bonfire-app'
   ARCH: amd64
   NUM_CPU: 32
   PG_MAX_CONNECTIONS: 300
@@ -29,12 +29,12 @@ x-bonfire_env: &bonfire_env
   POSTGRES_USER: postgres
   POSTGRES_DB: bonfire_db
   DB_MIGRATE_INDEXES_CONCURRENTLY: false
-  
+
   LANG: en_US.UTF-8
   LANGUAGE: en_US.UTF-8
   ACME_AGREE: true
   REPLACE_OS_VARS: true
-  
+
   LIVEVIEW_ENABLED: true
   WITH_API_GRAPHQL: 1
   WITH_LV_NATIVE: 0
@@ -42,7 +42,7 @@ x-bonfire_env: &bonfire_env
   WITH_AI: 0
   SHOW_DEBUG_IN_DEV: true
 
-  SECRET_KEY_BASE:  <set>
+  SECRET_KEY_BASE: <set>
   SIGNING_SALT: <set>
   ENCRYPTION_SALT: <set>
   ERLANG_COOKIE: <set>
@@ -66,13 +66,13 @@ x-bonfire_env: &bonfire_env
   SEEDS_USER: root
 
   WEB_PUSH_SUBJECT: mailto:bonfire@example.com
-  # WEB_PUSH_PUBLIC_KEY: 
-  # WEB_PUSH_PRIVATE_KEY: 
-  # GEOLOCATE_OPENCAGEDATA: 
+  # WEB_PUSH_PUBLIC_KEY:
+  # WEB_PUSH_PRIVATE_KEY:
+  # GEOLOCATE_OPENCAGEDATA:
   MAPBOX_API_KEY: pk.eyJ1IjoibWF5ZWwiLCJhIjoiY2tlMmxzNXF5MGFpaDJ0bzR2M29id2EzOCJ9.QsmjD-zypsE0_wonLGCYlA
-  # GITHUB_TOKEN: 
-  # TX_TOKEN: 
-  # AKISMET_API_KEY: 
+  # GITHUB_TOKEN:
+  # TX_TOKEN:
+  # AKISMET_API_KEY:
 
 services:
   bonfire:
@@ -108,7 +108,7 @@ services:
     image: postgis/postgis:17-3.5-alpine
     container_name: bonfire_db
     restart: unless-stopped
-    entrypoint: ["/bin/bash", "/opt/bonfire/deploy/postgres-entrypoint.sh"]
+    entrypoint: ['/bin/bash', '/opt/bonfire/deploy/postgres-entrypoint.sh']
     environment:
       <<: *bonfire_env
     volumes:

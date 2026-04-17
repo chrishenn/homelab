@@ -3,20 +3,20 @@
 :443
 
 route /data/uploads/* {
-  
+
   root * /frontend/
 
   # fallback to index (for single page site)
-  try_files {path} 
+  try_files {path}
 
   # serve static files
-  file_server 
+  file_server
 }
 
 route * {
-  
+
   # backend proxying
-  reverse_proxy web:4000 
+  reverse_proxy web:4000
 
 }
 

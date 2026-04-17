@@ -375,22 +375,5 @@ services:
       - $DATA/doplarr/config:/config
     networks: [arr]
 
-  recyclarr:
-    profiles: [arr]
-    image: ghcr.io/recyclarr/recyclarr:latest
-    container_name: recyclarr
-    restart: unless-stopped
-    user: $PUID:$PGID
-    volumes:
-      - ./recyclarr:/config
-    environment:
-      TZ: $TZ
-      RECYCLARR_CREATE_CONFIG: true
-      RADARR_URL: ${RADARR_URL}
-      RADARR_KEY: ${RADARR_KEY}
-      SONARR_URL: ${SONARR_URL}
-      SONARR_KEY: ${SONARR_KEY}
-    networks: [arr]
-
 networks:
   arr:

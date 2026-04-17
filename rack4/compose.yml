@@ -106,6 +106,7 @@ include:
   - apps/media/transcodarr.yml
   - apps/media/mdrm.yml
   - apps/media/mkvprio.yml
+  - apps/media/recyclarr.yml
 
   - apps/tools/actual.yml
   - apps/tools/airtrail.yml

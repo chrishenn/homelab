@@ -57,9 +57,9 @@
 
 # - Connection Settings -
 
-listen_addresses = '*' # comma-separated list of addresses; defaults to 'localhost'; use '*' for all 
+listen_addresses = '*' # comma-separated list of addresses; defaults to 'localhost'; use '*' for all
 
-max_connections = ${PG_MAX_CONNECTIONS} 
+max_connections = ${PG_MAX_CONNECTIONS}
 
 #port = 5432				# (change requires restart)
 #reserved_connections = 0		# (change requires restart)
@@ -126,8 +126,8 @@ max_connections = ${PG_MAX_CONNECTIONS}
 
 # - Memory -
 
-shared_buffers = ${PG_SHARED_BUFFERS_MB}MB # min 128kB 
-huge_pages = ${PG_HUGE_PAGES} # on, off, or try 
+shared_buffers = ${PG_SHARED_BUFFERS_MB}MB # min 128kB
+huge_pages = ${PG_HUGE_PAGES} # on, off, or try
 work_mem = ${PG_WORK_MEM_KB}kB # min 64kB
 maintenance_work_mem = ${PG_MAINTENANCE_WORK_MEM_MB}MB # min 1MB
 

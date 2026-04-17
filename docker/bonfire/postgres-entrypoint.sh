@@ -12,9 +12,9 @@ POSTGRES_CONF_PATH="${POSTGRES_CONF_PATH:-/var/lib/postgresql/postgresql.auto.co
 POSTGRES_START_CMD="${POSTGRES_START_CMD:-docker-entrypoint.sh postgres}"
 
 # Check if envsubst is available, if not, load our bash implementation
-if ! command -v envsubst &> /dev/null; then
-  echo "PostgreSQL: envsubst not found, using pure bash fallback..."
-  source "${SCRIPT_DIR}/bash-envsubst.sh"
+if ! command -v envsubst &>/dev/null; then
+	echo "PostgreSQL: envsubst not found, using pure bash fallback..."
+	source "${SCRIPT_DIR}/bash-envsubst.sh"
 fi
 
 echo "PostgreSQL: Generating optimized configuration..."
@@ -31,7 +31,7 @@ echo "  Work Mem: ${PG_WORK_MEM_KB}kB"
 echo "  Max Workers: ${PG_MAX_WORKER_PROCESSES}"
 
 # Filter out comments and blank lines for cleaner output
-config=$(envsubst < "${SCRIPT_DIR}/postgres.conf.tmpl" | grep -v '^\s*#' | grep -v '^\s*$')
+config=$(envsubst <"${SCRIPT_DIR}/postgres.conf.tmpl" | grep -v '^\s*#' | grep -v '^\s*$')
 
 # Get the directory for the config file
 CONF_DIR="$(dirname "${POSTGRES_CONF_PATH}")"
@@ -42,20 +42,20 @@ echo "=========================================="
 
 # Check if we can write to the config location
 if mkdir -p "${CONF_DIR}" 2>/dev/null; then
-  # Write the processed config
-  echo "$config" > "${POSTGRES_CONF_PATH}"
-  echo "PostgreSQL: Configuration generated at ${POSTGRES_CONF_PATH}"
-  
-  # Check if we should start postgres
-  if [[ -n "${POSTGRES_START_CMD}" && "${POSTGRES_START_CMD}" != "none" ]]; then
-    # Start PostgreSQL - postgresql.auto.conf is automatically loaded from data dir
-    exec ${POSTGRES_START_CMD}
-  else
-    echo "PostgreSQL: Skipping startup (POSTGRES_START_CMD is '${POSTGRES_START_CMD}')"
-    exit 0
-  fi
+	# Write the processed config
+	echo "$config" >"${POSTGRES_CONF_PATH}"
+	echo "PostgreSQL: Configuration generated at ${POSTGRES_CONF_PATH}"
+
+	# Check if we should start postgres
+	if [[ -n "${POSTGRES_START_CMD}" && "${POSTGRES_START_CMD}" != "none" ]]; then
+		# Start PostgreSQL - postgresql.auto.conf is automatically loaded from data dir
+		exec ${POSTGRES_START_CMD}
+	else
+		echo "PostgreSQL: Skipping startup (POSTGRES_START_CMD is '${POSTGRES_START_CMD}')"
+		exit 0
+	fi
 else
-  echo "WARNING: Cannot write to ${CONF_DIR}"
-  echo "To use this config, save it to a file and start postgres with: postgres -c config_file=/path/to/postgresql.conf"
-  exit 1
+	echo "WARNING: Cannot write to ${CONF_DIR}"
+	echo "To use this config, save it to a file and start postgres with: postgres -c config_file=/path/to/postgresql.conf"
+	exit 1
 fi
