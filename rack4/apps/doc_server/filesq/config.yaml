@@ -1,3 +1,7 @@
+frontend:
+  name: "FileBrowser Quantum: Chicken"
+  description: A file server for the Dancing Chicken
+
 server:
   externalUrl: https://filesq.chenn.dev
   internalUrl: http://filesq:80
@@ -6,26 +10,26 @@ server:
     - path: /mnt/h
       name: h
       config:
-        denyByDefault: false              # deny access unless an "allow" access rule was specifically created.
-        private: false                    # designate as source as private -- currently just means no sharing permitted.
-        disabled: false                   # disable the source, this is useful so you don't need to remove it from the config file
-        rules: # list of item rules to apply to specific paths
-          - neverWatchPath: ""            # index the folder in the first pass to get included in search, but never re-indexed.
-            includeRootItem: ""           # include only these items at root folder level
-            fileStartsWith: ""            # (global) exclude files that start with these prefixes. Eg. "archive-" or "backup-"
-            folderStartsWith: ""          # (global) exclude folders that start with these prefixes. Eg. "archive-" or "backup-"
-            fileEndsWith: ""              # (global) exclude files that end with these suffixes. Eg. ".jpg" or ".txt"
-            folderEndsWith: ""            # (global) exclude folders that end with these suffixes. Eg. ".thumbnails" or ".git"
-            folderPath: ""                # (global) exclude folders that match this path. Eg. "/path/to/folder" or "/path/to/folder/subfolder"
-            filePath: ""                  # (global) exclude files that match this path. Eg. "/path/to/file.txt" or "/path/to/file.txt/subfile.txt"
-            fileName: ""                  # (global) exclude files that match these names. Eg. "file.txt" or "test.csv"
-            folderName: ""                # (global) exclude folders that match these names. Eg. "folder" or "subfolder"
-            viewable: false               # Enable viewing in UI but exclude from indexing
-            ignoreHidden: false           # Excludes only hidden files and folders
-            ignoreZeroSizeFolders: false  # Excludes only folders with 0 size
-            ignoreSymlinks: false         # Excludes symbolic links
-        defaultUserScope: "/"             # defaults to root of index "/" should match folders under path
-        defaultEnabled: true              # should be added as a default source for new users?
+        denyByDefault: false
+        private: false
+        disabled: false
+        rules:
+          - neverWatchPath: ""
+            includeRootItem: ""
+            fileStartsWith: ""
+            folderStartsWith: ""
+            fileEndsWith: ""
+            folderEndsWith: ""
+            folderPath: ""
+            filePath: ""
+            fileName: ""
+            folderName: ""
+            viewable: false
+            ignoreHidden: false
+            ignoreZeroSizeFolders: false
+            ignoreSymlinks: false
+        defaultUserScope: "/"
+        defaultEnabled: true
         useLogicalSize: false
 
 integrations:
@@ -47,3 +51,6 @@ auth:
       enabled: true
       minLength: 5
       signup: true
+
+userDefaults:
+  loginMethod: password, oidc
