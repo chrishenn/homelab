@@ -3,6 +3,7 @@
 # - there's a button to open a doc editor in a new tab, but it doesn't work
 # - no way to link the root admin to the same user via SSO
 # - I can't get collabora working on a url separate from oxicloud's
+# - files are stored as postgres blobs on disk. No files on disk! :/
 
 # I already trust the security of this project more than the others. OIDC config was trivial.
 ---
@@ -45,7 +46,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Oxicloud
-      homepage.icon: oxicloud.png
+      homepage.icon: https://raw.githubusercontent.com/DioCrafts/OxiCloud/refs/heads/main/static/logo/logo-plain.svg
       homepage.href: https://oxicloud.chenn.dev
       homepage.description: Rust File Server
 

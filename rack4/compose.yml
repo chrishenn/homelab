@@ -30,7 +30,6 @@ include:
   - apps/dev/cyberchef.yml
   - apps/dev/dumb.yml
   - apps/dev/excalidraw.yml
-  - apps/dev/focalboard.yml
   - apps/dev/forgejo.yml
   - apps/dev/gist.yml
   - apps/dev/gitlab.yml
@@ -137,3 +136,4 @@ include:
   - apps/tools/moocup.yml
   - apps/tools/nodebb.yml
   - apps/tools/pairdrop.yml
+  - apps/tools/shlink.yml

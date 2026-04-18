@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Ideon
-      homepage.icon: jira.png
+      homepage.icon: https://github.com/3xpyth0n/ideon/blob/main/public/dark-icon.png?raw=true
       homepage.href: https://ideon.chenn.dev
       homepage.description: Collaborative Workspace Tool
 

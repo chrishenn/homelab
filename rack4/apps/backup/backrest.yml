@@ -58,7 +58,7 @@ services:
       homepage.name: Backrest
       homepage.icon: backrest.png
       homepage.href: https://backrest.chenn.dev
-      homepage.description: Backup Automation Server
+      homepage.description: Backup Automation
 
       pangolin.public-resources.backrest.name: backrest
       pangolin.public-resources.backrest.full-domain: backrest.chenn.dev

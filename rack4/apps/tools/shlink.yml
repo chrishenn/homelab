@@ -1,0 +1,95 @@
+---
+services:
+  shlink:
+    profiles: [shlink]
+    image: shlinkio/shlink-web-client
+    container_name: shlink
+    restart: unless-stopped
+    environment:
+      SHLINK_SERVER_URL: https://shlink_api.chenn.dev
+      SHLINK_SERVER_API_KEY: $SHLINK_API_KEY
+    networks: [shlink, newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Shlink
+      homepage.icon: shlink.png
+      homepage.href: https://shlink.chenn.dev
+      homepage.description: Link Shortener
+
+      pangolin.public-resources.shlink.name: shlink
+      pangolin.public-resources.shlink.full-domain: shlink.chenn.dev
+      pangolin.public-resources.shlink.protocol: http
+      pangolin.public-resources.shlink.ssl: true
+      pangolin.public-resources.shlink.targets[0].method: http
+      pangolin.public-resources.shlink.targets[0].port: 8080
+      pangolin.public-resources.shlink.auth.sso-enabled: true
+      pangolin.public-resources.shlink.auth.sso-roles[0]: Member
+      pangolin.public-resources.shlink.rules[0].action: pass
+      pangolin.public-resources.shlink.rules[0].match: country
+      pangolin.public-resources.shlink.rules[0].value: US
+      pangolin.public-resources.shlink.rules[0].priority: 0
+      pangolin.public-resources.shlink.rules[1].action: deny
+      pangolin.public-resources.shlink.rules[1].match: country
+      pangolin.public-resources.shlink.rules[1].value: ALL
+      pangolin.public-resources.shlink.rules[1].priority: 10
+
+  # must be accessible from the browser running the web client
+  shlink_api:
+    profiles: [shlink]
+    image: shlinkio/shlink:stable
+    container_name: shlink_api
+    restart: unless-stopped
+    environment:
+      DEFAULT_DOMAIN: shlink.chenn.dev
+      IS_HTTPS_ENABLED: true
+      INITIAL_API_KEY: $SHLINK_API_KEY
+      TRUSTED_PROXIES: 1
+
+      TIMEZONE: $TZ
+      MEMORY_LIMIT: 500M
+      DISABLE_TRACKING: true
+      SKIP_INITIAL_GEOLITE_DOWNLOAD: true
+      GEOLITE_LICENSE_KEY:
+
+      DB_HOST: shlink_db
+      DB_DRIVER: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: shlink
+    networks: [shlink, newt]
+    labels:
+      pangolin.public-resources.shlink_api.name: shlink_api
+      pangolin.public-resources.shlink_api.full-domain: shlink_api.chenn.dev
+      pangolin.public-resources.shlink_api.protocol: http
+      pangolin.public-resources.shlink_api.ssl: true
+      pangolin.public-resources.shlink_api.targets[0].method: http
+      pangolin.public-resources.shlink_api.targets[0].port: 8080
+      pangolin.public-resources.shlink_api.rules[0].action: pass
+      pangolin.public-resources.shlink_api.rules[0].match: country
+      pangolin.public-resources.shlink_api.rules[0].value: US
+      pangolin.public-resources.shlink_api.rules[0].priority: 0
+      pangolin.public-resources.shlink_api.rules[1].action: deny
+      pangolin.public-resources.shlink_api.rules[1].match: country
+      pangolin.public-resources.shlink_api.rules[1].value: ALL
+      pangolin.public-resources.shlink_api.rules[1].priority: 10
+
+  shlink_db:
+    profiles: [shlink]
+    image: postgres:18-alpine
+    container_name: shlink_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shlink
+    volumes:
+      - $DATA/shlink/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d shlink']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [shlink]
+
+networks:
+  shlink:

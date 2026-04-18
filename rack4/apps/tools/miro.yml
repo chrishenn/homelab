@@ -104,7 +104,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
-      homepage.icon: miro.png
+      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miro.chenn.dev
       homepage.description: P2P Video Chat
 
@@ -447,7 +447,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Mirotalk
-      homepage.icon: miro.png
+      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miros.chenn.dev
       homepage.description: Group Video Chat
 

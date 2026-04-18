@@ -47,7 +47,6 @@ services:
       pangolin.public-resources.rally.targets[0].port: 3000
       pangolin.public-resources.rally.auth.sso-enabled: true
       pangolin.public-resources.rally.auth.sso-roles[0]: Member
-
       pangolin.public-resources.rally.rules[0].action: pass
       pangolin.public-resources.rally.rules[0].match: country
       pangolin.public-resources.rally.rules[0].value: US

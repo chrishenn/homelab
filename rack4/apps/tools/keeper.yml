@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Keeper
-      homepage.icon: keeper-security.png
+      homepage.icon: https://github.com/ridafkih/keeper.sh/blob/main/applications/web/public/512x512-on-light.png?raw=true
       homepage.href: https://keeper.chenn.dev
       homepage.description: Calendar Automation
 
