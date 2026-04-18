@@ -1,3 +1,5 @@
+alias s := sync
+
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 

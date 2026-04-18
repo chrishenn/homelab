@@ -42,21 +42,22 @@ include:
   - apps/dev/penpot.yml
   - apps/dev/scanopy.yml
 
-  - apps/document/docmost.yml
-  - apps/document/documenso.yml
-  - apps/document/filebrowser.yml
-  - apps/document/hedge.yml
-  - apps/document/openresume.yml
-  - apps/document/pairdrop.yml
-  - apps/document/paperless.yml
-  - apps/document/resume.yml
-  - apps/document/stirling.yml
-  - apps/document/oxicloud.yml
-  - apps/document/bento.yml
-  - apps/document/etherpad.yml
-  - apps/document/bluefiles.yml
-  - apps/document/pdfding.yml
-  - apps/document/syncthing.yml
+  - apps/doc_edit/bento.yml
+  - apps/doc_edit/docmost.yml
+  - apps/doc_edit/documenso.yml
+  - apps/doc_edit/openresume.yml
+  - apps/doc_edit/pdfding.yml
+  - apps/doc_edit/resume.yml
+  - apps/doc_edit/stirling.yml
+
+  - apps/doc_server/filebrowser.yml
+  - apps/doc_server/hedge.yml
+  - apps/doc_server/pairdrop.yml
+  - apps/doc_server/paperless.yml
+  - apps/doc_server/oxicloud.yml
+  - apps/doc_server/etherpad.yml
+  - apps/doc_server/bluefiles.yml
+  - apps/doc_server/syncthing.yml
 
   - apps/games/wordle.yml
 

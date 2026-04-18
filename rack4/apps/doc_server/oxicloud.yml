@@ -1,12 +1,10 @@
-# CHROME ONLY FOR COLLABORA TO WORK. "NEW TAB" OPEN IS A NO-GO
-
 # early days still - but very promising
 # - no button to create a document in the interface; have to upload docs to create them
-# - no way to open a doc editor in a new tab
+# - there's a button to open a doc editor in a new tab, but it doesn't work
+# - no way to link the root admin to the same user via SSO
+# - I can't get collabora working on a url separate from oxicloud's
 
 # I already trust the security of this project more than the others. OIDC config was trivial.
-
-# boot once to create initial admin in UI - then disable password login
 ---
 services:
   oxicloud:
@@ -19,6 +17,9 @@ services:
       OXICLOUD_BASE_URL: https://oxicloud.chenn.dev
       OXICLOUD_DB_CONNECTION_STRING: postgres://postgres:postgres@oxicloud_db/oxicloud
       OXICLOUD_ENABLE_AUTH: true
+      OXICLOUD_ENABLE_FILE_SHARING: true
+      OXICLOUD_ENABLE_SEARCH: true
+      OXICLOUD_ENABLE_TRASH: true
       OXICLOUD_JWT_SECRET: ${OXICLOUD_JWT}
 
       OXICLOUD_OIDC_ENABLED: true
@@ -47,14 +48,14 @@ services:
       pangolin.public-resources.oxicloud.protocol: http
       pangolin.public-resources.oxicloud.ssl: true
 
+      pangolin.public-resources.oxicloud.auth.sso-enabled: true
+      pangolin.public-resources.oxicloud.auth.sso-roles[0]: Member
+
       pangolin.public-resources.oxicloud.targets[0].method: http
       pangolin.public-resources.oxicloud.targets[0].path-match: prefix
       pangolin.public-resources.oxicloud.targets[0].path: /
       pangolin.public-resources.oxicloud.targets[0].port: 8086
       pangolin.public-resources.oxicloud.targets[0].priority: 100
-
-      pangolin.public-resources.oxicloud.auth.sso-enabled: true
-      pangolin.public-resources.oxicloud.auth.sso-roles[0]: Member
 
       pangolin.public-resources.oxicloud.rules[0].action: pass
       pangolin.public-resources.oxicloud.rules[0].match: path
