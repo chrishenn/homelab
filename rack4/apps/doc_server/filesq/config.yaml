@@ -40,6 +40,10 @@ integrations:
 auth:
   adminUsername: chris
   methods:
+    password:
+      enabled: false
+      minLength: 5
+      signup: true
     oidc:
       enabled: true
       issuerUrl: https://pocketid.chenn.dev
@@ -48,10 +52,6 @@ auth:
       groupsClaim: groups
       adminGroup: admin
       createUser: true
-    password:
-      enabled: true
-      minLength: 5
-      signup: true
 
 userDefaults:
-  loginMethod: password, oidc
+  loginMethod: oidc
