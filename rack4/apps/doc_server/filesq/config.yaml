@@ -47,6 +47,7 @@ auth:
       userIdentifier: preferred_username
       groupsClaim: groups
       adminGroup: admin
+      createUser: true
     password:
       enabled: true
       minLength: 5
