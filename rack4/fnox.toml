@@ -88,6 +88,9 @@ MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/maxmind/license"
 RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
 RESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
 
+FILESQ_SECRET = { provider = "onepass", value = "op://homelab/filesq/secret" }
+FILESQ_PASS = { provider = "onepass", value = "op://homelab/filesq/password" }
+
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
@@ -113,7 +116,6 @@ DOPLARR_BOT_TOKEN = { provider = "onepass", value = "op://homelab/doplarr/bot_to
 PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" }
 ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
 SHLINK_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
-FILESQ_SECRET = { provider = "onepass", value = "op://homelab/filesq/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

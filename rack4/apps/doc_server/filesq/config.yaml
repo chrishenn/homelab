@@ -39,4 +39,10 @@ auth:
       enabled: true
       issuerUrl: https://pocketid.chenn.dev
       scopes: email openid profile groups
-      userIdentifier: preferred_username
+      userIdentifier: email
+      groupsClaim: groups
+      adminGroup: admin
+    password:
+      enabled: true
+      minLength: 5
+      signup: true
