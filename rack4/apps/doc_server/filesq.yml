@@ -1,0 +1,69 @@
+---
+services:
+  filesq:
+    profiles: [filesq]
+    image: gtstef/filebrowser:stable
+    container_name: filesq
+    restart: unless-stopped
+    environment:
+      FILEBROWSER_ONLYOFFICE_SECRET: ${FILESQ_SECRET}
+
+    volumes:
+      - $DATA/filesq/db:/home/filebrowser/database.db
+      - $DATA/filesq/data:/data
+      - ./filesq/config.yaml:/home/filebrowser/config.yaml
+      - /mnt/h/:/mnt/h
+    networks: [filesq, newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Filebrowser Quantum
+      homepage.icon: filebrowser-quantum.png
+      homepage.href: https://filesq.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.filesq.name: filesq
+      pangolin.public-resources.filesq.full-domain: filesq.chenn.dev
+      pangolin.public-resources.filesq.protocol: http
+      pangolin.public-resources.filesq.ssl: true
+      pangolin.public-resources.filesq.targets[0].method: http
+      pangolin.public-resources.filesq.targets[0].port: 80
+      pangolin.public-resources.filesq.auth.sso-enabled: true
+      pangolin.public-resources.filesq.auth.sso-roles[0]: Member
+      pangolin.public-resources.filesq.rules[0].action: pass
+      pangolin.public-resources.filesq.rules[0].match: country
+      pangolin.public-resources.filesq.rules[0].value: US
+      pangolin.public-resources.filesq.rules[0].priority: 0
+      pangolin.public-resources.filesq.rules[1].action: deny
+      pangolin.public-resources.filesq.rules[1].match: country
+      pangolin.public-resources.filesq.rules[1].value: ALL
+      pangolin.public-resources.filesq.rules[1].priority: 10
+
+  filesq_onlyoffice:
+    profiles: [filesq]
+    image: onlyoffice/documentserver:latest
+    container_name: filesq_onlyoffice
+    restart: unless-stopped
+    environment:
+      JWT_ENABLED: true
+      JWT_SECRET: ${FILESQ_SECRET}
+    networks: [filesq, newt]
+    labels:
+      pangolin.public-resources.office.name: office
+      pangolin.public-resources.office.full-domain: office.chenn.dev
+      pangolin.public-resources.office.protocol: http
+      pangolin.public-resources.office.ssl: true
+      pangolin.public-resources.office.targets[0].method: http
+      pangolin.public-resources.office.targets[0].port: 80
+      pangolin.public-resources.office.auth.sso-enabled: true
+      pangolin.public-resources.office.auth.sso-roles[0]: Member
+      pangolin.public-resources.office.rules[0].action: pass
+      pangolin.public-resources.office.rules[0].match: country
+      pangolin.public-resources.office.rules[0].value: US
+      pangolin.public-resources.office.rules[0].priority: 0
+      pangolin.public-resources.office.rules[1].action: deny
+      pangolin.public-resources.office.rules[1].match: country
+      pangolin.public-resources.office.rules[1].value: ALL
+      pangolin.public-resources.office.rules[1].priority: 10
+
+networks:
+  filesq:

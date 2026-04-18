@@ -1,0 +1,8 @@
+server:
+  externalUrl: https://filesq.chenn.dev
+  internalUrl: http://filesq:80
+
+integrations:
+  office:
+    url: https://office.chenn.dev
+    internalUrl: http://filesq_onlyoffice:80

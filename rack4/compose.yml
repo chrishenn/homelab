@@ -54,6 +54,7 @@ include:
   - apps/doc_server/oxicloud.yml
   - apps/doc_server/paperless.yml
   - apps/doc_server/syncthing.yml
+  - apps/doc_server/filesq.yml
 
   - apps/finance/actual.yml
   - apps/finance/sure.yml

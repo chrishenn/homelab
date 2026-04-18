@@ -113,6 +113,7 @@ DOPLARR_BOT_TOKEN = { provider = "onepass", value = "op://homelab/doplarr/bot_to
 PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" }
 ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
 SHLINK_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
+FILESQ_SECRET = { provider = "onepass", value = "op://homelab/filesq/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
