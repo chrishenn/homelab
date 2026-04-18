@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     environment:
       FILEBROWSER_CONFIG: /config.yaml
-#      FILEBROWSER_DATABASE: /db/database.db
       FILEBROWSER_ADMIN_PASSWORD: ${FILESQ_PASS}
 
       FILEBROWSER_OIDC_CLIENT_ID: ${FILESQ_OIDC_CLIENT}
@@ -17,7 +16,6 @@ services:
     volumes:
       - ./filesq/config.yaml:/config.yaml
       - $DATA/filesq/data:/home/filebrowser/data
-#      - $DATA/filesq/db:/db
       - /mnt/h/:/mnt/h
     networks: [filesq, newt]
     labels:

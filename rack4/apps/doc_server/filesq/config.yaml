@@ -34,12 +34,13 @@ integrations:
     internalUrl: http://filesq_onlyoffice:80
 
 auth:
+  adminUsername: chris
   methods:
     oidc:
       enabled: true
       issuerUrl: https://pocketid.chenn.dev
       scopes: email openid profile groups
-      userIdentifier: email
+      userIdentifier: preferred_username
       groupsClaim: groups
       adminGroup: admin
     password:
