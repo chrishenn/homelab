@@ -6,3 +6,11 @@ integrations:
   office:
     url: https://office.chenn.dev
     internalUrl: http://filesq_onlyoffice:80
+
+auth:
+  methods:
+    oidc:
+      enabled: true
+      issuerUrl: https://pocketid.chenn.dev
+      scopes: email openid profile groups
+      userIdentifier: preferred_username

@@ -173,3 +173,5 @@ PULSE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/pulse/oidc_cli
 PULSE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/pulse/oidc_secret" }
 PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/oidc_client" }
 PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }
+FILESQ_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/filesq/oidc_client" }
+FILESQ_OIDC_SECRET = { provider = "onepass", value = "op://homelab/filesq/oidc_secret" }
