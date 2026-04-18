@@ -54,7 +54,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Backup
       homepage.name: Backrest
       homepage.icon: backrest.png
       homepage.href: https://backrest.chenn.dev

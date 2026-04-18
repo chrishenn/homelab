@@ -27,7 +27,7 @@ services:
       IS_DOCKER: 'true'
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Backup
       homepage.name: Pluton
       homepage.icon: https://github.com/plutonhq/pluton/blob/main/frontend/public/favicon.png?raw=true
       homepage.href: https://pluton.chenn.dev

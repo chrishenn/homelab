@@ -45,19 +45,20 @@ include:
   - apps/doc_edit/bento.yml
   - apps/doc_edit/docmost.yml
   - apps/doc_edit/documenso.yml
-  - apps/doc_edit/openresume.yml
   - apps/doc_edit/pdfding.yml
-  - apps/doc_edit/resume.yml
   - apps/doc_edit/stirling.yml
 
+  - apps/doc_server/bluefiles.yml
+  - apps/doc_server/etherpad.yml
   - apps/doc_server/filebrowser.yml
   - apps/doc_server/hedge.yml
+  - apps/doc_server/oxicloud.yml
   - apps/doc_server/pairdrop.yml
   - apps/doc_server/paperless.yml
-  - apps/doc_server/oxicloud.yml
-  - apps/doc_server/etherpad.yml
-  - apps/doc_server/bluefiles.yml
   - apps/doc_server/syncthing.yml
+
+  - apps/finance/actual.yml
+  - apps/finance/sure.yml
 
   - apps/games/wordle.yml
 
@@ -110,7 +111,9 @@ include:
   - apps/media/mkvprio.yml
   - apps/media/recyclarr.yml
 
-  - apps/tools/actual.yml
+  - apps/resume/openresume.yml
+  - apps/resume/resume.yml
+
   - apps/tools/airtrail.yml
   - apps/tools/fileflow.yml
   - apps/tools/karakeep.yml
@@ -133,5 +136,4 @@ include:
   - apps/tools/keeper.yml
   - apps/tools/notediscovery.yml
   - apps/tools/moocup.yml
-  - apps/tools/sure.yml
   - apps/tools/nodebb.yml

@@ -20,7 +20,7 @@ services:
       - $DATA/zerobyte/data:/var/lib/zerobyte
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Backup
       homepage.name: Zerobyte
       homepage.icon: zerobyte.png
       homepage.href: https://zerobyte.chenn.dev

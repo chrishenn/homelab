@@ -57,6 +57,10 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
+  Backup:
+    useEqualHeights: true
+    style: row
+    columns: 5
   Webtop:
     useEqualHeights: true
     style: row
