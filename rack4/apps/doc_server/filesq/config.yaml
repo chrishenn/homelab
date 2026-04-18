@@ -55,3 +55,12 @@ auth:
 
 userDefaults:
   loginMethod: oidc
+  permissions:
+    api: false
+    admin: false
+    modify: true
+    share: true
+    realtime: true
+    delete: true
+    create: true
+    download: true
