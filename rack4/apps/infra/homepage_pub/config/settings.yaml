@@ -41,6 +41,10 @@ layout:
     useEqualHeights: true
     style: row
     columns: 5
+  File Servers:
+    useEqualHeights: true
+    style: row
+    columns: 5
   Dev:
     useEqualHeights: true
     style: row

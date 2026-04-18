@@ -3,7 +3,7 @@
 Deploys to machine: rack4
 
 You have to clone+pull the repo to the remote machine, to sync config files via github. Is it great? No. Do I want to
-deal with a more complicated setup? Not right now.
+deal with a more complicated setup? Also no.
 
 ---
 
@@ -34,12 +34,12 @@ Make sure that all images served from $REGISTRY are already built and pushed to 
 
 ```bash
 # the current list may be longer
-j build blocky_k openresume rsync rebuild
+j build blocky_k openresume rsync oxicloud transcodarr
 
 # bounce with pull, including from local REGISTRY
 j down
-j up forgejo
-j up core traefik traefik_k
+j pullup forgejo
+j pullup core traefik traefik_k newt
 j pullup
 ```
 
@@ -58,4 +58,5 @@ generate secrets
 ```bash
 python3 -c "import secrets; print(secrets.token_urlsafe(64))"
 openssl rand -base64 32
+openssl rand -hex 32
 ```

@@ -31,7 +31,7 @@ services:
       - $DATA/paperless/consume:/usr/src/paperless/consume
     networks: [paperless, traefik]
     labels:
-      homepage.instance.private.group: AI
+      homepage.instance.private.group: File Servers
       homepage.instance.private.name: Paperless
       homepage.instance.private.icon: paperless.png
       homepage.instance.private.href: https://paperless.henn.dev

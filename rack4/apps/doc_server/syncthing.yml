@@ -18,7 +18,7 @@ services:
       - 21027:21027/udp
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: File Servers
       homepage.name: Syncthing
       homepage.icon: syncthing.png
       homepage.href: https://syncthing.chenn.dev

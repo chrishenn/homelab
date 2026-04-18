@@ -38,7 +38,7 @@ services:
       - $DATA/hedge/config:/config
     networks: [hedge, newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: File Servers
       homepage.name: Hedge Doc
       homepage.icon: hedgedoc.png
       homepage.href: https://hedge.chenn.dev

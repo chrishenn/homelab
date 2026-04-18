@@ -9,7 +9,7 @@ services:
       - $DATA/notediscovery/data:/app/data
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Tools
       homepage.name: notediscovery
       homepage.icon: notediscovery.png
       homepage.href: https://notediscovery.chenn.dev

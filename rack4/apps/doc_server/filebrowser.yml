@@ -16,7 +16,7 @@ services:
       - /mnt/f:/mnt/f
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: File Servers
       homepage.name: File Browser
       homepage.icon: filebrowser-quantum.png
       homepage.href: https://files.chenn.dev

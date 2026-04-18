@@ -9,7 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Infra
       homepage.name: Dockscope
       homepage.icon: docker-engine.png
       homepage.href: https://dockscope.chenn.dev

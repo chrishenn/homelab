@@ -26,7 +26,7 @@ services:
 
     networks: [etherpad, newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: File Servers
       homepage.name: Etherpad
       homepage.icon: etherpad.png
       homepage.href: https://etherpad.chenn.dev

@@ -43,6 +43,12 @@ services:
         condition: service_healthy
     networks: [oxicloud, newt]
     labels:
+      homepage.group: File Servers
+      homepage.name: Oxicloud
+      homepage.icon: oxicloud.png
+      homepage.href: https://oxicloud.chenn.dev
+      homepage.description: Rust File Server
+
       pangolin.public-resources.oxicloud.name: oxicloud
       pangolin.public-resources.oxicloud.full-domain: oxicloud.chenn.dev
       pangolin.public-resources.oxicloud.protocol: http

@@ -53,7 +53,6 @@ include:
   - apps/doc_server/filebrowser.yml
   - apps/doc_server/hedge.yml
   - apps/doc_server/oxicloud.yml
-  - apps/doc_server/pairdrop.yml
   - apps/doc_server/paperless.yml
   - apps/doc_server/syncthing.yml
 
@@ -137,3 +136,4 @@ include:
   - apps/tools/notediscovery.yml
   - apps/tools/moocup.yml
   - apps/tools/nodebb.yml
+  - apps/tools/pairdrop.yml
