@@ -1,0 +1,55 @@
+# login: sync-in/sync-in
+
+include:
+  - ./config/nginx/docker-compose.nginx.yaml
+
+
+name: sync-in
+services:
+  syncin:
+    image: syncin/server:2
+    container_name: syncin
+    restart: unless-stopped
+    environment:
+      INIT_ADMIN: true
+      INIT_ADMIN_LOGIN: ${USER}
+      INIT_ADMIN_PASSWORD: ${PASS}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      FORCE_PERMISSIONS: true
+#    ports:
+#      - '9090:8080'
+    volumes:
+      - ./environment.yaml:/app/environment/environment.yaml
+      - $DATA/syncin/data:/app/data
+      - $DATA/syncin/desktop:/app/static/releases:ro
+    networks: [syncin, newt]
+
+  syncin_db:
+    image: mariadb:11
+    container_name: syncin_db
+    restart: unless-stopped
+    command: --innodb_ft_cache_size=16000000 --max-allowed-packet=1G
+    environment:
+      MYSQL_ROOT_PASSWORD: syncin
+      MYSQL_DATABASE: syncin
+    volumes:
+      - $DATA/syncin/db:/var/lib/mysql
+    networks: [syncin]
+
+  syncin_collabora:
+    image: collabora/code
+    container_name: syncin_collabora
+    restart: unless-stopped
+    environment:
+      extra_params: >-
+        --o:ssl.enable=false
+        --o:ssl.termination=true
+        --o:logging.disable_server_audit=true
+        --o:admin_console.enable=false
+    cap_drop: [ALL]
+    cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
+    networks: [newt]
+
+networks:
+  syncin:

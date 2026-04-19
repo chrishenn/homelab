@@ -1,4 +1,5 @@
 # onlyoffice editor is read-only in mobile browser without expensive license - I can workaround by using syncthing
+# if it supported collabora that would be better, except collabora on android doesn't work terribly well either
 ---
 services:
   files:
