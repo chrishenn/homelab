@@ -12,13 +12,9 @@ services:
       SYNCIN_SERVER_TRUSTPROXY: 1
       PUID: ${PUID}
       PGID: ${PGID}
-      FORCE_PERMISSIONS: true
-
-      # must be empty for false. derp
+      # set INIT_ADMIN to empty to indicate 'false'. derp
       INIT_ADMIN:
-#      INIT_ADMIN_LOGIN: ${SYNCIN_USER}
-#      INIT_ADMIN_PASSWORD: ${SYNCIN_PASS}
-
+      FORCE_PERMISSIONS: true
       SYNCIN_MYSQL_URL: mysql://root:syncin@syncin_db:3306/syncin
 
       SYNCIN_APPLICATIONS_FILES_DATAPATH: /app/data
@@ -44,18 +40,25 @@ services:
       SYNCIN_AUTH_OIDC_CLIENTID: ${SYNCIN_OIDC_CLIENT}
       SYNCIN_AUTH_OIDC_CLIENTSECRET: ${SYNCIN_OIDC_SECRET}
       SYNCIN_AUTH_OIDC_OPTIONS_AUTOCREATEUSER: true
-
-#      SYNCIN_AUTH_OIDC_OPTIONS_AUTOCREATEPERMISSIONS: >-
-#        personal_space, spaces_access, spaces_admin, shares_access, shares_admin, guests_admin, personal_groups_admin,
-#         desktop_app_access, desktop_app_sync, webdav_access
       SYNCIN_AUTH_OIDC_OPTIONS_ADMINROLEORGROUP: admin
       SYNCIN_AUTH_OIDC_OPTIONS_AUTOREDIRECT: true
       SYNCIN_AUTH_OIDC_SECURITY_SCOPE: openid email profile groups
       SYNCIN_AUTH_OIDC_SECURITY_SUPPORTPKCE: false
     volumes:
+      - ./syncin/environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data
+#      - /mnt/f:/mnt/f
+      - /mnt/h:/mnt/h
+      - /mnt/k:/mnt/k
+      - /mnt/q:/mnt/q
     networks: [syncin, newt]
     labels:
+      homepage.group: File Servers
+      homepage.name: Sync-In
+      homepage.icon: https://raw.githubusercontent.com/Sync-in/server/refs/heads/main/frontend/src/assets/favicon.svg
+      homepage.href: https://syncin.chenn.dev
+      homepage.description: File Server
+
       pangolin.public-resources.syncin.name: syncin
       pangolin.public-resources.syncin.full-domain: syncin.chenn.dev
       pangolin.public-resources.syncin.protocol: http
@@ -65,19 +68,38 @@ services:
       pangolin.public-resources.syncin.targets[0].path-match: prefix
       pangolin.public-resources.syncin.targets[0].path: /
       pangolin.public-resources.syncin.targets[0].port: 8080
-      pangolin.public-resources.syncin.targets[0].priority: 100
+      pangolin.public-resources.syncin.targets[0].priority: 1
 
-#      pangolin.public-resources.syncin.auth.sso-enabled: true
-#      pangolin.public-resources.syncin.auth.sso-roles[0]: Member
+      pangolin.public-resources.syncin.auth.sso-enabled: true
+      pangolin.public-resources.syncin.auth.sso-roles[0]: Member
 
-      pangolin.public-resources.syncin.rules[0].action: pass
-      pangolin.public-resources.syncin.rules[0].match: country
-      pangolin.public-resources.syncin.rules[0].value: US
-      pangolin.public-resources.syncin.rules[0].priority: 0
-      pangolin.public-resources.syncin.rules[1].action: deny
-      pangolin.public-resources.syncin.rules[1].match: country
-      pangolin.public-resources.syncin.rules[1].value: ALL
-      pangolin.public-resources.syncin.rules[1].priority: 10
+      pangolin.public-resources.syncin.rules[0].action: allow
+      pangolin.public-resources.syncin.rules[0].match: path
+      pangolin.public-resources.syncin.rules[0].value: /browser/*
+
+      pangolin.public-resources.syncin.rules[1].action: allow
+      pangolin.public-resources.syncin.rules[1].match: path
+      pangolin.public-resources.syncin.rules[1].value: /hosting/*
+
+      pangolin.public-resources.syncin.rules[2].action: allow
+      pangolin.public-resources.syncin.rules[2].match: path
+      pangolin.public-resources.syncin.rules[2].value: /cool/*
+
+      pangolin.public-resources.syncin.rules[3].action: allow
+      pangolin.public-resources.syncin.rules[3].match: path
+      pangolin.public-resources.syncin.rules[3].value: /api/*
+
+      pangolin.public-resources.syncin.rules[4].action: allow
+      pangolin.public-resources.syncin.rules[4].match: path
+      pangolin.public-resources.syncin.rules[4].value: /wopi/*
+
+      pangolin.public-resources.syncin.rules[5].action: pass
+      pangolin.public-resources.syncin.rules[5].match: country
+      pangolin.public-resources.syncin.rules[5].value: US
+
+      pangolin.public-resources.syncin.rules[6].action: deny
+      pangolin.public-resources.syncin.rules[6].match: country
+      pangolin.public-resources.syncin.rules[6].value: ALL
 
   syncin_db:
     profiles: [syncin]
@@ -111,19 +133,19 @@ services:
       pangolin.public-resources.syncin.targets[1].path-match: prefix
       pangolin.public-resources.syncin.targets[1].path: /browser
       pangolin.public-resources.syncin.targets[1].port: 9980
-      pangolin.public-resources.syncin.targets[1].priority: 110
+      pangolin.public-resources.syncin.targets[1].priority: 10
 
       pangolin.public-resources.syncin.targets[2].method: http
       pangolin.public-resources.syncin.targets[2].path-match: prefix
       pangolin.public-resources.syncin.targets[2].path: /hosting
       pangolin.public-resources.syncin.targets[2].port: 9980
-      pangolin.public-resources.syncin.targets[2].priority: 120
+      pangolin.public-resources.syncin.targets[2].priority: 20
 
       pangolin.public-resources.syncin.targets[3].method: http
       pangolin.public-resources.syncin.targets[3].path-match: prefix
       pangolin.public-resources.syncin.targets[3].path: /cool
       pangolin.public-resources.syncin.targets[3].port: 9980
-      pangolin.public-resources.syncin.targets[3].priority: 130
+      pangolin.public-resources.syncin.targets[3].priority: 30
 
 networks:
   syncin:
