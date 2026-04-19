@@ -1,5 +1,9 @@
+server:
+  trustProxy: 1
+
 mysql:
   url: mysql://root:syncin@syncin_db:3306/syncin
+
 auth:
   encryptionKey: ef99b8e7c864e8587761286f1f37877731c7ed148c3f0efb8cf2272e443c91fd
   token:

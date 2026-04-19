@@ -1,6 +1,7 @@
 ---
 services:
   syncin:
+    profiles: [syncin]
     image: syncin/server:latest
     container_name: syncin
     restart: unless-stopped
@@ -11,15 +12,36 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       FORCE_PERMISSIONS: true
-    #    ports:
-    #      - '9090:8080'
     volumes:
       - ./syncin/environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data
-      - $DATA/syncin/desktop:/app/static/releases:ro
     networks: [syncin, newt]
+    labels:
+      pangolin.public-resources.syncin.name: syncin
+      pangolin.public-resources.syncin.full-domain: syncin.chenn.dev
+      pangolin.public-resources.syncin.protocol: http
+      pangolin.public-resources.syncin.ssl: true
+
+      pangolin.public-resources.syncin.targets[0].method: http
+      pangolin.public-resources.syncin.targets[0].path-match: prefix
+      pangolin.public-resources.syncin.targets[0].path: /
+      pangolin.public-resources.syncin.targets[0].port: 8080
+      pangolin.public-resources.syncin.targets[0].priority: 100
+
+#      pangolin.public-resources.syncin.auth.sso-enabled: true
+#      pangolin.public-resources.syncin.auth.sso-roles[0]: Member
+
+      pangolin.public-resources.syncin.rules[0].action: pass
+      pangolin.public-resources.syncin.rules[0].match: country
+      pangolin.public-resources.syncin.rules[0].value: US
+      pangolin.public-resources.syncin.rules[0].priority: 0
+      pangolin.public-resources.syncin.rules[1].action: deny
+      pangolin.public-resources.syncin.rules[1].match: country
+      pangolin.public-resources.syncin.rules[1].value: ALL
+      pangolin.public-resources.syncin.rules[1].priority: 10
 
   syncin_db:
+    profiles: [syncin]
     image: mariadb:11
     container_name: syncin_db
     restart: unless-stopped
@@ -32,6 +54,7 @@ services:
     networks: [syncin]
 
   syncin_collabora:
+    profiles: [syncin]
     image: collabora/code:latest
     container_name: syncin_collabora
     restart: unless-stopped
@@ -43,7 +66,25 @@ services:
         --o:admin_console.enable=false
     cap_drop: [ALL]
     cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
-    networks: [newt]
+    networks: [syncin, newt]
+    labels:
+      pangolin.public-resources.syncin.targets[1].method: http
+      pangolin.public-resources.syncin.targets[1].path-match: prefix
+      pangolin.public-resources.syncin.targets[1].path: /browser
+      pangolin.public-resources.syncin.targets[1].port: 9980
+      pangolin.public-resources.syncin.targets[1].priority: 110
+
+      pangolin.public-resources.syncin.targets[2].method: http
+      pangolin.public-resources.syncin.targets[2].path-match: prefix
+      pangolin.public-resources.syncin.targets[2].path: /hosting
+      pangolin.public-resources.syncin.targets[2].port: 9980
+      pangolin.public-resources.syncin.targets[2].priority: 120
+
+      pangolin.public-resources.syncin.targets[3].method: http
+      pangolin.public-resources.syncin.targets[3].path-match: prefix
+      pangolin.public-resources.syncin.targets[3].path: /cool
+      pangolin.public-resources.syncin.targets[3].port: 9980
+      pangolin.public-resources.syncin.targets[3].priority: 130
 
 networks:
   syncin:
