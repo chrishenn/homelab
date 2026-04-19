@@ -88,8 +88,8 @@ MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/maxmind/license"
 RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
 RESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
 
-FILESQ_SECRET = { provider = "onepass", value = "op://homelab/filesq/secret" }
-FILESQ_PASS = { provider = "onepass", value = "op://homelab/filesq/password" }
+FILES_SECRET = { provider = "onepass", value = "op://homelab/files/secret" }
+FILES_PASS = { provider = "onepass", value = "op://homelab/files/password" }
 
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
@@ -175,5 +175,5 @@ PULSE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/pulse/oidc_cli
 PULSE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/pulse/oidc_secret" }
 PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/oidc_client" }
 PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }
-FILESQ_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/filesq/oidc_client" }
-FILESQ_OIDC_SECRET = { provider = "onepass", value = "op://homelab/filesq/oidc_secret" }
+FILES_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/files/oidc_client" }
+FILES_OIDC_SECRET = { provider = "onepass", value = "op://homelab/files/oidc_secret" }

@@ -1,11 +1,12 @@
-# early days still - but very promising
-# - no button to create a document in the interface; have to upload docs to create them
-# - there's a button to open a doc editor in a new tab, but it doesn't work
-# - no way to link the root admin to the same user via SSO
-# - I can't get collabora working on a url separate from oxicloud's
+# one deal-breaker for me:
 # - files are stored as postgres blobs on disk. No files on disk! :/
 
-# I already trust the security of this project more than the others. OIDC config was trivial.
+# otherwise, very promising
+# - no button to create a document in the interface; have to upload docs to create them
+# - there's a button to open a doc editor in a new tab, but it doesn't work with this setup
+# - no way to link the root admin to the same user via SSO
+# - I can't get collabora working on a url separate from oxicloud's
+
 ---
 services:
   oxicloud:

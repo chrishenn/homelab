@@ -1,5 +1,5 @@
 frontend:
-  name: "FileBrowser Quantum: Chicken"
+  name: "Quantum Chicken"
   description: A file server for the Dancing Chicken
 
 server:

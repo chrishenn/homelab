@@ -50,7 +50,6 @@ include:
   - apps/doc_server/bluefiles.yml
   - apps/doc_server/etherpad.yml
   - apps/doc_server/hedge.yml
-  - apps/doc_server/oxicloud.yml
   - apps/doc_server/paperless.yml
   - apps/doc_server/syncthing.yml
   - apps/doc_server/files.yml

@@ -7,11 +7,11 @@ services:
     restart: unless-stopped
     environment:
       FILEBROWSER_CONFIG: /config.yaml
-      FILEBROWSER_ADMIN_PASSWORD: ${FILESQ_PASS}
+      FILEBROWSER_ADMIN_PASSWORD: ${FILES_PASS}
 
-      FILEBROWSER_OIDC_CLIENT_ID: ${FILESQ_OIDC_CLIENT}
-      FILEBROWSER_OIDC_CLIENT_SECRET: ${FILESQ_OIDC_SECRET}
-      FILEBROWSER_ONLYOFFICE_SECRET: ${FILESQ_SECRET}
+      FILEBROWSER_OIDC_CLIENT_ID: ${FILES_OIDC_CLIENT}
+      FILEBROWSER_OIDC_CLIENT_SECRET: ${FILES_OIDC_SECRET}
+      FILEBROWSER_ONLYOFFICE_SECRET: ${FILES_SECRET}
 
     volumes:
       - ./files/config.yaml:/config.yaml
@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
     environment:
       JWT_ENABLED: true
-      JWT_SECRET: ${files_SECRET}
+      JWT_SECRET: ${FILES_SECRET}
     networks: [files, newt]
     labels:
       pangolin.public-resources.office.name: office

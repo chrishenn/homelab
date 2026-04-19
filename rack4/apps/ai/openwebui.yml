@@ -29,7 +29,7 @@ services:
       OAUTH_CLIENT_ID: $OLLAMA_OIDC_CLIENT
       OAUTH_CLIENT_SECRET: $OLLAMA_OIDC_SECRET
       OAUTH_PROVIDER_NAME: PocketID
-      OAUTH_SCOPES: openid email profile
+      OAUTH_SCOPES: openid email profile groups
       OAUTH_CODE_CHALLENGE_METHOD: S256
       OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
 
@@ -57,7 +57,6 @@ services:
       pangolin.public-resources.openwebui.targets[0].port: 8080
       pangolin.public-resources.openwebui.auth.sso-enabled: true
       pangolin.public-resources.openwebui.auth.sso-roles[0]: Member
-
       pangolin.public-resources.openwebui.rules[0].action: pass
       pangolin.public-resources.openwebui.rules[0].match: country
       pangolin.public-resources.openwebui.rules[0].value: US
