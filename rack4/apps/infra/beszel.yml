@@ -31,15 +31,12 @@ services:
       pangolin.public-resources.beszel.rules[0].action: allow
       pangolin.public-resources.beszel.rules[0].match: path
       pangolin.public-resources.beszel.rules[0].value: api/beszel/agent-connect
-      pangolin.public-resources.beszel.rules[0].priority: 0
       pangolin.public-resources.beszel.rules[1].action: pass
       pangolin.public-resources.beszel.rules[1].match: country
       pangolin.public-resources.beszel.rules[1].value: US
-      pangolin.public-resources.beszel.rules[1].priority: 10
       pangolin.public-resources.beszel.rules[2].action: deny
       pangolin.public-resources.beszel.rules[2].match: country
       pangolin.public-resources.beszel.rules[2].value: ALL
-      pangolin.public-resources.beszel.rules[2].priority: 20
 
   beszel_rack4:
     profiles: [beszel]

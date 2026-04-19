@@ -40,17 +40,14 @@ services:
       pangolin.public-resources.scanopy.rules[0].action: allow
       pangolin.public-resources.scanopy.rules[0].match: path
       pangolin.public-resources.scanopy.rules[0].value: /api/*
-      pangolin.public-resources.scanopy.rules[0].priority: 0
 
       pangolin.public-resources.scanopy.rules[1].action: pass
       pangolin.public-resources.scanopy.rules[1].match: country
       pangolin.public-resources.scanopy.rules[1].value: US
-      pangolin.public-resources.scanopy.rules[1].priority: 10
 
       pangolin.public-resources.scanopy.rules[2].action: deny
       pangolin.public-resources.scanopy.rules[2].match: country
       pangolin.public-resources.scanopy.rules[2].value: ALL
-      pangolin.public-resources.scanopy.rules[2].priority: 20
 
   scanopy_daemon:
     profiles: [scanopy]

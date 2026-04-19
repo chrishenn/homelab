@@ -1,3 +1,29 @@
+# 10/10 incredible work. No more Google Drive for me!
+# - collabora works, even from mobile browser
+# - documentation is STELLAR
+
+# I have just the tiniest set of gripes
+# - mounting folders is clunky
+# - there's no straightforward way to put external auth (like pangolin SSO) in front
+# - UI is ugly and awkward
+#   - I can't put a bookmark to any location anywhere I'd like - I have to navigate to spaces -> spacename -> folder
+#       every time I log in
+#   - Can't disable recents. I hate recents with a fiery passion
+#   - UI bug: The chevron to collapse the "shared" section does not collapse the section
+#   - padding around UI elements is too small
+#   - tool and status bars are not hideable
+#   - user icon is on the incorrect (right) side of app
+#   - search section should not be its own top-level tab - should be rechable from anywhere with a hotkey (ctrl+k)
+#   - redundant "admin" and "account" icons
+#   - user settings menu is a side-panel instead of a menu
+#   - file nav requires a double-click - weird on mobile, and usually configurable on desktop
+#   - bug: can't add 2FA OTP if you use OIDC auto-created user (because there's no password)
+#   - bug: can't set password if you use OIDC auto-created user
+#   - big forward, back, and refresh buttons in the UI, while browser works just fine
+#   - non-standard logout icon
+#   - UI doesn't respect the delete key
+#   - file operations slide in a side panel instead of a success toast or icon. auto-hides very slowly
+
 ---
 services:
   syncin:
@@ -47,7 +73,6 @@ services:
     volumes:
       - ./syncin/environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data
-#      - /mnt/f:/mnt/f
       - /mnt/h:/mnt/h
       - /mnt/k:/mnt/k
       - /mnt/q:/mnt/q

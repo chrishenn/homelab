@@ -3,7 +3,6 @@
 include:
   - ./config/nginx/docker-compose.nginx.yaml
 
-
 name: sync-in
 services:
   syncin:
@@ -17,8 +16,8 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       FORCE_PERMISSIONS: true
-#    ports:
-#      - '9090:8080'
+    #    ports:
+    #      - '9090:8080'
     volumes:
       - ./environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data

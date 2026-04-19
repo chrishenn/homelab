@@ -71,22 +71,18 @@ services:
       pangolin.public-resources.forgejo.rules[0].action: allow
       pangolin.public-resources.forgejo.rules[0].match: path
       pangolin.public-resources.forgejo.rules[0].value: /v2/*
-      pangolin.public-resources.forgejo.rules[0].priority: 0
 
       pangolin.public-resources.forgejo.rules[1].action: allow
       pangolin.public-resources.forgejo.rules[1].match: path
       pangolin.public-resources.forgejo.rules[1].value: /api/*
-      pangolin.public-resources.forgejo.rules[1].priority: 5
 
       pangolin.public-resources.forgejo.rules[2].action: pass
       pangolin.public-resources.forgejo.rules[2].match: country
       pangolin.public-resources.forgejo.rules[2].value: US
-      pangolin.public-resources.forgejo.rules[2].priority: 10
 
       pangolin.public-resources.forgejo.rules[3].action: deny
       pangolin.public-resources.forgejo.rules[3].match: country
       pangolin.public-resources.forgejo.rules[3].value: ALL
-      pangolin.public-resources.forgejo.rules[3].priority: 20
 
       pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
       pangolin.public-resources.forgejo_ssh.protocol: tcp

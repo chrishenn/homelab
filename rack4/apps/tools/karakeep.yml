@@ -61,11 +61,9 @@ services:
       pangolin.public-resources.karakeep.rules[0].action: pass
       pangolin.public-resources.karakeep.rules[0].match: country
       pangolin.public-resources.karakeep.rules[0].value: US
-      pangolin.public-resources.karakeep.rules[0].priority: 0
       pangolin.public-resources.karakeep.rules[1].action: deny
       pangolin.public-resources.karakeep.rules[1].match: country
       pangolin.public-resources.karakeep.rules[1].value: ALL
-      pangolin.public-resources.karakeep.rules[1].priority: 10
 
   karakeep_meili:
     profiles: [karakeep]

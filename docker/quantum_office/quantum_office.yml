@@ -1,4 +1,6 @@
-
+# how to integrate onlyoffice with filebrowser quantum
+# onlyoffice editor is read-only in mobile browser without expensive license - I can workaround by using syncthing
+# if it supported collabora that would be better, except collabora on android doesn't work terribly well either
 ---
 services:
   files:
@@ -9,8 +11,11 @@ services:
     environment:
       FILEBROWSER_CONFIG: /config.yaml
       FILEBROWSER_ADMIN_PASSWORD: ${FILES_PASS}
+
       FILEBROWSER_OIDC_CLIENT_ID: ${FILES_OIDC_CLIENT}
       FILEBROWSER_OIDC_CLIENT_SECRET: ${FILES_OIDC_SECRET}
+      FILEBROWSER_ONLYOFFICE_SECRET: ${FILES_SECRET}
+
     volumes:
       - ./files/config.yaml:/config.yaml
       - $DATA/files/data:/home/filebrowser/data
@@ -18,7 +23,7 @@ services:
       - /mnt/h:/mnt/h
       - /mnt/q:/mnt/q
       - /mnt/f:/mnt/f
-    networks: [newt]
+    networks: [files, newt]
     labels:
       homepage.group: File Servers
       homepage.name: Filebrowser Quantum
@@ -40,3 +45,32 @@ services:
       pangolin.public-resources.files.rules[1].action: deny
       pangolin.public-resources.files.rules[1].match: country
       pangolin.public-resources.files.rules[1].value: ALL
+
+  office:
+    profiles: [files]
+    image: onlyoffice/documentserver:latest
+    container_name: office
+    restart: unless-stopped
+    environment:
+      JWT_ENABLED: true
+      JWT_SECRET: ${FILES_SECRET}
+      ALLOW_PRIVATE_IP_ADDRESS: true
+      JWT_HEADER: Authorization
+      ONLYOFFICE_HTTPS_HSTS_ENABLED: false
+    networks: [files, newt]
+    labels:
+      pangolin.public-resources.office.name: office
+      pangolin.public-resources.office.full-domain: office.chenn.dev
+      pangolin.public-resources.office.protocol: http
+      pangolin.public-resources.office.ssl: true
+      pangolin.public-resources.office.targets[0].method: http
+      pangolin.public-resources.office.targets[0].port: 80
+      pangolin.public-resources.office.rules[0].action: pass
+      pangolin.public-resources.office.rules[0].match: country
+      pangolin.public-resources.office.rules[0].value: US
+      pangolin.public-resources.office.rules[1].action: deny
+      pangolin.public-resources.office.rules[1].match: country
+      pangolin.public-resources.office.rules[1].value: ALL
+
+networks:
+  files:

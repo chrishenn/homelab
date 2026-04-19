@@ -37,11 +37,9 @@ services:
       pangolin.public-resources.calibre.rules[0].action: pass
       pangolin.public-resources.calibre.rules[0].match: country
       pangolin.public-resources.calibre.rules[0].value: US
-      pangolin.public-resources.calibre.rules[0].priority: 0
       pangolin.public-resources.calibre.rules[1].action: deny
       pangolin.public-resources.calibre.rules[1].match: country
       pangolin.public-resources.calibre.rules[1].value: ALL
-      pangolin.public-resources.calibre.rules[1].priority: 10
 
   # admin/admin123
   autocaliweb:
@@ -76,11 +74,9 @@ services:
       pangolin.public-resources.autocaliweb.rules[0].action: pass
       pangolin.public-resources.autocaliweb.rules[0].match: country
       pangolin.public-resources.autocaliweb.rules[0].value: US
-      pangolin.public-resources.autocaliweb.rules[0].priority: 0
       pangolin.public-resources.autocaliweb.rules[1].action: deny
       pangolin.public-resources.autocaliweb.rules[1].match: country
       pangolin.public-resources.autocaliweb.rules[1].value: ALL
-      pangolin.public-resources.autocaliweb.rules[1].priority: 10
 
   shelfmark:
     profiles: [calibre]
@@ -121,8 +117,6 @@ services:
       pangolin.public-resources.shelfmark.rules[0].action: pass
       pangolin.public-resources.shelfmark.rules[0].match: country
       pangolin.public-resources.shelfmark.rules[0].value: US
-      pangolin.public-resources.shelfmark.rules[0].priority: 0
       pangolin.public-resources.shelfmark.rules[1].action: deny
       pangolin.public-resources.shelfmark.rules[1].match: country
       pangolin.public-resources.shelfmark.rules[1].value: ALL
-      pangolin.public-resources.shelfmark.rules[1].priority: 10

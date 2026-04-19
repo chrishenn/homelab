@@ -36,8 +36,6 @@ services:
       pangolin.public-resources.8mb.rules[0].action: pass
       pangolin.public-resources.8mb.rules[0].match: country
       pangolin.public-resources.8mb.rules[0].value: US
-      pangolin.public-resources.8mb.rules[0].priority: 0
       pangolin.public-resources.8mb.rules[1].action: deny
       pangolin.public-resources.8mb.rules[1].match: country
       pangolin.public-resources.8mb.rules[1].value: ALL
-      pangolin.public-resources.8mb.rules[1].priority: 10

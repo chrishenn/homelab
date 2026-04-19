@@ -33,11 +33,9 @@ services:
       pangolin.public-resources.bazarr.rules[0].action: pass
       pangolin.public-resources.bazarr.rules[0].match: country
       pangolin.public-resources.bazarr.rules[0].value: US
-      pangolin.public-resources.bazarr.rules[0].priority: 0
       pangolin.public-resources.bazarr.rules[1].action: deny
       pangolin.public-resources.bazarr.rules[1].match: country
       pangolin.public-resources.bazarr.rules[1].value: ALL
-      pangolin.public-resources.bazarr.rules[1].priority: 10
 
   radarr:
     profiles: [arr]
@@ -75,15 +73,12 @@ services:
       pangolin.public-resources.radarr.rules[0].action: allow
       pangolin.public-resources.radarr.rules[0].match: path
       pangolin.public-resources.radarr.rules[0].value: /api/*
-      pangolin.public-resources.radarr.rules[0].priority: 0
       pangolin.public-resources.radarr.rules[1].action: pass
       pangolin.public-resources.radarr.rules[1].match: country
       pangolin.public-resources.radarr.rules[1].value: US
-      pangolin.public-resources.radarr.rules[1].priority: 10
       pangolin.public-resources.radarr.rules[2].action: deny
       pangolin.public-resources.radarr.rules[2].match: country
       pangolin.public-resources.radarr.rules[2].value: ALL
-      pangolin.public-resources.radarr.rules[2].priority: 20
 
   sonarr:
     profiles: [arr]
@@ -121,15 +116,12 @@ services:
       pangolin.public-resources.sonarr.rules[0].action: allow
       pangolin.public-resources.sonarr.rules[0].match: path
       pangolin.public-resources.sonarr.rules[0].value: /api/*
-      pangolin.public-resources.sonarr.rules[0].priority: 0
       pangolin.public-resources.sonarr.rules[1].action: pass
       pangolin.public-resources.sonarr.rules[1].match: country
       pangolin.public-resources.sonarr.rules[1].value: US
-      pangolin.public-resources.sonarr.rules[1].priority: 10
       pangolin.public-resources.sonarr.rules[2].action: deny
       pangolin.public-resources.sonarr.rules[2].match: country
       pangolin.public-resources.sonarr.rules[2].value: ALL
-      pangolin.public-resources.sonarr.rules[2].priority: 20
 
   lidarr:
     profiles: [arr]
@@ -167,15 +159,12 @@ services:
       pangolin.public-resources.lidarr.rules[0].action: allow
       pangolin.public-resources.lidarr.rules[0].match: path
       pangolin.public-resources.lidarr.rules[0].value: /api/*
-      pangolin.public-resources.lidarr.rules[0].priority: 0
       pangolin.public-resources.lidarr.rules[1].action: pass
       pangolin.public-resources.lidarr.rules[1].match: country
       pangolin.public-resources.lidarr.rules[1].value: US
-      pangolin.public-resources.lidarr.rules[1].priority: 10
       pangolin.public-resources.lidarr.rules[2].action: deny
       pangolin.public-resources.lidarr.rules[2].match: country
       pangolin.public-resources.lidarr.rules[2].value: ALL
-      pangolin.public-resources.lidarr.rules[2].priority: 20
 
   seerr:
     profiles: [arr]
@@ -210,11 +199,9 @@ services:
       pangolin.public-resources.seerr.rules[0].action: pass
       pangolin.public-resources.seerr.rules[0].match: country
       pangolin.public-resources.seerr.rules[0].value: US
-      pangolin.public-resources.seerr.rules[0].priority: 0
       pangolin.public-resources.seerr.rules[1].action: deny
       pangolin.public-resources.seerr.rules[1].match: country
       pangolin.public-resources.seerr.rules[1].value: ALL
-      pangolin.public-resources.seerr.rules[1].priority: 10
 
   prowlarr:
     profiles: [arr]
@@ -256,11 +243,9 @@ services:
       pangolin.public-resources.prowlarr.rules[0].action: pass
       pangolin.public-resources.prowlarr.rules[0].match: country
       pangolin.public-resources.prowlarr.rules[0].value: US
-      pangolin.public-resources.prowlarr.rules[0].priority: 0
       pangolin.public-resources.prowlarr.rules[1].action: deny
       pangolin.public-resources.prowlarr.rules[1].match: country
       pangolin.public-resources.prowlarr.rules[1].value: ALL
-      pangolin.public-resources.prowlarr.rules[1].priority: 10
 
   mseerr:
     profiles: [arr]
@@ -301,11 +286,9 @@ services:
       pangolin.public-resources.mseerr.rules[0].action: pass
       pangolin.public-resources.mseerr.rules[0].match: country
       pangolin.public-resources.mseerr.rules[0].value: US
-      pangolin.public-resources.mseerr.rules[0].priority: 0
       pangolin.public-resources.mseerr.rules[1].action: deny
       pangolin.public-resources.mseerr.rules[1].match: country
       pangolin.public-resources.mseerr.rules[1].value: ALL
-      pangolin.public-resources.mseerr.rules[1].priority: 10
 
   aurral:
     profiles: [arr]
@@ -336,11 +319,9 @@ services:
       pangolin.public-resources.aurral.rules[0].action: pass
       pangolin.public-resources.aurral.rules[0].match: country
       pangolin.public-resources.aurral.rules[0].value: US
-      pangolin.public-resources.aurral.rules[0].priority: 0
       pangolin.public-resources.aurral.rules[1].action: deny
       pangolin.public-resources.aurral.rules[1].match: country
       pangolin.public-resources.aurral.rules[1].value: ALL
-      pangolin.public-resources.aurral.rules[1].priority: 10
 
   doplarr:
     profiles: [arr]

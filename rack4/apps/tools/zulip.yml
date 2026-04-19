@@ -23,6 +23,10 @@ services:
     image: zulip/docker-zulip:latest
     container_name: zulip
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     environment:
       TZ: $TZ
       SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
@@ -98,11 +102,9 @@ services:
       pangolin.public-resources.zulip.rules[0].action: pass
       pangolin.public-resources.zulip.rules[0].match: country
       pangolin.public-resources.zulip.rules[0].value: US
-      pangolin.public-resources.zulip.rules[0].priority: 0
       pangolin.public-resources.zulip.rules[1].action: deny
       pangolin.public-resources.zulip.rules[1].match: country
       pangolin.public-resources.zulip.rules[1].value: ALL
-      pangolin.public-resources.zulip.rules[1].priority: 10
 
   zulip_pg:
     profiles: [zulip]

@@ -24,6 +24,11 @@ server:
       config:
         defaultEnabled: true
 
+integrations:
+  office:
+    url: https://office.chenn.dev
+    internalUrl: http://office:80
+
 auth:
   adminUsername: chris
   methods:
