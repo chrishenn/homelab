@@ -27,6 +27,12 @@ NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_SECRET
 ARR_PANGOLIN_AUTH_USER = { provider = "onepass", value = "op://homelab/radarr/auth_user" }
 ARR_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/radarr/auth_pass" }
 
+SYNCIN_USER = { provider = "onepass", value = "op://homelab/syncin/username" }
+SYNCIN_PASS = { provider = "onepass", value = "op://homelab/syncin/password" }
+SYNCIN_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/syncin/ENCRYPTION_KEY" }
+SYNCIN_TOKEN_ACCESS_SECRET = { provider = "onepass", value = "op://homelab/syncin/TOKEN_ACCESS_SECRET" }
+SYNCIN_TOKEN_REFRESH_SECRET = { provider = "onepass", value = "op://homelab/syncin/TOKEN_REFRESH_SECRET" }
+
 N8N_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/n8n/encryption_key" }
 N8N_LICENSE = { provider = "onepass", value = "op://homelab/n8n/license" }
 
@@ -177,3 +183,5 @@ PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/
 PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }
 FILES_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/files/oidc_client" }
 FILES_OIDC_SECRET = { provider = "onepass", value = "op://homelab/files/oidc_secret" }
+SYNCIN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/syncin/OIDC_CLIENT" }
+SYNCIN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/syncin/OIDC_SECRET" }
