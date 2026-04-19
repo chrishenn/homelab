@@ -3,39 +3,31 @@ frontend:
   description: A file server for the Dancing Chicken
 
 server:
-  externalUrl: https://filesq.chenn.dev
-  internalUrl: http://filesq:80
+  externalUrl: https://files.chenn.dev
+  internalUrl: http://files:80
 
   sources:
-    - path: /mnt/h
+    - path: /mnt/q/
+      name: q
+      config:
+        defaultEnabled: true
+    - path: /mnt/f/
+      name: f
+      config:
+        defaultEnabled: true
+    - path: /mnt/k/
+      name: k
+      config:
+        defaultEnabled: true
+    - path: /mnt/h/
       name: h
       config:
-        denyByDefault: false
-        private: false
-        disabled: false
-        rules:
-          - neverWatchPath: ""
-            includeRootItem: ""
-            fileStartsWith: ""
-            folderStartsWith: ""
-            fileEndsWith: ""
-            folderEndsWith: ""
-            folderPath: ""
-            filePath: ""
-            fileName: ""
-            folderName: ""
-            viewable: false
-            ignoreHidden: false
-            ignoreZeroSizeFolders: false
-            ignoreSymlinks: false
-        defaultUserScope: "/"
         defaultEnabled: true
-        useLogicalSize: false
 
 integrations:
   office:
     url: https://office.chenn.dev
-    internalUrl: http://filesq_onlyoffice:80
+    internalUrl: http://office:80
 
 auth:
   adminUsername: chris

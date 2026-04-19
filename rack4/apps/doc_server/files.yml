@@ -1,9 +1,9 @@
 ---
 services:
-  filesq:
-    profiles: [filesq]
+  files:
+    profiles: [files]
     image: gtstef/filebrowser:stable
-    container_name: filesq
+    container_name: files
     restart: unless-stopped
     environment:
       FILEBROWSER_CONFIG: /config.yaml
@@ -14,43 +14,46 @@ services:
       FILEBROWSER_ONLYOFFICE_SECRET: ${FILESQ_SECRET}
 
     volumes:
-      - ./filesq/config.yaml:/config.yaml
-      - $DATA/filesq/data:/home/filebrowser/data
-      - /mnt/h/:/mnt/h
-    networks: [filesq, newt]
+      - ./files/config.yaml:/config.yaml
+      - $DATA/files/data:/home/filebrowser/data
+      - /mnt/k:/mnt/k
+      - /mnt/h:/mnt/h
+      - /mnt/q:/mnt/q
+      - /mnt/f:/mnt/f
+    networks: [files, newt]
     labels:
       homepage.group: File Servers
       homepage.name: Filebrowser Quantum
       homepage.icon: filebrowser-quantum.png
-      homepage.href: https://filesq.chenn.dev
+      homepage.href: https://files.chenn.dev
       homepage.description: File Server
 
-      pangolin.public-resources.filesq.name: filesq
-      pangolin.public-resources.filesq.full-domain: filesq.chenn.dev
-      pangolin.public-resources.filesq.protocol: http
-      pangolin.public-resources.filesq.ssl: true
-      pangolin.public-resources.filesq.targets[0].method: http
-      pangolin.public-resources.filesq.targets[0].port: 80
-      pangolin.public-resources.filesq.auth.sso-enabled: true
-      pangolin.public-resources.filesq.auth.sso-roles[0]: Member
-      pangolin.public-resources.filesq.rules[0].action: pass
-      pangolin.public-resources.filesq.rules[0].match: country
-      pangolin.public-resources.filesq.rules[0].value: US
-      pangolin.public-resources.filesq.rules[0].priority: 0
-      pangolin.public-resources.filesq.rules[1].action: deny
-      pangolin.public-resources.filesq.rules[1].match: country
-      pangolin.public-resources.filesq.rules[1].value: ALL
-      pangolin.public-resources.filesq.rules[1].priority: 10
+      pangolin.public-resources.files.name: files
+      pangolin.public-resources.files.full-domain: files.chenn.dev
+      pangolin.public-resources.files.protocol: http
+      pangolin.public-resources.files.ssl: true
+      pangolin.public-resources.files.targets[0].method: http
+      pangolin.public-resources.files.targets[0].port: 80
+      pangolin.public-resources.files.auth.sso-enabled: true
+      pangolin.public-resources.files.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.files.rules[0].action: pass
+      pangolin.public-resources.files.rules[0].match: country
+      pangolin.public-resources.files.rules[0].value: US
+      pangolin.public-resources.files.rules[0].priority: 0
+      pangolin.public-resources.files.rules[1].action: deny
+      pangolin.public-resources.files.rules[1].match: country
+      pangolin.public-resources.files.rules[1].value: ALL
+      pangolin.public-resources.files.rules[1].priority: 10
 
-  filesq_onlyoffice:
-    profiles: [filesq]
+  office:
+    profiles: [files]
     image: onlyoffice/documentserver:latest
-    container_name: filesq_onlyoffice
+    container_name: office
     restart: unless-stopped
     environment:
       JWT_ENABLED: true
-      JWT_SECRET: ${FILESQ_SECRET}
-    networks: [filesq, newt]
+      JWT_SECRET: ${files_SECRET}
+    networks: [files, newt]
     labels:
       pangolin.public-resources.office.name: office
       pangolin.public-resources.office.full-domain: office.chenn.dev
@@ -58,8 +61,6 @@ services:
       pangolin.public-resources.office.ssl: true
       pangolin.public-resources.office.targets[0].method: http
       pangolin.public-resources.office.targets[0].port: 80
-      pangolin.public-resources.office.auth.sso-enabled: true
-      pangolin.public-resources.office.auth.sso-roles[0]: Member
       pangolin.public-resources.office.rules[0].action: pass
       pangolin.public-resources.office.rules[0].match: country
       pangolin.public-resources.office.rules[0].value: US
@@ -70,4 +71,4 @@ services:
       pangolin.public-resources.office.rules[1].priority: 10
 
 networks:
-  filesq:
+  files:
