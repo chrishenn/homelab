@@ -14,10 +14,11 @@ services:
       PGID: ${PGID}
       FORCE_PERMISSIONS: true
 
-      INIT_ADMIN: false
+      # must be empty for false. derp
+      INIT_ADMIN:
 #      INIT_ADMIN_LOGIN: ${SYNCIN_USER}
 #      INIT_ADMIN_PASSWORD: ${SYNCIN_PASS}
-      
+
       SYNCIN_MYSQL_URL: mysql://root:syncin@syncin_db:3306/syncin
 
       SYNCIN_APPLICATIONS_FILES_DATAPATH: /app/data

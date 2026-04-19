@@ -27,8 +27,6 @@ NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_SECRET
 ARR_PANGOLIN_AUTH_USER = { provider = "onepass", value = "op://homelab/radarr/auth_user" }
 ARR_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/radarr/auth_pass" }
 
-SYNCIN_USER = { provider = "onepass", value = "op://homelab/syncin/username" }
-SYNCIN_PASS = { provider = "onepass", value = "op://homelab/syncin/password" }
 SYNCIN_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/syncin/ENCRYPTION_KEY" }
 SYNCIN_TOKEN_ACCESS_SECRET = { provider = "onepass", value = "op://homelab/syncin/TOKEN_ACCESS_SECRET" }
 SYNCIN_TOKEN_REFRESH_SECRET = { provider = "onepass", value = "op://homelab/syncin/TOKEN_REFRESH_SECRET" }
