@@ -1,4 +1,4 @@
-# onlyoffice editing does not work on mobile(?) - I can workaround by using syncthing
+# onlyoffice editor is read-only in mobile browser without expensive license - I can workaround by using syncthing
 ---
 services:
   files:
@@ -57,7 +57,6 @@ services:
       ALLOW_PRIVATE_IP_ADDRESS: true
       JWT_HEADER: Authorization
       ONLYOFFICE_HTTPS_HSTS_ENABLED: false
-#      LOG_LEVEL: DEBUG
     networks: [files, newt]
     labels:
       pangolin.public-resources.office.name: office
