@@ -12,6 +12,7 @@ services:
     environment:
       YTP_TEMP_PATH: /downloads/tmp
       YTP_DOWNLOAD_PATH: /downloads/files
+      YTP_BROWSER_CONTROL_ENABLED: true
     volumes:
       - $DATA/ytp/config:/config:rw
       - $DATA/ytp/downloads:/downloads:rw

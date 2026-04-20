@@ -47,7 +47,6 @@ include:
   - apps/doc_edit/pdfding.yml
   - apps/doc_edit/stirling.yml
 
-  - apps/doc_server/bluefiles.yml
   - apps/doc_server/etherpad.yml
   - apps/doc_server/hedge.yml
   - apps/doc_server/paperless.yml

@@ -23,6 +23,7 @@
 #   - non-standard logout icon
 #   - UI doesn't respect the delete key
 #   - file operations slide in a side panel instead of a success toast or icon. auto-hides very slowly
+#   - arrow keys don't work for image viewer navigation
 
 ---
 services:

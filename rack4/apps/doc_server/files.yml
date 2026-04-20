@@ -1,4 +1,4 @@
-
+# simple file browser that works well, with previews. I've removed the onlyoffice integration
 ---
 services:
   files:

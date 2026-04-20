@@ -1,3 +1,4 @@
+# simple file browser that works well. No editor integration, no oidc
 ---
 services:
   bluefiles:
@@ -20,7 +21,7 @@ services:
       homepage.name: BluFiles
       homepage.icon: https://github.com/BluDood/BluFiles/blob/main/web/static/assets/BluFiles.png?raw=true
       homepage.href: https://bluefiles.chenn.dev
-      homepage.description: File Browser
+      homepage.description: File Server
 
       pangolin.public-resources.bluefiles.name: bluefiles
       pangolin.public-resources.bluefiles.full-domain: bluefiles.chenn.dev
