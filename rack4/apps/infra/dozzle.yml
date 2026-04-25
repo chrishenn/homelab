@@ -7,17 +7,25 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks: [traefik]
+    networks: [newt]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Dozzle
-      homepage.instance.private.icon: dozzle.png
-      homepage.instance.private.href: https://dozzle.henn.dev
-      homepage.instance.private.description: Docker Logs Viewer
+      homepage.group: Infra
+      homepage.name: Dozzle
+      homepage.icon: dozzle.png
+      homepage.href: https://dozzle.chenn.dev
+      homepage.description: Docker Logs Viewer
 
-      traefik.enable: true
-      traefik.http.routers.dozzle.rule: Host(`dozzle.henn.dev`)
-      traefik.http.routers.dozzle.entrypoints: websecure
-      traefik.http.routers.dozzle.middlewares: hdrs@file
-      traefik.http.routers.dozzle.tls.certresolver: cf
-      traefik.http.services.dozzle.loadbalancer.server.port: 8080
+      pangolin.public-resources.dozzle.name: dozzle
+      pangolin.public-resources.dozzle.full-domain: dozzle.chenn.dev
+      pangolin.public-resources.dozzle.protocol: http
+      pangolin.public-resources.dozzle.ssl: true
+      pangolin.public-resources.dozzle.targets[0].method: http
+      pangolin.public-resources.dozzle.targets[0].port: 8080
+      pangolin.public-resources.dozzle.auth.sso-enabled: true
+      pangolin.public-resources.dozzle.auth.sso-roles[0]: Member
+      pangolin.public-resources.dozzle.rules[0].action: pass
+      pangolin.public-resources.dozzle.rules[0].match: country
+      pangolin.public-resources.dozzle.rules[0].value: US
+      pangolin.public-resources.dozzle.rules[1].action: deny
+      pangolin.public-resources.dozzle.rules[1].match: country
+      pangolin.public-resources.dozzle.rules[1].value: ALL

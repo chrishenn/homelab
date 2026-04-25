@@ -1,4 +1,5 @@
 # simple file browser that works well, with previews. I've removed the onlyoffice integration
+# sudo chown -R 1000:1000 $DATA/files
 ---
 services:
   files:

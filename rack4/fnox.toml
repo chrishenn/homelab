@@ -4,9 +4,6 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-
-
-
 NEWT_PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/Pangolin/PANGOLIN_ENDPOINT" }
 NEWT_ID = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_ID" }
 NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_SECRET" }
@@ -107,6 +104,7 @@ DOPLARR_BOT_TOKEN = { provider = "onepass", value = "op://homelab/doplarr/bot_to
 PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" }
 ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
 SHLINK_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
+SURE_SECRET = { provider = "onepass", value = "op://homelab/sure/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -168,7 +166,11 @@ PORTABASE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/portabase/
 PORTABASE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/portabase/oidc_secret" }
 FILES_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/files/oidc_client" }
 FILES_OIDC_SECRET = { provider = "onepass", value = "op://homelab/files/oidc_secret" }
-SYNCIN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/syncin/OIDC_CLIENT" }
-SYNCIN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/syncin/OIDC_SECRET" }
-FILEFLOW_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/fileflow/OIDC_CLIENT" }
-FILEFLOW_OIDC_SECRET = { provider = "onepass", value = "op://homelab/fileflow/OIDC_SECRET" }
+SYNCIN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/syncin/oidc_client" }
+SYNCIN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/syncin/oidc_secret" }
+FILEFLOW_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/fileflow/oidc_client" }
+FILEFLOW_OIDC_SECRET = { provider = "onepass", value = "op://homelab/fileflow/oidc_secret" }
+SURE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/sure/oidc_client" }
+SURE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/sure/oidc_secret" }
+TUGTAINER_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/tugtainer/oidc_client" }
+TUGTAINER_OIDC_SECRET = { provider = "onepass", value = "op://homelab/tugtainer/oidc_secret" }

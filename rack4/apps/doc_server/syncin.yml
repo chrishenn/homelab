@@ -97,7 +97,7 @@ services:
       pangolin.public-resources.syncin.targets[0].priority: 1
 
       pangolin.public-resources.syncin.auth.sso-enabled: true
-      pangolin.public-resources.syncin.auth.sso-roles[0]: Member
+      pangolin.public-resources.syncin.auth.sso-users[0]: ${EMAIL}
 
       pangolin.public-resources.syncin.rules[0].action: allow
       pangolin.public-resources.syncin.rules[0].match: path

@@ -1,0 +1,12 @@
+wireguard:
+  image: linuxserver/wireguard:latest
+  network_mode: 'service:archivebox'
+  cap_add:
+    - NET_ADMIN
+    - SYS_MODULE
+  sysctls:
+    - net.ipv4.conf.all.rp_filter=2
+    - net.ipv4.conf.all.src_valid_mark=1
+  volumes:
+    - /lib/modules:/lib/modules
+    - ./wireguard.conf:/config/wg0.conf:ro

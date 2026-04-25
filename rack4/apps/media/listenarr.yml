@@ -1,0 +1,38 @@
+# sudo chown -R 1001:1001 $DATA/listenarr/config
+---
+services:
+  listenarr:
+    profiles: [listenarr]
+    image: ghcr.io/listenarrs/listenarr:canary
+    container_name: listenarr
+    restart: unless-stopped
+    environment:
+      LISTENARR_PUBLIC_URL: https://listenarr.chenn.dev
+      LISTENARR_LOG_LEVEL: Information
+    volumes:
+      - $DATA/listenarr/config:/app/config
+      - $DATA/listenarr/audiobooks:/audiobooks
+      - $DATA/listenarr/downloads:/downloads
+      - $MEDIA/Books:/books
+    networks: [newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Listenarr
+      homepage.icon: https://github.com/Listenarrs/Listenarr/blob/canary/fe/public/icon.png?raw=true
+      homepage.href: https://listenarr.chenn.dev
+      homepage.description: Audiobook Server
+
+      pangolin.public-resources.listenarr.name: listenarr
+      pangolin.public-resources.listenarr.full-domain: listenarr.chenn.dev
+      pangolin.public-resources.listenarr.protocol: http
+      pangolin.public-resources.listenarr.ssl: true
+      pangolin.public-resources.listenarr.targets[0].method: http
+      pangolin.public-resources.listenarr.targets[0].port: 4545
+      pangolin.public-resources.listenarr.auth.sso-enabled: true
+      pangolin.public-resources.listenarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.listenarr.rules[0].action: pass
+      pangolin.public-resources.listenarr.rules[0].match: country
+      pangolin.public-resources.listenarr.rules[0].value: US
+      pangolin.public-resources.listenarr.rules[1].action: deny
+      pangolin.public-resources.listenarr.rules[1].match: country
+      pangolin.public-resources.listenarr.rules[1].value: ALL

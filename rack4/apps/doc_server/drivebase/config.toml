@@ -1,0 +1,36 @@
+[server]
+env = "prod"
+port = 4000
+host = "0.0.0.0"
+
+[db]
+url = "postgres://drivebase:drivebase@drivebase_db:5432/drivebase?sslmode=disable"
+
+[redis]
+url = "redis://drivebase_redis:6379/0"
+
+[crypto]
+masterKeyBase64 = "+UkRZw59iR+9hw1fja7yfkC5YDOF0YvU+k9vpCLx1hE="
+
+[auth]
+betterAuthSecret = "ed852035002793596fd7e44de86d2e4fa2c32d2f64212ecc949b1fdff0093d54"
+#baseUrl = "http://localhost:1558"
+baseUrl = "https://drivebase.chenn.dev"
+trustedOrigins = ["http://localhost:1558", "https://drivebase.chenn.dev"]
+
+[cache]
+childrenTtlSeconds = 60
+usageTtlSeconds = 600
+
+[workers.concurrency]
+upload = 4
+download = 4
+transfer = 4
+copy = 4
+move = 4
+delete = 4
+syncReconcile = 1
+usageRefresh = 1
+
+[log]
+level = "info"

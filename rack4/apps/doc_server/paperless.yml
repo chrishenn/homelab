@@ -11,7 +11,7 @@ services:
       TZ: ${TZ}
       PAPERLESS_TIME_ZONE: ${TZ}
 
-      PAPERLESS_URL: https://paperless.henn.dev
+      PAPERLESS_URL: https://paperless.chenn.dev
       PAPERLESS_REDIS: redis://paperless_redis:6379
       PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
       PAPERLESS_OCR_LANGUAGE: eng
@@ -29,20 +29,28 @@ services:
       - $DATA/paperless/media:/usr/src/paperless/media
       - $DATA/paperless/export:/usr/src/paperless/export
       - $DATA/paperless/consume:/usr/src/paperless/consume
-    networks: [paperless, traefik]
+    networks: [paperless, newt]
     labels:
-      homepage.instance.private.group: File Servers
-      homepage.instance.private.name: Paperless
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless.henn.dev
-      homepage.instance.private.description: Document Organization
+      homepage.group: File Servers
+      homepage.name: Paperless
+      homepage.icon: paperless.png
+      homepage.href: https://paperless.chenn.dev
+      homepage.description: Document Organization
 
-      traefik.enable: true
-      traefik.http.routers.paperless.rule: Host(`paperless.henn.dev`)
-      traefik.http.routers.paperless.entrypoints: websecure
-      traefik.http.routers.paperless.middlewares: hdrs@file
-      traefik.http.routers.paperless.tls.certresolver: cf
-      traefik.http.services.paperless.loadbalancer.server.port: 8000
+      pangolin.public-resources.paperless.name: paperless
+      pangolin.public-resources.paperless.full-domain: paperless.chenn.dev
+      pangolin.public-resources.paperless.protocol: http
+      pangolin.public-resources.paperless.ssl: true
+      pangolin.public-resources.paperless.targets[0].method: http
+      pangolin.public-resources.paperless.targets[0].port: 8000
+      pangolin.public-resources.paperless.auth.sso-enabled: true
+      pangolin.public-resources.paperless.auth.sso-roles[0]: Member
+      pangolin.public-resources.paperless.rules[0].action: pass
+      pangolin.public-resources.paperless.rules[0].match: country
+      pangolin.public-resources.paperless.rules[0].value: US
+      pangolin.public-resources.paperless.rules[1].action: deny
+      pangolin.public-resources.paperless.rules[1].match: country
+      pangolin.public-resources.paperless.rules[1].value: ALL
 
   paperless_ai:
     profiles: [paperless]
@@ -66,20 +74,28 @@ services:
 
     volumes:
       - $DATA/paperless/paperless_ai:/app/data
-    networks: [paperless, traefik, ollama]
+    networks: [paperless, newt, ollama]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Paperless AI
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless_ai.henn.dev
-      homepage.instance.private.description: AI Document Processing
+      homepage.group: File Servers
+      homepage.name: Paperless AI
+      homepage.icon: paperless.png
+      homepage.href: https://paperless_ai.chenn.dev
+      homepage.description: AI Document Processing
 
-      traefik.enable: true
-      traefik.http.routers.paperless_ai.rule: Host(`paperless_ai.henn.dev`)
-      traefik.http.routers.paperless_ai.entrypoints: websecure
-      traefik.http.routers.paperless_ai.middlewares: hdrs@file
-      traefik.http.routers.paperless_ai.tls.certresolver: cf
-      traefik.http.services.paperless_ai.loadbalancer.server.port: 3000
+      pangolin.public-resources.paperless_ai.name: paperless_ai
+      pangolin.public-resources.paperless_ai.full-domain: paperless_ai.chenn.dev
+      pangolin.public-resources.paperless_ai.protocol: http
+      pangolin.public-resources.paperless_ai.ssl: true
+      pangolin.public-resources.paperless_ai.targets[0].method: http
+      pangolin.public-resources.paperless_ai.targets[0].port: 3000
+      pangolin.public-resources.paperless_ai.auth.sso-enabled: true
+      pangolin.public-resources.paperless_ai.auth.sso-roles[0]: Member
+      pangolin.public-resources.paperless_ai.rules[0].action: pass
+      pangolin.public-resources.paperless_ai.rules[0].match: country
+      pangolin.public-resources.paperless_ai.rules[0].value: US
+      pangolin.public-resources.paperless_ai.rules[1].action: deny
+      pangolin.public-resources.paperless_ai.rules[1].match: country
+      pangolin.public-resources.paperless_ai.rules[1].value: ALL
 
   paperless_gpt:
     profiles: [paperless]
@@ -89,7 +105,7 @@ services:
     environment:
       PAPERLESS_BASE_URL: http://paperless:8000
       PAPERLESS_API_TOKEN: ${PAPERLESS_TOKEN}
-      PAPERLESS_PUBLIC_URL: https://paperless.henn.dev
+      PAPERLESS_PUBLIC_URL: https://paperless.chenn.dev
       PDF_UPLOAD: false
       LOG_LEVEL: DEBUG
 
@@ -112,24 +128,32 @@ services:
       PDF_OCR_COMPLETE_TAG: paperless-gpt-ocr-complete
     volumes:
       - $DATA/paperless/paperless_gpt:/app/prompts
-    networks: [paperless, traefik, ollama]
+    networks: [paperless, newt, ollama]
     labels:
-      homepage.instance.private.group: AI
-      homepage.instance.private.name: Paperless GPT
-      homepage.instance.private.icon: paperless.png
-      homepage.instance.private.href: https://paperless_gpt.henn.dev
-      homepage.instance.private.description: AI Document Processing
+      homepage.group: File Servers
+      homepage.name: Paperless GPT
+      homepage.icon: paperless.png
+      homepage.href: https://paperless_gpt.chenn.dev
+      homepage.description: AI Document Processing
 
-      traefik.enable: true
-      traefik.http.routers.paperless_gpt.rule: Host(`paperless_gpt.henn.dev`)
-      traefik.http.routers.paperless_gpt.entrypoints: websecure
-      traefik.http.routers.paperless_gpt.middlewares: hdrs@file
-      traefik.http.routers.paperless_gpt.tls.certresolver: cf
-      traefik.http.services.paperless_gpt.loadbalancer.server.port: 8080
+      pangolin.public-resources.paperless_gpt.name: paperless_gpt
+      pangolin.public-resources.paperless_gpt.full-domain: paperless_gpt.chenn.dev
+      pangolin.public-resources.paperless_gpt.protocol: http
+      pangolin.public-resources.paperless_gpt.ssl: true
+      pangolin.public-resources.paperless_gpt.targets[0].method: http
+      pangolin.public-resources.paperless_gpt.targets[0].port: 8080
+      pangolin.public-resources.paperless_gpt.auth.sso-enabled: true
+      pangolin.public-resources.paperless_gpt.auth.sso-roles[0]: Member
+      pangolin.public-resources.paperless_gpt.rules[0].action: pass
+      pangolin.public-resources.paperless_gpt.rules[0].match: country
+      pangolin.public-resources.paperless_gpt.rules[0].value: US
+      pangolin.public-resources.paperless_gpt.rules[1].action: deny
+      pangolin.public-resources.paperless_gpt.rules[1].match: country
+      pangolin.public-resources.paperless_gpt.rules[1].value: ALL
 
   paperless_postgres:
     profiles: [paperless]
-    image: postgres:18
+    image: postgres:18-alpine
     restart: unless-stopped
     container_name: paperless_postgres
     environment:
@@ -143,7 +167,7 @@ services:
 
   paperless_redis:
     profiles: [paperless]
-    image: docker.io/library/redis:8
+    image: docker.io/library/redis:8-alpine
     container_name: paperless_redis
     restart: unless-stopped
     volumes:
@@ -161,7 +185,7 @@ services:
 
   paperless_gotenberg:
     profiles: [paperless]
-    image: docker.io/gotenberg/gotenberg:8.25
+    image: docker.io/gotenberg/gotenberg:8
     container_name: paperless_gotenberg
     restart: unless-stopped
     environment:

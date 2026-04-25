@@ -1,0 +1,63 @@
+---
+services:
+  yamtrack:
+    profiles: [yamtrack]
+    image: ghcr.io/fuzzygrim/yamtrack
+    container_name: yamtrack
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      SECRET: secret
+      REDIS_URL: redis://yamtrack_redis:6379
+      DB_HOST: yamtrack_db
+      DB_PORT: 5432
+      DB_NAME: yamtrack
+      DB_USER: yamtrack
+      DB_PASSWORD: yamtrack
+    networks: [yamtrack, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Yamtrack
+      homepage.icon: yamtrack.png
+      homepage.href: https://yamtrack.chenn.dev
+      homepage.description: Media Manager
+
+      pangolin.public-resources.yamtrack.name: yamtrack
+      pangolin.public-resources.yamtrack.full-domain: yamtrack.chenn.dev
+      pangolin.public-resources.yamtrack.protocol: http
+      pangolin.public-resources.yamtrack.ssl: true
+      pangolin.public-resources.yamtrack.targets[0].method: http
+      pangolin.public-resources.yamtrack.targets[0].port: 8000
+      pangolin.public-resources.yamtrack.auth.sso-enabled: true
+      pangolin.public-resources.yamtrack.auth.sso-roles[0]: Member
+      pangolin.public-resources.yamtrack.rules[0].action: pass
+      pangolin.public-resources.yamtrack.rules[0].match: country
+      pangolin.public-resources.yamtrack.rules[0].value: US
+      pangolin.public-resources.yamtrack.rules[1].action: deny
+      pangolin.public-resources.yamtrack.rules[1].match: country
+      pangolin.public-resources.yamtrack.rules[1].value: ALL
+
+  yamtrack_db:
+    profiles: [yamtrack]
+    image: postgres:18-alpine
+    container_name: yamtrack_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: yamtrack
+      POSTGRES_USER: yamtrack
+      POSTGRES_PASSWORD: yamtrack
+    volumes:
+      - $DATA/yamtrack/db:/var/lib/postgresql
+    networks: [yamtrack]
+
+  yamtrack_redis:
+    profiles: [yamtrack]
+    image: redis:8-alpine
+    container_name: yamtrack_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/yamtrack/redis:/data
+    networks: [yamtrack]
+
+networks:
+  yamtrack:

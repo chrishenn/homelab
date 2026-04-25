@@ -12,6 +12,7 @@ USER1 = { provider = "onepass", value = "op://homelab/pangolin/user1" }
 VPS0_IP = { provider = "onepass", value = "op://homelab/vps0/ip" }
 CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
 OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
+GH_PAT = { provider = "onepass", value = "op://homelab/github/credential" }
 
 SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_host" }
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_user" }

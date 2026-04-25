@@ -16,17 +16,25 @@ services:
     volumes:
       - $DATA/apprise/config:/config
       - $DATA/apprise/attachments:/attachments
-    networks: [traefik]
+    networks: [newt]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Apprise
-      homepage.instance.private.icon: apprise.png
-      homepage.instance.private.href: https://apprise.henn.dev
-      homepage.instance.private.description: Notification Server
+      homepage.group: Infra
+      homepage.name: Apprise
+      homepage.icon: apprise.png
+      homepage.href: https://apprise.chenn.dev
+      homepage.description: Notification Server
 
-      traefik.enable: true
-      traefik.http.routers.apprise.rule: Host(`apprise.henn.dev`)
-      traefik.http.routers.apprise.entrypoints: websecure
-      traefik.http.routers.apprise.middlewares: hdrs@file
-      traefik.http.routers.apprise.tls.certresolver: cf
-      traefik.http.services.apprise.loadbalancer.server.port: 8000
+      pangolin.public-resources.apprise.name: apprise
+      pangolin.public-resources.apprise.full-domain: apprise.chenn.dev
+      pangolin.public-resources.apprise.protocol: http
+      pangolin.public-resources.apprise.ssl: true
+      pangolin.public-resources.apprise.targets[0].method: http
+      pangolin.public-resources.apprise.targets[0].port: 8000
+      pangolin.public-resources.apprise.auth.sso-enabled: true
+      pangolin.public-resources.apprise.auth.sso-roles[0]: Member
+      pangolin.public-resources.apprise.rules[0].action: pass
+      pangolin.public-resources.apprise.rules[0].match: country
+      pangolin.public-resources.apprise.rules[0].value: US
+      pangolin.public-resources.apprise.rules[1].action: deny
+      pangolin.public-resources.apprise.rules[1].match: country
+      pangolin.public-resources.apprise.rules[1].value: ALL

@@ -1,0 +1,47 @@
+# drops some of my pangolin labels on restart. Appears to miss a bunch of updates when available.
+---
+services:
+  tugtainer:
+    profiles: [tugtainer]
+    image: ghcr.io/quenary/tugtainer:1
+    container_name: tugtainer
+    restart: unless-stopped
+    environment:
+      DOMAIN: tugtainer.chenn.dev
+      GH_TOKEN: ${GH_PAT}
+      HTTPS: true
+
+      OIDC_ENABLED: true
+      OIDC_WELL_KNOWN_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+      OIDC_CLIENT_ID: ${TUGTAINER_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${TUGTAINER_OIDC_SECRET}
+      OIDC_REDIRECT_URI: https://tugtainer.chenn.dev/api/auth/oidc/callback
+      OIDC_SCOPES: openid profile email groups
+    volumes:
+      - $DATA/tugtainer/data:/tugtainer
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $HOME/.docker/config.json:/root/.docker/config.json:ro
+    networks: [newt]
+    labels:
+      dev.quenary.tugtainer.protected: True
+
+      homepage.group: Infra
+      homepage.name: Tugtainer
+      homepage.icon: tugtainer.png
+      homepage.href: https://tugtainer.chenn.dev
+      homepage.description: Container Updater
+
+      pangolin.public-resources.tugtainer.name: tugtainer
+      pangolin.public-resources.tugtainer.full-domain: tugtainer.chenn.dev
+      pangolin.public-resources.tugtainer.protocol: http
+      pangolin.public-resources.tugtainer.ssl: true
+      pangolin.public-resources.tugtainer.targets[0].method: http
+      pangolin.public-resources.tugtainer.targets[0].port: 80
+      pangolin.public-resources.tugtainer.auth.sso-enabled: true
+      pangolin.public-resources.tugtainer.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.tugtainer.rules[0].action: pass
+      pangolin.public-resources.tugtainer.rules[0].match: country
+      pangolin.public-resources.tugtainer.rules[0].value: US
+      pangolin.public-resources.tugtainer.rules[1].action: deny
+      pangolin.public-resources.tugtainer.rules[1].match: country
+      pangolin.public-resources.tugtainer.rules[1].value: ALL

@@ -41,6 +41,7 @@ include:
   - apps/dev/penpot.yml
   - apps/dev/scanopy.yml
   - apps/dev/wikijs.yml
+  - apps/dev/wikigo.yml
 
   - apps/doc_edit/bento.yml
   - apps/doc_edit/docmost.yml
@@ -55,9 +56,7 @@ include:
   - apps/doc_server/syncthing.yml
   - apps/doc_server/files.yml
   - apps/doc_server/syncin.yml
-
-  - apps/finance/actual.yml
-  - apps/finance/sure.yml
+  - apps/doc_server/drivebase.yml
 
   - apps/games/wordle.yml
   - apps/games/csgo.yml
@@ -113,6 +112,9 @@ include:
   - apps/media/recyclarr.yml
   - apps/media/kavita.yml
   - apps/media/flood.yml
+  - apps/media/archive.yml
+  - apps/media/yamtrack.yml
+  - apps/media/listenarr.yml
 
   - apps/resume/openresume.yml
   - apps/resume/resume.yml
@@ -141,5 +143,7 @@ include:
   - apps/tools/moocup.yml
   - apps/tools/pairdrop.yml
   - apps/tools/shlink.yml
+  - apps/tools/homebox.yml
+  - apps/tools/sure.yml
 
   - apps/forum/nodebb.yml

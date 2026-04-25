@@ -14,17 +14,25 @@ services:
     environment:
       TZ: $TZ
     command: serve
-    networks: [traefik]
+    networks: [newt]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Ntfy
-      homepage.instance.private.icon: ntfy.png
-      homepage.instance.private.href: https://ntfy.henn.dev
-      homepage.instance.private.description: Notifications Server
+      homepage.group: Infra
+      homepage.name: Ntfy
+      homepage.icon: ntfy.png
+      homepage.href: https://ntfy.chenn.dev
+      homepage.description: Notifications Server
 
-      traefik.enable: true
-      traefik.http.routers.ntfy.rule: Host(`ntfy.henn.dev`)
-      traefik.http.routers.ntfy.entrypoints: websecure
-      traefik.http.routers.ntfy.middlewares: hdrs@file
-      traefik.http.routers.ntfy.tls.certresolver: cf
-      traefik.http.services.ntfy.loadbalancer.server.port: 80
+      pangolin.public-resources.ntfy.name: ntfy
+      pangolin.public-resources.ntfy.full-domain: ntfy.chenn.dev
+      pangolin.public-resources.ntfy.protocol: http
+      pangolin.public-resources.ntfy.ssl: true
+      pangolin.public-resources.ntfy.targets[0].method: http
+      pangolin.public-resources.ntfy.targets[0].port: 80
+      pangolin.public-resources.ntfy.auth.sso-enabled: true
+      pangolin.public-resources.ntfy.auth.sso-roles[0]: Member
+      pangolin.public-resources.ntfy.rules[0].action: pass
+      pangolin.public-resources.ntfy.rules[0].match: country
+      pangolin.public-resources.ntfy.rules[0].value: US
+      pangolin.public-resources.ntfy.rules[1].action: deny
+      pangolin.public-resources.ntfy.rules[1].match: country
+      pangolin.public-resources.ntfy.rules[1].value: ALL

@@ -11,22 +11,30 @@ services:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
-      # - NTFY_URL=https://
-      # - NTFY_TOPIC=cron
-      # - NTFY_TOKEN=<token>
+      # - gocron_URL=https://
+      # - gocron_TOPIC=cron
+      # - gocron_TOKEN=<token>
     volumes:
       - ./gocron:/app/config/
-    networks: [traefik]
+    networks: [newt]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Go Cron
-      homepage.instance.private.icon: chronograf.png
-      homepage.instance.private.href: https://cron.henn.dev
-      homepage.instance.private.description: Go Cron
+      homepage.group: Infra
+      homepage.name: Go Cron
+      homepage.icon: chronograf.png
+      homepage.href: https://cron.henn.dev
+      homepage.description: Go Cron
 
-      traefik.enable: true
-      traefik.http.routers.cron.rule: Host(`cron.henn.dev`)
-      traefik.http.routers.cron.entrypoints: websecure
-      traefik.http.routers.cron.middlewares: hdrs@file
-      traefik.http.routers.cron.tls.certresolver: cf
-      traefik.http.services.cron.loadbalancer.server.port: 8156
+      pangolin.public-resources.gocron.name: gocron
+      pangolin.public-resources.gocron.full-domain: gocron.chenn.dev
+      pangolin.public-resources.gocron.protocol: http
+      pangolin.public-resources.gocron.ssl: true
+      pangolin.public-resources.gocron.targets[0].method: http
+      pangolin.public-resources.gocron.targets[0].port: 8156
+      pangolin.public-resources.gocron.auth.sso-enabled: true
+      pangolin.public-resources.gocron.auth.sso-roles[0]: Member
+      pangolin.public-resources.gocron.rules[0].action: pass
+      pangolin.public-resources.gocron.rules[0].match: country
+      pangolin.public-resources.gocron.rules[0].value: US
+      pangolin.public-resources.gocron.rules[1].action: deny
+      pangolin.public-resources.gocron.rules[1].match: country
+      pangolin.public-resources.gocron.rules[1].value: ALL
