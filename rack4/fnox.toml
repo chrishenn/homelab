@@ -79,6 +79,9 @@ RESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
 FILES_SECRET = { provider = "onepass", value = "op://homelab/files/secret" }
 FILES_PASS = { provider = "onepass", value = "op://homelab/files/password" }
 
+KANEO_S3_ACCESS = { provider = "onepass", value = "op://homelab/kaneo/s3_access" }
+KANEO_S3_SECRET = { provider = "onepass", value = "op://homelab/kaneo/s3_secret" }
+
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
@@ -105,6 +108,9 @@ PULSE_AUTH_PASS = { provider = "onepass", value = "op://homelab/pulse/password" 
 ROCKET_PASS = { provider = "onepass", value = "op://homelab/rocketchat/password" }
 SHLINK_API_KEY = { provider = "onepass", value = "op://homelab/shlink/credential" }
 SURE_SECRET = { provider = "onepass", value = "op://homelab/sure/secret" }
+OWLRELAY_API = { provider = "onepass", value = "op://homelab/owlrelay/api_key" }
+PAPRA_WEBHOOK_SECRET = { provider = "onepass", value = "op://homelab/owlrelay/papra_webhook_secret" }
+KANEO_SECRET = { provider = "onepass", value = "op://homelab/kaneo/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -174,3 +180,5 @@ SURE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/sure/oidc_clien
 SURE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/sure/oidc_secret" }
 TUGTAINER_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/tugtainer/oidc_client" }
 TUGTAINER_OIDC_SECRET = { provider = "onepass", value = "op://homelab/tugtainer/oidc_secret" }
+KANEO_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kaneo/oidc_client" }
+KANEO_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kaneo/oidc_secret" }

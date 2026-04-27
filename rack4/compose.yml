@@ -42,6 +42,7 @@ include:
   - apps/dev/scanopy.yml
   - apps/dev/wikijs.yml
   - apps/dev/wikigo.yml
+  - apps/dev/kaneo.yml
 
   - apps/doc_edit/bento.yml
   - apps/doc_edit/docmost.yml
@@ -57,6 +58,8 @@ include:
   - apps/doc_server/files.yml
   - apps/doc_server/syncin.yml
   - apps/doc_server/drivebase.yml
+  - apps/doc_server/zipline.yml
+  - apps/doc_server/papra.yml
 
   - apps/games/wordle.yml
   - apps/games/csgo.yml

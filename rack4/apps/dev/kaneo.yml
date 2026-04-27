@@ -1,0 +1,158 @@
+# sudo chown -R 10001:10001 $DATA/kaneo/s3
+# log into kaneo_s3 console (console.kaneo.chenn.dev) and manually create bucket "kaneo" ?
+---
+x-kaneo_env: &kaneo_env
+  KANEO_CLIENT_URL: https://kaneo.chenn.dev
+  KANEO_API_URL: https://kaneo_api.chenn.dev
+  BETTER_AUTH_SECRET: ${KANEO_SECRET}
+
+  DATABASE_URL: postgresql://kaneo:kaneo@kaneo_db/kaneo
+  POSTGRES_DB: kaneo
+  POSTGRES_USER: kaneo
+  POSTGRES_PASSWORD: kaneo
+
+  S3_ENDPOINT: https://files.kaneo.chenn.dev
+  S3_BUCKET: kaneo
+  S3_ACCESS_KEY_ID: ${KANEO_S3_ACCESS}
+  S3_SECRET_ACCESS_KEY: ${KANEO_S3_SECRET}
+  S3_REGION: us-east-1
+  S3_FORCE_PATH_STYLE: true
+
+  RUSTFS_ACCESS_KEY: ${KANEO_S3_ACCESS}
+  RUSTFS_SECRET_KEY: ${KANEO_S3_SECRET}
+  RUSTFS_ADDRESS: 0.0.0.0:9000
+  RUSTFS_CONSOLE_ENABLE: true
+  RUSTFS_SERVER_DOMAINS: files.kaneo.chenn.dev
+  RUSTFS_VOLUMES: /data
+
+  DISABLE_REGISTRATION: false
+  DISABLE_PASSWORD_REGISTRATION: false
+  CUSTOM_OAUTH_AUTHORIZATION_URL: https://pocketid.chenn.dev/authorize
+  CUSTOM_OAUTH_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+  CUSTOM_OAUTH_TOKEN_URL: https://pocketid.chenn.dev/api/oidc/token
+  CUSTOM_OAUTH_USER_INFO_URL: https://pocketid.chenn.dev/api/oidc/userinfo
+  CUSTOM_OAUTH_CLIENT_ID: ${KANEO_OIDC_CLIENT}
+  CUSTOM_OAUTH_CLIENT_SECRET: ${KANEO_OIDC_SECRET}
+  CUSTOM_OAUTH_SCOPES: profile,email
+  CUSTOM_AUTH_PKCE: true
+
+  SMTP_HOST: $SMTP_HOST
+  SMTP_PORT: 465
+  SMTP_SECURE: true
+  SMTP_USER: $SMTP_USER
+  SMTP_PASSWORD: $SMTP_TOKEN
+  SMTP_FROM: $SMTP_USER
+  SMTP_REQUIRE_TLS: true
+  SMTP_IGNORE_TLS: false
+
+services:
+  kaneo:
+    profiles: [kaneo]
+    image: ghcr.io/usekaneo/web:latest
+    container_name: kaneo
+    restart: unless-stopped
+    environment:
+      <<: *kaneo_env
+    networks: [kaneo, newt]
+    labels:
+      homepage.group: Dev
+      homepage.name: Kaneo
+      homepage.icon: https://raw.githubusercontent.com/usekaneo/kaneo/refs/heads/main/apps/docs/favicon.svg
+      homepage.href: https://kaneo.chenn.dev
+      homepage.description: Project Coordination
+
+      pangolin.public-resources.kaneo.name: kaneo
+      pangolin.public-resources.kaneo.full-domain: kaneo.chenn.dev
+      pangolin.public-resources.kaneo.protocol: http
+      pangolin.public-resources.kaneo.ssl: true
+      pangolin.public-resources.kaneo.targets[0].method: http
+      pangolin.public-resources.kaneo.targets[0].port: 5173
+      pangolin.public-resources.kaneo.auth.sso-enabled: true
+      pangolin.public-resources.kaneo.auth.sso-roles[0]: Member
+      pangolin.public-resources.kaneo.rules[0].action: pass
+      pangolin.public-resources.kaneo.rules[0].match: country
+      pangolin.public-resources.kaneo.rules[0].value: US
+      pangolin.public-resources.kaneo.rules[1].action: deny
+      pangolin.public-resources.kaneo.rules[1].match: country
+      pangolin.public-resources.kaneo.rules[1].value: ALL
+
+  kaneo_api:
+    profiles: [kaneo]
+    image: ghcr.io/usekaneo/api:latest
+    container_name: kaneo_api
+    restart: unless-stopped
+    environment:
+      <<: *kaneo_env
+    networks: [kaneo, newt]
+    labels:
+      pangolin.public-resources.kaneo_api.name: kaneo_api
+      pangolin.public-resources.kaneo_api.full-domain: kaneo_api.chenn.dev
+      pangolin.public-resources.kaneo_api.protocol: http
+      pangolin.public-resources.kaneo_api.ssl: true
+      pangolin.public-resources.kaneo_api.targets[0].method: http
+      pangolin.public-resources.kaneo_api.targets[0].port: 1337
+      pangolin.public-resources.kaneo_api.rules[0].action: pass
+      pangolin.public-resources.kaneo_api.rules[0].match: country
+      pangolin.public-resources.kaneo_api.rules[0].value: US
+      pangolin.public-resources.kaneo_api.rules[1].action: deny
+      pangolin.public-resources.kaneo_api.rules[1].match: country
+      pangolin.public-resources.kaneo_api.rules[1].value: ALL
+
+  kaneo_db:
+    profiles: [kaneo]
+    image: postgres:18-alpine
+    container_name: kaneo_db
+    restart: unless-stopped
+    environment:
+      <<: *kaneo_env
+    volumes:
+      - $DATA/kaneo/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kaneo -d kaneo']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [kaneo]
+
+  kaneo_s3:
+    profiles: [kaneo]
+    image: rustfs/rustfs:latest
+    container_name: kaneo_s3
+    restart: unless-stopped
+    command: /data
+    environment:
+      <<: *kaneo_env
+    volumes:
+      - $DATA/kaneo/s3:/data
+    networks: [kaneo, newt]
+    labels:
+      pangolin.public-resources.kaneo_s3.name: kaneo_s3
+      pangolin.public-resources.kaneo_s3.full-domain: files.kaneo.chenn.dev
+      pangolin.public-resources.kaneo_s3.protocol: http
+      pangolin.public-resources.kaneo_s3.ssl: true
+      pangolin.public-resources.kaneo_s3.targets[0].method: http
+      pangolin.public-resources.kaneo_s3.targets[0].port: 9000
+      pangolin.public-resources.kaneo_s3.rules[0].action: pass
+      pangolin.public-resources.kaneo_s3.rules[0].match: country
+      pangolin.public-resources.kaneo_s3.rules[0].value: US
+      pangolin.public-resources.kaneo_s3.rules[1].action: deny
+      pangolin.public-resources.kaneo_s3.rules[1].match: country
+      pangolin.public-resources.kaneo_s3.rules[1].value: ALL
+
+      pangolin.public-resources.kaneo_s3_console.name: kaneo_s3_console
+      pangolin.public-resources.kaneo_s3_console.full-domain: console.kaneo.chenn.dev
+      pangolin.public-resources.kaneo_s3_console.protocol: http
+      pangolin.public-resources.kaneo_s3_console.ssl: true
+      pangolin.public-resources.kaneo_s3_console.targets[0].method: http
+      pangolin.public-resources.kaneo_s3_console.targets[0].port: 9001
+      pangolin.public-resources.kaneo_s3_console.auth.sso-enabled: true
+      pangolin.public-resources.kaneo_s3_console.auth.sso-roles[0]: Member
+      pangolin.public-resources.kaneo_s3_console.rules[0].action: pass
+      pangolin.public-resources.kaneo_s3_console.rules[0].match: country
+      pangolin.public-resources.kaneo_s3_console.rules[0].value: US
+      pangolin.public-resources.kaneo_s3_console.rules[1].action: deny
+      pangolin.public-resources.kaneo_s3_console.rules[1].match: country
+      pangolin.public-resources.kaneo_s3_console.rules[1].value: ALL
+
+networks:
+  kaneo:

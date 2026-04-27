@@ -1,0 +1,40 @@
+---
+services:
+  papra:
+    profiles: [papra]
+    image: ghcr.io/papra-hq/papra:latest-root
+    container_name: papra
+    restart: unless-stopped
+    environment:
+      AUTH_SECRET: cB7tKElkWLxYqVeOuOsMnUvwgiL8JjI5l2A2gxKoLhDnKwAA
+      APP_BASE_URL: https://papra.chenn.dev
+      INGESTION_FOLDER_IS_ENABLED: true
+      INTAKE_EMAILS_IS_ENABLED: true
+      INTAKE_EMAILS_DRIVER: owlrelay
+      OWLRELAY_API_KEY: ${OWLRELAY_API}
+      INTAKE_EMAILS_WEBHOOK_SECRET: ${PAPRA_WEBHOOK_SECRET}
+    volumes:
+      - $DATA/papra/data:/app/app-data
+      - $DATA/papra/ingest:/app/ingestion
+    networks: [newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Papra
+      homepage.icon: papra.png
+      homepage.href: https://papra.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.papra.name: papra
+      pangolin.public-resources.papra.full-domain: papra.chenn.dev
+      pangolin.public-resources.papra.protocol: http
+      pangolin.public-resources.papra.ssl: true
+      pangolin.public-resources.papra.targets[0].method: http
+      pangolin.public-resources.papra.targets[0].port: 1221
+      pangolin.public-resources.papra.auth.sso-enabled: true
+      pangolin.public-resources.papra.auth.sso-roles[0]: Member
+      pangolin.public-resources.papra.rules[0].action: pass
+      pangolin.public-resources.papra.rules[0].match: country
+      pangolin.public-resources.papra.rules[0].value: US
+      pangolin.public-resources.papra.rules[1].action: deny
+      pangolin.public-resources.papra.rules[1].match: country
+      pangolin.public-resources.papra.rules[1].value: ALL
