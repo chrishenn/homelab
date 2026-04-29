@@ -1,9 +1,9 @@
 import json
-import os
 from enum import StrEnum, auto
 from pathlib import Path
 
 import pulumi
+import pulumi_cloudflare as cf
 import pulumiverse_talos as talos
 import yaml
 from pulumi import Resource, ResourceOptions
@@ -13,7 +13,6 @@ from pulumi_kubernetes.meta.v1 import ObjectMetaArgs
 from pulumi_kubernetes.yaml.v2 import ConfigGroup
 from pydantic import BaseModel
 from rich.console import Console
-from yaml import SafeLoader
 
 
 def traefik_dash(deps: list[Resource]) -> list[Resource]:
@@ -196,9 +195,12 @@ class Node(BaseModel):
     caps: set[NodeCap]
     nodetype: NodeType
     ip: str
+    ip_cidr: str
+    gateway: str
+    nameserver: str
     disk: str
     image: str
-    ifc: str
+    ifc_mac: str
     dhcp: bool
 
 
@@ -276,43 +278,40 @@ def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult) -> dict:
     }
 
 
-def node_dns(_cluster: Cluster, _node: Node) -> None:
+def node_dns(cluster: Cluster, node: Node) -> None:
     """Per Talos docs, we only need domain names for controlplane nodes
     Note that these dns records are used instead of a TCP load balancer like HAProxy, nginx, (probably) traefik
     """
-    # if node.nodetype != NodeType.controlplane:
-    #     return None
-    #
-    # rec = cf.DnsRecord(
-    #     resource_name=f"dnsrec_{node.i}",
-    #     type="A",
-    #     name=cluster.name,
-    #     content=node.ip,
-    #     ttl=1,
-    #     zone_id=cluster.zoneid,
-    #     proxied=False,
-    # )
+    if node.nodetype != NodeType.controlplane:
+        return
+
     return
-
-
-def env_valid(name: str) -> str:
-    assert name in os.environ
-    val = os.getenv(name)
-    assert val
-    return val
-
-
-def load_yaml(path: Path) -> dict:
-    assert path.exists()
-    with path.open() as f:
-        return yaml.load(f, SafeLoader)
+    cf.DnsRecord(
+        resource_name=f"dnsrec_{node.i}",
+        type="A",
+        name=cluster.name,
+        content=node.ip,
+        ttl=1,
+        zone_id=cluster.zoneid,
+        proxied=False,
+    )
 
 
 def patch_cmn(node: Node) -> str:
     patch = {
         "machine": {
             "install": {"disk": node.disk, "image": node.image},
-            "network": {"interfaces": [{"interface": node.ifc, "dhcp": node.dhcp}]},
+            "network": {
+                "nameservers": [node.nameserver],
+                "interfaces": [
+                    {
+                        "deviceSelector": {"hardwareAddr": node.ifc_mac},
+                        "dhcp": node.dhcp,
+                        "addresses": [node.ip_cidr],
+                        "routes": [{"gateway": node.gateway}],
+                    }
+                ],
+            },
             "kubelet": {
                 "extraMounts": [
                     {
@@ -354,25 +353,19 @@ def patch_taint() -> str:
     return json.dumps(patch)
 
 
-def nvidia(deps: list[Resource]) -> list[Resource]:
+def nvidia() -> list[Resource]:
     ns = Namespace(
-        "nvdp-ns",
-        metadata=ObjectMetaArgs(name="gpu", labels={"pod-security.kubernetes.io/enforce": "privileged"}),
-    )
-    svc = ConfigGroup(
-        "nvdp-runtimeclass",
-        files=["./nvidia/class.yml"],
-        opts=ResourceOptions(depends_on=deps),
+        "gpu-ns",
+        metadata=ObjectMetaArgs(name="gpu-operator", labels={"pod-security.kubernetes.io/enforce": "privileged"}),
     )
     chart = Chart(
-        "nvdp-chart",
-        chart="nvidia-device-plugin",
+        "gpu-chart",
         namespace=ns.metadata.name,
-        repository_opts=RepositoryOptsArgs(repo="https://nvidia.github.io/k8s-device-plugin"),
-        value_yaml_files=[pulumi.FileAsset("nvidia/nvdp.yml")],
-        opts=ResourceOptions(depends_on=svc),
+        chart="gpu-operator",
+        repository_opts=RepositoryOptsArgs(repo="https://helm.ngc.nvidia.com/nvidia"),
+        value_yaml_files=[pulumi.FileAsset("nvidia_/gpu.yml")],
     )
-    return [svc, chart]
+    return [ns, chart]
 
 
 def patch_nvidia(node: Node) -> str:
@@ -418,16 +411,17 @@ def node_cfg(cluster: Cluster, node: Node) -> Resource:
 def cluster_cfg(cluster: Cluster) -> list[Resource]:
     # various resources depend on this cluster-wide set of secrets
     cluster.secrets = talos.machine.Secrets("secrets")
+    assert cluster.secrets is not None
 
     # dns A records for cluster domain, configure nodes, boot cluster
     dnsrecs = [node_dns(cluster, node) for node in cluster.nodes]
     dnsrecs = [rec for rec in dnsrecs if rec is not None]
-    cfgapps = [node_cfg(cluster, node) for node in cluster.nodes]
+    nodecfgs = [node_cfg(cluster, node) for node in cluster.nodes]
     talos.machine.Bootstrap(
         "bootstrap",
         node=cluster.nodes[0].ip,
         client_configuration=cluster.secrets.client_configuration,
-        opts=ResourceOptions(depends_on=cfgapps),
+        opts=ResourceOptions(depends_on=nodecfgs),
     )
 
     # write taloscfg. these 'endpoints' must be control plane ips
@@ -476,13 +470,13 @@ def main() -> None:
     svc_rscs.extend(traefik())
     svc_rscs.extend(certmanager())
 
-    nvidia(svc_rscs)
-    newt(svc_rscs)
-    traefik_dash(svc_rscs)
-    longhorn_dash(svc_rscs)
-    whoami(svc_rscs)
-    kuma(svc_rscs)
-    beszel(svc_rscs)
+    nvidia()
+    # newt(svc_rscs)
+    # traefik_dash(svc_rscs)
+    # longhorn_dash(svc_rscs)
+    # whoami(svc_rscs)
+    # kuma(svc_rscs)
+    # beszel(svc_rscs)
 
 
 if __name__ == "__main__":

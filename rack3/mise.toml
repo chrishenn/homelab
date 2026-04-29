@@ -8,8 +8,8 @@ talosctl = "latest"
 uv = "latest"
 
 [env]
-rack3 = "192.168.1.29"
-rack2 = "192.168.1.30"
+rack3 = "192.168.1.30"
+rack2 = "192.168.1.20"
 
 KUBECONFIG = "{{'./.secrets/dev/kubeconfig' | absolute}}"
 TALOSCONFIG = "{{'./.secrets/dev/talosconfig' | absolute}}"

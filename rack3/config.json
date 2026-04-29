@@ -13,22 +13,28 @@
           "name": "rack3",
           "nodetype": "controlplane",
           "caps": ["gpu"],
-          "image": "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5",
-          "ip": "192.168.1.29",
+          "image": "factory.talos.dev/metal-installer/9a0cbf0604c695d9a60e3f140da8a9558b514f14d797abcb939192e3eb5e9783:v1.13.0",
+          "ip": "192.168.1.30",
+          "ip_cidr": "192.168.1.30/24",
+          "gateway": "192.168.1.1",
+          "nameserver": "192.168.1.3",
           "disk": "/dev/nvme0n1",
-          "ifc": "enp10s0np0",
-          "dhcp": true
+          "ifc_mac": "98:03:9b:8c:75:c6",
+          "dhcp": false
         },
         {
           "i": 1,
           "name": "rack2",
           "nodetype": "worker",
           "caps": [],
-          "image": "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.5",
-          "ip": "192.168.1.30",
+          "image": "factory.talos.dev/metal-installer/a4b64fe7fc7fac8e76ea7f1952cea3b797e20adb7c4b562cd1f7f33155255343:v1.13.0",
+          "ip": "192.168.1.20",
+          "ip_cidr": "192.168.1.20/24",
+          "gateway": "192.168.1.1",
+          "nameserver": "192.168.1.3",
           "disk": "/dev/nvme0n1",
-          "ifc": "enp9s0f1np1",
-          "dhcp": true
+          "ifc_mac": "3c:fd:fe:34:d9:82",
+          "dhcp": false
         }
       ]
     }

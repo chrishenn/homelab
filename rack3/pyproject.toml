@@ -14,8 +14,3 @@ dependencies = [
     "pulumiverse-talos>=0.7.1",
     "rich>=14.3.3",
 ]
-
-[tool.uv.workspace]
-members = [
-    "src/rack3",
-]

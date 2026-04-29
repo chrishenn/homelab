@@ -83,22 +83,27 @@ more
 https://factory.talos.dev/
 
 - grab a talos linux iso from their "image factory"
-- iscsi-tools and util-linux-tools are required for Longhorn storage
+- longhorn requires:
+    - iscsi-tools
+    - util-linux-tools
+- nvidia requires:
+    - nvidia-open-gpu-kernel-modules
+    - nvidia-container-toolkit
 
 hit the image factory api with the yml above, and get the image id in response. The image id goes in the image url
 
 ```bash
 # rack2: longhorn
-# edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096
+# a4b64fe7fc7fac8e76ea7f1952cea3b797e20adb7c4b562cd1f7f33155255343
 curl -X POST --data-binary @talos/image_rack2.yml https://factory.talos.dev/schematics
 
 # rack3: longhorn, nvidia
-# a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6
+# 9a0cbf0604c695d9a60e3f140da8a9558b514f14d797abcb939192e3eb5e9783
 curl -X POST --data-binary @talos/image_rack3.yml https://factory.talos.dev/schematics
 
 # image url and pxe url formats
-# factory.talos.dev/metal-installer/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3:v1.12.5
-# https://pxe.factory.talos.dev/pxe/9de1ae6b78074fa02f9bff05757590503aa86bdbb3814f0e460b13781b7b0cb3/v1.12.5/metal-amd64
+# factory.talos.dev/metal-installer/<imgid>:v1.13.0
+# https://pxe.factory.talos.dev/pxe/<imgid>/v1.13.0/metal-amd64
 ```
 
 The doc is extremely unclear, but it seems that extensions are not built into the downloaded iso. You have to spec the
@@ -110,8 +115,8 @@ the image you spec is then installed to disk).
 So I ran a manual upgrade to install an image with the patches included
 
 ```bash
-talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/a3a30b1e9dac52323f3febbe27c6693562874ff8a86f805719652db4f88cb9d6:v1.12.5"
-talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/edf8010de70681c30908eca8ff474bd551034a6a1161c3f3072db3d86d5ee096:v1.12.5"
+talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/9a0cbf0604c695d9a60e3f140da8a9558b514f14d797abcb939192e3eb5e9783:v1.13.0"
+talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/a4b64fe7fc7fac8e76ea7f1952cea3b797e20adb7c4b562cd1f7f33155255343:v1.13.0"
 ```
 
 ---
@@ -126,9 +131,10 @@ pulumi plugin install resource talos
 boot from iso. grab ip from kvm gui. then
 
 ```bash
-# populate the node ip and disk name into the config
+# populate the node ip, network interface mac address, and disk name into the config
 talosctl get disks --insecure --nodes $rack3
 talosctl get ethtool --insecure --nodes $rack3
+talosctl get links -n <IP> --insecure
 
 # 'health' won't work for worker nodes (?). instead use dashboard
 talosctl -n $rack3 health
@@ -161,6 +167,9 @@ talosctl patch mc -n $rack3 --patch talos/taint.yml
 
 # delete pods that are not running
 kubectl delete pods --field-selector status.phase!=Running
+
+# manually delete taint
+kubectl taint nodes rack3 node.kubernetes.io/unschedulable:NoSchedule-
 ```
 
 longhorn
@@ -252,6 +261,15 @@ Trying out something like this. We'll see how it goes
 # quotes are not allowed; spaces are fine in values for 'key=value w space'
 kubectl create secret generic dev-secrets --from-env-file=<(fnox export | sd 'export ' '' | sd "'" '')
 kubectl delete secret dev-secrets
+```
+
+outputs recovery
+
+imagine you've deleted your kubeconfig and talosconfig files. what a dunce!
+
+```bash
+pulumi stack output --show-secrets kubeconfig
+pulumi stack output --show-secrets clientConfiguration
 ```
 
 ---
