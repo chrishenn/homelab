@@ -150,7 +150,7 @@ sudo systemctl restart nfs-kernel-server
 # Client
 
 ```bash
-sudo apt install -y nfs-common
+sudo apt install -y nfs-common rdma-core
 sudo apt install -y \
   infiniband-diags srptools perftest opensm-doc librdmacm-dev rdmacm-utils librdmacm1 ibacm \
   libibmad-dev libibmad5 libibumad-dev libibumad3 ibverbs-utils libibverbs-dev libibverbs1 rdma-core opensm librbd1 \
