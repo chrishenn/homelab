@@ -1,4 +1,5 @@
 import json
+import os
 from enum import StrEnum, auto
 from pathlib import Path
 
@@ -15,6 +16,13 @@ from pydantic import BaseModel
 from rich.console import Console
 
 
+def env_valid(name: str) -> str:
+    assert name in os.environ
+    val = os.getenv(name)
+    assert val
+    return val
+
+
 def traefik_dash(deps: list[Resource]) -> list[Resource]:
     svc = ConfigGroup(
         "traefik-dash",
@@ -28,7 +36,7 @@ def beszel(deps: list[Resource]) -> list[Resource]:
     svc = ConfigGroup(
         "beszel-app",
         files=["./app/beszel.yml"],
-        opts=ResourceOptions(depends_on=deps),
+        opts=ResourceOptions(depends_on=deps, delete_before_replace=True, replace_on_changes=["*"]),
     )
     return [svc]
 
@@ -54,24 +62,47 @@ def whoami(deps: list[Resource]) -> list[Resource]:
 def longhorn_dash(deps: list[Resource]) -> list[Resource]:
     svc = ConfigGroup(
         "longhorn-dash",
-        files=["./app/longhorn_dash.yml"],
+        files=["./longhorn_/dash.yml"],
         opts=ResourceOptions(depends_on=deps),
     )
     return [svc]
 
 
 def newt() -> list[Resource]:
+    newt_key = env_valid("NEWT_PROVISIONING_KEY")
+
     ns = Namespace(
         "newt-ns",
-        metadata=ObjectMetaArgs(name="newt"),
+        metadata=ObjectMetaArgs(name="newt", labels={"pod-security.kubernetes.io/enforce": "privileged"}),
     )
     chart = Chart(
         "newt-chart",
         namespace=ns.metadata.name,
         chart="newt",
         repository_opts=RepositoryOptsArgs(repo="https://charts.fossorial.io"),
-        value_yaml_files=[pulumi.FileAsset("newt_/values.yml")],
+        dependency_update=True,
         opts=ResourceOptions(depends_on=None),
+        values={
+            "global": {
+                "nativeMode": {"enabled": True},
+            },
+            "newtInstances": [
+                {
+                    "enabled": True,
+                    "name": "rack3",
+                    "newtName": "talos",
+                    "useNativeInterface": True,
+                    "pangolinEndpoint": "https://pangolin.chenn.dev",
+                    "provisioningKey": newt_key,
+                    "configPersistence": {
+                        "enabled": True,
+                        "mountPath": "/var/lib/newt",
+                        "fileName": "config.json",
+                        "type": "emptyDir",
+                    },
+                }
+            ],
+        },
     )
     return [ns, chart]
 
@@ -148,16 +179,14 @@ def metallb() -> list[Resource]:
         "metallb-chart",
         namespace=ns.metadata.name,
         chart="metallb",
-        repository_opts=RepositoryOptsArgs(
-            repo="https://metallb.github.io/metallb",
-        ),
+        repository_opts=RepositoryOptsArgs(repo="https://metallb.github.io/metallb"),
     )
     cfg = ConfigGroup(
         "metallb-ippool-default",
         files=["./metallb_/pool.yml"],
         opts=ResourceOptions(depends_on=[ns, chart]),
     )
-    return [ns, chart, cfg]
+    return [cfg]
 
 
 def longhorn() -> list[Resource]:
@@ -172,10 +201,7 @@ def longhorn() -> list[Resource]:
         repository_opts=RepositoryOptsArgs(
             repo="https://charts.longhorn.io",
         ),
-        value_yaml_files=[
-            # this filename cannot match the chart/repo name or helm will error
-            pulumi.FileAsset("./longhorn_/values.yaml")
-        ],
+        value_yaml_files=[pulumi.FileAsset("./longhorn_/values.yaml")],
     )
     return [ns, chart]
 
@@ -278,15 +304,14 @@ def sec_machine_fmt(ms: talos.machine.outputs.MachineSecretsResult) -> dict:
     }
 
 
-def node_dns(cluster: Cluster, node: Node) -> None:
+def node_dns(cluster: Cluster, node: Node) -> cf.DnsRecord | None:
     """Per Talos docs, we only need domain names for controlplane nodes
     Note that these dns records are used instead of a TCP load balancer like HAProxy, nginx, (probably) traefik
     """
     if node.nodetype != NodeType.controlplane:
-        return
+        return None
 
-    return
-    cf.DnsRecord(
+    return cf.DnsRecord(
         resource_name=f"dnsrec_{node.i}",
         type="A",
         name=cluster.name,
@@ -357,21 +382,6 @@ def patch_cmn(node: Node) -> str:
     return json.dumps(patch)
 
 
-def patch_taint() -> str:
-    # this delete patch will fail when the exclude label no longer exists
-    patch = {
-        # "machine": {
-        #     "nodeLabels": {
-        #         "node.kubernetes.io/exclude-from-external-load-balancers": {
-        #             "$patch": "delete"
-        #         }
-        #     }
-        # },
-        "cluster": {"allowSchedulingOnControlPlanes": True}
-    }
-    return json.dumps(patch)
-
-
 def nvidia() -> list[Resource]:
     ns = Namespace(
         "gpu-ns",
@@ -390,6 +400,7 @@ def nvidia() -> list[Resource]:
 def patch_nvidia(node: Node) -> str:
     if NodeCap.gpu not in node.caps:
         return ""
+
     patch = {
         "machine": {
             "kernel": {
@@ -411,7 +422,7 @@ def node_cfg(cluster: Cluster, node: Node) -> Resource:
     # the same node type - nodes with the same node type could share a sec_machine_fmt string and nodecfg
     assert cluster.secrets is not None
 
-    mc = [patch_cmn(node), patch_taint(), patch_nvidia(node)]
+    mc = [patch_cmn(node), patch_nvidia(node)]
     mc = list(filter(bool, mc))
 
     nodecfg = talos.machine.get_configuration_output(

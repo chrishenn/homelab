@@ -30,12 +30,15 @@ services:
       pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
       pangolin.public-resources.bazarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.bazarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.bazarr.rules[0].action: pass
-      pangolin.public-resources.bazarr.rules[0].match: country
-      pangolin.public-resources.bazarr.rules[0].value: US
-      pangolin.public-resources.bazarr.rules[1].action: deny
+      pangolin.public-resources.bazarr.rules[0].action: allow
+      pangolin.public-resources.bazarr.rules[0].match: path
+      pangolin.public-resources.bazarr.rules[0].value: /api/*
+      pangolin.public-resources.bazarr.rules[1].action: pass
       pangolin.public-resources.bazarr.rules[1].match: country
-      pangolin.public-resources.bazarr.rules[1].value: ALL
+      pangolin.public-resources.bazarr.rules[1].value: US
+      pangolin.public-resources.bazarr.rules[2].action: deny
+      pangolin.public-resources.bazarr.rules[2].match: country
+      pangolin.public-resources.bazarr.rules[2].value: ALL
 
   radarr:
     profiles: [arr]
@@ -327,12 +330,15 @@ services:
       pangolin.public-resources.aurral.targets[0].port: 3001
       pangolin.public-resources.aurral.auth.sso-enabled: true
       pangolin.public-resources.aurral.auth.sso-roles[0]: Member
-      pangolin.public-resources.aurral.rules[0].action: pass
-      pangolin.public-resources.aurral.rules[0].match: country
-      pangolin.public-resources.aurral.rules[0].value: US
-      pangolin.public-resources.aurral.rules[1].action: deny
+      pangolin.public-resources.aurral.rules[0].action: allow
+      pangolin.public-resources.aurral.rules[0].match: path
+      pangolin.public-resources.aurral.rules[0].value: /api/*
+      pangolin.public-resources.aurral.rules[1].action: pass
       pangolin.public-resources.aurral.rules[1].match: country
-      pangolin.public-resources.aurral.rules[1].value: ALL
+      pangolin.public-resources.aurral.rules[1].value: US
+      pangolin.public-resources.aurral.rules[2].action: deny
+      pangolin.public-resources.aurral.rules[2].match: country
+      pangolin.public-resources.aurral.rules[2].value: ALL
 
   doplarr:
     profiles: [arr]

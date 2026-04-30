@@ -39,8 +39,8 @@ services:
         condition: service_healthy
       resume_chrome:
         condition: service_healthy
-    #      seaweedfs_create_bucket:
-    #        condition: service_completed_successfully
+      resume_seaweed_create:
+        condition: service_completed_successfully
     networks: [resume, newt, ollama]
     labels:
       homepage.group: File Editors
@@ -112,22 +112,23 @@ services:
       retries: 3
     networks: [resume]
 
-#  seaweedfs_create_bucket:
-#    profiles: [resume]
-#    image: quay.io/minio/mc:latest
-#    container_name: seaweedfs_create_bucket
-#    restart: on-failure
-#    entrypoint: >
-#      /bin/sh -c "
-#        sleep 5;
-#        mc alias set seaweedfs http://seaweedfs:8333 seaweedfs seaweedfs;
-#        mc mb seaweedfs/reactive-resume;
-#        exit 0;
-#      "
-#    depends_on:
-#      seaweedfs:
-#        condition: service_healthy
-#    networks: [resume]
+  resume_seaweed_create:
+    profiles: [resume]
+    image: quay.io/minio/mc:latest
+    container_name: resume_seaweed_create
+    restart: on-failure
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        addr='http://resume_seaweed:8333'
+        while (! mc alias set seaweedfs $$addr seaweedfs seaweedfs &>/dev/null); do
+          echo "waiting for connection to seaweedfs at $$addr"
+          sleep 3
+        done
+        mc mb -p seaweedfs/reactive-resume
+        exit 0
+    networks: [resume]
 
 networks:
   resume:

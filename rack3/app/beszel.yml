@@ -35,6 +35,9 @@ spec:
         - name: beszel-agent-rack3
           image: henrygd/beszel-agent-nvidia:latest
           imagePullPolicy: Always
+          resources:
+            limits:
+              nvidia.com/gpu: 1
           env:
             - name: LISTEN
               value: '45876'

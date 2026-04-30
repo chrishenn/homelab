@@ -4,6 +4,18 @@ hosted on hostinger VPS
 
 ---
 
+# update
+
+```bash
+# if config or traefik config require manual changes, edit them locally (esp the badger plugin). then:
+j s
+j ssh
+cd pangolin
+sudo rm -rf config_backup
+sudo cp -r config config_backup
+dc down && dc up -d --pull always
+```
+
 # install
 
 ```bash
@@ -12,62 +24,10 @@ hosted on hostinger VPS
 
 # in the cloudflare web console, add a DNS A record to point to pangolin VPS
 
-# pangolin installer
+# run pangolin installer
 mkdir -p ~/pangolin && cd pangolin
 curl -fsSL https://static.pangolin.net/get-installer.sh | bash
 sudo ./installer
-```
-
----
-
-# config
-
-Note the non-standard smtp SSL port 465.
-The standard port is 587, which didn't work for me
-
-```bash
-$SSH_CHRIS -t "cd /home/chris/pangolin ; bash --login"
-
-# connect to proton smtp
-sudo nano config/config.yml
-
-sudo chris pass:
-op read "op://homelab/vps0/chris_pass"
-
-email:
-    smtp_host: "op://homelab/proton/SMTP/smtp_host"
-    smtp_port: 465
-    smtp_user: "op://homelab/proton/SMTP/smtp_user"
-    smtp_pass: "op://homelab/proton/SMTP/smtp_token"
-    no_reply: "op://homelab/proton/SMTP/smtp_user"
-    smtp_secure: true
-    smtp_tls_reject_unauthorized: true
-
-docker compose restart
-```
-
-# update
-
-```bash
-$SSH_CHRIS -t "cd /home/chris/pangolin ; bash --login"
-sudo cp -r config config_backup
-docker compose down
-
-# edit the tags manually. Or, set them all to "latest" or "ee-latest"
-sudo nano docker-compose.yml
-
-# update the version under experimental.plugins.badger.version
-# https://github.com/fosrl/badger/releases
-sudo nano config/traefik/traefik_config.yml
-
-docker compose up -d --pull always
-docker compose logs -f
-```
-
-traefik fix
-
-```bash
-sudo nano config/traefik/traefik_config.yml
 ```
 
 ---
@@ -76,7 +36,7 @@ sudo nano config/traefik/traefik_config.yml
 
 This config is for compose services on the same host as your pangolin+traefik+gerbil
 
-pangolin's traefik must trust headers from the pangolin container. I locked the pangolin ip via docker-compose
+Pangolin's traefik must trust headers from the pangolin container. I locked the pangolin ip via docker-compose
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pangolin
 172.18.0.2
 

@@ -106,8 +106,8 @@ services:
       HUB_URL: ${VPS0_BESZEL_HUB_URL}
 
   geoipupdate:
-    container_name: geoipupdate
     image: ghcr.io/maxmind/geoipupdate
+    container_name: geoipupdate
     restart: unless-stopped
     environment:
       GEOIPUPDATE_ACCOUNT_ID: ${MAXMIND_ACCOUNT}

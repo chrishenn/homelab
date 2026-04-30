@@ -9,7 +9,12 @@ def env_valid(name: str) -> str:
     return val
 
 
-def local_dns() -> None:
+def local_traefik_dns() -> None:
+    """
+    Wildcard dns for local services routed by a traefik instance hosted on rack4 and/or rack0.
+    At this time, that's {*.henn.dev -> 192.168.1.4}
+    At this time, 192.168.1.4 is a virtual IP that can failover from 192.168.1.142 to 192.168.1.70 via keepalived
+    """
     zoneid = env_valid("ZONEID")
     domain = env_valid("DOMAIN")
     localip = env_valid("LOCALIP")
@@ -34,38 +39,5 @@ def local_dns() -> None:
     )
 
 
-def local_arecords() -> None:
-    """
-    Subdomain {A, wildcard} entries for services.
-    Individual A records are unneeded when the parent domain has a wildcard cert via DNS challenge
-    """
-    svcs = []
-
-    zoneid = env_valid("ZONEID")
-    domain = env_valid("DOMAIN")
-    localip = env_valid("LOCALIP")
-
-    for svc in svcs:
-        cf.DnsRecord(
-            resource_name=f"{domain}_{svc}",
-            type="A",
-            name=svc,
-            content=localip,
-            ttl=1,
-            zone_id=zoneid,
-            proxied=False,
-        )
-        cf.DnsRecord(
-            resource_name=f"{domain}_{svc}_star",
-            type="CNAME",
-            name=f"*.{svc}",
-            content=f"{svc}.{domain}",
-            ttl=1,
-            zone_id=zoneid,
-            proxied=False,
-        )
-
-
 if __name__ == "__main__":
-    local_dns()
-    # local_arecords()
+    local_traefik_dns()

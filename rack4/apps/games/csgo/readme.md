@@ -20,6 +20,8 @@ app_status 4465480
 # install dir should be /data/serverfiles/
 ```
 
+## fixes
+
 generate a new server login token for the new appid
 https://steamcommunity.com/dev/managegameservers
 
@@ -33,20 +35,25 @@ serverfiles/csgo/steam.inf
 config-lgsm/csgoserver/csgoserver.cfg
 under appid="4465480"
 
-install plugins
-./csgoserver mi metamodsource
-./csgoserver mi sourcemod
-
-copy in patches to fix these issues:
+install minimum patches to fix these issues:
 
 - hangs forever requesting lobby id from server
 - S3: Client connected with ticket for the wrong game. STEAM validation rejected
 
 ```bash
+# inside container
+./csgoserver mi metamodsource
+./csgoserver mi sourcemod
+
+# from local machine homelab/rack4
 serverfiles="$DATA/csgo/serverfiles"
 patches='apps/games/csgo/addons'
 cp -rf $patches "$serverfiles/csgo"
+```
 
+## custom retakes
+
+```bash
 # retakes plugin
 url="https://github.com/splewis/csgo-retakes/releases/download/v0.3.4/retakes_0.3.4.zip"
 curl -Lo file.zip $url

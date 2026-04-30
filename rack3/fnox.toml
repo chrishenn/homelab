@@ -5,6 +5,8 @@ account = "my.1password.com"
 
 [secrets]
 CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
+NEWT_PROVISIONING_KEY = { provider = "onepass", value = "op://homelab/pangolin/newt_provisioning" }
+
 BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel_rack3/key" }
 BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel_rack3/token" }
 

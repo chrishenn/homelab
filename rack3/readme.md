@@ -13,36 +13,42 @@ workers: {rack2}
 - [x] add worker node
     - wow that was easy. Just booted the machine, added the data in the config.json, and ran `pulumi up`
 - [x] upgrade talos installed disk images
-    - [x] add required extensions for longhorn
+    - [x] add required extensions for longhorn, nvidia
     - [x] add required longhorn data path mounts, kernel modules required for longhorn V2 data engine
 - [x] longhorn
 - [x] metallb
 - [x] traefik
-    - [x] letsencrypt certs working (local storage)
+    - [x] letsencrypt certs working (local storage for testing)
     - [x] secure headers
-    - [x] ingressroute for longhorn dash
-    - [x] ingressroute for traefik dash
-- [x] cert-manager
-    - [x] integrate with traefik
+    - [x] ingressroutes for apps
+- [x] SSL/https automation via
+    - [x] cert-manager
+    - [x] traefik
 - [x] nvidia gpu via nvidia operator
-- [ ] use pulumi to add a dns record to resolve service metallb lb ip
-- [ ] autoscaler
-    - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
-    - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server
+- [x] static IP assignments via network NIC mac addresses
+- [ ] connect longhorn storage to the newt connector
+- [ ] spec the metallb loadbalancer ip and ip pool in the pulumi config, or config.json
+    - [ ] use pulumi to define the metallb ip pool in pool.yml
+    - [ ] use pulumi to define the metallb loadbalancer ip in traefik helm values.yml
+    - [ ] use pulumi to add a dns record to for the loadbalancer ip
 
 apps
 
-- [ ] pangolin
-    - [ ] pangolin
-    - [x] newt
+- [x] traefik dashboard
+- [x] longhorn dashboard
+- [x] whoami
 - [x] uptime-kuma
-- [ ] beszel (https://beszel.dev/guide/advanced-deployment)
-    - [ ] beszel server
+- [x] newt (exposes cluster as a site to my existing pangolin server on vps0)
+    - pangolin operator coming in the next few weeks! https://github.com/home-operations/pangolin-operator
+- [ ] beszel
     - [x] beszel agents for each node
-    - [x] gpu monitoring
+    - [x] gpu monitoring on gpu nodes
+    - [ ] beszel server
+    - [ ] helm chart with pod monitoring coming soonish: https://github.com/henrygd/beszel/pull/1586
 - [ ] local container registry pull-through cache
-    - [x] docker's official registry (hosted on rack4 compose)
+    - [x] registry service is up (hosted on rack4 compose)
     - [ ] configure talos clients to use the cache
+        - https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/images-container-runtime/pull-through-cache
 - [ ] oath2-proxy + pocketid
 - [ ] grafana/loki
     - https://github.com/timothystewart6/launchpad/tree/152d6bbcba239f98ea8cfa136a98841dc3cd30cd/kubernetes/kube-prometheus-stack
@@ -52,6 +58,9 @@ apps
     - forgejo repo
     - argo? something auto-deploys the cluster with pulumi, and the apps into the cluster
 - [ ] https://github.com/kite-org/kite
+- [ ] autoscaler
+    - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
+    - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server
 
 annoyances
 
@@ -82,7 +91,6 @@ more
 
 https://factory.talos.dev/
 
-- grab a talos linux iso from their "image factory"
 - longhorn requires:
     - iscsi-tools
     - util-linux-tools
@@ -90,9 +98,9 @@ https://factory.talos.dev/
     - nvidia-open-gpu-kernel-modules
     - nvidia-container-toolkit
 
-hit the image factory api with the yml above, and get the image id in response. The image id goes in the image url
-
 ```bash
+# hit the image factory api with a yml def, and get the image id in response
+
 # rack2: longhorn
 curl -X POST --data-binary @talos/image_rack2.yml https://factory.talos.dev/schematics
 
@@ -120,7 +128,7 @@ boot from iso. grab ip from kvm gui. then
 # populate the node ip, network interface mac address, and disk name into the config
 talosctl get disks --insecure --nodes $rack3
 talosctl get ethtool --insecure --nodes $rack3
-talosctl get links --insecurev -n $rack3
+talosctl get links --insecure -n $rack3
 
 # 'health' only works for control plane nodes. Use talos dashboard to see all node status in cluster:
 talosctl -n $rack3 health
@@ -208,14 +216,14 @@ nvidia
 
 ```bash
 # verify that modules are loaded
-t -n $rack3 read /proc/modules | grep nvidia
-t get modules -n $rack3 | grep nvidia
+talosctl -n $rack3 read /proc/modules | grep nvidia
+talosctl get modules -n $rack3 | grep nvidia
 # nvidia
 # nvidia_drm
 # nvidia_modeset
 # nvidia_uvm
 
-t get extensions -n $rack3 | grep nvidia
+talosctl get extensions -n $rack3 | grep nvidia
 # 192.168.1.29   runtime     ExtensionStatus   4             1         nonfree-kmod-nvidia-lts        580.126.16-v1.12.5
 # 192.168.1.29   runtime     ExtensionStatus   5             1         nvidia-container-toolkit-lts   580.126.16-v1.18.2
 
@@ -238,6 +246,25 @@ kf nvidia_/test2.yml
 k logs pod/nvadd
 kd nvidia_/test2.yml
 ```
+
+pangolin (newt)
+
+I was able to expose a service running in my talos cluster by manually defining a public resource in my pangolin server
+web console. The newt "site" connector running in the cluster can reach any service, but services in a different namespace
+must be addressed with this format:
+
+`service-name.namespace-name.svc.cluster.local`
+eg:
+`uptime-kuma.kuma.svc.cluster.local`
+
+I tried to pass my containerd socket to the newt connector through its helm chart's values (/var/containerd/containerd.sock);
+it looks like newt tried to connect to it over http and failed? Not sure.
+
+The newt chart's values.yaml says in its readme that it can be configured with env vars, but I couldn't get them to work.
+Possibly because I'm applying the chart throug pulumi? Not sure. Adding the newt site with a provisioning token did work,
+but I need to connect it to persistent storage. As it is, the newt site re-provisions as a new site when I recreate it.
+
+---
 
 secrets
 

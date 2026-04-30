@@ -6,5 +6,5 @@ account = "my.1password.com"
 [secrets]
 CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
 ZONEID = { provider = "onepass", value = "op://homelab/cloudflare/zoneid/henndev" }
-DOMAIN = { provider = "onepass", value = "op://homelab/Traefik/domain" }
-LOCALIP = { provider = "onepass", value = "op://homelab/Traefik/host" }
+DOMAIN = { provider = "onepass", value = "op://homelab/rack4/domain" }
+LOCALIP = { provider = "onepass", value = "op://homelab/rack4/host" }
