@@ -60,7 +60,7 @@ def longhorn_dash(deps: list[Resource]) -> list[Resource]:
     return [svc]
 
 
-def newt(deps: list[Resource]) -> list[Resource]:
+def newt() -> list[Resource]:
     ns = Namespace(
         "newt-ns",
         metadata=ObjectMetaArgs(name="newt"),
@@ -71,7 +71,7 @@ def newt(deps: list[Resource]) -> list[Resource]:
         chart="newt",
         repository_opts=RepositoryOptsArgs(repo="https://charts.fossorial.io"),
         value_yaml_files=[pulumi.FileAsset("newt_/values.yml")],
-        opts=ResourceOptions(depends_on=deps),
+        opts=ResourceOptions(depends_on=None),
     )
     return [ns, chart]
 
@@ -333,6 +333,25 @@ def patch_cmn(node: Node) -> str:
         "cluster": {
             "proxy": {"extraArgs": {"ipvs-strict-arp": True}},
             "allowSchedulingOnControlPlanes": True,
+            "apiServer": {
+                "admissionControl": [
+                    {
+                        "name": "PodSecurity",
+                        "configuration": {
+                            "apiVersion": "pod-security.admission.config.k8s.io/v1",
+                            "kind": "PodSecurityConfiguration",
+                            "defaults": {
+                                "enforce": "baseline",
+                                "enforce-version": "latest",
+                                "audit": "baseline",
+                                "audit-version": "latest",
+                                "warn": "baseline",
+                                "warn-version": "latest",
+                            },
+                        },
+                    }
+                ]
+            },
         },
     }
     return json.dumps(patch)
@@ -388,6 +407,8 @@ def patch_nvidia(node: Node) -> str:
 
 
 def node_cfg(cluster: Cluster, node: Node) -> Resource:
+    # performance note: this will generate a talosmachine config for each node, even if there are multiple nodes with
+    # the same node type - nodes with the same node type could share a sec_machine_fmt string and nodecfg
     assert cluster.secrets is not None
 
     mc = [patch_cmn(node), patch_taint(), patch_nvidia(node)]
@@ -464,19 +485,20 @@ def main() -> None:
     list(map(cluster_val, cfg.clusters))
     list(map(cluster_cfg, cfg.clusters))
 
-    svc_rscs = []
-    svc_rscs.extend(longhorn())
-    svc_rscs.extend(metallb())
-    svc_rscs.extend(traefik())
-    svc_rscs.extend(certmanager())
+    # performance note: this is a kludgy dependency graph
+    svcs_core = []
+    svcs_core.extend(longhorn())
+    svcs_core.extend(metallb())
+    svcs_core.extend(traefik())
+    svcs_core.extend(certmanager())
 
     nvidia()
-    # newt(svc_rscs)
-    # traefik_dash(svc_rscs)
-    # longhorn_dash(svc_rscs)
-    # whoami(svc_rscs)
-    # kuma(svc_rscs)
-    # beszel(svc_rscs)
+    newt()
+    traefik_dash(svcs_core)
+    longhorn_dash(svcs_core)
+    whoami(svcs_core)
+    kuma(svcs_core)
+    beszel(svcs_core)
 
 
 if __name__ == "__main__":

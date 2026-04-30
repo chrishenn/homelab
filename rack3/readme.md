@@ -24,8 +24,8 @@ workers: {rack2}
     - [x] ingressroute for traefik dash
 - [x] cert-manager
     - [x] integrate with traefik
-- [x] nvidia gpu
-- [x] loosen seccomp
+- [x] nvidia gpu via nvidia operator
+- [ ] use pulumi to add a dns record to resolve service metallb lb ip
 - [ ] autoscaler
     - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
     - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server
@@ -94,25 +94,18 @@ hit the image factory api with the yml above, and get the image id in response. 
 
 ```bash
 # rack2: longhorn
-# a4b64fe7fc7fac8e76ea7f1952cea3b797e20adb7c4b562cd1f7f33155255343
 curl -X POST --data-binary @talos/image_rack2.yml https://factory.talos.dev/schematics
 
 # rack3: longhorn, nvidia
-# 9a0cbf0604c695d9a60e3f140da8a9558b514f14d797abcb939192e3eb5e9783
 curl -X POST --data-binary @talos/image_rack3.yml https://factory.talos.dev/schematics
 
-# image url and pxe url formats
+# image url and pxe url formats:
 # factory.talos.dev/metal-installer/<imgid>:v1.13.0
 # https://pxe.factory.talos.dev/pxe/<imgid>/v1.13.0/metal-amd64
 ```
 
-The doc is extremely unclear, but it seems that extensions are not built into the downloaded iso. You have to spec the
-image that will be installed to disk when running the machine configuration apply patch (I've added to pulumi).
-Adding the image to the pulumi Resource and running pulumi up does not seem to run the upgrade after the machine has
-run the configuration path and rebooted (presumably the image install only applies when first booted from iso, because
-the image you spec is then installed to disk).
-
-So I ran a manual upgrade to install an image with the patches included
+I had an outdated image_id/spec in the initial talos machine config.
+So I ran a manual upgrade to install an image with the patches included:
 
 ```bash
 talosctl upgrade -n $rack3 --image "factory.talos.dev/metal-installer/9a0cbf0604c695d9a60e3f140da8a9558b514f14d797abcb939192e3eb5e9783:v1.13.0"
@@ -121,26 +114,19 @@ talosctl upgrade -n $rack2 --image "factory.talos.dev/metal-installer/a4b64fe7fc
 
 ---
 
-env setup
-
-```bash
-pulumi new
-pulumi plugin install resource talos
-```
-
 boot from iso. grab ip from kvm gui. then
 
 ```bash
 # populate the node ip, network interface mac address, and disk name into the config
 talosctl get disks --insecure --nodes $rack3
 talosctl get ethtool --insecure --nodes $rack3
-talosctl get links -n <IP> --insecure
+talosctl get links --insecurev -n $rack3
 
-# 'health' won't work for worker nodes (?). instead use dashboard
+# 'health' only works for control plane nodes. Use talos dashboard to see all node status in cluster:
 talosctl -n $rack3 health
 talosctl dashboard
 
-# node info and actions
+# node info, resource descriptors, builtin verbs
 talosctl -n $rack3 g rd
 talosctl -n $rack3 g ethtool
 talosctl -n $rack3 reboot
@@ -164,12 +150,16 @@ kubectl describe node rack3 | grep -A5 Taints
 
 # patch taint - the delete will only succeed once, while the label it deletes exists. duplicated in pulumi code
 talosctl patch mc -n $rack3 --patch talos/taint.yml
+talosctl patch mc -n $rack3 --patch talos/taint2.yml
 
 # delete pods that are not running
-kubectl delete pods --field-selector status.phase!=Running
+kubectl delete pods --field-selector status.phase!=Running -A
 
-# manually delete taint
-kubectl taint nodes rack3 node.kubernetes.io/unschedulable:NoSchedule-
+# this taint is due to cordoning
+# Taints:             node.kubernetes.io/unschedulable:NoSchedule
+# Unschedulable:      true
+# uncordon with:
+k uncordon rack3
 ```
 
 longhorn
@@ -185,10 +175,10 @@ k port-forward service/longhorn-frontend 8080:80 -n longhorn-system
 traefik
 
 ```bash
-# this is for traefik's built-in letsencrypt SSL from cloudflare - replacing this later with cert-manager
-kubectl create secret generic cloudflare-credentials \
-    --namespace traefik-system \
-    --from-literal=token=$(op read "op://homelab/cloudflare/token")
+# testing only: this is for traefik's built-in letsencrypt SSL from cloudflare - replacing this later with cert-manager
+# kubectl create secret generic cloudflare-credentials \
+#     --namespace traefik-system \
+#     --from-literal=token=$(op read "op://homelab/cloudflare/token")
 
 # verify that traefik's loadbalancer service has an external IP from metallb (should see EXTERNAL_IP)
 k get svc -n traefik-system
@@ -197,6 +187,7 @@ k get svc -n traefik-system
 cert-manager
 
 ```bash
+# todo: you have to create the namespace before you can put the secret there - do this in pulumi code if possible
 kubectl create secret generic cloudflare-credentials \
     --namespace cert-manager \
     --from-literal=token=$(op read "op://homelab/cloudflare/token")
@@ -208,43 +199,44 @@ k get -n default certificates
 newt
 
 ```bash
+# todo: you have to create the namespace before you can put the secret there - do this in pulumi code if possible
+k delete secret newt-cred -n newt
 kubectl create secret generic newt-cred -n newt --from-env-file=<(fnox export -P newt --no-defaults | sd 'export ' '' | sd "'" '')
 ```
 
 nvidia
 
 ```bash
-# the gpu operator does not currently work, although that should change soon
-# Talos 1.13 now ships /etc/ld.* files, so this might not be a problem anymore, the gpu operator works now
-# https://github.com/NVIDIA/k8s-dra-driver-gpu/pull/695
-
-# dra does not appear to work, because nvidia-smi and other nvidia libs are in nonstandard paths
-
 # verify that modules are loaded
 t -n $rack3 read /proc/modules | grep nvidia
-# nvidia_uvm 2232320 0 - Live 0x0000000000000000 (PO)
-# nvidia_drm 151552 0 - Live 0x0000000000000000 (PO)
-# nvidia_modeset 1908736 2 nvidia_drm, Live 0x0000000000000000 (PO)
-# drm_ttm_helper 12288 1 nvidia_drm, Live 0x0000000000000000
-# nvidia 111489024 8 nvidia_uvm,nvidia_drm,nvidia_modeset, Live 0x0000000000000000 (PO)
+t get modules -n $rack3 | grep nvidia
+# nvidia
+# nvidia_drm
+# nvidia_modeset
+# nvidia_uvm
 
 t get extensions -n $rack3 | grep nvidia
 # 192.168.1.29   runtime     ExtensionStatus   4             1         nonfree-kmod-nvidia-lts        580.126.16-v1.12.5
 # 192.168.1.29   runtime     ExtensionStatus   5             1         nvidia-container-toolkit-lts   580.126.16-v1.18.2
 
 # check node labels from node discovery
-kubectl label nodes rack2 nvidia.com/gpu.deploy.operands=false
-kubectl label nodes rack2 nvidia.com/gpu.deploy.driver=false
-kubectl get node rack3 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com"))'
 kubectl get node rack2 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com"))'
+kubectl get node rack3 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com/gpu.present"))'
+kubectl get node rack3 -o json | jq '.metadata.labels | to_entries[] | select(.key | startswith("nvidia.com/gpu.product"))'
 
-kubectl run \
-  nvidia-test \
-  --restart=Never \
-  -ti --rm \
-  --image nvcr.io/nvidia/cuda:12.5.0-base-ubuntu22.04 \
-  --overrides '{"spec": {"runtimeClassName": "nvidia"}}' \
-  nvidia-smi
+# manually add node labels - the gpu operator should do this automatically
+# kubectl label nodes rack2 nvidia.com/gpu.deploy.operands=false
+# kubectl label nodes rack2 nvidia.com/gpu.deploy.driver=false
+
+# test. you should see the nvidia-smi output in the pod logs
+kf nvidia_/test.yml
+k logs pod/nvsmi
+kd nvidia_/test.yml
+
+# test2: vectoradd output in logs
+kf nvidia_/test2.yml
+k logs pod/nvadd
+kd nvidia_/test2.yml
 ```
 
 secrets
@@ -259,7 +251,7 @@ Trying out something like this. We'll see how it goes
 
 ```bash
 # quotes are not allowed; spaces are fine in values for 'key=value w space'
-kubectl create secret generic dev-secrets --from-env-file=<(fnox export | sd 'export ' '' | sd "'" '')
+kubectl create secret generic dev-secrets -n beszel --from-env-file=<(fnox export | sd 'export ' '' | sd "'" '')
 kubectl delete secret dev-secrets
 ```
 
@@ -270,6 +262,29 @@ imagine you've deleted your kubeconfig and talosconfig files. what a dunce!
 ```bash
 pulumi stack output --show-secrets kubeconfig
 pulumi stack output --show-secrets clientConfiguration
+```
+
+k9s
+https://www.hackingnote.com/en/cheatsheets/k9s/
+
+```bash
+# sort by namespace
+shift-p
+```
+
+pulumi state taint
+
+My newt secrets have changed, because I have new pangolin install. I've updated the secrets in my password manager,
+which are put into (the shell?) practice with k delete secret / k create secret. The helm chart's values.yaml refers to
+the secrets - how to force pulumi to re-create the helm release?
+
+note: this did not work. Did I update the wrong secret?
+
+```bash
+pulumi stack graph tmp
+# search file 'tmp' for newt-chart
+pulumi state taint urn:pulumi:dev::rack3::kubernetes:helm.sh/v4:Chart::newt-chart
+pulumi up -y
 ```
 
 ---

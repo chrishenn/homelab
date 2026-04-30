@@ -1,19 +1,27 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: beszel
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: beszel-agent-rack3
+  namespace: beszel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: beszel-agent
+      app: beszel-agent-rack3
   template:
     metadata:
       labels:
-        app: beszel-agent
+        app: beszel-agent-rack3
     spec:
-      runtimeClassName: nvidia
       hostNetwork: true
       affinity:
         nodeAffinity:
@@ -24,7 +32,10 @@ spec:
                     operator: In
                     values: [rack3]
       containers:
-        - env:
+        - name: beszel-agent-rack3
+          image: henrygd/beszel-agent-nvidia:latest
+          imagePullPolicy: Always
+          env:
             - name: LISTEN
               value: '45876'
             - name: HUB_URL
@@ -39,9 +50,6 @@ spec:
                 secretKeyRef:
                   name: dev-secrets
                   key: BESZEL_TOKEN
-          image: henrygd/beszel-agent-nvidia:latest
-          imagePullPolicy: Always
-          name: beszel-agent
           ports:
             - containerPort: 45876
               hostPort: 45876
@@ -59,15 +67,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: beszel-agent-rack2
+  namespace: beszel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: beszel-agent
+      app: beszel-agent-rack2
   template:
     metadata:
       labels:
-        app: beszel-agent
+        app: beszel-agent-rack2
     spec:
       hostNetwork: true
       affinity:
@@ -96,7 +105,7 @@ spec:
                   key: BESZEL_TOKEN
           image: henrygd/beszel-agent:latest
           imagePullPolicy: Always
-          name: beszel-agent
+          name: beszel-agent-rack2
           ports:
             - containerPort: 45876
               hostPort: 45876
