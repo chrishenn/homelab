@@ -111,6 +111,7 @@ SURE_SECRET = { provider = "onepass", value = "op://homelab/sure/secret" }
 OWLRELAY_API = { provider = "onepass", value = "op://homelab/owlrelay/api_key" }
 PAPRA_WEBHOOK_SECRET = { provider = "onepass", value = "op://homelab/owlrelay/papra_webhook_secret" }
 KANEO_SECRET = { provider = "onepass", value = "op://homelab/kaneo/secret" }
+MM_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

@@ -36,7 +36,7 @@ Make sure that all images served from $REGISTRY are already built and pushed to 
 # the current list may be longer
 j build misago openresume transcodarr blocky_k rsync
 
-# bounce with pull, including from local REGISTRY
+# bounce and fresh pull the full stack, including images proivded by local $REGISTRY
 j down
 j pullup forgejo
 j pullup core traefik traefik_k newt

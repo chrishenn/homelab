@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Forums
       homepage.name: Nodebb
-      homepage.icon: nodebb.png
+      homepage.icon: nodebb.svg
       homepage.href: https://nodebb.chenn.dev
       homepage.description: Forum
 

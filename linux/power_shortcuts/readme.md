@@ -3,7 +3,7 @@
 scripted
 
 ```bash
-. power_shortcuts.sh && power_install
+./power_shortcuts.sh
 ```
 
 manual

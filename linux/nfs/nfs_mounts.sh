@@ -28,10 +28,11 @@ sudo tee -a /etc/fstab >/dev/null <<-END
 END
 
 # only some nfs mounts aren't mounting at boot (kubuntu 26.04, 7.0.0-14-generic)
-192.168.1.142:/mnt/h /mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/k /mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/f /mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/q /mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-
+sudo tee -a /etc/fstab >/dev/null <<-END
+	192.168.1.142:/mnt/h /mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/mnt/k /mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/mnt/f /mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/mnt/q /mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+END
 sudo systemctl daemon-reload
 sudo mount -a

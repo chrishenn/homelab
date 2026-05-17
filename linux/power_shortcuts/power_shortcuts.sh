@@ -10,8 +10,8 @@ function power_install {
 	# allow user `chris` to run `sudo <script>` without typing password
 	tmp=$sdir/tmp
 	sudo rm -f $tmp
-	echo 'chris ALL=(root) NOPASSWD:/home/chris/.local/share/applications/shutdown.sh' | tee -a $tmp
-	echo 'chris ALL=(root) NOPASSWD:/home/chris/.local/share/applications/restart.sh' | tee -a $tmp
+	echo "$USER ALL=(root) NOPASSWD:$HOME/.local/share/applications/shutdown.sh" | tee -a $tmp
+	echo "$USER ALL=(root) NOPASSWD:$HOME/.local/share/applications/restart.sh" | tee -a $tmp
 	sudo chmod 0440 $tmp
 
 	dst=/etc/sudoers.d/pwr
@@ -21,4 +21,7 @@ function power_install {
 	fi
 	echo "copying $tmp to $dst"
 	sudo cp $tmp $dst
+	sudo rm -f $tmp
 }
+
+power_install

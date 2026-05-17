@@ -22,6 +22,11 @@ bounce profile=profile *svcs:
     docker compose --profile {{ profile }} down {{ svcs }} && \
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
+pb profile=profile *svcs:
+    #!/bin/bash
+    docker compose --profile {{ profile }} down {{ svcs }} && \
+    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+
 build *svcs:
     docker compose build --push {{ svcs }}
 

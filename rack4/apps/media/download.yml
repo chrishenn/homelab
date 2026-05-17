@@ -113,7 +113,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit/config:/config
-      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA/torrents:/qbit/downloads
     depends_on:
       - gluetun
     network_mode: service:gluetun
@@ -172,6 +172,7 @@ services:
       pangolin.public-resources.qbit_novpn.rules[1].value: ALL
 
   sab:
+    # host_whitelist = sab, sab.henn.dev, sab.chenn.dev
     profiles: [download]
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sab

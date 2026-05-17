@@ -1,2 +1,5 @@
+## Import default configurations
 import = /etc/rtorrent/rtorrent.rc
+
+## Listening port
 network.port_range.set=6881-6881

@@ -1,19 +1,33 @@
 # not ready yet - qbittorrent client can't create category successfully - probably needs to bypass auth (blank user no worky)
-# sudo chown -R 1000:1000 $DATA/mediamanager/images
+
+# sudo chown -R 1000:1000 $MEDIA
+# default password: admin
 ---
 services:
   mediamanager:
-    profiles: [mm]
+    profiles: [mediamanager]
     container_name: mediamanager
     image: quay.io/maxdorninger/mediamanager:latest
     environment:
-      MEDIAMANAGER_DATABASE__HOST: mediamanager_db
-
       CONFIG_DIR: /app/config
+
+      MEDIAMANAGER_DATABASE__HOST: mediamanager_db
+      MEDIAMANAGER_DATABASE__PORT: 5432
+      MEDIAMANAGER_DATABASE__USER: 'MediaManager'
+      MEDIAMANAGER_DATABASE__PASSWORD: 'MediaManager'
+      MEDIAMANAGER_DATABASE__DBNAME: 'MediaManager'
+
+      MEDIAMANAGER_MISC__FRONTEND_URL: https://mm.chenn.dev
+      MEDIAMANAGER_MISC__CORS_URLS: '["https://mm.chenn.dev"]'
+      MEDIAMANAGER_MISC__DEVELOPMENT: false
+
       MEDIAMANAGER_MISC__TV_DIRECTORY: /data/TV
       MEDIAMANAGER_MISC__MOVIE_DIRECTORY: /data/Movies
       MEDIAMANAGER_MISC__IMAGE_DIRECTORY: /data/images
       MEDIAMANAGER_MISC__TORRENT_DIRECTORY: /data/torrents
+
+      MEDIAMANAGER_AUTH__ADMIN_EMAILS: '["$EMAIL"]'
+      MEDIAMANAGER_AUTH__TOKEN_SECRET: ${MM_SECRET}
 
       MEDIAMANAGER_AUTH__OPENID_CONNECT__ENABLED: true
       MEDIAMANAGER_AUTH__OPENID_CONNECT__CLIENT_ID: ${MM_OIDC_CLIENT}
@@ -25,7 +39,7 @@ services:
       MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_PORT: 465
       MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_USER: $SMTP_USER
       MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_PASSWORD: $SMTP_TOKEN
-      MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__FROM_EMAIL: mediamanager@chenn.dev
+      MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__FROM_EMAIL: $SMTP_USER
       MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__USE_TLS: true
 
       MEDIAMANAGER_TORRENTS__QBITTORRENT__ENABLED: true
@@ -46,11 +60,12 @@ services:
       MEDIAMANAGER_INDEXERS__PROWLARR__TIMEOUT_SECONDS: 60
 
     volumes:
-      - $MEDIA/:/data/
       - ./mediamanager/:/app/config/
-      - $DATA/mediamanager/images/:/data/images/
-      - $DATA/qbit/downloads/:/data/torrents
-    networks: [traefik, mm]
+      - $MEDIA/TV:/data/TV
+      - $MEDIA/Movies:/data/Movies
+      - $MEDIA/images:/data/images
+      - $MEDIA/torrents:/data/torrents
+    networks: [mm, newt]
     labels:
       pangolin.public-resources.mm.name: mm
       pangolin.public-resources.mm.protocol: http
@@ -58,10 +73,8 @@ services:
       pangolin.public-resources.mm.ssl: true
       pangolin.public-resources.mm.targets[0].method: http
       pangolin.public-resources.mm.targets[0].port: 8000
-
       pangolin.public-resources.mm.auth.sso-enabled: true
       pangolin.public-resources.mm.auth.sso-roles[0]: Member
-
       pangolin.public-resources.mm.rules[0].action: pass
       pangolin.public-resources.mm.rules[0].match: country
       pangolin.public-resources.mm.rules[0].value: US
@@ -72,9 +85,9 @@ services:
       pangolin.public-resources.mm.rules[1].priority: 10
 
   mediamanager_db:
-    profiles: [mm]
+    profiles: [mediamanager]
     container_name: mediamanager_db
-    image: postgres:18
+    image: postgres:18-alpine
     restart: unless-stopped
     volumes:
       - $DATA/mediamanager/db:/var/lib/postgresql

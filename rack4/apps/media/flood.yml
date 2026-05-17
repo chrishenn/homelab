@@ -1,3 +1,7 @@
+# sudo chown -R 1000:1001 $DATA/flood
+
+# first login, create user, add rtorrent at socket path:
+# /config/.local/share/rtorrent/rtorrent.sock
 ---
 services:
   flood:
@@ -10,8 +14,8 @@ services:
     environment:
       HOME: /config
     volumes:
-      - ./flood:/config
       - $DATA/flood/data:/data
+      - $DATA/flood/config:/config
     networks: [flood, newt]
     labels:
       homepage.group: Media
@@ -45,8 +49,9 @@ services:
     environment:
       HOME: /config
     volumes:
-      - ./flood:/config
-      - $DATA/flood/rtorrent:/data
+      - $DATA/flood/data:/data
+      - $DATA/flood/config:/config
+      - ./flood/.rtorrent.rc:/config/.rtorrent.rc
     ports:
       - '6881:6881'
     networks: [flood]
