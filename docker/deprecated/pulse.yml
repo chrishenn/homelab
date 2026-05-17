@@ -1,0 +1,54 @@
+# pros:
+# It's cool that their agent supports k8s, proxmox, and docker
+# Looks like pangolin SSO breaks their agent installer
+
+# cons:
+# The way you pull down an install script as root to install an agent is not my favorite. doesn't work with my setup either.
+# documentation is not great
+---
+services:
+  pulse:
+    profiles: [pulse]
+    image: rcourtman/pulse:latest
+    container_name: pulse
+    restart: unless-stopped
+    volumes:
+      - $DATA/pulse/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PULSE_PUBLIC_URL: https://pulse.chenn.dev
+      ALLOWED_ORIGINS: pulse.chenn.dev
+      TZ: $TZ
+
+      PULSE_AUTH_USER: ${USER}
+      PULSE_AUTH_PASS: ${PULSE_AUTH_PASS}
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: ${PULSE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${PULSE_OIDC_SECRET}
+      OIDC_GROUPS_CLAIM: groups
+      OIDC_SCOPES: openid,profile,email,groups
+      OIDC_GROUP_ROLE_MAPPINGS: admin=admin,user=operator
+    networks: [newt]
+    labels:
+      homepage.group: Monitoring
+      homepage.name: Pulse
+      homepage.icon: pulse.png
+      homepage.href: https://pulse.chenn.dev
+      homepage.description: Unified Dash
+
+      pangolin.public-resources.pulse.name: pulse
+      pangolin.public-resources.pulse.full-domain: pulse.chenn.dev
+      pangolin.public-resources.pulse.protocol: http
+      pangolin.public-resources.pulse.ssl: true
+      pangolin.public-resources.pulse.targets[0].method: http
+      pangolin.public-resources.pulse.targets[0].port: 7655
+      pangolin.public-resources.pulse.auth.sso-enabled: true
+      pangolin.public-resources.pulse.auth.sso-roles[0]: Member
+      pangolin.public-resources.pulse.rules[0].action: pass
+      pangolin.public-resources.pulse.rules[0].match: country
+      pangolin.public-resources.pulse.rules[0].value: US
+      pangolin.public-resources.pulse.rules[1].action: deny
+      pangolin.public-resources.pulse.rules[1].match: country
+      pangolin.public-resources.pulse.rules[1].value: ALL

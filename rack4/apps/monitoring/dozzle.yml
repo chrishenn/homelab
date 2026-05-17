@@ -1,0 +1,31 @@
+---
+services:
+  dozzle:
+    profiles: [dozzle]
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [newt]
+    labels:
+      homepage.group: Monitoring
+      homepage.name: Dozzle
+      homepage.icon: dozzle.png
+      homepage.href: https://dozzle.chenn.dev
+      homepage.description: Docker Logs Viewer
+
+      pangolin.public-resources.dozzle.name: dozzle
+      pangolin.public-resources.dozzle.full-domain: dozzle.chenn.dev
+      pangolin.public-resources.dozzle.protocol: http
+      pangolin.public-resources.dozzle.ssl: true
+      pangolin.public-resources.dozzle.targets[0].method: http
+      pangolin.public-resources.dozzle.targets[0].port: 8080
+      pangolin.public-resources.dozzle.auth.sso-enabled: true
+      pangolin.public-resources.dozzle.auth.sso-roles[0]: Member
+      pangolin.public-resources.dozzle.rules[0].action: pass
+      pangolin.public-resources.dozzle.rules[0].match: country
+      pangolin.public-resources.dozzle.rules[0].value: US
+      pangolin.public-resources.dozzle.rules[1].action: deny
+      pangolin.public-resources.dozzle.rules[1].match: country
+      pangolin.public-resources.dozzle.rules[1].value: ALL

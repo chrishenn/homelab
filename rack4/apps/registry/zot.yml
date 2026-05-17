@@ -1,0 +1,107 @@
+# https://github.com/project-zot/zot/tree/main/examples
+#  "registry-mirrors": ["https://zot.henn.dev"],
+---
+configs:
+  zot_auth:
+    content: $HTPASSWD
+  zot_dockerhub:
+    content: |
+      {
+        "https://registry-1.docker.io": {
+          "username": "$DOCKERHUB_USER",
+          "password": "$DOCKERHUB_PASS"
+        }
+      }
+  zot_oidc:
+    content: |
+      {
+        "clientid": "$ZOT_OIDC_CLIENT",
+        "clientsecret": "$ZOT_OIDC_SECRET"
+      }
+  zot_config:
+    content: |
+      {
+        "storage": {
+          "dedupe": true,
+          "gc": true,
+          "rootDirectory": "/var/lib/zot"
+        },
+        "http": {
+          "externalUrl": "https://zot.henn.dev",
+          "address": "0.0.0.0",
+          "port": "8080",
+          "auth": {
+            "HTPasswd": {
+              "path": "/etc/zot/passwd"
+            },
+            "apikey": true,
+            "openid": {
+              "callbackAllowOrigins": ["https://pocketid.chenn.dev", "https://zot.henn.dev"],
+              "providers": {
+                "oidc": {
+                  "name": "Pocket ID",
+                  "issuer": "https://pocketid.chenn.dev",
+                  "credentialsFile": "/etc/zot/oidc.json",
+                  "scopes": ["openid","user","email","groups"]
+                }
+              }
+            }
+          }
+        },
+        "log": {
+          "level": "debug"
+        },
+        "extensions": {
+          "ui": {
+            "enable": true
+          },
+          "search": {
+            "enable": true
+          },
+          "sync": {
+            "enable": true,
+            "credentialsFile": "/etc/zot/auth.json",
+            "registries": [
+              {
+                "urls": [
+                  "https://registry-1.docker.io"
+                ],
+                "onDemand": true,
+                "tlsVerify": true
+              }
+            ]
+          }
+        }
+      }
+
+services:
+  zot:
+    profiles: [zot]
+    image: ghcr.io/project-zot/zot:latest
+    container_name: zot
+    restart: unless-stopped
+    configs:
+      - source: zot_auth
+        target: /etc/zot/passwd
+      - source: zot_dockerhub
+        target: /etc/zot/auth.json
+      - source: zot_oidc
+        target: /etc/zot/oidc.json
+      - source: zot_config
+        target: /etc/zot/config.json
+    volumes:
+      - $DATA/zot/data:/var/lib/zot
+    networks: [traefik]
+    labels:
+      homepage.group: Registry and Code Forge
+      homepage.name: Zot
+      homepage.icon: zot-registry.png
+      homepage.href: https://zot.henn.dev
+      homepage.description: Container Registry
+
+      traefik.enable: true
+      traefik.http.routers.zot.rule: Host(`zot.henn.dev`)
+      traefik.http.routers.zot.entrypoints: websecure
+      traefik.http.routers.zot.middlewares: hdrs@file
+      traefik.http.routers.zot.tls.certresolver: cf
+      traefik.http.services.zot.loadbalancer.server.port: 8080

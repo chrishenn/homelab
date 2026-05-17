@@ -1,3 +1,9 @@
+# - ssh into a windows build server
+# - bring up a windows build container running on that windows build server
+# - build a set of bins in that container with cmake/ninja/clang
+# - package those bins into an installer
+# - install via the installer
+
 $repo = "$PSScriptRoot"
 $ErrorActionPreference = 'Stop';
 $ProgressPreference = 'SilentlyContinue';

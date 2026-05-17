@@ -26,11 +26,11 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9090']
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Linkding
       homepage.icon: linkding.png
       homepage.href: https://linkding.chenn.dev
-      homepage.description: Bookmarks
+      homepage.description: Bookmarks Manager
 
       pangolin.public-resources.linkding.name: linkding
       pangolin.public-resources.linkding.full-domain: linkding.chenn.dev

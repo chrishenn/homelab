@@ -1,0 +1,66 @@
+# nonworking stalwart setup
+# this proxy_protocol works to tunnel these ports (25,465,993) from vps0 to rack4;
+# however, outgoing mail from stalwart -> WAN leaves from rack4, but it really needs to leave to WAN from vps0 (port 25
+# is universally blocked from residential IPs)
+---
+services:
+  stalwart:
+    image: stalwartlabs/stalwart:latest
+    volumes:
+      - $DATA/stalwart/data:/etc/stalwart
+      - $DATA/stalwart/var:/var/lib/stalwart
+      # cert dumper scheme required
+      - $DATA/stalwart/certs:/data/certs:ro
+    networks:
+      newt:
+        # traefik's proxy-protocol-enabled entrypoints will reference this ip verbatim
+        ipv4_address: 192.168.200.2
+    labels:
+      pangolin.public-resources.mail.name: mail
+      pangolin.public-resources.mail.full-domain: mail.chenn.dev
+      pangolin.public-resources.mail.mode: http
+      pangolin.public-resources.mail.ssl: true
+      pangolin.public-resources.mail.targets[0].method: http
+      pangolin.public-resources.mail.targets[0].port: 8080
+
+      pangolin.public-resources.mail_1.name: mail_1
+      pangolin.public-resources.mail_1.full-domain: autodiscover.chenn.dev
+      pangolin.public-resources.mail_1.mode: http
+      pangolin.public-resources.mail_1.ssl: true
+      pangolin.public-resources.mail_1.targets[0].method: http
+      pangolin.public-resources.mail_1.targets[0].port: 8080
+
+      pangolin.public-resources.mail_2.name: mail_2
+      pangolin.public-resources.mail_2.full-domain: autoconfig.chenn.dev
+      pangolin.public-resources.mail_2.mode: http
+      pangolin.public-resources.mail_2.ssl: true
+      pangolin.public-resources.mail_2.targets[0].method: http
+      pangolin.public-resources.mail_2.targets[0].port: 8080
+
+      pangolin.public-resources.mail_3.name: mail_3
+      pangolin.public-resources.mail_3.full-domain: mta-sts.chenn.dev
+      pangolin.public-resources.mail_3.mode: http
+      pangolin.public-resources.mail_3.ssl: true
+      pangolin.public-resources.mail_3.targets[0].method: http
+      pangolin.public-resources.mail_3.targets[0].port: 8080
+
+      pangolin.public-resources.smtp.name: smtp
+      pangolin.public-resources.smtp.mode: tcp
+      pangolin.public-resources.smtp.proxy-port: 25
+      pangolin.public-resources.smtp.targets[0].port: 25
+      pangolin.public-resources.smtp.proxy-protocol: true
+      pangolin.public-resources.smtp.proxy-protocol-version: 2
+
+      pangolin.public-resources.smtps.name: smtps
+      pangolin.public-resources.smtps.mode: tcp
+      pangolin.public-resources.smtps.proxy-port: 465
+      pangolin.public-resources.smtps.targets[0].port: 465
+      pangolin.public-resources.smtps.proxy-protocol: true
+      pangolin.public-resources.smtps.proxy-protocol-version: 2
+
+      pangolin.public-resources.imaps.name: imaps
+      pangolin.public-resources.imaps.mode: tcp
+      pangolin.public-resources.imaps.proxy-port: 993
+      pangolin.public-resources.imaps.targets[0].port: 993
+      pangolin.public-resources.imaps.proxy-protocol: true
+      pangolin.public-resources.imaps.proxy-protocol-version: 2

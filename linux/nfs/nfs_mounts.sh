@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# shares
+# shares: tmp
 sudo tee -a /etc/exports >/dev/null <<-END
 	/tmp 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+END
+
+# shares
+sudo tee -a /etc/exports >/dev/null <<-END
 	/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
 	/mnt/k 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
 	/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
@@ -18,20 +22,22 @@ sudo systemctl restart nfs-kernel-server
 sudo exportfs -v
 
 # client mounts
-sudo mkdir -p /mnt/h /mnt/k /mnt/f /mnt/q
+sudo mkdir -p \
+	/var/mnt/f \
+	/var/mnt/h \
+	/var/mnt/k \
+	/var/mnt/q
 
-sudo tee -a /etc/fstab >/dev/null <<-END
-	192.168.1.142:/mnt/h /mnt/h nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/k /mnt/k nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/f /mnt/f nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
-	192.168.1.142:/mnt/q /mnt/q nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
-END
+# minimal
+192.168.1.142:/var/mnt/f /var/mnt/f nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
 
 # only some nfs mounts aren't mounting at boot (kubuntu 26.04, 7.0.0-14-generic)
-192.168.1.142:/mnt/h /mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/k /mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/f /mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-192.168.1.142:/mnt/q /mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+sudo tee -a /etc/fstab >/dev/null <<-END
+	192.168.1.142:/var/mnt/f /var/mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/var/mnt/h /var/mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/var/mnt/k /var/mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/var/mnt/q /var/mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+END
 
 sudo systemctl daemon-reload
 sudo mount -a

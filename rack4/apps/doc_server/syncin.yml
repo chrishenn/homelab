@@ -2,30 +2,31 @@
 # - collabora works, even from mobile browser
 # - documentation is STELLAR
 
-# I have just the tiniest set of gripes
+# small gripes
+# - syncin crashes if redirecturi is not set. So, I can't use oidc to access from both henn.dev and chenn.dev at once :/
 # - mounting folders is clunky
-# - there's no straightforward way to put external auth (like pangolin SSO) in front
-# - UI is ugly and awkward
-#   - I can't put a bookmark to any location anywhere I'd like - I have to navigate to spaces -> spacename -> folder
-#       every time I log in
-#   - Can't disable recents. I hate recents with a fiery passion
-#   - UI bug: The chevron to collapse the "shared" section does not collapse the section
-#   - padding around UI elements is too small
-#   - tool and status bars are not hideable
-#   - user icon is on the incorrect (right) side of app
-#   - search section should not be its own top-level tab - should be rechable from anywhere with a hotkey (ctrl+k)
-#   - redundant "admin" and "account" icons
-#   - user settings menu is a side-panel instead of a menu
-#   - file nav requires a double-click - weird on mobile, and usually configurable on desktop
-#   - bug: can't add 2FA OTP if you use OIDC auto-created user (because there's no password)
-#   - bug: can't set password if you use OIDC auto-created user
-#   - big forward, back, and refresh buttons in the UI, while browser works just fine
-#   - non-standard logout icon
-#   - UI doesn't respect the delete key
-#   - file operations slide in a side panel instead of a success toast or icon. auto-hides very slowly
-#   - arrow keys don't work for image viewer navigation
+# - pangolin SSO in front is clunky
+# - UI is real bad
 
 ---
+configs:
+  syncin:
+    content: |
+      auth:
+        oidc:
+          options:
+            autoCreatePermissions:
+              - personal_space
+              - spaces_access
+              - spaces_admin
+              - shares_access
+              - shares_admin
+              - guests_admin
+              - personal_groups_admin
+              - desktop_app_access
+              - desktop_app_sync
+              - webdav_access
+
 services:
   syncin:
     profiles: [syncin]
@@ -68,22 +69,30 @@ services:
       SYNCIN_AUTH_OIDC_CLIENTSECRET: ${SYNCIN_OIDC_SECRET}
       SYNCIN_AUTH_OIDC_OPTIONS_AUTOCREATEUSER: true
       SYNCIN_AUTH_OIDC_OPTIONS_ADMINROLEORGROUP: admin
-      SYNCIN_AUTH_OIDC_OPTIONS_AUTOREDIRECT: true
       SYNCIN_AUTH_OIDC_SECURITY_SCOPE: openid email profile groups
-      SYNCIN_AUTH_OIDC_SECURITY_SUPPORTPKCE: false
+      SYNCIN_AUTH_OIDC_OPTIONS_AUTOREDIRECT: false
+      SYNCIN_AUTH_OIDC_SECURITY_SUPPORTPKCE: true
+    configs:
+      - source: syncin
+        target: /app/environment/environment.yaml
     volumes:
-      - ./syncin/environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data
       - /mnt/h:/mnt/h
       - /mnt/k:/mnt/k
-      - /mnt/q:/mnt/q
-    networks: [syncin, newt]
+    networks: [syncin, newt, traefik]
     labels:
       homepage.group: File Servers
       homepage.name: Sync-In
       homepage.icon: https://raw.githubusercontent.com/Sync-in/server/refs/heads/main/frontend/src/assets/favicon.svg
       homepage.href: https://syncin.chenn.dev
       homepage.description: File Server
+
+      traefik.enable: true
+      traefik.http.routers.syncin.rule: Host(`syncin.henn.dev`) && PathPrefix(`/`)
+      traefik.http.routers.syncin.entrypoints: websecure
+      traefik.http.routers.syncin.middlewares: hdrs@file
+      traefik.http.routers.syncin.tls.certresolver: cf
+      traefik.http.services.syncin.loadbalancer.server.port: 8080
 
       pangolin.public-resources.syncin.name: syncin
       pangolin.public-resources.syncin.full-domain: syncin.chenn.dev
@@ -113,19 +122,15 @@ services:
 
       pangolin.public-resources.syncin.rules[3].action: allow
       pangolin.public-resources.syncin.rules[3].match: path
-      pangolin.public-resources.syncin.rules[3].value: /api/*
+      pangolin.public-resources.syncin.rules[3].value: /wopi/*
 
-      pangolin.public-resources.syncin.rules[4].action: allow
-      pangolin.public-resources.syncin.rules[4].match: path
-      pangolin.public-resources.syncin.rules[4].value: /wopi/*
+      pangolin.public-resources.syncin.rules[4].action: pass
+      pangolin.public-resources.syncin.rules[4].match: country
+      pangolin.public-resources.syncin.rules[4].value: US
 
-      pangolin.public-resources.syncin.rules[5].action: pass
+      pangolin.public-resources.syncin.rules[5].action: deny
       pangolin.public-resources.syncin.rules[5].match: country
-      pangolin.public-resources.syncin.rules[5].value: US
-
-      pangolin.public-resources.syncin.rules[6].action: deny
-      pangolin.public-resources.syncin.rules[6].match: country
-      pangolin.public-resources.syncin.rules[6].value: ALL
+      pangolin.public-resources.syncin.rules[5].value: ALL
 
   syncin_db:
     profiles: [syncin]
@@ -153,8 +158,15 @@ services:
         --o:admin_console.enable=false
     cap_drop: [ALL]
     cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
-    networks: [syncin, newt]
+    networks: [syncin, newt, traefik]
     labels:
+      traefik.enable: true
+      traefik.http.routers.syncin_collab.rule: Host(`syncin.henn.dev`) && (PathPrefix(`/browser`) || PathPrefix(`/hosting`) || PathPrefix(`/cool`))
+      traefik.http.routers.syncin_collab.entrypoints: websecure
+      traefik.http.routers.syncin_collab.middlewares: hdrs@file
+      traefik.http.routers.syncin_collab.tls.certresolver: cf
+      traefik.http.services.syncin_collab.loadbalancer.server.port: 9980
+
       pangolin.public-resources.syncin.targets[1].method: http
       pangolin.public-resources.syncin.targets[1].path-match: prefix
       pangolin.public-resources.syncin.targets[1].path: /browser

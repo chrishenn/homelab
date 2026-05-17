@@ -1,0 +1,80 @@
+# daemon.json: "registry-mirrors": ["https://docker_mirror.henn.dev"]
+---
+services:
+  docker_mirror:
+    profiles: [mirrors]
+    image: registry:latest
+    container_name: docker_mirror
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+      REGISTRY_PROXY_USERNAME: $DOCKERHUB_USER
+      REGISTRY_PROXY_PASSWORD: $DOCKERHUB_PASS
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - $DATA/mirrors/docker_mirror:/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.docker_mirror.rule: Host(`docker_mirror.henn.dev`)
+      traefik.http.routers.docker_mirror.entrypoints: websecure
+      traefik.http.routers.docker_mirror.middlewares: hdrs@file
+      traefik.http.routers.docker_mirror.tls.certresolver: cf
+      traefik.http.services.docker_mirror.loadbalancer.server.port: 5000
+
+  k8s_mirror:
+    profiles: [mirrors]
+    image: registry:latest
+    container_name: k8s_mirror
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry.k8s.io
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - $DATA/mirrors/k8s_mirror:/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.k8s_mirror.rule: Host(`k8s_mirror.henn.dev`)
+      traefik.http.routers.k8s_mirror.entrypoints: websecure
+      traefik.http.routers.k8s_mirror.middlewares: hdrs@file
+      traefik.http.routers.k8s_mirror.tls.certresolver: cf
+      traefik.http.services.k8s_mirror.loadbalancer.server.port: 5000
+
+  gcr_mirror:
+    profiles: [mirrors]
+    image: registry:latest
+    container_name: gcr_mirror
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://gcr.io
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - $DATA/mirrors/gcr_mirror:/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.gcr_mirror.rule: Host(`gcr_mirror.henn.dev`)
+      traefik.http.routers.gcr_mirror.entrypoints: websecure
+      traefik.http.routers.gcr_mirror.middlewares: hdrs@file
+      traefik.http.routers.gcr_mirror.tls.certresolver: cf
+      traefik.http.services.gcr_mirror.loadbalancer.server.port: 5000
+
+  ghcr_mirror:
+    profiles: [mirrors]
+    image: registry:latest
+    container_name: ghcr_mirror
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://ghcr.io
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - $DATA/mirrors/dghcr_mirror:/data
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ghcr_mirror.rule: Host(`ghcr_mirror.henn.dev`)
+      traefik.http.routers.ghcr_mirror.entrypoints: websecure
+      traefik.http.routers.ghcr_mirror.middlewares: hdrs@file
+      traefik.http.routers.ghcr_mirror.tls.certresolver: cf
+      traefik.http.services.ghcr_mirror.loadbalancer.server.port: 5000

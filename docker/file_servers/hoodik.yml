@@ -1,0 +1,62 @@
+# it looks like you'll need to build from source to get this to work at all
+# no files on disk - only encrypted blobs in the db
+---
+services:
+  hoodik:
+    profiles: [hoodik]
+    image: hudik/hoodik:latest
+    container_name: hoodik
+    restart: unless-stopped
+    environment:
+      APP_URL: https://hoodik.chenn.dev
+      APP_CLIENT_URL: https://hoodik.chenn.dev
+      HTTP_PORT: 5443
+      HTTP_ADDRESS: 0.0.0.0
+      SSL_DISABLED: true
+
+      DATABASE_URL: postgresql://postgres:postgres@hoodik_db:5432/postgres
+      STORAGE_PROVIDER: local
+      DATA_DIR: /data
+
+      MAILER_TYPE: smtp
+      SMTP_ADDRESS: ${SMTP_HOST}
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_PORT: 465
+    volumes:
+      - $DATA/hoodik/data:/data
+    networks: [hoodik, newt]
+    labels:
+      pangolin.public-resources.hoodik.name: hoodik
+      pangolin.public-resources.hoodik.protocol: http
+      pangolin.public-resources.hoodik.full-domain: hoodik.chenn.dev
+      pangolin.public-resources.hoodik.ssl: true
+      pangolin.public-resources.hoodik.targets[0].method: http
+      pangolin.public-resources.hoodik.targets[0].port: 5443
+      pangolin.public-resources.hoodik.auth.sso-enabled: true
+      pangolin.public-resources.hoodik.auth.sso-roles[0]: Member
+      pangolin.public-resources.hoodik.rules[0].action: pass
+      pangolin.public-resources.hoodik.rules[0].match: country
+      pangolin.public-resources.hoodik.rules[0].value: US
+      pangolin.public-resources.hoodik.rules[1].action: deny
+      pangolin.public-resources.hoodik.rules[1].match: country
+      pangolin.public-resources.hoodik.rules[1].value: ALL
+
+  hoodik_db:
+    profiles: [hoodik]
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - $DATA/hoodik/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [hoodik]
+
+networks:
+  hoodik:

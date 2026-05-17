@@ -16,7 +16,7 @@ services:
       - $DATA/transmute:/app/data
     networks: [newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: Transmute
       homepage.icon: https://github.com/transmute-app/transmute/raw/refs/heads/main/assets/samples/svg.svg
       homepage.href: https://transmute.chenn.dev

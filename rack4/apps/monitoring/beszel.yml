@@ -1,0 +1,63 @@
+---
+services:
+  beszel:
+    profiles: [beszel]
+    image: henrygd/beszel
+    container_name: beszel
+    restart: unless-stopped
+    environment:
+      DISABLE_PASSWORD_AUTH: true
+      USER_CREATION: false
+    volumes:
+      - $DATA/beszel/beszel_server/data:/beszel_data
+    healthcheck:
+      test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
+    networks: [newt]
+    labels:
+      homepage.group: Monitoring
+      homepage.name: Beszel
+      homepage.icon: beszel.png
+      homepage.href: https://beszel.chenn.dev
+      homepage.description: Server Stats
+
+      pangolin.public-resources.beszel.name: beszel
+      pangolin.public-resources.beszel.full-domain: beszel.chenn.dev
+      pangolin.public-resources.beszel.protocol: http
+      pangolin.public-resources.beszel.ssl: true
+      pangolin.public-resources.beszel.targets[0].method: http
+      pangolin.public-resources.beszel.targets[0].port: 8090
+      pangolin.public-resources.beszel.auth.sso-enabled: true
+      pangolin.public-resources.beszel.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.beszel.rules[0].action: allow
+      pangolin.public-resources.beszel.rules[0].match: path
+      pangolin.public-resources.beszel.rules[0].value: api/beszel/agent-connect
+      pangolin.public-resources.beszel.rules[1].action: pass
+      pangolin.public-resources.beszel.rules[1].match: country
+      pangolin.public-resources.beszel.rules[1].value: US
+      pangolin.public-resources.beszel.rules[2].action: deny
+      pangolin.public-resources.beszel.rules[2].match: country
+      pangolin.public-resources.beszel.rules[2].value: ALL
+
+  beszel_rack4:
+    profiles: [beszel]
+    image: henrygd/beszel-agent-nvidia
+    container_name: beszel_rack4
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [utility]
+    environment:
+      LISTEN: 45876
+      KEY: ${BESZEL_KEY}
+      TOKEN: ${BESZEL_TOKEN}
+      HUB_URL: https://beszel.chenn.dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/beszel/beszel_rack4:/var/lib/beszel-agent
+    network_mode: host
+    healthcheck:
+      test: ['CMD', '/agent', 'health']

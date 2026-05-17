@@ -1,0 +1,67 @@
+# default update rules are not great
+---
+services:
+  wud:
+    profiles: [wud]
+    image: getwud/wud
+    container_name: wud
+    environment:
+      WUD_WATCHER_LOCAL_WATCHBYDEFAULT: true
+
+      WUD_AUTH_OIDC_POCKETID_CLIENTID: ${WUD_OIDC_CLIENT}
+      WUD_AUTH_OIDC_POCKETID_CLIENTSECRET: ${WUD_OIDC_SECRET}
+      WUD_AUTH_OIDC_POCKETID_DISCOVERY: https://pocketid.chenn.dev/.well-known/openid-configuration
+      WUD_AUTH_OIDC_POCKETID_REDIRECT: true
+
+      WUD_REGISTRY_CUSTOM_ZOT_URL: https://zot.henn.dev
+      WUD_REGISTRY_CUSTOM_ZOT_LOGIN: ${USER}
+      WUD_REGISTRY_CUSTOM_ZOT_PASSWORD: ${PASS}
+
+      WUD_REGISTRY_FORGEJO_HOME_URL: https://forgejo.henn.dev
+      WUD_REGISTRY_FORGEJO_HOME_LOGIN: ${USER}
+      WUD_REGISTRY_FORGEJO_HOME_PASSWORD: ${PASS}
+
+      WUD_REGISTRY_HUB_PUBLIC_LOGIN: ${DOCKERHUB_USER}
+      WUD_REGISTRY_HUB_PUBLIC_PASSWORD: ${DOCKERHUB_PASS}
+
+      WUD_REGISTRY_GHCR_PUBLIC_USERNAME: ${GH_USER}
+      WUD_REGISTRY_GHCR_PUBLIC_TOKEN: ${GH_PAT}
+
+      WUD_REGISTRY_LSCR_PUBLIC_USERNAME: ${GH_USER}
+      WUD_REGISTRY_LSCR_PUBLIC_TOKEN: ${GH_PAT}
+
+      WUD_REGISTRY_CUSTOM_CODEBERG_URL: https://codeberg.org
+      WUD_REGISTRY_CUSTOM_MATRIX_URL: https://forgejo.ellis.link
+      WUD_REGISTRY_CUSTOM_PLANE_URL: https://artifacts.plane.so
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: curl --fail http://localhost:3000/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.wud.rule: Host(`wud.henn.dev`)
+      traefik.http.routers.wud.entrypoints: websecure
+      traefik.http.routers.wud.middlewares: hdrs@file
+      traefik.http.routers.wud.tls.certresolver: cf
+      traefik.http.services.wud.loadbalancer.server.port: 3000
+
+      pangolin.public-resources.wud.name: wud
+      pangolin.public-resources.wud.full-domain: wud.chenn.dev
+      pangolin.public-resources.wud.protocol: http
+      pangolin.public-resources.wud.ssl: true
+      pangolin.public-resources.wud.targets[0].method: http
+      pangolin.public-resources.wud.targets[0].port: 3000
+      pangolin.public-resources.wud.auth.sso-enabled: true
+      pangolin.public-resources.wud.auth.sso-roles[0]: Member
+      pangolin.public-resources.wud.rules[0].action: pass
+      pangolin.public-resources.wud.rules[0].match: country
+      pangolin.public-resources.wud.rules[0].value: US
+      pangolin.public-resources.wud.rules[1].action: deny
+      pangolin.public-resources.wud.rules[1].match: country
+      pangolin.public-resources.wud.rules[1].value: ALL

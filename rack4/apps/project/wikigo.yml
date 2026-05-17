@@ -1,0 +1,38 @@
+# sudo chown -R 1000:1000 $DATA/wikigo
+
+# hash password with bcrypt to commit in plaintext config.yaml
+# htpasswd -bnBC 14 "" YOUR_PASSWORD | tr -d ':\n'
+
+# config file must be mounted as writeable file
+---
+services:
+  wikigo:
+    profiles: [wikigo]
+    image: leomoonstudios/wiki-go:latest
+    container_name: wikigo
+    restart: unless-stopped
+    volumes:
+      - $DATA/wikigo/data:/wiki/data
+      - ./wikigo/config.yaml:/wiki/data/config.yaml
+    networks: [newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Wiki Go
+      homepage.icon: wiki-go.png
+      homepage.href: https://wikigo.chenn.dev
+      homepage.description: Simple Wiki
+
+      pangolin.public-resources.wikigo.name: wikigo
+      pangolin.public-resources.wikigo.full-domain: wikigo.chenn.dev
+      pangolin.public-resources.wikigo.protocol: http
+      pangolin.public-resources.wikigo.ssl: true
+      pangolin.public-resources.wikigo.targets[0].method: http
+      pangolin.public-resources.wikigo.targets[0].port: 8080
+      pangolin.public-resources.wikigo.auth.sso-enabled: true
+      pangolin.public-resources.wikigo.auth.sso-roles[0]: Member
+      pangolin.public-resources.wikigo.rules[0].action: pass
+      pangolin.public-resources.wikigo.rules[0].match: country
+      pangolin.public-resources.wikigo.rules[0].value: US
+      pangolin.public-resources.wikigo.rules[1].action: deny
+      pangolin.public-resources.wikigo.rules[1].match: country
+      pangolin.public-resources.wikigo.rules[1].value: ALL

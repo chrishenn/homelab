@@ -102,7 +102,7 @@ services:
       EMAIL_SEND_TO: p2p.mirotalk@gmail.com
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Mirotalk
       homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miro.chenn.dev
@@ -442,7 +442,7 @@ services:
       MEDIASOUP_LOG_LEVEL: error # Mediasoup log level (debug, warn, error)
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Mirotalk
       homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
       homepage.href: https://miros.chenn.dev

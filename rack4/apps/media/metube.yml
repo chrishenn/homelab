@@ -9,7 +9,7 @@ services:
       - $DATA/metube:/downloads
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Metube
       homepage.icon: metube.png
       homepage.href: https://metube.chenn.dev

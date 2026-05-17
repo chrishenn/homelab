@@ -23,7 +23,7 @@ services:
       OAUTH_BUTTON_TEXT: Log in with PocketID
     networks: [airtrail, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Airtrail
       homepage.icon: air-trail.png
       homepage.href: https://airtrail.chenn.dev

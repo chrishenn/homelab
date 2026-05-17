@@ -1,4 +1,3 @@
-# https://go-acme.github.io/lego/dns/cloudflare/
 ---
 services:
   traefik:
@@ -11,7 +10,7 @@ services:
       CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/traefik_config.yml:/traefik.yml:ro
       - ./traefik/cfg:/cfg
       - $DATA/traefik/logs:/logs
       - $DATA/traefik/ssl:/ssl
@@ -27,6 +26,10 @@ services:
       - '${SVC_IP}:61001:61001' # spice-tls
       - '${SVC_IP}:10000:10000' #
 
+      - '${SVC_IP}:25:25' # email
+      - '${SVC_IP}:465:465' # email
+      - '${SVC_IP}:993:993' # email
+
       - '${TRAEFIK_VIP}:80:80' # http
       - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
       - '${TRAEFIK_VIP}:443:443' # https
@@ -37,12 +40,17 @@ services:
       - '${TRAEFIK_VIP}:3128:3128' # spice
       - '${TRAEFIK_VIP}:61001:61001' # spice-tls
       - '${TRAEFIK_VIP}:10000:10000' #
+
+      - '${TRAEFIK_VIP}:25:25' # email
+      - '${TRAEFIK_VIP}:465:465' # email
+      - '${TRAEFIK_VIP}:993:993' # email
+    networks: [traefik]
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Traefik-Docker
-      homepage.instance.private.icon: traefik.png
-      homepage.instance.private.href: https://docker-traefik.henn.dev
-      homepage.instance.private.description: Docker Traefik Gui (Rack 4)
+      homepage.group: Infra
+      homepage.name: Traefik-Docker
+      homepage.icon: traefik.png
+      homepage.href: https://docker-traefik.henn.dev
+      homepage.description: Docker Traefik Gui (Rack 4)
 
       traefik.enable: true
       traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)
@@ -50,13 +58,12 @@ services:
       traefik.http.routers.dash.middlewares: hdrs@file
       traefik.http.routers.dash.tls.certresolver: cf
       traefik.http.routers.dash.service: api@internal
-    networks: [traefik]
 
 networks:
   traefik:
+    # the traefik instance expects this network name, and the default would be "project-traefik" if now spec'd here
     name: traefik
-    driver: bridge
     ipam:
       config:
-        - subnet: $TRAEFIK_SUBNET
-          gateway: $TRAEFIK_GATEWAY
+        - subnet: ${TRAEFIK_SUBNET}
+          gateway: ${TRAEFIK_GATEWAY}

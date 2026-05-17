@@ -27,12 +27,11 @@ services:
       OidcClientSecret: ${FILEFLOW_OIDC_SECRET}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /mnt/q/media_library:/media
-      - $DATA/fileflow/fileflow:/app/Data
+      - $DATA/fileflow/data:/app/Data
       - $DATA/fileflow/temp:/temp
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Fileflow
       homepage.icon: fileflows.png
       homepage.href: https://fileflow.chenn.dev

@@ -1,3 +1,5 @@
+# probably the only production-grade url shortener out there for free
+# however - pretty heavy for a url shorterner
 ---
 services:
   shlink:
@@ -7,10 +9,10 @@ services:
     restart: unless-stopped
     environment:
       SHLINK_SERVER_URL: https://shlink_api.chenn.dev
-      SHLINK_SERVER_API_KEY: $SHLINK_API_KEY
+      SHLINK_SERVER_API_KEY: ${SHLINK_API_KEY}
     networks: [shlink, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Shlink
       homepage.icon: shlink.png
       homepage.href: https://shlink.chenn.dev
@@ -40,19 +42,19 @@ services:
     environment:
       DEFAULT_DOMAIN: shlink.chenn.dev
       IS_HTTPS_ENABLED: true
-      INITIAL_API_KEY: $SHLINK_API_KEY
+      INITIAL_API_KEY: ${SHLINK_API_KEY}
       TRUSTED_PROXIES: 1
 
       TIMEZONE: $TZ
       MEMORY_LIMIT: 500M
       DISABLE_TRACKING: true
-      SKIP_INITIAL_GEOLITE_DOWNLOAD: true
-      GEOLITE_LICENSE_KEY:
+      SKIP_INITIAL_GEOLITE_DOWNLOAD: false
+      GEOLITE_LICENSE_KEY: ${MAXMIND_KEY}
 
       DB_HOST: shlink_db
       DB_DRIVER: postgres
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      DB_USER: shlink
+      DB_PASSWORD: shlink
       DB_NAME: shlink
     networks: [shlink, newt]
     labels:
@@ -75,13 +77,13 @@ services:
     container_name: shlink_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: shlink
+      POSTGRES_PASSWORD: shlink
       POSTGRES_DB: shlink
     volumes:
       - $DATA/shlink/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d shlink']
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

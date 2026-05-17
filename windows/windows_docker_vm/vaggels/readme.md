@@ -1,22 +1,27 @@
-https://github.com/vaggeliskls/windows-in-docker-container/
+# vaggeliskls windows-in-docker-container
 
-# Username: Administrator, vagrant
+my modifications to:
 
-# Password: vagrant
+- https://github.com/vaggeliskls/windows-in-docker-container
 
-I'll use a known-working box for now
-wget https://app.vagrantup.com/peru/boxes/windows-server-2022-standard-x64-eval/versions/20231201.01/providers/libvirt.box
--O peru-server2022.box
+```bash
+Username: Administrator, vagrant
+Password: vagrant
+```
 
-wget https://app.vagrantup.com/debian/boxes/jessie64/versions/8.9.0/providers/virtualbox.box -O
-debian-jessie64-8.9.0.box
+```bash
+# I'll use a known-working box for now
+wget https://app.vagrantup.com/peru/boxes/windows-server-2022-standard-x64-eval/versions/20231201.01/providers/libvirt.box -O peru-server2022.box
 
-download this to /home/chris/boxes
+wget https://app.vagrantup.com/debian/boxes/jessie64/versions/8.9.0/providers/virtualbox.box -O debian-jessie64-8.9.0.box
 
-set docker .env VAGRANTBOX_DIR=/home/chris/boxes
-compose mounts volume ${VAGRANTBOX_DIR}:/boxes
+# download this to /home/chris/boxes
 
-compose sets VAGRANT_BOX=peru-server2022.box
-startup.sh checks if peru-server2022.box is a box file or a url
+# set docker .env VAGRANTBOX_DIR=/home/chris/boxes
+# compose mounts volume ${VAGRANTBOX_DIR}:/boxes
 
-startup.sh sets VAGRANT_BOX_ADDR=/boxes/peru-server2022.box
+# compose sets VAGRANT_BOX=peru-server2022.box
+# startup.sh checks if peru-server2022.box is a box file or a url
+
+# startup.sh sets VAGRANT_BOX_ADDR=/boxes/peru-server2022.box
+```

@@ -1,0 +1,42 @@
+# we have moved on from microslop. Also, this is broken rn
+---
+services:
+  code:
+    profiles: [code]
+    image: lscr.io/linuxserver/code-server
+    container_name: code
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      PASSWORD:
+      HASHED_PASSWORD:
+      SUDO_PASSWORD:
+      SUDO_PASSWORD_HASH:
+      PROXY_DOMAIN: code.chenn.dev
+      DEFAULT_WORKSPACE: /config/workspace
+    volumes:
+      - $DATA/code:/config
+    networks: [newt]
+    labels:
+      homepage.group: Dev
+      homepage.name: Code
+      homepage.icon: code.png
+      homepage.href: https://code.chenn.dev
+      homepage.description: Vs Code
+
+      pangolin.public-resources.code.name: code
+      pangolin.public-resources.code.full-domain: code.chenn.dev
+      pangolin.public-resources.code.protocol: http
+      pangolin.public-resources.code.ssl: true
+      pangolin.public-resources.code.targets[0].method: http
+      pangolin.public-resources.code.targets[0].port: 8443
+      pangolin.public-resources.code.auth.sso-enabled: true
+      pangolin.public-resources.code.auth.sso-roles[0]: Member
+      pangolin.public-resources.code.rules[0].action: pass
+      pangolin.public-resources.code.rules[0].match: country
+      pangolin.public-resources.code.rules[0].value: US
+      pangolin.public-resources.code.rules[1].action: deny
+      pangolin.public-resources.code.rules[1].match: country
+      pangolin.public-resources.code.rules[1].value: ALL

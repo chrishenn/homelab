@@ -1,0 +1,39 @@
+# rougly equivalent to bytestash, but no syntax highlighting in the text box
+---
+services:
+  gist:
+    profiles: [gist]
+    image: ghcr.io/thomiceli/opengist
+    container_name: gist
+    restart: unless-stopped
+    environment:
+      OG_OIDC_PROVIDER_NAME: PocketID
+      OG_OIDC_CLIENT_KEY: ${GIST_OIDC_CLIENT}
+      OG_OIDC_SECRET: ${GIST_OIDC_SECRET}
+      OG_OIDC_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+    volumes:
+      - $DATA/gist:/opengist
+    healthcheck:
+      test: ['CMD', 'curl', '-fs', 'http://localhost:6157/healthcheck']
+    networks: [newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: OpenGist
+      homepage.icon: opengist.png
+      homepage.href: https://gist.chenn.dev
+      homepage.description: Private Gists
+
+      pangolin.public-resources.gist.name: gist
+      pangolin.public-resources.gist.full-domain: gist.chenn.dev
+      pangolin.public-resources.gist.protocol: http
+      pangolin.public-resources.gist.ssl: true
+      pangolin.public-resources.gist.targets[0].method: http
+      pangolin.public-resources.gist.targets[0].port: 6157
+      pangolin.public-resources.gist.auth.sso-enabled: true
+      pangolin.public-resources.gist.auth.sso-roles[0]: Member
+      pangolin.public-resources.gist.rules[0].action: pass
+      pangolin.public-resources.gist.rules[0].match: country
+      pangolin.public-resources.gist.rules[0].value: US
+      pangolin.public-resources.gist.rules[1].action: deny
+      pangolin.public-resources.gist.rules[1].match: country
+      pangolin.public-resources.gist.rules[1].value: ALL

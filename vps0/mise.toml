@@ -1,15 +1,13 @@
 [settings]
 python.uv_venv_auto = "create|source"
 
-[env]
-FNOX_AGE_KEY_FILE = "~/.ssh/id_ed25519"
-
-# paths to homelab repo on host
-REPO = "/home/chris/Projects/homelab/"
-REPO_MACHINE = "/home/chris/Projects/homelab/rack4"
-
 [tools]
-#"cargo:rustscan" = "latest"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
+
+[env]
+DOCKER_HOST = "ssh://chris@${VPS0_IP}:2200"
+DIR_HOST = "/home/chris/Projects/homelab/vps0"
+DATA = "/home/chris/data"
+BACKUP = "/home/chris/backup"

@@ -1,0 +1,35 @@
+# seerr/sonarr/radarr discord bot
+---
+services:
+  doplarr:
+    profiles: [arr]
+    image: lscr.io/linuxserver/doplarr:latest
+    container_name: doplarr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+      DISCORD__TOKEN: ${DOPLARR_BOT_TOKEN}
+      SONARR__URL: ${SONARR_URL}
+      SONARR__API: ${SONARR_KEY}
+      RADARR__URL: ${RADARR_URL}
+      RADARR__API: ${RADARR_KEY}
+      OVERSEERR__API:
+      OVERSEERR__URL:
+
+      DISCORD__MAX_RESULTS: 25
+      DISCORD__REQUESTED_MSG_STYLE: :plain
+      SONARR__QUALITY_PROFILE:
+      RADARR__QUALITY_PROFILE:
+      SONARR__ROOTFOLDER:
+      RADARR__ROOTFOLDER:
+      SONARR__LANGUAGE_PROFILE:
+      OVERSEERR__DEFAULT_ID:
+      PARTIAL_SEASONS: true
+      LOG_LEVEL: :info
+      JAVA_OPTS:
+    volumes:
+      - $DATA/doplarr/config:/config
+    networks: [arr]

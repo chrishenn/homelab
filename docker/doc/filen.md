@@ -1,4 +1,4 @@
-# Filen
+# filen
 
 Mount using the filen-rs rust rewrite (mounts for a minute, then dies)
 

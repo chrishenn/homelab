@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: Omni Converters
       homepage.icon: omni-tools.png
       homepage.href: https://omni.chenn.dev

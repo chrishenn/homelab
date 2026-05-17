@@ -2,6 +2,9 @@
 
 K3s ansible deployment from technotim
 
+- https://www.youtube.com/@TechnoTim
+- https://github.com/timothystewart6
+
 ---
 
 I did put the load balancer onto a 192.168.1.0/24 IP, but now that I've natted 192.168.1.0/24 to 192.168.30.0/24, the

@@ -1,0 +1,108 @@
+---
+x-opencut_env: &opencut_env
+  NODE_ENV: production
+  NEXT_PUBLIC_SITE_URL: https://opencut.chenn.dev
+
+  DATABASE_URL: postgresql://opencut:opencut@opencut_db:5432/opencut
+  BETTER_AUTH_SECRET: ${OPENCUT_BETTERAUTH}
+  UPSTASH_REDIS_REST_URL: http://opencut_redis_serverless:80
+  UPSTASH_REDIS_REST_TOKEN: ${OPENCUT_UPSTASH}
+
+  NEXT_PUBLIC_MARBLE_API_URL: https://api.marblecms.com
+  MARBLE_WORKSPACE_KEY: ${MARBLE_API_KEY}
+  FREESOUND_CLIENT_ID: ${FREESOUND_CLIENT}
+  FREESOUND_API_KEY: ${FREESOUND_SECRET}
+
+services:
+  opencut:
+    profiles: [opencut]
+    image: ${REGISTRY}/opencut:latest
+    container_name: opencut
+    build:
+      context: https://github.com/OpenCut-app/OpenCut.git#v0.3.0
+      dockerfile: apps/web/Dockerfile
+      args:
+        <<: *opencut_env
+    restart: unless-stopped
+    environment:
+      <<: *opencut_env
+    healthcheck:
+      test: wget --spider -q http://0.0.0.0:3000
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks: [opencut, newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: Opencut
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/opencut.png
+      homepage.href: https://opencut.chenn.dev
+      homepage.description: Video Editor
+
+      pangolin.public-resources.opencut.name: opencut
+      pangolin.public-resources.opencut.full-domain: opencut.chenn.dev
+      pangolin.public-resources.opencut.protocol: http
+      pangolin.public-resources.opencut.ssl: true
+      pangolin.public-resources.opencut.targets[0].method: http
+      pangolin.public-resources.opencut.targets[0].port: 3000
+      pangolin.public-resources.opencut.auth.sso-enabled: true
+      pangolin.public-resources.opencut.auth.sso-roles[0]: Member
+      pangolin.public-resources.opencut.rules[0].action: pass
+      pangolin.public-resources.opencut.rules[0].match: country
+      pangolin.public-resources.opencut.rules[0].value: US
+      pangolin.public-resources.opencut.rules[1].action: deny
+      pangolin.public-resources.opencut.rules[1].match: country
+      pangolin.public-resources.opencut.rules[1].value: ALL
+
+  opencut_db:
+    profiles: [opencut]
+    image: postgres:18-alpine
+    container_name: opencut_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: opencut
+      POSTGRES_USER: opencut
+      POSTGRES_PASSWORD: opencut
+    volumes:
+      - $DATA/opencut/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -U $${POSTGRES_USER}
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [opencut]
+
+  opencut_redis:
+    profiles: [opencut]
+    image: valkey/valkey:alpine
+    container_name: opencut_redis
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [opencut]
+
+  opencut_redis_serverless:
+    profiles: [opencut]
+    image: hiett/serverless-redis-http:latest
+    container_name: opencut_redis_serverless
+    restart: unless-stopped
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: example_token
+      SRH_CONNECTION_STRING: redis://opencut_redis:6379
+    healthcheck:
+      test: wget --spider -q http://127.0.0.1:80 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [opencut]
+
+networks:
+  opencut:

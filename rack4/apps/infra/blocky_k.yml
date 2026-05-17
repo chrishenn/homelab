@@ -1,4 +1,39 @@
 ---
+configs:
+  blocky_k:
+    content: |
+      vrrp_script check_blocky {
+          script "/usr/bin/dig @${KEEPALIVE_MASTER} -p 53 healthcheck.blocky +tcp +short"
+          weight -50
+          timeout 1
+          interval 1
+          fall 2
+          rise 2
+      }
+
+      vrrp_instance VI_1 {
+          state MASTER
+          interface ${RACK4_NIC}
+          virtual_router_id 55
+          priority 150
+          advert_int 1
+
+          track_script {
+              check_blocky
+          }
+          authentication {
+              auth_type PASS
+              auth_pass ${KEEPALIVE_PASS}
+          }
+          unicast_src_ip ${KEEPALIVE_MASTER}
+          unicast_peer {
+              ${KEEPALIVE_BACKUP}
+          }
+          virtual_ipaddress {
+              ${DNS_VIP_CIDR}
+          }
+      }
+
 services:
   blocky_k:
     profiles: [blocky_k]
@@ -8,8 +43,9 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
-      KEEPALIVED_CUSTOM_CONFIG: 'true'
-    volumes:
-      - ./blocky_k/master.conf:/etc/keepalived/keepalived.conf
+      KEEPALIVED_CUSTOM_CONFIG: true
+    configs:
+      - source: blocky_k
+        target: /etc/keepalived/keepalived.conf
     network_mode: host
     cap_add: [NET_ADMIN, NET_BROADCAST]

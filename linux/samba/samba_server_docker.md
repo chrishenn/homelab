@@ -3,8 +3,9 @@
 not working yet
 
 to try
-https://hub.docker.com/r/servercontainers/samba
-https://github.com/crazy-max/docker-samba
+
+- https://hub.docker.com/r/servercontainers/samba
+- https://github.com/crazy-max/docker-samba
 
 ---
 

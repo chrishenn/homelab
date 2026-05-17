@@ -1,0 +1,133 @@
+---
+services:
+  mattermost:
+    profiles: [mattermost]
+    image: mattermost/mattermost-enterprise-edition:latest
+    container_name: mattermost
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 4G
+    read_only: false
+    tmpfs:
+      - /tmp
+    environment:
+      DOMAIN: mm.chenn.dev
+      MM_SERVICESETTINGS_SITEURL: https://mattermost.chenn.dev
+      TZ: $TZ
+
+      MM_TEAMSETTINGS_ENABLEUSERCREATION: true
+      MM_EMAILSETTINGS_ENABLESIGNUPWITHEMAIL: true
+      MM_SERVICESETTINGS_ENABLEEMAILINVITATIONS: true
+      MM_SERVICESETTINGS_ENABLEMULTIFACTORAUTHENTICATION: true
+
+      MM_EMAILSETTINGS_REQUIREEMAILVERIFICATION: true
+      MM_EMAILSETTINGS_ENABLESIGNINWITHEMAIL: true
+      MM_EMAILSETTINGS_ENABLESIGNINWITHUSERNAME: false
+      MM_EMAILSETTINGS_SMTPSERVER: ${SMTP_HOST}
+      MM_EMAILSETTINGS_SMTPPORT: 465
+      MM_EMAILSETTINGS_SMTPUSERNAME: ${SMTP_USER}
+      MM_EMAILSETTINGS_SMTPPASSWORD: ${SMTP_TOKEN}
+      MM_EMAILSETTINGS_ENABLESMTPAUTH: true
+      MM_EMAILSETTINGS_CONNECTIONSECURITY: TLS
+      MM_EMAILSETTINGS_FEEDBACKEMAIL: ${SMTP_USER}
+
+      MM_ELASTICSEARCHSETTINGS_ENABLEINDEXING: true
+      MM_ELASTICSEARCHSETTINGS_ENABLESEARCHING: true
+      MM_ELASTICSEARCHSETTINGS_ENABLEAUTOCOMPLETE: true
+      MM_ELASTICSEARCHSETTINGS_BACKEND: opensearch
+      MM_ELASTICSEARCHSETTINGS_CONNECTIONURL: http://mattermost_search:9200
+      MM_ELASTICSEARCHSETTINGS_USERNAME: admin
+      MM_ELASTICSEARCHSETTINGS_PASSWORD: ${MATTERMOST_SEARCH_PASS}
+
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mm:mm@mattermost_db/mm?sslmode=disable&connect_timeout=10
+
+      MM_OPENIDSETTINGS_ENABLE: true
+      MM_OPENIDSETTINGS_BUTTONTEXT: Pocket ID
+      MM_OPENIDSETTINGS_DISCOVERYENDPOINT: https://pocketid.chenn.dev/.well-known/openid-configuration
+      MM_OPENIDSETTINGS_ID: ${MATTERMOST_OIDC_CLIENT}
+      MM_OPENIDSETTINGS_SECRET: ${MATTERMOST_OIDC_SECRET}
+
+    volumes:
+      - $DATA/mattermost/app/config:/mattermost/config
+      - $DATA/mattermost/app/data:/mattermost/data
+      - $DATA/mattermost/app/logs:/mattermost/logs
+      - $DATA/mattermost/app/plugins:/mattermost/plugins
+      - $DATA/mattermost/app/client:/mattermost/client/plugins
+    networks: [mattermost, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Mattermost
+      homepage.icon: mattermost.png
+      homepage.href: https://mattermost.chenn.dev
+      homepage.description: Private Slack
+
+      pangolin.public-resources.mattermost.name: mattermost
+      pangolin.public-resources.mattermost.full-domain: mattermost.chenn.dev
+      pangolin.public-resources.mattermost.protocol: http
+      pangolin.public-resources.mattermost.ssl: true
+      pangolin.public-resources.mattermost.targets[0].method: http
+      pangolin.public-resources.mattermost.targets[0].port: 8065
+      pangolin.public-resources.mattermost.auth.sso-enabled: true
+      pangolin.public-resources.mattermost.auth.sso-roles[0]: Member
+      pangolin.public-resources.mattermost.rules[0].action: pass
+      pangolin.public-resources.mattermost.rules[0].match: country
+      pangolin.public-resources.mattermost.rules[0].value: US
+      pangolin.public-resources.mattermost.rules[1].action: deny
+      pangolin.public-resources.mattermost.rules[1].match: country
+      pangolin.public-resources.mattermost.rules[1].value: ALL
+
+  mattermost_db:
+    profiles: [mattermost]
+    image: postgres:18-alpine
+    container_name: mattermost_db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 16G
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    environment:
+      TZ: $TZ
+      POSTGRES_USER: mm
+      POSTGRES_PASSWORD: mm
+      POSTGRES_DB: mm
+    volumes:
+      - $DATA/mattermost/db:/var/lib/postgresql
+    networks: [mattermost]
+
+  mattermost_search:
+    profiles: [mattermost]
+    image: opensearchproject/opensearch:latest
+    container_name: mattermost_search
+    environment:
+      node.name: opensearch-node
+      discovery.type: single-node
+      plugins.security.disabled: true
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${MATTERMOST_SEARCH_PASS}
+    volumes:
+      - $DATA/mattermost/search:/usr/share/opensearch/data
+    networks: [mattermost]
+
+  mattermost_perm:
+    profiles: [mattermost]
+    image: alpine
+    container_name: mattermost_perm
+    restart: no
+    volumes:
+      - $DATA/mattermost/app:/data/app
+      - $DATA/mattermost/search:/data/search
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -x
+        chown -R 2000:2000 /data/app
+        chown -R 1000:1000 /data/search
+        echo "set perms; exit: $?"
+
+networks:
+  mattermost:

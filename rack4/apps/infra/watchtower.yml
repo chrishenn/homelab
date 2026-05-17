@@ -1,0 +1,29 @@
+# throwing "digest retrieval failed" and "failed to retrieve image info" sigh...
+---
+services:
+  watchtower:
+    profiles: [watchtower]
+    image: nickfedor/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      # WATCHTOWER_UPDATE_ON_START: true
+      WATCHTOWER_SCHEDULE: '0 0 4 * * *'
+      WATCHTOWER_INCLUDE_STOPPED: true
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_REMOVE_VOLUMES: true
+      WATCHTOWER_HTTP_API_METRICS: true
+      WATCHTOWER_HTTP_API_TOKEN: token
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/.docker/config.json:/config.json
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Watchtower
+      homepage.icon: watchtower.png
+      homepage.description: Watchtower Container Updater
+      homepage.widget.type: watchtower
+      homepage.widget.url: http://watchtower:8080
+      homepage.widget.key: token

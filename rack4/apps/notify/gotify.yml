@@ -1,0 +1,80 @@
+# https://raw.githubusercontent.com/gotify/server/master/config.example.yml
+---
+configs:
+  gotify:
+    content: |
+      server:
+        keepaliveperiodseconds: 0
+        listenaddr: ''
+        port: 80
+
+        ssl:
+          enabled: false
+          redirecttohttps: true
+          listenaddr: ''
+          port: 443
+          certfile:
+          certkey:
+          letsencrypt:
+            enabled: false
+            accepttos: false
+            cache: data/certs
+            directoryurl:
+            hosts:
+
+        responseheaders:
+        trustedproxies:
+        cors:
+          alloworigins:
+          allowmethods:
+          allowheaders:
+        stream:
+          pingperiodseconds: 45
+          allowedorigins:
+
+      database:
+        dialect: sqlite3
+        connection: data/gotify.db
+
+      defaultuser:
+        name: ${USER}
+        pass: ${PASS}
+
+      passstrength: 10
+      uploadedimagesdir: data/images
+      pluginsdir: data/plugins
+      registration: false
+
+services:
+  gotify:
+    profiles: [gotify]
+    image: gotify/server
+    container_name: gotify
+    restart: unless-stopped
+    configs:
+      - source: gotify
+        target: /etc/gotify/config.yml
+    volumes:
+      - $DATA/gotify/data:/app/data
+    networks: [newt]
+    labels:
+      homepage.group: Notify
+      homepage.name: Gotify
+      homepage.icon: gotify.png
+      homepage.href: https://gotify.chenn.dev
+      homepage.description: Notification Server
+
+      pangolin.public-resources.gotify.name: gotify
+      pangolin.public-resources.gotify.full-domain: gotify.chenn.dev
+      pangolin.public-resources.gotify.protocol: http
+      pangolin.public-resources.gotify.ssl: true
+      pangolin.public-resources.gotify.targets[0].method: http
+      pangolin.public-resources.gotify.targets[0].port: 80
+      pangolin.public-resources.gotify.auth.sso-enabled: true
+      pangolin.public-resources.gotify.auth.sso-roles[0]: Member
+      pangolin.public-resources.gotify.rules[0].action: pass
+      pangolin.public-resources.gotify.rules[0].match: country
+      pangolin.public-resources.gotify.rules[0].value: US
+      pangolin.public-resources.gotify.rules[1].action: deny
+      pangolin.public-resources.gotify.rules[1].match: country
+      pangolin.public-resources.gotify.rules[1].value: ALL

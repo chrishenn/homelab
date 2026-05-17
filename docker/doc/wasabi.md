@@ -4,8 +4,10 @@ mc minio tool to list s3 filesystems:
 
 ```bash
 brew install minio/stable/mc
-nano ~/.mc/config.json
+# or
+mise use -g mc
 
+nano ~/.mc/config.json
 # "wasabi0": {
 #    "url": "https://s3.us-east-1.wasabisys.com",
 #    "accessKey": "",

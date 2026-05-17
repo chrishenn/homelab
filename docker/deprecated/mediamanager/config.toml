@@ -1,0 +1,55 @@
+[auth]
+email_password_resets = false
+session_lifetime = 86400
+
+[notifications]
+
+[torrents]
+
+# Title-based scoring rules
+[[indexers.title_scoring_rules]]
+name = "prefer_h265"
+keywords = ["h265", "hevc", "x265", "h.265", "x.265"]
+score_modifier = 100
+negate = false
+
+[[indexers.title_scoring_rules]]
+name = "prefer_hdr"
+keywords = ["hdr", "10bit"]
+score_modifier = 100
+negate = false
+
+[[indexers.title_scoring_rules]]
+name = "avoid_cam"
+keywords = ["cam", "camrip", "bdscr", "ddc", "dvdscreener","dvdscr", "hdcam", "hdtc", "hdts", "scr", "screener","telesync", "ts", "webscreener", "tc", "telecine", "tvrip"]
+score_modifier = -10000
+negate = false
+
+# Indexer flag-based scoring rules
+[[indexers.indexer_flag_scoring_rules]]
+name = "prefer_freeleech"
+flags = ["freeleech", "freeleech75"]
+score_modifier = 100
+negate = false
+
+[[indexers.indexer_flag_scoring_rules]]
+name = "reject_nuked"
+flags = ["nuked"]
+score_modifier = -10000
+negate = false
+
+# Scoring rulesets
+[[indexers.scoring_rule_sets]]
+name = "default"
+libraries = ["ALL_TV", "ALL_MOVIES"]
+rule_names = ["prefer_h265", "prefer_hdr", "avoid_cam", "reject_nuked", "prefer_freeleech"]
+
+# its very unlikely that you need to change this
+[metadata]
+[metadata.tmdb]
+tmdb_relay_url = "https://metadata-relay.dorninger.co/tmdb"
+primary_languages = [""]
+default_language = "en"
+
+[metadata.tvdb]
+tvdb_relay_url = "https://metadata-relay.dorninger.co/tvdb"

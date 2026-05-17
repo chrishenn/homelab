@@ -1,0 +1,58 @@
+# nonworking
+---
+configs:
+  sab:
+    content: |    
+
+services:
+  sab:
+    profiles: [sab]
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sab
+    restart: unless-stopped
+    hostname: sab
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+#    configs:
+#      - source: sab
+#        target: /config/sabnzbd.ini
+#        mode: 0777
+    entrypoint: /var/home/chris/Projects/homelab/rack4/apps/download/sab.sh
+    volumes:
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/sab/incomplete:/incomplete
+      - $DATA/sab/config:/config
+      - $DATA/sab/sab.ini:/config/sabnzbd.ini
+    networks: [arr, traefik, newt]
+    labels:
+      homepage.group: Download
+      homepage.name: Sab
+      homepage.icon: sabnzbd.png
+      homepage.href: https://sab.chenn.dev
+      homepage.description: Usenet Downloads
+      
+      traefik.enable: true
+      traefik.http.routers.sab.rule: Host(`sab.henn.dev`)
+      traefik.http.routers.sab.entrypoints: websecure
+      traefik.http.routers.sab.middlewares: hdrs@file
+      traefik.http.routers.sab.tls.certresolver: cf
+      traefik.http.services.sab.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.sab.name: sab
+      pangolin.public-resources.sab.full-domain: sab.chenn.dev
+      pangolin.public-resources.sab.protocol: http
+      pangolin.public-resources.sab.ssl: true
+      pangolin.public-resources.sab.targets[0].method: http
+      pangolin.public-resources.sab.targets[0].port: 8080
+      pangolin.public-resources.sab.auth.sso-enabled: true
+      pangolin.public-resources.sab.auth.sso-roles[0]: Member
+      pangolin.public-resources.sab.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.sab.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.sab.rules[0].action: pass
+      pangolin.public-resources.sab.rules[0].match: country
+      pangolin.public-resources.sab.rules[0].value: US
+      pangolin.public-resources.sab.rules[1].action: deny
+      pangolin.public-resources.sab.rules[1].match: country
+      pangolin.public-resources.sab.rules[1].value: ALL

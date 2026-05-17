@@ -1,24 +1,82 @@
-# simple file browser that works well, with previews. I've removed the onlyoffice integration
 # sudo chown -R 1000:1000 $DATA/files
 ---
+configs:
+  files:
+    content: |
+      frontend:
+        name: 'Quantum Chicken'
+        description: A file server for the Dancing Chicken
+
+      server:
+        externalUrl: https://files.chenn.dev
+        internalUrl: http://files:80
+
+        sources:
+          - path: /mnt/f/
+            name: f
+            config:
+              defaultEnabled: true
+          - path: /mnt/h/
+            name: h
+            config:
+              defaultEnabled: true
+          - path: /mnt/k/
+            name: k
+            config:
+              defaultEnabled: true
+          - path: /mnt/r/
+            name: r
+            config:
+              defaultEnabled: true
+
+      auth:
+        adminUsername: chris
+        methods:
+          password:
+            enabled: false
+            minLength: 5
+            signup: true
+          oidc:
+            enabled: true
+            issuerUrl: https://pocketid.chenn.dev
+            scopes: email openid profile groups
+            userIdentifier: preferred_username
+            groupsClaim: groups
+            adminGroup: admin
+            createUser: true
+
+      userDefaults:
+        loginMethod: oidc
+        permissions:
+          api: false
+          admin: false
+          modify: true
+          share: true
+          realtime: true
+          delete: true
+          create: true
+          download: true
+
 services:
   files:
     profiles: [files]
     image: gtstef/filebrowser:stable
     container_name: files
     restart: unless-stopped
+    configs:
+      - source: files
+        target: /config.yaml
     environment:
       FILEBROWSER_CONFIG: /config.yaml
       FILEBROWSER_ADMIN_PASSWORD: ${FILES_PASS}
       FILEBROWSER_OIDC_CLIENT_ID: ${FILES_OIDC_CLIENT}
       FILEBROWSER_OIDC_CLIENT_SECRET: ${FILES_OIDC_SECRET}
     volumes:
-      - ./files/config.yaml:/config.yaml
       - $DATA/files/data:/home/filebrowser/data
       - /mnt/k:/mnt/k
       - /mnt/h:/mnt/h
-      - /mnt/q:/mnt/q
       - /mnt/f:/mnt/f
+      - /mnt/r:/mnt/r
     networks: [newt]
     labels:
       homepage.group: File Servers

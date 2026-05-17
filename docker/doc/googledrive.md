@@ -1,4 +1,4 @@
-# Rclone backup for google drive
+# rclone for google drive
 
 ```bash
 rclone sync -P --fast-list --transfers=32 \

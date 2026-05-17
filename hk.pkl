@@ -1,14 +1,12 @@
-amends "package://github.com/jdx/hk/releases/download/v1.39.0/hk@1.39.0#/Config.pkl"
-import "package://github.com/jdx/hk/releases/download/v1.39.0/hk@1.39.0#/Builtins.pkl"
+amends "package://github.com/jdx/hk/releases/download/v1.45.0/hk@1.45.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.45.0/hk@1.45.0#/Builtins.pkl"
 
 local formatters = new Mapping<String, Step> {
     ["ruff"] = Builtins.ruff
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-    ["prettier"] = (Builtins.prettier) {
-        batch = false
-    }
+    ["prettier"] = Builtins.prettier
     ["pkl"] = Builtins.pkl
     ["newlines"] = Builtins.newlines
     ["mixed_line_ending"] = Builtins.mixed_line_ending
@@ -45,11 +43,11 @@ local linters = new Mapping<String, Step> {
         output_summary = "hide"
         batch = false
     }
-    // ["detect-secrets"] {
-    //     glob = List("*")
-    //     check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
-    //     batch = false
-    // }
+//     ["detect-secrets"] {
+//         glob = List("*")
+//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
+//         batch = false
+//     }
 }
 
 hooks {

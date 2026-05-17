@@ -29,11 +29,11 @@ services:
       CHECK_SSL_VALIDITY: False
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Archivebox
       homepage.icon: archivebox.png
       homepage.href: https://archive.chenn.dev
-      homepage.description: Web Archiver
+      homepage.description: Web Archive
 
       pangolin.public-resources.archive.name: archive
       pangolin.public-resources.archive.full-domain: archive.chenn.dev
@@ -60,11 +60,11 @@ services:
       RUN_XTERM: no
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Archivebox VNC
       homepage.icon: archivebox.png
       homepage.href: https://archive_vnc.chenn.dev
-      homepage.description: Archiver Browser Viewer
+      homepage.description: Web Archive Viewer
 
       pangolin.public-resources.archive_vnc.name: archive_vnc
       pangolin.public-resources.archive_vnc.full-domain: archive_vnc.chenn.dev
@@ -102,11 +102,11 @@ services:
       - $DATA/archive/webarchive:/webarchive
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Archivebox PyWB
       homepage.icon: archivebox.png
       homepage.href: https://archive_pywb.chenn.dev
-      homepage.description: Archiver Web Recorder
+      homepage.description: Web Archive Recorder
 
       pangolin.public-resources.archive_pywb.name: archive_pywb
       pangolin.public-resources.archive_pywb.full-domain: archive_pywb.chenn.dev

@@ -1,0 +1,52 @@
+---
+services:
+  wikijs:
+    profiles: [wikijs]
+    image: ghcr.io/requarks/wiki:latest
+    container_name: wikijs
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: wikijs_db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: wikijs
+      DB_NAME: wikijs
+    networks: [wikijs, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: WikiJS
+      homepage.icon: wikijs.png
+      homepage.href: https://wikijs.chenn.dev
+      homepage.description: Wiki
+
+      pangolin.public-resources.wikijs.name: wikijs
+      pangolin.public-resources.wikijs.full-domain: wikijs.chenn.dev
+      pangolin.public-resources.wikijs.protocol: http
+      pangolin.public-resources.wikijs.ssl: true
+      pangolin.public-resources.wikijs.targets[0].method: http
+      pangolin.public-resources.wikijs.targets[0].port: 3000
+      pangolin.public-resources.wikijs.auth.sso-enabled: true
+      pangolin.public-resources.wikijs.auth.sso-roles[0]: Member
+      pangolin.public-resources.wikijs.rules[0].action: pass
+      pangolin.public-resources.wikijs.rules[0].match: country
+      pangolin.public-resources.wikijs.rules[0].value: US
+      pangolin.public-resources.wikijs.rules[1].action: deny
+      pangolin.public-resources.wikijs.rules[1].match: country
+      pangolin.public-resources.wikijs.rules[1].value: ALL
+
+  wikijs_db:
+    profiles: [wikijs]
+    image: postgres:18-alpine
+    container_name: wikijs_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wikijs
+      POSTGRES_PASSWORD: wikijs
+      POSTGRES_USER: wikijs
+    volumes:
+      - $DATA/wikijs/db:/var/lib/postgresql
+    networks: [wikijs]
+
+networks:
+  wikijs:

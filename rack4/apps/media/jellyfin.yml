@@ -20,7 +20,6 @@ services:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
-      JELLYFIN_PublishedServerUrl: 'https://jellyfin.chenn.dev'
     volumes:
       - $DATA/jellyfin/config:/config
       - $DATA/jellyfin/cache:/cache
@@ -31,7 +30,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8096']
     networks: [traefik, newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Jellyfin
       homepage.icon: jellyfin.png
       homepage.href: https://jellyfin.chenn.dev

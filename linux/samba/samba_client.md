@@ -1,6 +1,6 @@
 # samba client
 
-note: use nfs instead where possible
+note: use nfs and nfs-over-rdma on linux
 
 ---
 

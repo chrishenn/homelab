@@ -1,5 +1,9 @@
 # Hybrid {linux, windows} K8s cluster
 
+Setup for a K8s cluster that includes linux control planes and windows workers.
+
+This was working at one point, but seems to have fallen over. Lotta moving parts
+
 ---
 
 # todo

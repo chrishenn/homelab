@@ -1,11 +1,9 @@
 # set up a fresh windows server
 
-
 # TUI config
 # sconfig - install updates
 # sconfig - set static ip
 # sconfig - rename computer
-
 
 # add user
 net user chris <pass> /add /active:yes
@@ -71,13 +69,10 @@ Get-SmbServerNetworkInterface
 Get-SmbClientNetworkInterface
 get-NetAdapterRDMA
 
-
-
 # ssh keys
 # add key to agent manually?
 ssh-add ~/.ssh/work
 [Environment]::SetEnvironmentVariable("GIT_SSH", "C:\Windows\System32\OpenSSH\ssh.exe", "Machine")
-
 
 # docker engine (headless install)
 # no config daemon.json was created? see:
@@ -94,14 +89,12 @@ dockerd --register-service
 set-service -name docker -startuptype Automatic
 start-service docker
 
-
 # tailscale (headless install)
 scoop install tailscale
 reg import "C:\Users\chris\scoop\apps\tailscale\current\add-startup.reg"
 restart-computer
 tailscale up --auth-key=<auth key from web ui>  --unattended
 tailscale set --auto-update
-
 
 # containerd
 # Note: you should probably use the sig-windows k8s scripts to install containerd for a k8s install

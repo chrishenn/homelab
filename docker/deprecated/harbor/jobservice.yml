@@ -1,0 +1,33 @@
+---
+protocol: 'http'
+port: 8080
+worker_pool:
+  workers: 10
+  backend: 'redis'
+  redis_pool:
+    redis_url: redis://harbor_redis:6379/2?idle_timeout_seconds=30
+    namespace: 'harbor_job_service_namespace'
+    idle_timeout_second: 3600
+
+job_loggers:
+  # "STD_OUTPUT", "FILE" and/or "DB"
+  - name: 'STD_OUTPUT'
+    level: 'INFO' # INFO/DEBUG/WARNING/ERROR/FATAL
+  - name: 'FILE'
+    level: 'INFO'
+    settings:
+      base_dir: '/var/log/jobs'
+    sweeper:
+      duration: 1
+      settings:
+        work_dir: '/var/log/jobs'
+
+loggers:
+  - name: 'STD_OUTPUT' # Same with above
+    level: 'INFO'
+
+reaper:
+  max_update_hours: 24
+  max_dangling_hours: 168
+
+max_retrieve_size_mb: 10

@@ -1,6 +1,8 @@
 # pocketid passkeys only work with one domain (can't find a way to enable ROR). This instance is public only
 # initial login: https://pocketid.chenn.dev/setup
-# dc exec pocketid ./pocket-id export --path - > ./pocketid.zip
+
+# backup, restore
+# dc exec pocketid ./pocket-id export --path -> /var/mnt/h/backup/pocketid.zip
 # cat ./pocketid.zip | dc run pocketid ./pocket-id import --yes --path -
 ---
 x-pid_env: &pid_env
@@ -10,7 +12,7 @@ x-pid_env: &pid_env
   PUID: $PUID
   PGID: $PGID
   TRUST_PROXY: true
-  MAXMIND_LICENSE_KEY: $MAXMIND_LICENSE
+  MAXMIND_LICENSE_KEY: ${MAXMIND_KEY}
 
   UI_CONFIG_DISABLED: true
   SMTP_HOST: $SMTP_HOST
@@ -53,44 +55,9 @@ services:
       pangolin.public-resources.pocketid.ssl: true
       pangolin.public-resources.pocketid.targets[0].method: http
       pangolin.public-resources.pocketid.targets[0].port: 1411
-
-      # this may be addressed by: https://github.com/fosrl/pangolin/pull/2843
-      # crazy edge case: when logging into pangolin with pocketid, and pocketid is exposed through pangolin, there is a
-      # part of the oidc login that pangolin sees as coming from 172.18.0.1 instead of pocketid.chenn.dev
-
-      # Verify session: Badger sent {"sessions":{},"originalRequestURL":"https://pocketid.chenn.dev/api/oidc/token"
-      # "requestIp":"172.18.0.1", "X-Real-Ip":"172.18.0.1"
-      # Client IP: {"clientIp":"172.18.0.1"}
-      # Resource denied by rule
-
-      # and 172.18.0.1 will be considered by geographical matching to be "not in the US" and blocked
-      # This is a doozy to debug, because this ip only shows in this way when you're logging into pangolin specifically
-      # - pocketid will not hit this edge cause when performing OIDC for other apps exposed by pangolin
-
-      # here's what the rest of the oidc exchange would look like
-      # Verify session: Badger sent {"sessions":{},"originalRequestURL":"https://pocketid.chenn.dev/api/oidc/authorize"
-      # "requestIp":"my-home-internet-ip", "X-Real-Ip":"my-home-internet-ip"
-      # Client IP: {"clientIp":"my-home-internet-ip"}
-      # Resource allowed by rule
-
-      # also note that my base docker ip pool is larger than standard (I ran out)
-      # "default-address-pools": [{"base": "172.16.0.0/12","size": 24}]
-
-      pangolin.public-resources.pocketid.auth.sso-enabled: true
-      pangolin.public-resources.pocketid.auth.sso-roles[0]: Member
-
-      pangolin.public-resources.pocketid.rules[0].action: allow
-      pangolin.public-resources.pocketid.rules[0].match: path
-      pangolin.public-resources.pocketid.rules[0].value: /api/*
-
-      pangolin.public-resources.pocketid.rules[1].action: allow
-      pangolin.public-resources.pocketid.rules[1].match: path
-      pangolin.public-resources.pocketid.rules[1].value: /.well-known/*
-
-      pangolin.public-resources.pocketid.rules[2].action: allow
-      pangolin.public-resources.pocketid.rules[2].match: path
-      pangolin.public-resources.pocketid.rules[2].value: /authorize/*
-
-      pangolin.public-resources.pocketid.rules[3].action: pass
-      pangolin.public-resources.pocketid.rules[3].match: path
-      pangolin.public-resources.pocketid.rules[3].value: '*'
+      pangolin.public-resources.pocketid.rules[0].action: pass
+      pangolin.public-resources.pocketid.rules[0].match: country
+      pangolin.public-resources.pocketid.rules[0].value: US
+      pangolin.public-resources.pocketid.rules[1].action: deny
+      pangolin.public-resources.pocketid.rules[1].match: country
+      pangolin.public-resources.pocketid.rules[1].value: ALL

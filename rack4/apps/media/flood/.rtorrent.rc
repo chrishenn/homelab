@@ -1,2 +1,0 @@
-import = /etc/rtorrent/rtorrent.rc
-network.port_range.set=6881-6881

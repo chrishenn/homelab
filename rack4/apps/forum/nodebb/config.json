@@ -1,9 +1,0 @@
-{
-  "defaults": {
-    "redis": {
-      "host": "nodebb_redis",
-      "port": 6379,
-      "database": 0
-    }
-  }
-}

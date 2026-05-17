@@ -1,17 +1,57 @@
+set fallback
+alias a := attach
+alias b := bounce
+alias f := follow
 alias s := sync
+alias p := ps
+alias u := up
+alias d := down
 
+# 'repo' is the repo location on the remote host
 repo := "/home/chris/Projects/homelab"
-ddir := "/home/chris/Projects/homelab/vps0"
-dusr := "chris"
-dip := env('VPS0_IP')
-dport := "2200"
+
+[arg("pty", long="pty", short="p")]
+ssh cmd='' pty='true':
+    just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+
+backup_cmd := """
+sudo rm -rf $DIR_HOST/pangolin_backup && sudo cp -r $DIR_HOST/pangolin $DIR_HOST/pangolin_backup \
+&& sudo rm -rf $BACKUP && sudo cp -r $DATA $BACKUP
+"""
+
+backup:
+    just ssh '{{backup_cmd}}'
+
+# generic
+
+sync message="sync":
+    git commit -a -m '{{ message }}' || true && git pull && git push
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-sync message="sync" usr=dusr ip=dip dir=repo port=dport:
-    git commit -a -m "{{ message }}" || true && git pull && git push
-    ssh {{ usr }}@{{ ip }} -p {{ port }} -At "cd {{ dir }} && git commit -a -m '{{ message }}' || true && git pull && git push"
+up *svcs:
+    docker compose up -d --remove-orphans {{ svcs }}
 
-ssh usr=dusr ip=dip dir=ddir port=dport:
-    ssh {{ usr }}@{{ ip }} -p {{ port }} -t "$(op read op://homelab/svc/bash) && cd {{ dir }} && exec bash -l"
+down *svcs:
+    docker compose down {{ svcs }}
+
+bounce *svcs:
+    just down {{ svcs }}
+    just up {{ svcs }}
+
+pullup *svcs:
+    docker compose up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+
+attach svc cmd="/bin/sh":
+    docker compose exec -it {{ svc }} {{ cmd }}
+
+ps *svcs:
+    docker compose ps {{ svcs }}
+
+log *args:
+    docker compose logs {{ args }}
+
+follow *args:
+    just log -f {{ args }}

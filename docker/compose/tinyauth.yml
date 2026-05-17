@@ -1,3 +1,4 @@
+# simple auth for traefik services
 # https://tinyauth.app/docs/getting-started/
 ---
 services:

@@ -1,3 +1,4 @@
+# full-disk backup is paywalled
 ---
 services:
   pluton:
@@ -7,7 +8,6 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/pluton/data:/data
-      # mount folders to backup under /mnt/subfolder
     environment:
       ENCRYPTION_KEY: ${PLUTON_KEY}
       USER_NAME: ${USER}
