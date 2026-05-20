@@ -40,7 +40,8 @@ services:
         && chown -R 1000:1000 /mnt/h/gdrive
       SCRIPT_GITHUB: |
         . /scripts/deps.sh
-        && /scripts/github.sh
+        && /scripts/gclone.sh 'chrishenn' 'github.com' "/mnt/h/github/github.com/chrishenn" "$$HOME/.ssh/id_ed25519"
+        && chown -R 1000:1000 /mnt/h/github
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

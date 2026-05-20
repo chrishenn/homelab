@@ -6,6 +6,8 @@ account = "my.1password.com"
 [secrets]
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
+BASICAUTH = { provider = "onepass", value = "op://homelab/chris/basic_auth" }
+HTPASSWD = { provider = "onepass", value = "op://homelab/chris/htpasswd" }
 EMAIL = { provider = "onepass", value = "op://homelab/chris/email" }
 USER1 = { provider = "onepass", value = "op://homelab/pangolin/user1" }
 
@@ -20,6 +22,7 @@ SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP/smtp_toke
 
 DOCKERHUB_USER = { provider = "onepass", value = "op://homelab/dockerhub/username" }
 DOCKERHUB_PASS = { provider = "onepass", value = "op://homelab/dockerhub/password" }
+DOCKERHUB_AUTH = { provider = "onepass", value = "op://homelab/dockerhub/basic_auth" }
 
 FORGEJO_USER = { provider = "onepass", value = "op://homelab/forgejo/username" }
 FORGEJO_PASS = { provider = "onepass", value = "op://homelab/forgejo/password" }

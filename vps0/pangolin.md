@@ -7,13 +7,15 @@ hosted on hostinger VPS
 # update
 
 ```bash
+# https://github.com/fosrl/badger/releases/latest
 # if config or traefik config require manual changes, edit them locally (esp the badger plugin). then:
 j s
 j ssh
 cd pangolin
 sudo rm -rf config_backup
 sudo cp -r config config_backup
-dc down && dc up -d --pull always
+dc pull && dc up -d --remove-orphans
+docker system prune -a
 ```
 
 # install

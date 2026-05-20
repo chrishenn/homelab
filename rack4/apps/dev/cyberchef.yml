@@ -18,7 +18,7 @@ services:
       pangolin.public-resources.cyberchef.protocol: http
       pangolin.public-resources.cyberchef.ssl: true
       pangolin.public-resources.cyberchef.targets[0].method: http
-      pangolin.public-resources.cyberchef.targets[0].port: 80
+      pangolin.public-resources.cyberchef.targets[0].port: 8080
       pangolin.public-resources.cyberchef.auth.sso-enabled: true
       pangolin.public-resources.cyberchef.auth.sso-roles[0]: Member
       pangolin.public-resources.cyberchef.rules[0].action: pass

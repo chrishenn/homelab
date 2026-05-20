@@ -6,9 +6,7 @@ local formatters = new Mapping<String, Step> {
     ["ruff_format"] = (Builtins.ruff_format) {
         output_summary = "hide"
     }
-    ["prettier"] = (Builtins.prettier) {
-        batch = false
-    }
+    ["prettier"] = Builtins.prettier
     ["pkl"] = Builtins.pkl
     ["newlines"] = Builtins.newlines
     ["mixed_line_ending"] = Builtins.mixed_line_ending

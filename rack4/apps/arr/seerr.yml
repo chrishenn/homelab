@@ -1,0 +1,90 @@
+# sonarr/radarr media requests
+---
+services:
+  seerr:
+    profiles: [arr]
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      LOG_LEVEL: debug
+    volumes:
+      - $DATA/seerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Seerr
+      homepage.icon: jellyseerr.png
+      homepage.href: https://seerr.chenn.dev
+      homepage.description: Media Requests
+
+      pangolin.public-resources.seerr.name: seerr
+      pangolin.public-resources.seerr.full-domain: seerr.chenn.dev
+      pangolin.public-resources.seerr.protocol: http
+      pangolin.public-resources.seerr.ssl: true
+      pangolin.public-resources.seerr.targets[0].method: http
+      pangolin.public-resources.seerr.targets[0].port: 5055
+      pangolin.public-resources.seerr.auth.sso-enabled: true
+      pangolin.public-resources.seerr.auth.sso-roles[0]: Member
+      pangolin.public-resources.seerr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.seerr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.seerr.rules[0].action: allow
+      pangolin.public-resources.seerr.rules[0].match: path
+      pangolin.public-resources.seerr.rules[0].value: /api/*
+      pangolin.public-resources.seerr.rules[1].action: pass
+      pangolin.public-resources.seerr.rules[1].match: country
+      pangolin.public-resources.seerr.rules[1].value: US
+      pangolin.public-resources.seerr.rules[2].action: deny
+      pangolin.public-resources.seerr.rules[2].match: country
+      pangolin.public-resources.seerr.rules[2].value: ALL
+
+  mseerr:
+    profiles: [arr]
+    image: ghcr.io/habirabbu/musicseerr:latest
+    container_name: mseerr
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: $TZ
+      PORT: 8688
+    volumes:
+      - $DATA/mseerr/config:/app/config
+      - $DATA/mseerr/cache:/app/cache
+      - $MEDIA/Music:/music:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8688/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: Music Seerr
+      homepage.icon: https://github.com/HabiRabbu/Musicseerr/blob/main/Images/logo_icon.png?raw=true
+      homepage.href: https://mseerr.chenn.dev
+      homepage.description: Music Requests
+
+      pangolin.public-resources.mseerr.name: mseerr
+      pangolin.public-resources.mseerr.full-domain: mseerr.chenn.dev
+      pangolin.public-resources.mseerr.protocol: http
+      pangolin.public-resources.mseerr.ssl: true
+      pangolin.public-resources.mseerr.targets[0].method: http
+      pangolin.public-resources.mseerr.targets[0].port: 8688
+      pangolin.public-resources.mseerr.auth.sso-enabled: true
+      pangolin.public-resources.mseerr.auth.sso-roles[0]: Member
+      pangolin.public-resources.mseerr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.mseerr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.mseerr.rules[0].action: allow
+      pangolin.public-resources.mseerr.rules[0].match: path
+      pangolin.public-resources.mseerr.rules[0].value: /api/*
+      pangolin.public-resources.mseerr.rules[1].action: pass
+      pangolin.public-resources.mseerr.rules[1].match: country
+      pangolin.public-resources.mseerr.rules[1].value: US
+      pangolin.public-resources.mseerr.rules[2].action: deny
+      pangolin.public-resources.mseerr.rules[2].match: country
+      pangolin.public-resources.mseerr.rules[2].value: ALL

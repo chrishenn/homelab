@@ -1,0 +1,37 @@
+# automatic sonarr/radarr/video file subtitle and audio remuxing
+---
+services:
+  muxarr:
+    profiles: [arr]
+    image: ghcr.io/kirovair/muxarr:latest
+    container_name: muxarr
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $DATA/muxarr/data:/data
+      - $MEDIA:/media
+    networks: [arr, newt]
+    labels:
+      homepage.group: Media
+      homepage.name: muxarr
+      homepage.icon: muxarr.png
+      homepage.href: https://muxarr.chenn.dev
+      homepage.description: Auto Video Mux
+
+      pangolin.public-resources.muxarr.name: muxarr
+      pangolin.public-resources.muxarr.full-domain: muxarr.chenn.dev
+      pangolin.public-resources.muxarr.protocol: http
+      pangolin.public-resources.muxarr.ssl: true
+      pangolin.public-resources.muxarr.targets[0].method: http
+      pangolin.public-resources.muxarr.targets[0].port: 8183
+      pangolin.public-resources.muxarr.auth.sso-enabled: true
+      pangolin.public-resources.muxarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.muxarr.rules[0].action: pass
+      pangolin.public-resources.muxarr.rules[0].match: country
+      pangolin.public-resources.muxarr.rules[0].value: US
+      pangolin.public-resources.muxarr.rules[1].action: deny
+      pangolin.public-resources.muxarr.rules[1].match: country
+      pangolin.public-resources.muxarr.rules[1].value: ALL

@@ -70,15 +70,19 @@ rlogin:
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    $DHOST_SSH -At "cd ${REPO_HOST} && git commit -a -m '{{ message }}' || true && git pull && git push"
 
 rsync message="sync":
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    $DHOST_SSH -At "cd ${REPO_HOST} && git commit -a -m '{{ message }}' || true && git pull && git push"
     git commit -a -m "{{ message }}" || true && git pull && git push
 
+# sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
+ssync:
+    fnox sync --provider age --config fnox.local.toml -f
+
 reset:
-    $DHOST_SSH -At "cd ${REPO} && git fetch origin"
-    $DHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
+    $DHOST_SSH -At "cd ${REPO_HOST} && git fetch origin"
+    $DHOST_SSH -At "cd ${REPO_HOST} && git reset --hard origin/main"
 
 ssh:
     $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd ${REPO_MACHINE} && bash -l"

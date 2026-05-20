@@ -1,4 +1,39 @@
 ---
+configs:
+  traefik_k:
+    content: |
+      vrrp_script check_traefik {
+          script "/usr/bin/curl --fail http://${KEEPALIVE_MASTER}:8080/ping -t 1"
+          weight -50
+          timeout 1
+          interval 1
+          fall 2
+          rise 2
+      }
+
+      vrrp_instance VI_2 {
+          state MASTER
+          interface ${RACK4_NIC}
+          virtual_router_id 56
+          priority 150
+          advert_int 1
+
+          track_script {
+              check_traefik
+          }
+          authentication {
+              auth_type PASS
+              auth_pass ${KEEPALIVE_PASS}
+          }
+          unicast_src_ip ${KEEPALIVE_MASTER}
+          unicast_peer {
+              ${KEEPALIVE_BACKUP}
+          }
+          virtual_ipaddress {
+              ${TRAEFIK_VIP_CIDR}
+          }
+      }
+
 services:
   traefik_k:
     profiles: [traefik_k]
@@ -8,7 +43,8 @@ services:
     environment:
       TZ: ${TZ}
       KEEPALIVED_CUSTOM_CONFIG: 'true'
-    volumes:
-      - ./traefik_k/master.conf:/etc/keepalived/keepalived.conf
+    configs:
+      - source: traefik_k
+        target: /etc/keepalived/keepalived.conf
     network_mode: host
     cap_add: [NET_ADMIN, NET_BROADCAST]

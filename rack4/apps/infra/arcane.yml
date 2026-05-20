@@ -21,6 +21,7 @@ services:
       PGID: ${PGID}
       APP_URL: https://arcane.chenn.dev
       ENCRYPTION_KEY: $ARCANE_ENCRYPTION_KEY
+      JWT_SECRET: $ARCANE_SECRET
       ANALYTICS_DISABLED: true
       NVIDIA_VISIBLE_DEVICES: all
       GPU_MONITORING_ENABLED: true

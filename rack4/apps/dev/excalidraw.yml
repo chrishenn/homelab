@@ -5,6 +5,8 @@ services:
     image: excalidraw/excalidraw:latest
     container_name: excalidraw
     restart: unless-stopped
+    environment:
+      THEME: DARK
     networks: [newt]
     labels:
       homepage.group: Dev

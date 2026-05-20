@@ -15,9 +15,9 @@ services:
       - $DATA/blocky/blacklists:/app/blacklists/:ro
       - $DATA/blocky/whitelists:/app/whitelists/:ro
       # don't overwrite blocky logs from rack4 with this rack0 instance
-      - $HOME/blocky/logs:/logs
+      - $HOME_HOST/blocky/logs:/logs
       # shared blocky config
-      - ../../rack4/apps/infra/blocky/config.yml:/app/config.yml:ro
+      - $REPO_HOST/rack4/apps/infra/blocky/config.yml:/app/config.yml:ro
     ports:
       - '${SVC_IP}:53:53/tcp'
       - '${SVC_IP}:53:53/udp'

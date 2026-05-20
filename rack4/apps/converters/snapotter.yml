@@ -1,0 +1,58 @@
+services:
+  snapotter:
+    profiles: [snapotter]
+    image: snapotter/snapotter:latest
+    container_name: snapotter
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      EXTERNAL_URL: https://snapotter.chenn.dev
+      TRUST_PROXY: true
+      AUTH_ENABLED: true
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DEFAULT_USERNAME: ${USER}
+      DEFAULT_PASSWORD: ${PASS}
+      DEFAULT_THEME: dark
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER_URL: ${OIDC}
+      OIDC_CLIENT_ID: ${SNAPOTTER_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${SNAPOTTER_OIDC_SECRET}
+      OIDC_SCOPES: openid profile email groups
+      OIDC_AUTO_CREATE_USERS: true
+      OIDC_DEFAULT_ROLE: user
+      OIDC_PROVIDER_NAME: Pocket ID
+    volumes:
+      - $DATA/snapotter/data:/data
+      - $DATA/snapotter/workspace:/tmp/workspace
+    healthcheck:
+      test: curl http://0.0.0.0:1349/api/v1/health
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Snap Otter
+      homepage.icon: https://github.com/snapotter-hq/SnapOtter/blob/main/apps/web/public/logo.png?raw=true
+      homepage.href: https://snapotter.chenn.dev
+      homepage.description: Image Converters
+
+      pangolin.public-resources.snapotter.name: snapotter
+      pangolin.public-resources.snapotter.full-domain: snapotter.chenn.dev
+      pangolin.public-resources.snapotter.protocol: http
+      pangolin.public-resources.snapotter.ssl: true
+      pangolin.public-resources.snapotter.targets[0].method: http
+      pangolin.public-resources.snapotter.targets[0].port: 1349
+      pangolin.public-resources.snapotter.auth.sso-enabled: true
+      pangolin.public-resources.snapotter.auth.sso-roles[0]: Member
+      pangolin.public-resources.snapotter.rules[0].action: pass
+      pangolin.public-resources.snapotter.rules[0].match: country
+      pangolin.public-resources.snapotter.rules[0].value: US
+      pangolin.public-resources.snapotter.rules[1].action: deny
+      pangolin.public-resources.snapotter.rules[1].match: country
+      pangolin.public-resources.snapotter.rules[1].value: ALL

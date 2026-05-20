@@ -1,3 +1,6 @@
+[settings]
+env_shell_expand = true
+
 [tools]
 gitleaks = "latest"
 just = "latest"
@@ -19,36 +22,47 @@ trufflehog = "latest"
 shell = "bash"
 script = "mise i -q"
 
+[tasks.pre-commit]
+alias = "pc"
+run = "hk run pre-commit"
+
 [env]
+# note this is the local repo path; clones of repo may have diff locations on remotes
 REPO = "{{ config_root | absolute }}"
 REPO_NAME = "{{ config_root | basename }}"
-
+FNOX_AGE_KEY_FILE = "~/.ssh/id_ed25519"
 HK_MISE = 1
 HK_LIBGIT2 = 0
 MISE_NPM_BUN = 1
 
+# remotes
 RACK0_USR = "chris"
 RACK0_IP = "192.168.1.70"
 RACK0_PORT = "22"
 RACK0_DIR = "/home/chris/Projects/homelab/rack0"
+RACK0_NIC = "nic0"
 
 RACK4_USR = "chris"
 RACK4_IP = "192.168.1.142"
 RACK4_PORT = "2200"
 RACK4_DIR = "/home/chris/Projects/homelab/rack4"
+RACK4_NIC = "enp47s0np0"
 
 VPS0_USR = "chris"
 VPS0_PORT = "2200"
 VPS0_DIR = "/home/chris/Projects/homelab/vps0"
 
-GITLAB_HOST = "gitlab.chenn.dev"
-REGISTRY = "forgejo.henn.dev/chris"
-REGISTRY_URL = "forgejo.henn.dev"
-
+# registries
+REGISTRY = "zot.henn.dev"
 BERG_USR = "chris"
 BERG_BASE_URL = "forgejo.henn.dev"
 BERG_SSH_PORT = 2424
 
-[tasks.pre-commit]
-alias = "pc"
-run = "hk run pre-commit"
+# settings for: {virtual IP, keepalived} {traefik, blocky}
+DNS_VIP = "192.168.1.3"
+DNS_VIP_CIDR = "192.168.1.3/24"
+TRAEFIK_VIP = "192.168.1.4"
+TRAEFIK_VIP_CIDR = "192.168.1.4/24"
+KEEPALIVE_MASTER = "192.168.1.142"
+KEEPALIVE_BACKUP = "192.168.1.70"
+KEEPALIVE_PASS = "E@!#3f$%"

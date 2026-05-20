@@ -5,9 +5,9 @@ upstreams:
   groups:
     default:
       - https://one.one.one.one/dns-query
-      - tcp-tls:one.one.one.one:853
-      - https://dns.nextdns.io/74c891
-      - tcp-tls:74c891.dns.nextdns.io:853
+#      - tcp-tls:one.one.one.one:853
+#      - https://dns.nextdns.io/74c891
+#      - tcp-tls:74c891.dns.nextdns.io:853
 
   # strategy blocky uses to choose upstream servers: {parallel_best, strict, random}
   strategy: parallel_best
@@ -22,7 +22,7 @@ connectIPVersion: v4
 customDNS:
   customTTL: 1h
   filterUnmappedTypes: false
-  # lancache. according to https://github.com/uklans/cache-domains, this is the only domain we need to rewrite
+  # according to https://github.com/uklans/cache-domains, {lancache.steamcontent.com} is the only domain we need to rewrite
   mapping:
     lancache.steamcontent.com: 192.168.1.143
     steam.cache.lancache.net: 192.168.1.143

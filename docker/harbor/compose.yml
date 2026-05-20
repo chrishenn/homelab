@@ -1,0 +1,168 @@
+# harbor is abandonware
+
+# sudo chmod -R 777 $DATA/harbor/db
+# sudo chmod -R 777 $DATA/harbor/redis
+# sudo chmod -R 777 $DATA/harbor/storage
+
+# openssl genrsa -out config/private_key.pem 4096
+# openssl req -new -x509 -key config/private_key.pem -out root.crt -days 3650
+# openssl pkey -in config/private_key.pem -traditional
+---
+x-harbor_env: &harbor_env
+  EXT_ENDPOINT: https://reg.henn.dev
+  REGISTRY_URL: http://harbor_registry:5000
+  PORTAL_URL: http://harbor_portal:8080
+  TOKEN_SERVICE_URL: http://harbor_core:8080/service/token
+  CORE_URL: http://harbor_core:8080
+  CORE_LOCAL_URL: http://127.0.0.1:8080
+  JOBSERVICE_URL: http://harbor_jobservice:8080
+  TRIVY_ADAPTER_URL: http://trivy-adapter:8080
+  _REDIS_URL_CORE: redis://harbor_redis:6379?idle_timeout_seconds=30
+  _REDIS_URL_REG: redis://harbor_redis:6379/1?idle_timeout_seconds=30
+  NO_PROXY: harbor_portal,harbor_core,harbor_registry,harbor_registryctl,harbor_jobservice,harbor_db,harbor_redis,127.0.0.1,.internal,.local,localhost
+
+  REGISTRY_CONTROLLER_URL: http://harbor_registryctl:8080
+  REGISTRY_CREDENTIAL_USERNAME: harbor_registry_user
+  REGISTRY_CREDENTIAL_PASSWORD: cDy1JgXfb19wedyZ6dsGLBQjcORWmtxj
+
+  CORE_SECRET: vviLNCvAFeudb43e
+  JOBSERVICE_SECRET: 7BNUW7efyhY86JVb
+  CSRF_KEY: 85HhRcBe7KjE0miiKFIFtEazxb12hTCB
+  ROBOT_SCANNER_NAME_PREFIX: nXvmFTyE
+  HARBOR_ADMIN_PASSWORD: $PASS
+
+  PORT: 8080
+  CONFIG_PATH: /etc/core/app.conf
+  UAA_CA_ROOT: /etc/core/certificates/uaa_ca.pem
+  SYNC_QUOTA: true
+  LOG_LEVEL: info
+  MAX_JOB_WORKERS: 10
+  WITH_TRIVY: False
+  READ_ONLY: false
+  RELOAD_KEY:
+  PERMITTED_REGISTRY_TYPES_FOR_PROXY_CACHE: docker-hub,harbor,azure-acr,ali-acr,aws-ecr,google-gcr,docker-registry,github-ghcr,jfrog-artifactory
+  REPLICATION_ADAPTER_WHITELIST: ali-acr,aws-ecr,azure-acr,docker-hub,docker-registry,github-ghcr,google-gcr,harbor,huawei-SWR,jfrog-artifactory,tencent-tcr,volcengine-cr
+  HTTP_PROXY:
+  HTTPS_PROXY:
+  QUOTA_UPDATE_PROVIDER: db
+  JOBSERVICE_WEBHOOK_JOB_MAX_RETRY: 3
+  JOBSERVICE_WEBHOOK_JOB_HTTP_CLIENT_TIMEOUT: 3
+
+  POSTGRES_PASSWORD: 1234
+  DATABASE_TYPE: postgresql
+  POSTGRESQL_HOST: harbor_db
+  POSTGRESQL_PORT: 5432
+  POSTGRESQL_USERNAME: postgres
+  POSTGRESQL_PASSWORD: 1234
+  POSTGRESQL_DATABASE: registry
+  POSTGRESQL_SSLMODE: disable
+  POSTGRESQL_MAX_IDLE_CONNS: 100
+  POSTGRESQL_MAX_OPEN_CONNS: 900
+  POSTGRESQL_CONN_MAX_LIFETIME: 5m
+  POSTGRESQL_CONN_MAX_IDLE_TIME: 0
+
+services:
+  harbor_portal:
+    profiles: [harbor]
+    image: goharbor/harbor-portal:v2.14.4
+    container_name: harbor_portal
+    restart: unless-stopped
+    volumes:
+      - ./harbor/portal.conf:/etc/nginx/nginx.conf
+    networks: [harbor, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.reg.rule: Host(`reg.henn.dev`) && PathPrefix(`/`)
+      traefik.http.routers.reg.entrypoints: websecure
+      traefik.http.routers.reg.middlewares: hdrs@file
+      traefik.http.routers.reg.tls.certresolver: cf
+      traefik.http.services.reg.loadbalancer.server.port: 8080
+
+  harbor_core:
+    profiles: [harbor]
+    image: goharbor/harbor-core:v2.14.4
+    container_name: harbor_core
+    restart: unless-stopped
+    environment:
+      <<: *harbor_env
+      # registryctl chokes on this one
+      REGISTRY_STORAGE_PROVIDER_NAME: filesystem
+    volumes:
+      - $DATA/harbor/cert:/harbor_cust_cert
+      - $DATA/harbor/data/:/data
+      - $DATA/harbor/core:/etc/core
+      - ./harbor/private_key.pem:/etc/core/private_key.pem
+      - ./harbor/core.conf:/etc/core/app.conf
+    networks: [harbor, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.reg_c.rule: Host(`reg.henn.dev`) && (PathPrefix(`/c`) || PathPrefix(`/api`) || PathPrefix(`/v2`) || PathPrefix(`/service`))
+      traefik.http.routers.reg_c.entrypoints: websecure
+      traefik.http.routers.reg_c.middlewares: hdrs@file
+      traefik.http.routers.reg_c.tls.certresolver: cf
+      traefik.http.services.reg_c.loadbalancer.server.port: 8080
+
+  harbor_registry:
+    profiles: [harbor]
+    image: goharbor/registry-photon:v2.14.4
+    container_name: harbor_registry
+    restart: unless-stopped
+    volumes:
+      - $DATA/harbor/cert:/harbor_cust_cert
+      - $DATA/harbor/storage:/storage
+      - ./harbor/root.crt:/etc/registry/root.crt
+      - ./harbor/passwd:/etc/registry/passwd
+      - ./harbor/registry.yml/:/etc/registry/config.yml
+    networks: [harbor]
+
+  harbor_registryctl:
+    profiles: [harbor]
+    image: goharbor/harbor-registryctl:v2.14.4
+    container_name: harbor_registryctl
+    restart: unless-stopped
+    environment:
+      <<: *harbor_env
+    volumes:
+      - $DATA/harbor/cert:/harbor_cust_cert
+      - $DATA/harbor/storage:/storage
+      - ./harbor/passwd:/etc/registry/passwd
+      - ./harbor/registry.yml/:/etc/registry/config.yml
+      - ./harbor/registryctl.yml:/etc/registryctl/config.yml
+    networks: [harbor]
+
+  harbor_jobservice:
+    profiles: [harbor]
+    image: goharbor/harbor-jobservice:v2.14.4
+    container_name: harbor_jobservice
+    restart: unless-stopped
+    environment:
+      <<: *harbor_env
+    volumes:
+      - $DATA/harbor/cert:/harbor_cust_cert
+      - $DATA/harbor/jobservice:/var/log/jobs
+      - ./harbor/jobservice.yml:/etc/jobservice/config.yml
+    networks: [harbor]
+
+  harbor_db:
+    profiles: [harbor]
+    image: goharbor/harbor-db:v2.14.4
+    container_name: harbor_db
+    restart: unless-stopped
+    shm_size: '1gb'
+    environment:
+      <<: *harbor_env
+    volumes:
+      - $DATA/harbor/db:/var/lib/postgresql/data
+    networks: [harbor]
+
+  harbor_redis:
+    profiles: [harbor]
+    image: goharbor/redis-photon:v2.14.4
+    container_name: harbor_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/harbor/redis:/var/lib/redis
+    networks: [harbor]
+
+networks:
+  harbor:

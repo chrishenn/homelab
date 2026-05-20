@@ -1,12 +1,14 @@
 #!/bin/bash
 
+sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
+
 # fedora atomic init config
 
 # we must do rpm-ostree overlays for 1password and chrome for them to integrate correctly
 # use zentool to install zen - works perfectly with 1pass integraton
 # aurora ships firefox as a flatpak, so that's a no-go (would need to uninstall and use overlay)
 
-function flatpak {
+function flatpak_install {
 	# fedora atomic (ships with flatpak, flathub, and flatseal)
 	flatpak install -y flathub \
 		md.obsidian.Obsidian \
@@ -17,15 +19,15 @@ function flatpak {
 		org.kde.kdenlive \
 		com.belmoussaoui.Obfuscate \
 		io.gitlab.adhami3310.Converter \
-		org.audacityteam.Audacity
+		org.audacityteam.Audacity \
+		org.darktable.Darktable
 
 	flatpak uninstall -y \
 		org.mozilla.Thunderbird \
 		org.kde.skanpage \
 		org.kde.okular \
 		org.kde.kontact \
-		org.kde.kclock \
-		org.kde.haruna
+		org.kde.kclock
 
 	# flatpak fix: a bunch didn't launch ootb due to file perm issue
 	systemctl --user restart xdg-document-portal.service
@@ -49,7 +51,10 @@ function chezmoi_mise {
 
 function installs {
 	# aurora builtins
-	ujust devmode
+	sudo ujust devmode
+	# sudo ujust dx-group
+	# ujust --choose
+	# ujust aurora-cli
 
 	# uv
 	curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -74,6 +79,11 @@ function installs {
 	curl -Lo op.rpm https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
 	sudo rpm-ostree install op.rpm
 	rm op.rpm
+
+	# you might need to reboot before doing this install
+	# sudo nano /etc/yum.repos.d/1password.repo
+	# set gpg_check=0
+	# sudo rpm-ostree install 1password 1password-cli
 
 	# kvantum
 	sudo rpm-ostree install kvantum
@@ -137,19 +147,38 @@ function chrome {
 
 function nfs {
 	# all nfs rdma packages/modules are shipped with aurora ootb!
-	# no idea what doca support might look like though
-	sudo mkdir -p /var/mnt/h /var/mnt/k /var/mnt/f /var/mnt/q
+	# mounting to /mnt/* works, but displays as /var/mnt/* in dolphin, and shows up twice
+	sudo mkdir -p /var/mnt/h /var/mnt/k /var/mnt/f /var/mnt/q /var/mnt/r
 	sudo tee -a /etc/fstab >/dev/null <<-END
-    	192.168.1.142:/mnt/h /var/mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-    	192.168.1.142:/mnt/k /var/mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-    	192.168.1.142:/mnt/f /var/mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-    	192.168.1.142:/mnt/q /var/mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-    END
-    sudo systemctl daemon-reload
-    sudo mount -a
+		192.168.1.142:/var/mnt/h /var/mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+		192.168.1.142:/var/mnt/k /var/mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+		192.168.1.142:/var/mnt/f /var/mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+		192.168.1.142:/var/mnt/q /var/mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+		192.168.1.142:/var/mnt/r /var/mnt/r nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	END
+	sudo systemctl daemon-reload
+	sudo mount -a
 }
 
-function tweaks {
+function power_shortcuts {
+	# untested. not sure aurora will invoke a script from absolute path?
 	sudo chmod +x $REPO/linux/power_shortcuts/power_shortcuts.sh
 	$REPO/linux/power_shortcuts/power_shortcuts.sh
+}
+
+function sudo_timeout {
+	tmp=$sdir/tmp
+	sudo rm -f $tmp
+	echo "Defaults timestamp_timeout=180" | tee -a $tmp
+	sudo chmod 0440 $tmp
+
+	if ! sudo visudo -c -q $tmp; then
+		echo "ERROR: visudo syntax check failed on temporary file. Exiting without writing to permanent file"
+		exit 1
+	fi
+
+	dst=/etc/sudoers.d/sudo_timeout
+	echo "copying $tmp to $dst"
+	sudo cp $tmp $dst
+	sudo rm -f $tmp
 }

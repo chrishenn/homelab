@@ -82,6 +82,9 @@ FILES_PASS = { provider = "onepass", value = "op://homelab/files/password" }
 KANEO_S3_ACCESS = { provider = "onepass", value = "op://homelab/kaneo/s3_access" }
 KANEO_S3_SECRET = { provider = "onepass", value = "op://homelab/kaneo/s3_secret" }
 
+DRIVEBASE_MASTER = { provider = "onepass", value = "op://homelab/drivebase/master" }
+DRIVEBASE_BETTER = { provider = "onepass", value = "op://homelab/drivebase/betterauth" }
+
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
@@ -112,6 +115,8 @@ OWLRELAY_API = { provider = "onepass", value = "op://homelab/owlrelay/api_key" }
 PAPRA_WEBHOOK_SECRET = { provider = "onepass", value = "op://homelab/owlrelay/papra_webhook_secret" }
 KANEO_SECRET = { provider = "onepass", value = "op://homelab/kaneo/secret" }
 MM_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/secret" }
+WIKIGO_HTPASSWD = { provider = "onepass", value = "op://homelab/wikigo/htpasswd" }
+ARCANE_SECRET = { provider = "onepass", value = "op://homelab/arcane/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -183,3 +188,7 @@ TUGTAINER_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/tugtainer/
 TUGTAINER_OIDC_SECRET = { provider = "onepass", value = "op://homelab/tugtainer/oidc_secret" }
 KANEO_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kaneo/oidc_client" }
 KANEO_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kaneo/oidc_secret" }
+ZOT_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/zot/oidc_client" }
+ZOT_OIDC_SECRET = { provider = "onepass", value = "op://homelab/zot/oidc_secret" }
+SNAPOTTER_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/snapotter/oidc_client" }
+SNAPOTTER_OIDC_SECRET = { provider = "onepass", value = "op://homelab/snapotter/oidc_secret" }

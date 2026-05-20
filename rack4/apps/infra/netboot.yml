@@ -36,4 +36,4 @@ services:
       traefik.http.services.netboot-assets.loadbalancer.server.port: 80
 
     ports:
-      - 69:69/udp
+      - '69:69/udp'

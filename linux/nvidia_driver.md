@@ -86,10 +86,38 @@ sudo nvidia-modprobe
 ## Uninstall
 
 ```bash
-sudo apt remove --purge -y '^nvidia-.*'
-sudo apt remove --purge -y '^libnvidia-.*'
-sudo apt remove --purge -y '^cuda-.*'
-sudo apt autoremove --purge -y
+sudo apt remove --autoremove --purge -y '^nvidia-.*' '^libnvidia-.*' '^cuda-.*'
+sudo rm -rf /lib/firmware/nvidia
+sudo rm -rf /lib/systemd/system-sleep
+
+# or,
+sudo apt remove --autoremove --purge \
+   cuda-compat\* \
+   cuda-drivers\*  \
+   libnvidia-cfg1\* \
+   libnvidia-compute\* \
+   libnvidia-decode\* \
+   libnvidia-encode\* \
+   libnvidia-extra\* \
+   libnvidia-fbc1\* \
+   libnvidia-gl\* \
+   libnvidia-gpucomp\* \
+   libnvidia-nscq\* \
+   libnvsdm\* \
+   libxnvctrl\* \
+   nvidia-dkms\* \
+   nvidia-driver\* \
+   nvidia-fabricmanager\* \
+   nvidia-firmware\* \
+   nvidia-headless\* \
+   nvidia-imex\* \
+   nvidia-kernel\* \
+   nvidia-modprobe\* \
+   nvidia-open\* \
+   nvidia-persistenced\* \
+   nvidia-settings\* \
+   nvidia-xconfig\* \
+   xserver-xorg-video-nvidia\*
 ```
 
 ## Remove

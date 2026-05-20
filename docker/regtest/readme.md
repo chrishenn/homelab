@@ -5,22 +5,25 @@ codeberg/forgejo
 ```bash
 # if "create on push" is enabled, there's no need to create the remote repo first
 git init && git add --all && git commit -m "init"
-git remote add origin ssh://git@forgejo.chenn.dev:2424/chris/$(basename $PWD).git
+git remote add origin ssh://git@forgejo.henn.dev:2424/chris/$(basename $PWD).git
 git push -u origin main
 
 # create repo with berg cli (note that I can't get create+push to work in the one command)
-export BERG_BASE_URL=forgejo.chenn.dev
+export BERG_BASE_URL=forgejo.henn.dev
 berg auth login --token $(op read "op://homelab/forgejo/pat")
 
 repo=$(basename $PWD)
 berg repo create --default-branch main -p private -n $repo -d $repo
-git remote add origin ssh://git@forgejo.chenn.dev:2424/chris/$repo.git
+git remote add origin ssh://git@forgejo.henn.dev:2424/chris/$repo.git
 git push --set-upstream origin --all
 git push --set-upstream origin --tags
 
 # push to container registry
 docker login forgejo.henn.dev
 docker build -t forgejo.henn.dev/chris/regtest:latest . --load --push
+
+docker login zot.henn.dev
+docker build -t zot.henn.dev/regtest:latest . --push
 ```
 
 gitlab
@@ -59,10 +62,10 @@ forgejo cli (too old to use)
 ```bash
 # using fj cli (NOTE: libgit2 version is too old [unsupported extension name extensions.refstorage])
 # git config --unset-all extensions.refstorage
-# fj -H forgejo.chenn.dev auth add-key chris $(op read "op://homelab/forgejo/pat")
-# fj -H forgejo.chenn.dev repo create --private --push --ssh true $(basename $PWD)
+# fj -H forgejo.henn.dev auth add-key chris $(op read "op://homelab/forgejo/pat")
+# fj -H forgejo.henn.dev repo create --private --push --ssh true $(basename $PWD)
 
 # "create on push" is enabled
-git remote add origin ssh://git@forgejo.chenn.dev:2424/chris/$(basename $PWD).git
+git remote add origin ssh://git@forgejo.henn.dev:2424/chris/$(basename $PWD).git
 git push -u origin main
 ```

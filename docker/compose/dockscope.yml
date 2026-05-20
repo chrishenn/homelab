@@ -1,0 +1,32 @@
+# silently fell over and won't respond to requests. Couldn't tell you why
+---
+services:
+  dockscope:
+    profiles: [dockscope]
+    image: ghcr.io/manuelr-t/dockscope
+    container_name: dockscope
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Dockscope
+      homepage.icon: docker-engine.png
+      homepage.href: https://dockscope.chenn.dev
+      homepage.description: 3D Docker Visualizer
+
+      pangolin.public-resources.dockscope_1.name: dockscope
+      pangolin.public-resources.dockscope_1.full-domain: dockscope.chenn.dev
+      pangolin.public-resources.dockscope_1.protocol: http
+      pangolin.public-resources.dockscope_1.ssl: true
+      pangolin.public-resources.dockscope_1.targets[0].method: http
+      pangolin.public-resources.dockscope_1.targets[0].port: 4681
+      pangolin.public-resources.dockscope_1.auth.sso-enabled: true
+      pangolin.public-resources.dockscope_1.auth.sso-roles[0]: Member
+      pangolin.public-resources.dockscope_1.rules[0].action: pass
+      pangolin.public-resources.dockscope_1.rules[0].match: country
+      pangolin.public-resources.dockscope_1.rules[0].value: US
+      pangolin.public-resources.dockscope_1.rules[1].action: deny
+      pangolin.public-resources.dockscope_1.rules[1].match: country
+      pangolin.public-resources.dockscope_1.rules[1].value: ALL

@@ -9,16 +9,12 @@ deal with a more complicated setup? Also no.
 
 # todo
 
-- [x] Add a file provider monitoring on traefik in container.
-    - [x] Then the split routing on blocky container can be removed.
-- [x] idrive, gdrive backup LXC -> compose
-- [x] github backup
-- [x] backup storage: backrest local -> wasabi cloud
-- [x] homarr -> homepage
-- [x] netbootxyz: PXE DHCP config
-    - [ ] PXE boot windows
-- [x] matrix
-- [ ] iventoy
+- [x] netbootxyz
+- [x] use a docker registry that requires no manual config (zot. done!)
+    - [ ] enable mTLS
+- [ ] a way to PXE boot windows
+    - [ ] iventoy? 
+    - [ ] netbootxyz?
 - [ ] grafana + loki
 - [ ] fluxer (not quite ready yet)
     - https://fluxer.app/
@@ -27,20 +23,36 @@ deal with a more complicated setup? Also no.
 
 # dev
 
-#### Build fresh local images
+#### update
 
-Make sure that all images served from $REGISTRY are already built and pushed to the registry.
-`dc up --pull always` will NOT build and push missing images
+Pull newer images and recreate all services. As long as the $REGISTRY image is not being updated, this can just be one
+step
 
 ```bash
-# the current list may be longer
-j build misago openresume transcodarr blocky_k rsync
-
-# bounce and fresh pull the full stack, including images proivded by local $REGISTRY
-j down
-j pullup forgejo
-j pullup core traefik traefik_k newt
 j pullup
+```
+
+#### update local images
+
+if services depend on images that are built locally, and depend on images that may have been updated, then to update 
+our local images we must manually build and push them to the local registry ($REGISTRY)
+
+```bash
+# Local images requiring a local build. The current list may be longer
+j build openresume transcodarr blocky_k rsync
+
+# there's a bit of an ordering here; the local registry has service deps that it requires to work
+# ie: traefik is needed to route zot.henn.dev; traefik_k binds traefik to the host's vip; zot requires its auth provider
+# pocketid or else it crashes; pocketid is routed by pangolin via rack4 newt. 
+j down
+j pullup core zot traefik traefik_k pocketid newt
+j pullup
+
+# boot stack fresh
+j login_docker
+j up zot
+j build openresume transcodarr blocky_k rsync
+j up
 ```
 
 ---

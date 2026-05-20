@@ -111,14 +111,15 @@ entryPoints:
     address: ':2222'
   tcp-2424:
     address: ':2424'
+  udp-10000:
+    address: ':10000/udp'
+
   rtmp:
     address: ':1935'
   spice:
     address: ':3128'
   spice-tls:
     address: ':61001'
-  udp-10000:
-    address: ':10000/udp'
 
 certificatesResolvers:
   cf:

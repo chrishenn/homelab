@@ -1,0 +1,105 @@
+# https://overleaf.chenn.dev/launchpad
+---
+configs:
+  overleaf_mongo_init:
+    content: | 
+      rs.initiate({ _id: 'overleaf', members: [{ _id: 0, host: 'overleaf_mongo:27017' }] })
+
+services:
+  overleaf:
+    profiles: [overleaf]
+    image: sharelatex/sharelatex
+    container_name: overleaf
+    restart: unless-stopped
+    environment:
+      OVERLEAF_SITE_URL: https://overleaf.chenn.dev
+      OVERLEAF_APP_NAME: Chicken Overleaf
+      ENABLED_LINKED_FILE_TYPES: 'project_file,project_output_file'
+      ENABLE_CONVERSIONS: 'true'
+      EMAIL_CONFIRMATION_DISABLED: 'true'
+      OVERLEAF_NAV_TITLE: Chicken Overleaf
+      OVERLEAF_HEADER_IMAGE_URL: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overleaf.svg
+      OVERLEAF_PROXY_LEARN: 'true'
+      ENABLE_CRON_RESOURCE_DELETION: true
+      OVERLEAF_ADMIN_EMAIL: ${EMAIL}
+
+      OVERLEAF_MONGO_URL: mongodb://overleaf_mongo/sharelatex
+      OVERLEAF_REDIS_HOST: overleaf_redis
+      REDIS_HOST: overleaf_redis
+      OVERLEAF_REDIS_PORT: 6379
+      REDIS_PORT: 6379
+
+      OVERLEAF_LEFT_FOOTER: '[{"text": "Left Footer"} ]'
+      OVERLEAF_RIGHT_FOOTER: '[{"text": "Right Footer"} ]'
+      OVERLEAF_CUSTOM_EMAIL_FOOTER: 'Overleaf Email Footer'
+      OVERLEAF_EMAIL_FROM_ADDRESS: $SMTP_USER
+      OVERLEAF_EMAIL_AWS_SES_ACCESS_KEY_ID:
+      OVERLEAF_EMAIL_AWS_SES_SECRET_KEY:
+      OVERLEAF_EMAIL_SMTP_HOST: $SMTP_HOST
+      OVERLEAF_EMAIL_SMTP_PORT: 465
+      OVERLEAF_EMAIL_SMTP_SECURE: true
+      OVERLEAF_EMAIL_SMTP_USER: $SMTP_USER
+      OVERLEAF_EMAIL_SMTP_PASS: $SMTP_TOKEN
+      OVERLEAF_EMAIL_SMTP_TLS_REJECT_UNAUTH: true
+      OVERLEAF_EMAIL_SMTP_IGNORE_TLS: false
+      OVERLEAF_EMAIL_SMTP_NAME: '127.0.0.1'
+      OVERLEAF_EMAIL_SMTP_LOGGER: true
+    volumes:
+      - $DATA/overleaf/data:/var/lib/overleaf
+    networks: [overleaf, newt]
+    labels:
+      homepage.group: File Editors
+      homepage.name: Overleaf
+      homepage.icon: overleaf.png
+      homepage.href: https://overleaf.chenn.dev
+      homepage.description: Latex PDF Compiler
+
+      pangolin.public-resources.overleaf.name: overleaf
+      pangolin.public-resources.overleaf.full-domain: overleaf.chenn.dev
+      pangolin.public-resources.overleaf.protocol: http
+      pangolin.public-resources.overleaf.ssl: true
+      pangolin.public-resources.overleaf.targets[0].method: http
+      pangolin.public-resources.overleaf.targets[0].port: 80
+      pangolin.public-resources.overleaf.auth.sso-enabled: true
+      pangolin.public-resources.overleaf.auth.sso-roles[0]: Member
+      pangolin.public-resources.overleaf.rules[0].action: pass
+      pangolin.public-resources.overleaf.rules[0].match: country
+      pangolin.public-resources.overleaf.rules[0].value: US
+      pangolin.public-resources.overleaf.rules[1].action: deny
+      pangolin.public-resources.overleaf.rules[1].match: country
+      pangolin.public-resources.overleaf.rules[1].value: ALL
+
+  overleaf_mongo:
+    profiles: [overleaf]
+    image: mongo:8
+    container_name: overleaf_mongo
+    restart: unless-stopped
+    extra_hosts:
+      - overleaf_mongo:127.0.0.1
+    command: "--replSet overleaf"
+    environment:
+      MONGO_INITDB_DATABASE: sharelatex
+      GLIBC_TUNABLES: "glibc.cpu.hwcaps=-SHSTK"
+    configs:
+      - source: overleaf_mongo_init
+        target: /docker-entrypoint-initdb.d/mongodb-init-replica-set.js
+    volumes:
+      - $DATA/overleaf/db:/data/db
+    healthcheck:
+      test: echo 'db.stats().ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks: [overleaf]
+
+  overleaf_redis:
+    profiles: [overleaf]
+    image: redis:8-alpine
+    container_name: overleaf_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/overleaf/redis:/data
+    networks: [overleaf]
+
+networks:
+  overleaf:

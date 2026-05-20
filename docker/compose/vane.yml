@@ -1,0 +1,32 @@
+# their searxng config went stale and now it just falls over. slop!
+---
+services:
+  vane:
+    profiles: [vane]
+    image: itzcrazykns1337/vane:latest
+    container_name: vane
+    restart: unless-stopped
+    volumes:
+      - $DATA/vane/data:/home/vane/data
+    networks: [newt, ollama]
+    labels:
+      homepage.group: AI
+      homepage.name: vane
+      homepage.icon: vane.png
+      homepage.href: https://vane.chenn.dev
+      homepage.description: Private AI Search
+
+      pangolin.public-resources.vane.name: vane
+      pangolin.public-resources.vane.full-domain: vane.chenn.dev
+      pangolin.public-resources.vane.protocol: http
+      pangolin.public-resources.vane.ssl: true
+      pangolin.public-resources.vane.targets[0].method: http
+      pangolin.public-resources.vane.targets[0].port: 3000
+      pangolin.public-resources.vane.auth.sso-enabled: true
+      pangolin.public-resources.vane.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.vane.rules[0].action: pass
+      pangolin.public-resources.vane.rules[0].match: country
+      pangolin.public-resources.vane.rules[0].value: US
+      pangolin.public-resources.vane.rules[1].action: deny
+      pangolin.public-resources.vane.rules[1].match: country
+      pangolin.public-resources.vane.rules[1].value: ALL

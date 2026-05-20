@@ -7,18 +7,16 @@ this is to configure the DNS server that's built into mikrotik, and can serve on
 ssh 192.168.1.1 -p 2200
 
 # you need a working dns upstream set for the router to fetch this file (under IP -> DNS -> servers -> 1.1.1.1)
-/tool fetch url=https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem
-/certificate import file-name=DigiCertGlobalRootG2.crt.pem passphrase=""
+/tool fetch url="https://ssl.com/repo/certs/SSLcomRootCertificationAuthorityECC.pem"
+/certificate import file-name="SSLcomRootCertificationAuthorityECC.pem"
 
-/ip dns set use-doh-server=https://one.one.one.one/dns-query verify-doh-cert=yes
+# once you've fetched the cert to the server, this command will remove 1.1.1.1 from the servers list
+/ip dns set servers="" use-doh-server=https://1.1.1.1/dns-query verify-doh-cert=yes allow-remote-requests=yes
+
+# you can see the imported cert under system->certificates
 
 # now you should be able to use the router IP as a DNS resolver
-dig @192.168.1.1 msn.com
-
-# ;; Got answer:
-# ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 36545
-# ;; ANSWER SECTION:
-# msn.com.                1461    IN      A       204.79.197.219
+dig @192.168.1.1 google.com
 
 # to disable "dynamic servers" from comcast, turn off "use peer dns"
 # IP -> DHCP Client -> edit the client on the WAN port sfpplus-1 -> under section DHCP, untoggle "use peer DNS"

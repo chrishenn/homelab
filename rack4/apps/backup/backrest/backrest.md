@@ -11,7 +11,7 @@ You can just edit the config.json file manually
     - set "autoInitialize": true
 
 If you're controlling docker from a remote and mounting the config file from a local path, don't forget to push changes
-to the local bind mount location.
+to the host's bind mount location.
 
 ---
 
@@ -36,13 +36,6 @@ this is 150 Mb/s in KiB/s
 
 flag on job:
 --skip-if-unchanged
-
-hook script example:
-
-```bash
-/scripts/github/run.sh
-echo {{ .ShellEscape .Summary }}
-```
 
 In the restic ui, to configure a repo
 

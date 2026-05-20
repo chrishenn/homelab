@@ -32,8 +32,6 @@ services:
     image: dumbwareio/dumbkan:latest
     container_name: dumbkan
     restart: unless-stopped
-    environment:
-      SITE_TITLE: Chicken Kanban
     volumes:
       - $DATA/dumbkan:/app/data
     networks: [traefik]
@@ -81,6 +79,8 @@ services:
     image: dumbwareio/dumbwhois:latest
     container_name: dumbwhois
     restart: unless-stopped
+    environment:
+      SITE_TITLE: Chicken Whois
     volumes:
       - $DATA/dumbwhois:/app/data
     networks: [traefik]

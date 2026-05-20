@@ -1,0 +1,157 @@
+---
+services:
+  resume:
+    profiles: [resume]
+    image: amruthpillai/reactive-resume:latest
+    container_name: resume
+    restart: unless-stopped
+    environment:
+      APP_URL: https://resume.chenn.dev
+      PRINTER_ENDPOINT: http://resume_chrome:3000?token=1234567890
+
+      AUTH_SECRET: ${RESUME_AUTH_SECRET}
+      TZ: ${TZ}
+      NODE_ENV: production
+      FLAG_DISABLE_SIGNUPS: false
+
+      DATABASE_URL: postgresql://postgres:postgres@resume_pg:5432/postgres
+      REDIS_URL: redis://resume_redis:6379
+      ENCRYPTION_SECRET: 'change-me-to-a-secure-agent-secret-in-production'
+
+      S3_ACCESS_KEY_ID: seaweedfs
+      S3_SECRET_ACCESS_KEY: seaweedfs
+      S3_ENDPOINT: http://resume_seaweed:8333
+      S3_BUCKET: reactive-resume
+      S3_FORCE_PATH_STYLE: true
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: 465
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_TOKEN}
+      SMTP_FROM: ${SMTP_USER}
+      SMTP_SECURE: true
+
+      OAUTH_DISCOVERY_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+      OAUTH_PROVIDER_NAME: PocketID
+      OAUTH_CLIENT_ID: ${RESUME_OIDC_CLIENT}
+      OAUTH_CLIENT_SECRET: ${RESUME_OIDC_SECRET}
+    volumes:
+      - $DATA/resume/data:/app/data
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://0.0.0.0:3000/api/health').then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
+    depends_on:
+      resume_pg:
+        condition: service_healthy
+      resume_redis:
+        condition: service_healthy
+      resume_chrome:
+        condition: service_healthy
+      resume_seaweed_create:
+        condition: service_completed_successfully
+    networks: [resume, newt, ollama]
+    labels:
+      homepage.group: File Editors
+      homepage.name: Reactive Resume
+      homepage.icon: reactive-resume.png
+      homepage.href: https://resume.chenn.dev
+      homepage.description: Resume Editor
+
+      pangolin.public-resources.resume.name: resume
+      pangolin.public-resources.resume.full-domain: resume.chenn.dev
+      pangolin.public-resources.resume.protocol: http
+      pangolin.public-resources.resume.ssl: true
+      pangolin.public-resources.resume.targets[0].method: http
+      pangolin.public-resources.resume.targets[0].port: 3000
+      pangolin.public-resources.resume.auth.sso-enabled: true
+      pangolin.public-resources.resume.auth.sso-roles[0]: Member
+      pangolin.public-resources.resume.rules[0].action: pass
+      pangolin.public-resources.resume.rules[0].match: country
+      pangolin.public-resources.resume.rules[0].value: US
+      pangolin.public-resources.resume.rules[1].action: deny
+      pangolin.public-resources.resume.rules[1].match: country
+      pangolin.public-resources.resume.rules[1].value: ALL
+
+  resume_pg:
+    profiles: [resume]
+    image: postgres:18-alpine
+    container_name: resume_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - $DATA/resume/resume_pg:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+    networks: [resume]
+
+  resume_redis:
+    profiles: [resume]
+    image: redis:latest
+    container_name: resume_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - $DATA/resume/resume_redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      start_period: 5s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks: [resume]
+
+  resume_chrome:
+    profiles: [resume]
+    image: ghcr.io/browserless/chromium:latest
+    container_name: resume_chrome
+    restart: unless-stopped
+    environment:
+      QUEUED: 10
+      HEALTH: true
+      CONCURRENT: 5
+      TOKEN: 1234567890
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/pressure?token=1234567890']
+    networks: [resume]
+
+  resume_seaweed:
+    profiles: [resume]
+    image: chrislusf/seaweedfs:latest
+    container_name: resume_seaweed
+    restart: unless-stopped
+    command: server -s3 -filer -dir=/data -ip=0.0.0.0
+    environment:
+      AWS_ACCESS_KEY_ID: seaweedfs
+      AWS_SECRET_ACCESS_KEY: seaweedfs
+    volumes:
+      - $DATA/resume/seaweedfs:/data
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8888']
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks: [resume]
+
+  resume_seaweed_create:
+    profiles: [resume]
+    image: quay.io/minio/mc:latest
+    container_name: resume_seaweed_create
+    restart: on-failure
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        addr='http://resume_seaweed:8333'
+        while (! mc alias set seaweedfs $$addr seaweedfs seaweedfs &>/dev/null); do
+          echo "waiting for connection to seaweedfs at $$addr"
+          sleep 3
+        done
+        mc mb -p seaweedfs/reactive-resume
+        exit 0
+    networks: [resume]
+
+networks:
+  resume:

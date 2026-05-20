@@ -30,7 +30,7 @@ function system_configs {
 
 function nvidia_driver_open {
 	# nvidia-open: GTX 1660 and later. otherwise use nvidia-driver
-	curl -Lo cuda.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+	curl -Lo cuda.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2604/x86_64/cuda-keyring_1.1-1_all.deb
 	sudo apt install -y ./cuda.deb
 	sudo apt install -y nvidia-open
 	rm cuda.deb

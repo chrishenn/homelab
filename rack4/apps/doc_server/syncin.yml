@@ -26,6 +26,24 @@
 #   - arrow keys don't work for image viewer navigation
 
 ---
+configs:
+  syncin:
+    content: |
+      auth:
+        oidc:
+          options:
+            autoCreatePermissions:
+              - personal_space
+              - spaces_access
+              - spaces_admin
+              - shares_access
+              - shares_admin
+              - guests_admin
+              - personal_groups_admin
+              - desktop_app_access
+              - desktop_app_sync
+              - webdav_access
+
 services:
   syncin:
     profiles: [syncin]
@@ -71,12 +89,13 @@ services:
       SYNCIN_AUTH_OIDC_OPTIONS_AUTOREDIRECT: true
       SYNCIN_AUTH_OIDC_SECURITY_SCOPE: openid email profile groups
       SYNCIN_AUTH_OIDC_SECURITY_SUPPORTPKCE: false
+    configs:
+      - source: syncin
+        target: /app/environment/environment.yaml
     volumes:
-      - ./syncin/environment.yaml:/app/environment/environment.yaml
       - $DATA/syncin/data:/app/data
       - /mnt/h:/mnt/h
       - /mnt/k:/mnt/k
-      - /mnt/q:/mnt/q
     networks: [syncin, newt]
     labels:
       homepage.group: File Servers

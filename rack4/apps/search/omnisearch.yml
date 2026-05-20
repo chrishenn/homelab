@@ -1,0 +1,55 @@
+---
+configs:
+  omnisearch:
+    content: |
+      [server]
+      domain = https://omnisearch.chenn.dev
+      host = 0.0.0.0
+      port = 5000
+      
+      [proxy]
+
+      [cache]      
+      dir = /cache
+      ttl_search = 3600
+      ttl_infobox = 86400
+
+      [engines]
+      # Use * for all engines, or specify comma-separated list (e.g., ddg,yahoo)
+      # Use *,-engine to exclude specific engines (e.g., *,-startpage)
+      # Available engines: ddg, startpage, yahoo, mojeek
+      engines="*"
+
+services:
+  omnisearch:
+    profiles: [omnisearch]
+    image: vivianverdant/omnisearch_but_gay:latest
+    container_name: omnisearch
+    restart: unless-stopped
+    configs:
+      - source: omnisearch
+        target: /usr/local/app/omnisearch/config.ini
+    volumes:
+      - $DATA/omnisearch/cache:/cache
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Omnisearch
+      homepage.icon: quickwit.png
+      homepage.href: https://omnisearch.chenn.dev
+      homepage.description: Private Google
+
+      pangolin.public-resources.omnisearch.name: omnisearch
+      pangolin.public-resources.omnisearch.full-domain: omnisearch.chenn.dev
+      pangolin.public-resources.omnisearch.protocol: http
+      pangolin.public-resources.omnisearch.ssl: true
+      pangolin.public-resources.omnisearch.targets[0].method: http
+      pangolin.public-resources.omnisearch.targets[0].port: 5000
+      pangolin.public-resources.omnisearch.auth.sso-enabled: true
+      pangolin.public-resources.omnisearch.auth.sso-roles[0]: Member
+      pangolin.public-resources.omnisearch.rules[0].action: pass
+      pangolin.public-resources.omnisearch.rules[0].match: country
+      pangolin.public-resources.omnisearch.rules[0].value: US
+      pangolin.public-resources.omnisearch.rules[1].action: deny
+      pangolin.public-resources.omnisearch.rules[1].match: country
+      pangolin.public-resources.omnisearch.rules[1].value: ALL

@@ -7,15 +7,16 @@ services:
     container_name: rsync
     restart: unless-stopped
     user: $PUID:$PGID
+    environment:
+      TZ: $TZ
+      CRON_SCHEDULE: '0 5 * * *'
+      CRON_CMD: '/run.sh'
+      RUN_NOW: 1
+      MEDIA: $MEDIA
     volumes:
       - ~/.docker/config.json:/config.json
       - ./rsync/rsync.sh:/run.sh
       - /mnt/f:/mnt/f
       - /mnt/h:/mnt/h
       - /mnt/k:/mnt/k
-      - /mnt/q:/mnt/q
-    environment:
-      TZ: $TZ
-      CRON_SCHEDULE: '0 5 * * *'
-      CRON_CMD: '/run.sh'
-      RUN_NOW: 1
+      - /mnt/r:/mnt/r

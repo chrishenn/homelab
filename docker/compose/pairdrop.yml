@@ -1,0 +1,38 @@
+# replaced with localsend
+---
+services:
+  pairdrop:
+    profiles: [pairdrop]
+    image: lscr.io/linuxserver/pairdrop:latest
+    container_name: pairdrop
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      RATE_LIMIT: false
+      WS_FALLBACK: false
+      RTC_CONFIG:
+      DEBUG_MODE: false
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: Pairdrop
+      homepage.icon: pairdrop.png
+      homepage.href: https://pairdrop.chenn.dev
+      homepage.description: Private Airdrop
+
+      pangolin.public-resources.pairdrop.name: pairdrop
+      pangolin.public-resources.pairdrop.full-domain: pairdrop.chenn.dev
+      pangolin.public-resources.pairdrop.protocol: http
+      pangolin.public-resources.pairdrop.ssl: true
+      pangolin.public-resources.pairdrop.targets[0].method: http
+      pangolin.public-resources.pairdrop.targets[0].port: 3000
+      pangolin.public-resources.pairdrop.auth.sso-enabled: true
+      pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
+      pangolin.public-resources.pairdrop.rules[0].action: pass
+      pangolin.public-resources.pairdrop.rules[0].match: country
+      pangolin.public-resources.pairdrop.rules[0].value: US
+      pangolin.public-resources.pairdrop.rules[1].action: deny
+      pangolin.public-resources.pairdrop.rules[1].match: country
+      pangolin.public-resources.pairdrop.rules[1].value: ALL

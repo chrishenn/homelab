@@ -8,6 +8,9 @@ alias u := up
 alias d := down
 profile := "'*'"
 
+repo := "/var/home/chris/Projects/homelab"
+dir := repo/"rack4"
+
 up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
@@ -62,12 +65,13 @@ pbounce profile=profile *svcs:
 # logins, keys, helpers
 
 keys:
-    echo "$(op read 'op://homelab/dkey/public key')" | $DHOST_SSH "cat >> ~/.ssh/authorized_keys"
+    echo "$(op read 'op://homelab/dkey/public key')" | $DHOST_SSH "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
-login:
-    #!/bin/bash
-    echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin
+login_docker:
     echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin
+
+login_registry:
+    echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin
 
 rlogin:
     #!/bin/bash
@@ -76,22 +80,22 @@ rlogin:
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    $DHOST_SSH -At "cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push"
+
+rsync message="sync":
+    $DHOST_SSH -At "cd {{repo}} && git add --all && git commit -a -m '{{ message }}' || true && git pull && git push"
+    git commit -a -m "{{ message }}" || true && git pull && git push
 
 # sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-rsync message="sync":
-    $DHOST_SSH -At "cd ${REPO} && git commit -a -m '{{ message }}' || true && git pull && git push"
-    git commit -a -m "{{ message }}" || true && git pull && git push
-
 reset:
-    $DHOST_SSH -At "cd ${REPO} && git fetch origin"
-    $DHOST_SSH -At "cd ${REPO} && git reset --hard origin/main"
+    $DHOST_SSH -At "cd {{repo}} && git fetch origin"
+    $DHOST_SSH -At "cd {{repo}} && git reset --hard origin/main"
 
 ssh:
-    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd ${REPO_MACHINE} && bash -l"
+    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd {{dir}} && bash -l"
 
 cm:
     $DHOST_SSH -t "$(op read op://homelab/svc/bash) && bash -i -c 'just cm'"

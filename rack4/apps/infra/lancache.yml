@@ -30,6 +30,7 @@ services:
 
   # it did auto-detect the lancache server at LANCACHE_IP
   # dc run --rm -it lancache_prefill select-apps
+  # [730,4465480,1079800,400,620,2012840]
   # dc run --rm -it lancache_prefill prefill
   lancache_prefill:
     profiles: [lancache]
