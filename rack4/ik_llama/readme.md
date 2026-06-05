@@ -1,5 +1,7 @@
 # ik_llama and r1 quantizations
 
+todo: add a pixi env to install cudatoolkit
+
 https://huggingface.co/ubergarm/DeepSeek-R1-0528-GGUF
 https://github.com/ikawrakow/ik_llama.cpp
 https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md

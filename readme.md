@@ -27,6 +27,11 @@ K8s talos pulumi stacks for:
     - ryzen 5950X
     - GTX 1080
 
+Docker compose stacks for:
+
+- vps0
+    - 8 vcpus (hostinger)
+
 ---
 
 # dev

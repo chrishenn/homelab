@@ -11,7 +11,7 @@ services:
       CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/traefik_config.yml:/traefik.yml:ro
       - ./traefik/cfg:/cfg
       - $DATA/traefik/logs:/logs
       - $DATA/traefik/ssl:/ssl
@@ -38,11 +38,11 @@ services:
       - '${TRAEFIK_VIP}:61001:61001' # spice-tls
       - '${TRAEFIK_VIP}:10000:10000' #
     labels:
-      homepage.instance.private.group: Infra
-      homepage.instance.private.name: Traefik-Docker
-      homepage.instance.private.icon: traefik.png
-      homepage.instance.private.href: https://docker-traefik.henn.dev
-      homepage.instance.private.description: Docker Traefik Gui (Rack 4)
+      homepage.group: Infra
+      homepage.name: Traefik-Docker
+      homepage.icon: traefik.png
+      homepage.href: https://docker-traefik.henn.dev
+      homepage.description: Docker Traefik Gui (Rack 4)
 
       traefik.enable: true
       traefik.http.routers.dash.rule: Host(`docker-traefik.henn.dev`)

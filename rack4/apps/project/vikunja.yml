@@ -28,7 +28,7 @@ services:
       - $DATA/vikunja/db:/db
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Vikunja
       homepage.icon: vikunja.png
       homepage.href: https://vikunja.chenn.dev

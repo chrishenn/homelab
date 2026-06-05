@@ -113,7 +113,7 @@ services:
       - $DATA/gitlab/config:/etc/gitlab
     networks: [newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Registry and Code Forge
       homepage.name: Gitlab
       homepage.icon: gitlab.png
       homepage.href: https://gitlab.chenn.dev

@@ -23,7 +23,7 @@ services:
       - $DATA/docmost/docmost:/app/data/storage
     networks: [docmost, newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: File Servers
       homepage.name: Docmost
       homepage.icon: docmost.png
       homepage.href: https://docmost.chenn.dev
@@ -59,11 +59,16 @@ services:
 
   docmost_redis:
     profiles: [docmost]
-    image: redis:7.2-alpine
+    image: valkey/valkey:alpine
     container_name: docmost_redis
     restart: unless-stopped
     volumes:
-      - $DATA/docmost/docmost_redis:/data
+      - $DATA/docmost/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [docmost]
 
 networks:

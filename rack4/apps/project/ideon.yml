@@ -27,7 +27,7 @@ services:
       - $DATA/ideon/data:/app/storage
     networks: [ideon, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Ideon
       homepage.icon: https://github.com/3xpyth0n/ideon/blob/main/public/dark-icon.png?raw=true
       homepage.href: https://ideon.chenn.dev

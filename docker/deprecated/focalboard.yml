@@ -1,0 +1,8 @@
+# abandoned
+---
+services:
+  focalboard:
+    profiles: [focalboard]
+    image: mattermost/focalboard
+    container_name: focalboard
+    restart: unless-stopped

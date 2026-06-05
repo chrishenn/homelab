@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
-      KEEPALIVED_CUSTOM_CONFIG: 'true'
+      KEEPALIVED_CUSTOM_CONFIG: true
     configs:
       - source: traefik_k
         target: /etc/keepalived/keepalived.conf

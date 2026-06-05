@@ -1,0 +1,27 @@
+# private slack
+# cpu and mem use at idle (4GB!) is quite high. Those damn Ruby people at it again
+---
+services:
+  campfire:
+    profiles: [campfire]
+    image: ${REGISTRY}/campfire:1.0
+    container_name: campfire
+    restart: unless-stopped
+    environment:
+      SECRET_KEY_BASE: ${CAMPFIRE_SECRET_KEY_BASE}
+    volumes:
+      - $DATA/campfire:/rails/storage
+    networks: [traefik]
+    labels:
+      homepage.group: Tools
+      homepage.name: Campfire
+      homepage.icon: firebase.png
+      homepage.href: https://campfire.henn.dev
+      homepage.description: Private Slack
+
+      traefik.enable: true
+      docker-volume-backup.stop-during-backup: campfire
+      traefik.http.routers.campfire.rule: Host(`campfire.henn.dev`)
+      traefik.http.routers.campfire.entrypoints: websecure
+      traefik.http.routers.campfire.tls.certresolver: cf
+      traefik.http.services.campfire.loadbalancer.server.port: 80

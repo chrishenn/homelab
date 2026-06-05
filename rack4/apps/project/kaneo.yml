@@ -55,7 +55,7 @@ services:
       <<: *kaneo_env
     networks: [kaneo, newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Project Management
       homepage.name: Kaneo
       homepage.icon: https://raw.githubusercontent.com/usekaneo/kaneo/refs/heads/main/apps/docs/favicon.svg
       homepage.href: https://kaneo.chenn.dev

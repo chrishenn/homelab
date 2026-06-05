@@ -1,4 +1,5 @@
-# compose operations over {profiles, svcs}
+set fallback
+alias a := attach
 alias b := bounce
 alias f := follow
 alias s := sync
@@ -7,8 +8,19 @@ alias u := up
 alias d := down
 profile := "'*'"
 
+# machine-specific
+
+repo := "/home/chris/Projects/homelab"
+dir := repo/"rack0"
+
+[arg("pty", long="pty", short="p")]
+ssh cmd='' pty='true':
+    just rack0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+
+# compose operations over {profiles, svcs}
+
 up profile=profile *svcs:
-    docker compose --profile {{ profile }} up -d --remove-orphans --pull missing {{ svcs }}
+    docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
 pullup profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
@@ -21,6 +33,11 @@ bounce profile=profile *svcs:
     docker compose --profile {{ profile }} down {{ svcs }} && \
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
+pb profile=profile *svcs:
+    #!/bin/bash
+    docker compose --profile {{ profile }} down {{ svcs }} && \
+    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+
 build *svcs:
     docker compose build --push {{ svcs }}
 
@@ -31,7 +48,7 @@ log *args:
     docker compose logs {{ args }}
 
 follow *args:
-    just log --follow {{ args }}
+    just log -f {{ args }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}
@@ -42,11 +59,11 @@ ps *svcs:
 watch:
     watch -n 1 "docker compose ps"
 
-bbounce profile=profile *svcs:
+bbounce *svcs:
     #!/bin/bash
-    docker compose --profile {{ profile }} down {{ svcs }} || true \
+    docker compose down {{ svcs }} \
     && docker compose build --push {{ svcs }} \
-    && docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
+    && docker compose up -d --remove-orphans --pull always {{ svcs }}
 
 pbounce profile=profile *svcs:
     #!/bin/bash
@@ -56,24 +73,25 @@ pbounce profile=profile *svcs:
 # logins, keys, helpers
 
 keys:
-    echo "$(op read 'op://homelab/dkey/public key')" | $DHOST_SSH "cat >> ~/.ssh/authorized_keys"
+    echo "$(op read 'op://homelab/dkey/public key')" | just ssh 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys' -p=false
 
-login:
-    #!/bin/bash
-    echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin
+login_docker:
     echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin
+
+login_registry:
+    echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin
 
 rlogin:
     #!/bin/bash
-    $DHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
-    $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
+    just ssh 'echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin'
+    just ssh 'echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin'
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "cd ${REPO_HOST} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    just ssh 'cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
 rsync message="sync":
-    $DHOST_SSH -At "cd ${REPO_HOST} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    just ssh 'cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push'
     git commit -a -m "{{ message }}" || true && git pull && git push
 
 # sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
@@ -81,17 +99,4 @@ ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
 reset:
-    $DHOST_SSH -At "cd ${REPO_HOST} && git fetch origin"
-    $DHOST_SSH -At "cd ${REPO_HOST} && git reset --hard origin/main"
-
-ssh:
-    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd ${REPO_MACHINE} && bash -l"
-
-cm:
-    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && bash -i -c 'just cm'"
-
-# service-specific recipes
-
-sync_dns:
-    just sync
-    just bounce core blocky
+    just ssh 'cd {{repo}} && git fetch origin && git reset --hard origin/main'

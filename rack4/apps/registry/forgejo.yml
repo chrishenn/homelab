@@ -55,7 +55,7 @@ services:
       - $DATA/forgejo/data:/data
     networks: [forgejo, traefik]
     labels:
-      homepage.group: Dev
+      homepage.group: Registry and Code Forge
       homepage.name: Forgejo
       homepage.icon: forgejo.png
       homepage.href: https://forgejo.henn.dev

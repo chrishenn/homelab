@@ -1,7 +1,7 @@
 # Pulumi Talos K8s cluster on {Rack2, Rack3}
 
-control planes: {rack3}
-workers: {rack2}
+- control planes: {rack3}
+- workers: {rack2}
 
 ---
 

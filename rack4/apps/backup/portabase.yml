@@ -43,7 +43,7 @@ services:
         condition: service_healthy
     networks: [portabase, newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Backup
       homepage.name: Portabase
       homepage.icon: postgres.png
       homepage.href: https://portabase.chenn.dev

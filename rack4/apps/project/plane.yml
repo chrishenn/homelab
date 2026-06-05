@@ -1,0 +1,171 @@
+# "some services might have failed"; wait between 90 seconds and 5 minutes for the 'migrator' to exit, then refresh
+---
+x-plane_env: &plane_env
+  DOMAIN_NAME: plane.chenn.dev
+  FILE_SIZE_LIMIT: 10485760
+  DATABASE_URL: postgresql://plane:plane@plane_db/plane
+  REDIS_URL: redis://plane_redis:6379
+  AMQP_URL: amqp://plane:plane@plane_mq:5672/plane
+  AWS_S3_ENDPOINT_URL: http://plane_s3:9000
+  AWS_REGION: us-east-1
+  AWS_S3_BUCKET_NAME: plane
+  AWS_ACCESS_KEY_ID: ${PLANE_S3_ACCESS}
+  AWS_SECRET_ACCESS_KEY: ${PLANE_S3_SECRET}
+
+  POSTGRES_DB: plane
+  POSTGRES_USER: plane
+  POSTGRES_PASSWORD: plane
+
+  RABBITMQ_DEFAULT_USER: plane
+  RABBITMQ_DEFAULT_PASS: plane
+  RABBITMQ_DEFAULT_VHOST: plane
+
+  RUSTFS_ACCESS_KEY: ${PLANE_S3_ACCESS}
+  RUSTFS_SECRET_KEY: ${PLANE_S3_SECRET}
+  RUSTFS_VOLUMES: /data
+  RUSTFS_ADDRESS: :9000
+  RUSTFS_EXTERNAL_ADDRESS: :9000
+  RUSTFS_CONSOLE_ENABLE: true
+  RUSTFS_CONSOLE_ADDRESS: :9001
+  RUSTFS_CORS_ALLOWED_ORIGINS: '*'
+  RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: '*'
+
+services:
+  plane:
+    profiles: [plane]
+    image: artifacts.plane.so/makeplane/plane-aio-commercial:stable
+    container_name: plane
+    environment:
+      <<: *plane_env
+    depends_on:
+      plane_s3_setup:
+        condition: service_completed_successfully
+    networks: [plane, traefik, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Plane
+      homepage.icon: plane.png
+      homepage.href: https://plane.chenn.dev
+      homepage.description: Linear Alternative
+
+      pangolin.public-resources.plane.name: plane
+      pangolin.public-resources.plane.full-domain: plane.chenn.dev
+      pangolin.public-resources.plane.protocol: http
+      pangolin.public-resources.plane.ssl: true
+      pangolin.public-resources.plane.targets[0].method: http
+      pangolin.public-resources.plane.targets[0].port: 80
+      pangolin.public-resources.plane.auth.sso-enabled: true
+      pangolin.public-resources.plane.auth.sso-roles[0]: Member
+      pangolin.public-resources.plane.rules[0].action: pass
+      pangolin.public-resources.plane.rules[0].match: country
+      pangolin.public-resources.plane.rules[0].value: US
+      pangolin.public-resources.plane.rules[1].action: deny
+      pangolin.public-resources.plane.rules[1].match: country
+      pangolin.public-resources.plane.rules[1].value: ALL
+
+  plane_db:
+    profiles: [plane]
+    image: postgres:18-alpine
+    container_name: plane_db
+    restart: unless-stopped
+    environment:
+      <<: *plane_env
+    volumes:
+      - $DATA/plane/db:/var/lib/postgresql
+    networks: [plane]
+
+  plane_redis:
+    profiles: [plane]
+    image: valkey/valkey:alpine
+    container_name: plane_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/plane/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [plane]
+
+  plane_mq:
+    profiles: [plane]
+    # do not bump this version
+    image: rabbitmq:3.13.6-management-alpine
+    container_name: plane_mq
+    restart: unless-stopped
+    environment:
+      <<: *plane_env
+    volumes:
+      - $DATA/plane/mq:/var/lib/rabbitmq
+    networks: [plane, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_mq.rule: Host(`mq.plane.henn.dev`)
+      traefik.http.routers.plane_mq.entrypoints: websecure
+      traefik.http.routers.plane_mq.middlewares: hdrs@file
+      traefik.http.routers.plane_mq.tls.certresolver: cf
+      traefik.http.services.plane_mq.loadbalancer.server.port: 15672
+
+  plane_s3_setup:
+    profiles: [plane]
+    image: minio/mc
+    container_name: plane_s3_setup
+    restart: no
+    environment:
+      <<: *plane_env
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        until mc alias set rustfs $${AWS_S3_ENDPOINT_URL} $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY}; do
+          echo 'waiting to connect to plane_s3'
+          sleep 2
+        done
+        mc mb rustfs/$${AWS_S3_BUCKET_NAME} --ignore-existing
+    depends_on:
+      plane_s3:
+        condition: service_healthy
+    networks: [plane]
+
+  plane_s3:
+    profiles: [plane]
+    image: rustfs/rustfs:latest
+    container_name: plane_s3
+    restart: unless-stopped
+    command: /data
+    environment:
+      <<: *plane_env
+    volumes:
+      - $DATA/plane/s3:/data
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+      interval: 5s
+    depends_on:
+      plane_s3_perm:
+        condition: service_completed_successfully
+    networks: [plane, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_s3.rule: Host(`s3.plane.henn.dev`)
+      traefik.http.routers.plane_s3.entrypoints: websecure
+      traefik.http.routers.plane_s3.middlewares: hdrs@file
+      traefik.http.routers.plane_s3.tls.certresolver: cf
+      traefik.http.services.plane_s3.loadbalancer.server.port: 9001
+
+  plane_s3_perm:
+    profiles: [plane]
+    image: alpine
+    container_name: plane_s3_perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/plane/s3:/data
+    command: chown -R 10001:10001 /data
+
+networks:
+  plane:

@@ -1,22 +1,38 @@
 ---
+configs:
+  ntfy:
+    content: |
+      base-url: https://ntfy.chenn.dev
+      listen-http: ':80'
+      behind-proxy: true
+      proxy-forwarded-header: 'X-Forwarded-For'
+      proxy-trusted-hosts: '192.168.100.0/24'
+      attachment-cache-dir: /attachments
+      attachment-total-size-limit: '1000G'
+      attachment-file-size-limit: '10G'
+      attachment-expiry-duration: '48h'
+      visitor-attachment-total-size-limit: '1000G'
+      visitor-attachment-daily-bandwidth-limit: '1000G'
 services:
   ntfy:
     profiles: [ntfy]
     image: binwiederhier/ntfy
     container_name: ntfy
     restart: unless-stopped
-    healthcheck:
-      test: ['CMD-SHELL', "wget -q --tries=1 http://ntfy:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+    command: serve
     volumes:
       - $DATA/ntfy/data:/var/cache/ntfy
       - $DATA/ntfy/attachments:/attachments
-      - ./ntfy:/etc/ntfy
+    configs:
+      - source: ntfy
+        target: /etc/ntfy/server.yml
     environment:
       TZ: $TZ
-    command: serve
+    healthcheck:
+      test: ['CMD-SHELL', "wget -q --tries=1 http://ntfy:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Notify
       homepage.name: Ntfy
       homepage.icon: ntfy.png
       homepage.href: https://ntfy.chenn.dev

@@ -1,3 +1,4 @@
+# restrictive oidc setup means only one url for now
 ---
 services:
   kavita:
@@ -12,9 +13,10 @@ services:
     volumes:
       - $DATA/kavita/config:/config
       - $DATA/kavita/data:/data
+      - $MEDIA/Books:/media
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: Kavita
       homepage.icon: kavita.png
       homepage.href: https://kavita.chenn.dev

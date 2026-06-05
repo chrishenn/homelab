@@ -1,7 +1,9 @@
 # sudo chown -R 1000:1000 $DATA/wikigo
+
 # hash password with bcrypt to commit in plaintext config.yaml
-# config file must be mounted as writeable file (why? jesus christ)
 # htpasswd -bnBC 14 "" YOUR_PASSWORD | tr -d ':\n'
+
+# config file must be mounted as writeable file
 ---
 services:
   wikigo:
@@ -14,7 +16,7 @@ services:
       - ./wikigo/config.yaml:/wiki/data/config.yaml
     networks: [newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Project Management
       homepage.name: Wiki Go
       homepage.icon: wiki-go.png
       homepage.href: https://wikigo.chenn.dev

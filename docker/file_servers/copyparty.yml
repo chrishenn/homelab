@@ -1,0 +1,53 @@
+# crappy UI, though server features are pretty great
+---
+configs:
+  copyparty:
+    content: |
+      [global]
+          p: 8086, 3923       # Listen on ports 8086 and 3923
+          e2dsa               # Enable EdDSA encryption for secure connections
+          e2ts                # Enable TLS encryption
+          z, qr               # Enable Zeroconf (LAN service discovery) and QR code login
+          shr: /shr           # Shared folder path
+          hist: /cfg/hists/
+      [/h]
+          /mnt/h
+          accs:
+              rwmda: *
+      [/q]
+          /mnt/q
+          accs:
+              rwmda: *
+      [/f]
+          /mnt/f
+          accs:
+              rwmda: *
+      [accounts]
+          chris: 1234
+
+services:
+  copyparty:
+    profiles: [copyparty]
+    image: copyparty/ac:latest
+    container_name: copyparty
+    restart: no
+    user: $PGID:$PUID
+    configs:
+      - source: copyparty
+        target: /cfg/config.conf
+    volumes:
+      - /mnt/h:/mnt/h
+      - /mnt/q:/mnt/q
+      - /mnt/f:/mnt/f
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.copyparty.rule: Host(`copyparty.henn.dev`)
+      traefik.http.routers.copyparty.entrypoints: websecure
+      traefik.http.routers.copyparty.tls.certresolver: cf
+      traefik.http.services.copyparty.loadbalancer.server.port: 3923
+      homepage.group: File Edit, Convert
+      homepage.name: Copy Party
+      homepage.icon: copyparty.png
+      homepage.href: https://copyparty.henn.dev
+      homepage.description: File server

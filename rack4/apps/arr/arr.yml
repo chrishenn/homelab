@@ -17,11 +17,11 @@ services:
       - $MEDIA:/media_library
     networks: [arr, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: Radarr
       homepage.icon: radarr.png
       homepage.href: https://radarr.chenn.dev
-      homepage.description: Movies
+      homepage.description: Movie Manager
 
       pangolin.public-resources.radarr.name: radarr
       pangolin.public-resources.radarr.full-domain: radarr.chenn.dev
@@ -33,15 +33,12 @@ services:
       pangolin.public-resources.radarr.auth.sso-roles[0]: Member
       pangolin.public-resources.radarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.radarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.radarr.rules[0].action: allow
-      pangolin.public-resources.radarr.rules[0].match: path
-      pangolin.public-resources.radarr.rules[0].value: /api/*
-      pangolin.public-resources.radarr.rules[1].action: pass
+      pangolin.public-resources.radarr.rules[0].action: pass
+      pangolin.public-resources.radarr.rules[0].match: country
+      pangolin.public-resources.radarr.rules[0].value: US
+      pangolin.public-resources.radarr.rules[1].action: deny
       pangolin.public-resources.radarr.rules[1].match: country
-      pangolin.public-resources.radarr.rules[1].value: US
-      pangolin.public-resources.radarr.rules[2].action: deny
-      pangolin.public-resources.radarr.rules[2].match: country
-      pangolin.public-resources.radarr.rules[2].value: ALL
+      pangolin.public-resources.radarr.rules[1].value: ALL
 
   sonarr:
     # ghost redownloads of failed dl's I think were a retry from sab. Try purging sab's dl history, including faileds
@@ -62,11 +59,11 @@ services:
       - $MEDIA:/media_library
     networks: [arr, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: Sonarr
       homepage.icon: sonarr.png
       homepage.href: https://sonarr.chenn.dev
-      homepage.description: TV
+      homepage.description: TV Manager
 
       pangolin.public-resources.sonarr.name: sonarr
       pangolin.public-resources.sonarr.full-domain: sonarr.chenn.dev
@@ -78,58 +75,12 @@ services:
       pangolin.public-resources.sonarr.auth.sso-roles[0]: Member
       pangolin.public-resources.sonarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.sonarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.sonarr.rules[0].action: allow
-      pangolin.public-resources.sonarr.rules[0].match: path
-      pangolin.public-resources.sonarr.rules[0].value: /api/*
-      pangolin.public-resources.sonarr.rules[1].action: pass
+      pangolin.public-resources.sonarr.rules[0].action: pass
+      pangolin.public-resources.sonarr.rules[0].match: country
+      pangolin.public-resources.sonarr.rules[0].value: US
+      pangolin.public-resources.sonarr.rules[1].action: deny
       pangolin.public-resources.sonarr.rules[1].match: country
-      pangolin.public-resources.sonarr.rules[1].value: US
-      pangolin.public-resources.sonarr.rules[2].action: deny
-      pangolin.public-resources.sonarr.rules[2].match: country
-      pangolin.public-resources.sonarr.rules[2].value: ALL
-
-  lidarr:
-    profiles: [arr]
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    restart: unless-stopped
-    environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TZ}
-      LIDARR__AUTH__METHOD: External
-    volumes:
-      - $DATA/lidarr:/config
-      - $DATA/sab/downloads:/sab/downloads
-      - $DATA/qbit/downloads:/qbit/downloads
-      - $MEDIA:/media_library
-    networks: [arr, newt]
-    labels:
-      homepage.group: Media
-      homepage.name: Lidarr
-      homepage.icon: lidarr.png
-      homepage.href: https://lidarr.chenn.dev
-      homepage.description: Music Manager
-
-      pangolin.public-resources.lidarr.name: lidarr
-      pangolin.public-resources.lidarr.full-domain: lidarr.chenn.dev
-      pangolin.public-resources.lidarr.protocol: http
-      pangolin.public-resources.lidarr.ssl: true
-      pangolin.public-resources.lidarr.targets[0].method: http
-      pangolin.public-resources.lidarr.targets[0].port: 8686
-      pangolin.public-resources.lidarr.auth.sso-enabled: true
-      pangolin.public-resources.lidarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.lidarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.lidarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.lidarr.rules[0].action: allow
-      pangolin.public-resources.lidarr.rules[0].match: path
-      pangolin.public-resources.lidarr.rules[0].value: /api/*
-      pangolin.public-resources.lidarr.rules[1].action: pass
-      pangolin.public-resources.lidarr.rules[1].match: country
-      pangolin.public-resources.lidarr.rules[1].value: US
-      pangolin.public-resources.lidarr.rules[2].action: deny
-      pangolin.public-resources.lidarr.rules[2].match: country
-      pangolin.public-resources.lidarr.rules[2].value: ALL
+      pangolin.public-resources.sonarr.rules[1].value: ALL
 
   prowlarr:
     profiles: [arr]
@@ -144,7 +95,7 @@ services:
       - $DATA/prowlarr:/config
     networks: [arr, newt, traefik]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: Prowlarr
       homepage.icon: prowlarr.png
       homepage.href: https://prowlarr.chenn.dev
@@ -168,15 +119,12 @@ services:
       pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
       pangolin.public-resources.prowlarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.prowlarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.prowlarr.rules[0].action: allow
-      pangolin.public-resources.prowlarr.rules[0].match: path
-      pangolin.public-resources.prowlarr.rules[0].value: /api/*
-      pangolin.public-resources.prowlarr.rules[1].action: pass
+      pangolin.public-resources.prowlarr.rules[0].action: pass
+      pangolin.public-resources.prowlarr.rules[0].match: country
+      pangolin.public-resources.prowlarr.rules[0].value: US
+      pangolin.public-resources.prowlarr.rules[1].action: deny
       pangolin.public-resources.prowlarr.rules[1].match: country
-      pangolin.public-resources.prowlarr.rules[1].value: US
-      pangolin.public-resources.prowlarr.rules[2].action: deny
-      pangolin.public-resources.prowlarr.rules[2].match: country
-      pangolin.public-resources.prowlarr.rules[2].value: ALL
+      pangolin.public-resources.prowlarr.rules[1].value: ALL
 
   bazarr:
     profiles: [arr]
@@ -192,7 +140,7 @@ services:
       - $MEDIA:/media_library
     networks: [arr, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: Bazarr
       homepage.icon: bazarr.png
       homepage.href: https://bazarr.chenn.dev
@@ -208,17 +156,12 @@ services:
       pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
       pangolin.public-resources.bazarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.bazarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.bazarr.rules[0].action: allow
-      pangolin.public-resources.bazarr.rules[0].match: path
-      pangolin.public-resources.bazarr.rules[0].value: /api/*
-      pangolin.public-resources.bazarr.rules[1].action: pass
+      pangolin.public-resources.bazarr.rules[0].action: pass
+      pangolin.public-resources.bazarr.rules[0].match: country
+      pangolin.public-resources.bazarr.rules[0].value: US
+      pangolin.public-resources.bazarr.rules[1].action: deny
       pangolin.public-resources.bazarr.rules[1].match: country
-      pangolin.public-resources.bazarr.rules[1].value: US
-      pangolin.public-resources.bazarr.rules[2].action: deny
-      pangolin.public-resources.bazarr.rules[2].match: country
-      pangolin.public-resources.bazarr.rules[2].value: ALL
-
-
+      pangolin.public-resources.bazarr.rules[1].value: ALL
 
 networks:
   arr:

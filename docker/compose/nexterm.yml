@@ -1,0 +1,34 @@
+# works well, and has both server and client cli's (which termix does not). However, supplanting with termix for now
+---
+services:
+  nexterm:
+    profiles: [nexterm]
+    image: germannewsmaker/nexterm
+    container_name: nexterm
+    restart: unless-stopped
+    volumes:
+      - $DATA/nexterm:/app/data
+    environment:
+      ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
+    networks: [newt]
+    labels:
+      homepage.group: Monitoring
+      homepage.name: Nexterm
+      homepage.icon: nexterm.png
+      homepage.href: https://nexterm.chenn.dev
+      homepage.description: Server Manager
+
+      pangolin.public-resources.nexterm.name: nexterm
+      pangolin.public-resources.nexterm.full-domain: nexterm.chenn.dev
+      pangolin.public-resources.nexterm.protocol: http
+      pangolin.public-resources.nexterm.ssl: true
+      pangolin.public-resources.nexterm.targets[0].method: http
+      pangolin.public-resources.nexterm.targets[0].port: 6989
+      pangolin.public-resources.nexterm.auth.sso-enabled: true
+      pangolin.public-resources.nexterm.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.nexterm.rules[0].action: pass
+      pangolin.public-resources.nexterm.rules[0].match: country
+      pangolin.public-resources.nexterm.rules[0].value: US
+      pangolin.public-resources.nexterm.rules[1].action: deny
+      pangolin.public-resources.nexterm.rules[1].match: country
+      pangolin.public-resources.nexterm.rules[1].value: ALL

@@ -15,9 +15,9 @@ services:
       - $MEDIA:/media
     networks: [arr, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: muxarr
-      homepage.icon: muxarr.png
+      homepage.icon: https://github.com/KirovAir/muxarr/blob/master/docs/logo.png?raw=true
       homepage.href: https://muxarr.chenn.dev
       homepage.description: Auto Video Mux
 

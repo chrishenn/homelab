@@ -1,4 +1,4 @@
-# I use arcane for this
+# I can't get anything to auto-update my containers - might be time to revisit watchtower
 ---
 services:
   watchtower:

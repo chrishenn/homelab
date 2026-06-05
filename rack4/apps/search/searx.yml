@@ -21,7 +21,7 @@ services:
       - $DATA/searx/cache:/var/cache/searxng:rw
     networks: [searx, newt]
     labels:
-      homepage.group: AI
+      homepage.group: Search
       homepage.name: Searx
       homepage.icon: searxng.png
       homepage.href: https://searx.chenn.dev
@@ -44,7 +44,7 @@ services:
 
   searx_redis:
     profiles: [searx]
-    image: valkey/valkey:8-alpine
+    image: valkey/valkey:alpine
     container_name: searx_redis
     restart: unless-stopped
     command: valkey-server --save 30 1 --loglevel warning

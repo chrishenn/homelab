@@ -85,7 +85,7 @@ services:
 
   opencut_redis:
     profiles: [opencut]
-    image: redis:7-alpine
+    image: valkey/valkey:alpine
     container_name: opencut_redis
     restart: unless-stopped
     healthcheck:

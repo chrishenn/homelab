@@ -1,3 +1,4 @@
+# works ok to monitor docker containers. A little crunchy
 ---
 services:
   portainer:

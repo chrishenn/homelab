@@ -9,7 +9,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
     networks: [newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: Vert
       homepage.icon: converse-light.png
       homepage.href: https://vert.chenn.dev

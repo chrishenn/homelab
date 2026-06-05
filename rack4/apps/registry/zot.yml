@@ -93,6 +93,12 @@ services:
       - $DATA/zot/data:/var/lib/zot
     networks: [traefik]
     labels:
+      homepage.group: Registry and Code Forge
+      homepage.name: Zot
+      homepage.icon: zot-registry.png
+      homepage.href: https://zot.henn.dev
+      homepage.description: Container Registry
+
       traefik.enable: true
       traefik.http.routers.zot.rule: Host(`zot.henn.dev`)
       traefik.http.routers.zot.entrypoints: websecure

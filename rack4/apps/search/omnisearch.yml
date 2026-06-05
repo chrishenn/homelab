@@ -6,10 +6,10 @@ configs:
       domain = https://omnisearch.chenn.dev
       host = 0.0.0.0
       port = 5000
-      
+
       [proxy]
 
-      [cache]      
+      [cache]
       dir = /cache
       ttl_search = 3600
       ttl_infobox = 86400
@@ -33,7 +33,7 @@ services:
       - $DATA/omnisearch/cache:/cache
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Search
       homepage.name: Omnisearch
       homepage.icon: quickwit.png
       homepage.href: https://omnisearch.chenn.dev

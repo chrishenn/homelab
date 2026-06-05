@@ -36,7 +36,7 @@ services:
       test: curl http://0.0.0.0:1349/api/v1/health
     networks: [newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: Snap Otter
       homepage.icon: https://github.com/snapotter-hq/SnapOtter/blob/main/apps/web/public/logo.png?raw=true
       homepage.href: https://snapotter.chenn.dev

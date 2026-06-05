@@ -3,6 +3,7 @@
 # curl will prompt for password
 
 # SSO is enterprise-only
+# bit heavy at idle
 ---
 services:
   kestra:

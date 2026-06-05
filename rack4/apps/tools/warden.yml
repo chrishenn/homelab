@@ -34,7 +34,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: General Tools
       homepage.name: Vaultwarden
       homepage.icon: vaultwarden.png
       homepage.href: https://warden.chenn.dev

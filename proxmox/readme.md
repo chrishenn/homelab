@@ -2,4 +2,4 @@
 
 Proxmox configs
 
-Deploys to machine: rack2
+Deploys to platform: proxmox

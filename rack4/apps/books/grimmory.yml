@@ -31,8 +31,8 @@ services:
       <<: *grimmory_env
     volumes:
       - $DATA/grimmory/data:/app/data
-      - $DATA/grimmory/books:/books
       - $DATA/grimmory/bookdrop:/bookdrop
+      - $MEDIA/Books:/books
     depends_on:
       grimmory_db:
         condition: service_healthy
@@ -44,7 +44,7 @@ services:
       timeout: 10s
     networks: [grimmory, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: grimmory
       homepage.icon: booklore.png
       homepage.href: https://grimmory.chenn.dev

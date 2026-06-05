@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     networks: [newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: Job
       homepage.name: openresume
       homepage.icon: open-resume.png
       homepage.href: https://openresume.chenn.dev

@@ -75,25 +75,25 @@ function main {
 	declare ssh_keyf=${1:-"$HOME/.ssh/id_ed25519"}
 	shift
 
-	cat <<- END
+	cat <<-END
 
-	---- gclone params ----
-	owner: 	  $owner
-	host: 	  $host
-	dst: 	  $dst
-	ssh_keyf: $ssh_keyf
-	sdir: 	  $sdir
+		---- gclone params ----
+		owner:    $owner
+		host:     $host
+		dst:      $dst
+		ssh_keyf: $ssh_keyf
+		sdir:    $sdir
 
 	END
 
 	check_or "git" || exit 1
-    check_or "gh" || exit 1
-    check_or "jq" || exit 1
-    check_or "tr" || exit 1
-    check_or "awk" || exit 1
-    check_or "ssh-keyscan" || exit 1
-    check_or "op" || exit 1
-    check_or "parallel" || exit 1
+	check_or "gh" || exit 1
+	check_or "jq" || exit 1
+	check_or "tr" || exit 1
+	check_or "awk" || exit 1
+	check_or "ssh-keyscan" || exit 1
+	check_or "op" || exit 1
+	check_or "parallel" || exit 1
 
 	# git and ssh setup
 	mkdir -p $HOME/.ssh
@@ -102,7 +102,7 @@ function main {
 
 	# add github keys to known_hosts to prevent interactive prompt. note: out of date keys will not be updated
 	if ! grep -q "github.com" $HOME/.ssh/known_hosts &>/dev/null; then
-		ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+		ssh-keyscan github.com >>$HOME/.ssh/known_hosts
 	fi
 
 	# gh login if not logged in

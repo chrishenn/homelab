@@ -54,7 +54,7 @@ services:
         condition: service_healthy
     networks: [sure, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Sure
       homepage.icon: sure.png
       homepage.href: https://sure.chenn.dev
@@ -110,13 +110,13 @@ services:
 
   sure_redis:
     profiles: [sure]
-    image: redis:latest
+    image: valkey/valkey:alpine
     container_name: sure_redis
     restart: unless-stopped
     volumes:
       - $DATA/sure/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: redis-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

@@ -13,7 +13,7 @@ services:
       test: ['CMD-SHELL', 'apk add curl && curl -ILfSs http://localhost:5230']
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Memos
       homepage.icon: memos.png
       homepage.href: https://memos.chenn.dev

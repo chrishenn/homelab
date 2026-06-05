@@ -1,17 +1,21 @@
+set fallback
+
 alias s := sync
 
+# machine-specific
+
+# 'repo' is the repo location on the remote host
 repo := "/home/chris/Projects/homelab"
-ddir := "/home/chris/Projects/homelab/vps0"
-dusr := "chris"
-dip := env('VPS0_IP')
-dport := "2200"
+
+[arg("pty", long="pty", short="p")]
+ssh cmd='' pty='true':
+    just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+
+# generic
 
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-sync message="sync" usr=dusr ip=dip dir=repo port=dport:
-    git commit -a -m "{{ message }}" || true && git pull && git push
-    ssh {{ usr }}@{{ ip }} -p {{ port }} -At "cd {{ dir }} && git commit -a -m '{{ message }}' || true && git pull && git push"
-
-ssh usr=dusr ip=dip dir=ddir port=dport:
-    ssh {{ usr }}@{{ ip }} -p {{ port }} -t "$(op read op://homelab/svc/bash) && cd {{ dir }} && exec bash -l"
+sync message="sync":
+    git commit -a -m '{{ message }}' || true && git pull && git push
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'

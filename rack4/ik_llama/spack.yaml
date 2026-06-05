@@ -1,6 +1,0 @@
-spack:
-  specs:
-    - cuda@12.9
-  view: true
-  concretizer:
-    unify: true

@@ -13,11 +13,11 @@ services:
       PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Dev
-      homepage.instance.private.name: PgAdmin
-      homepage.instance.private.icon: pgadmin.png
-      homepage.instance.private.href: https://pgadmin.henn.dev
-      homepage.instance.private.description: Postgres GUI
+      homepage.group: Development Tools
+      homepage.name: PgAdmin
+      homepage.icon: pgadmin.png
+      homepage.href: https://pgadmin.henn.dev
+      homepage.description: Postgres GUI
 
       traefik.enable: true
       traefik.http.routers.pgadmin.rule: Host(`pgadmin.henn.dev`)

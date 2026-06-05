@@ -1,3 +1,5 @@
+# probably the only production-grade url shortener out there for free
+# however - pretty heavy for a url shorterner
 ---
 services:
   shlink:

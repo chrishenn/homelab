@@ -56,7 +56,7 @@ function sysctl_config {
 }
 
 function chezmoi_mise {
-	# $DHOST_SSH -t "$(op read op://homelab/svc/bash); $(op read op://homelab/github/token); bash -l"
+	# just ssh "$(op read op://homelab/svc/bash); $(op read op://homelab/github/token); bash -l"
 
 	brew install mise
 	mise use -g chezmoi op
@@ -66,7 +66,7 @@ function chezmoi_mise {
 }
 
 function homelab_clone {
-	# $DHOST_SSH -t "$(op read op://homelab/svc/bash); $(op read op://homelab/github/token); bash -l"
+	# just ssh '$(op read op://homelab/svc/bash); $(op read op://homelab/github/token); bash -l'
 
 	mkdir -p ~/Projects
 	cd ~/Projects

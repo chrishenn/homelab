@@ -6,8 +6,8 @@ include:
   - apps/ai/speach.yml
 
   - apps/arr/arr.yml
-  - apps/arr/aurral.yml
   - apps/arr/byparr.yml
+  - apps/arr/cinephage.yml
   - apps/arr/doplarr.yml
   - apps/arr/muxarr.yml
   - apps/arr/recyclarr.yml
@@ -17,6 +17,7 @@ include:
   - apps/arr/transcodarr.yml
 
   - apps/backup/backrest.yml
+  - apps/backup/databasus.yml
   - apps/backup/pluton.yml
   - apps/backup/portabase.yml
   - apps/backup/repliqate.yml
@@ -41,18 +42,13 @@ include:
 
   - apps/dev/chartdb.yml
   - apps/dev/cyberchef.yml
-  - apps/dev/databasus.yml
-  - apps/dev/dumb.yml
   - apps/dev/excalidraw.yml
-  - apps/dev/gist.yml
   - apps/dev/ittools.yml
-  - apps/dev/onedev.yml
   - apps/dev/pgadmin.yml
   - apps/dev/scanopy.yml
-  - apps/dev/stash.yml
+  - apps/dev/bytestash.yml
 
   - apps/doc_server/docmost.yml
-  - apps/doc_server/drivebase.yml
   - apps/doc_server/files.yml
   - apps/doc_server/hedge.yml
   - apps/doc_server/paperless.yml
@@ -61,45 +57,27 @@ include:
   - apps/doc_server/syncthing.yml
   - apps/doc_server/zipline.yml
 
-  - apps/download/flood.yml
   - apps/download/qbit.yml
   - apps/download/sab.yml
 
-#  - apps/games/cs2.yml
-#  - apps/games/csgo.yml
+  #  - apps/games/cs2.yml
+  #  - apps/games/csgo.yml
   - apps/games/wordle.yml
 
-  - apps/images/dawarich.yml
-  - apps/images/foldergram.yml
-  - apps/images/immich.yml
-
-  - apps/infra/aptcache.yml
-  - apps/infra/arcane.yml
   - apps/infra/autoheal.yml
-  - apps/infra/beszel.yml
   - apps/infra/blocky.yml
   - apps/infra/blocky_k.yml
-  - apps/infra/dozzle.yml
   - apps/infra/homepage.yml
-  - apps/infra/kuma.yml
   - apps/infra/lancache.yml
   - apps/infra/netboot.yml
   - apps/infra/newt.yml
-  - apps/infra/nexterm.yml
-  - apps/infra/peekaping.yml
   - apps/infra/pocketid.yml
-  - apps/infra/pulse.yml
-  - apps/infra/termix.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
 
   - apps/job/openresume.yml
   - apps/job/resume.yml
   - apps/job/ops.yml
-
-  - apps/linktree/linkding.yml
-  - apps/linktree/linkstack.yml
-  - apps/linktree/littlelink.yml
 
   - apps/media/archive.yml
   - apps/media/jellyfin.yml
@@ -108,7 +86,18 @@ include:
   - apps/media/yamtrack.yml
   - apps/media/ytp.yml
 
+  - apps/monitoring/arcane.yml
+  - apps/monitoring/beszel.yml
+  - apps/monitoring/dozzle.yml
+  - apps/monitoring/kuma.yml
+  - apps/monitoring/peekaping.yml
+  - apps/monitoring/termix.yml
+  - apps/monitoring/dockscope.yml
+
+  - apps/music/aurral.yml
+  - apps/music/lidarr.yml
   - apps/music/mdrm.yml
+  - apps/music/mseerr.yml
   - apps/music/navidrome.yml
 
   - apps/notify/apprise.yml
@@ -120,6 +109,10 @@ include:
   - apps/pdf/overleaf.yml
   - apps/pdf/pdfding.yml
   - apps/pdf/stirling.yml
+
+  - apps/photos/dawarich.yml
+  - apps/photos/foldergram.yml
+  - apps/photos/immich.yml
 
   - apps/project/affine.yml
   - apps/project/ideon.yml
@@ -133,29 +126,31 @@ include:
   - apps/project/vikunja.yml
   - apps/project/wikigo.yml
   - apps/project/wikijs.yml
+  - apps/project/penpot.yml
+  - apps/project/plane.yml
 
-  - apps/registry/forgejo.yml
+  # code forge, artifact registry, artifact cache
+  - apps/registry/aptcache.yml
   #  - apps/registry/gitlab.yml
+  - apps/registry/forgejo.yml
   - apps/registry/mirrors.yml
+  #  - apps/registry/onedev.yml
   - apps/registry/zot.yml
 
   - apps/search/omnisearch.yml
   - apps/search/searx.yml
 
-  - apps/speedtest/librespeed.yml
-  - apps/speedtest/openspeedtest.yml
-
   - apps/tools/airtrail.yml
+  - apps/tools/dumb.yml
   - apps/tools/fileflow.yml
   - apps/tools/gocron.yml
-  - apps/tools/homebox.yml
+  - apps/tools/linkding.yml
   - apps/tools/matrix.yml
   - apps/tools/miro.yml
   - apps/tools/moocup.yml
   - apps/tools/n8n.yml
+  - apps/tools/openspeedtest.yml
   - apps/tools/owncast.yml
   - apps/tools/rally.yml
   - apps/tools/sure.yml
   - apps/tools/warden.yml
-
-

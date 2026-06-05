@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: PDF
       homepage.name: Bento PDF
       homepage.icon: bentopdf.png
       homepage.href: https://bento.chenn.dev

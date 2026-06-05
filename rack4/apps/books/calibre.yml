@@ -15,11 +15,11 @@ services:
     volumes:
       - $DATA/calibre/config:/config
       - $DATA/calibre/ingest:/cwa-book-ingest
-      - $DATA/calibre/library:/calibre-library
       - $DATA/calibre/plugins:/config/.config/calibre/plugins
+      - $DATA/calibre/library:/calibre-library
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: Calibre
       homepage.icon: calibre.png
       homepage.href: https://calibre.chenn.dev
@@ -61,7 +61,7 @@ services:
       - $DATA/calibre/config/app.db:/auth/app.db:ro
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: Shelfmark
       homepage.icon: shelfmark.png
       homepage.href: https://shelfmark.chenn.dev

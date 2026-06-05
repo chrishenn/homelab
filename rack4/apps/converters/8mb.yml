@@ -19,7 +19,7 @@ services:
       - $DATA/8mb/outputs:/app/outputs
     networks: [newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: 8MB
       homepage.icon: compreface.png
       homepage.href: https://8MB.chenn.dev

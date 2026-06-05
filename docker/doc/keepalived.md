@@ -1,8 +1,6 @@
 # keepalived
 
----
-
-#### Troubleshooting
+## troubleshooting
 
 add "ip_vs" to
 /etc/modules-load.d/modules.conf
@@ -13,9 +11,7 @@ use the method in ./server.md to get stable nic names
 the virtual ip is pingable but will not forward requrests to port 53 dns server
 https://serverfault.com/questions/922457/keepalived-virtual-is-not-routing-my-requests-to-real-servers
 
----
-
-#### Config
+## config
 
 ```bash
 # this was needed for docker to bind to an ip that the system didn't have yet (the vip when not assigned)
@@ -66,7 +62,7 @@ net.ipv6.conf.lo.disable_ipv6 = 1
 
 ---
 
-#### Refs
+## ref
 
 - https://medium.com/@yahyasghiouri1998/building-a-high-availability-cluster-with-haproxy-keepalived-and-docker-a-step-by-step-guide-9325f4ac8aa7
 - https://github.com/shawly/docker-keepalived

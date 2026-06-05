@@ -167,16 +167,21 @@ services:
 
   paperless_redis:
     profiles: [paperless]
-    image: docker.io/library/redis:8-alpine
+    image: valkey/valkey:alpine
     container_name: paperless_redis
     restart: unless-stopped
     volumes:
-      - $DATA/paperless/paperless_redis:/data
+      - $DATA/paperless/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [paperless]
 
   paperless_tika:
     profiles: [paperless]
-    image: docker.io/apache/tika:latest
+    image: apache/tika:latest
     container_name: paperless_tika
     restart: unless-stopped
     environment:
@@ -185,7 +190,7 @@ services:
 
   paperless_gotenberg:
     profiles: [paperless]
-    image: docker.io/gotenberg/gotenberg:8
+    image: gotenberg/gotenberg:8
     container_name: paperless_gotenberg
     restart: unless-stopped
     environment:

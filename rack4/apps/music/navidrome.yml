@@ -10,7 +10,7 @@ services:
       - $MEDIA/Music:/music:ro
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Music
       homepage.name: Navidrome
       homepage.icon: navidrome.png
       homepage.href: https://navidrome.chenn.dev

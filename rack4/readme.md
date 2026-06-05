@@ -13,11 +13,13 @@ deal with a more complicated setup? Also no.
 - [x] use a docker registry that requires no manual config (zot. done!)
     - [ ] enable mTLS
 - [ ] a way to PXE boot windows
-    - [ ] iventoy? 
+    - [ ] iventoy?
     - [ ] netbootxyz?
 - [ ] grafana + loki
-- [ ] fluxer (not quite ready yet)
+- [ ] fluxer server (not quite ready yet)
     - https://fluxer.app/
+- [ ] stoat chat server (not quite ready yet)
+    - https://stoat.chat/
 
 ---
 
@@ -34,7 +36,7 @@ j pullup
 
 #### update local images
 
-if services depend on images that are built locally, and depend on images that may have been updated, then to update 
+if services depend on images that are built locally, and depend on images that may have been updated, then to update
 our local images we must manually build and push them to the local registry ($REGISTRY)
 
 ```bash
@@ -43,7 +45,7 @@ j build openresume transcodarr blocky_k rsync
 
 # there's a bit of an ordering here; the local registry has service deps that it requires to work
 # ie: traefik is needed to route zot.henn.dev; traefik_k binds traefik to the host's vip; zot requires its auth provider
-# pocketid or else it crashes; pocketid is routed by pangolin via rack4 newt. 
+# pocketid or else it crashes; pocketid is routed by pangolin via rack4 newt.
 j down
 j pullup core zot traefik traefik_k pocketid newt
 j pullup

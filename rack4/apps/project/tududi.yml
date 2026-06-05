@@ -18,7 +18,7 @@ services:
       - $DATA/tududi/uploads:/app/backend/uploads
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Tududi
       homepage.icon: atlassian.png
       homepage.href: https://tududi.chenn.dev

@@ -18,7 +18,7 @@ services:
       - $DATA/ytp/downloads:/downloads:rw
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Ytp
       homepage.icon: https://github.com/arabcoders/ytptube/blob/dev/ui/public/images/favicon.png?raw=true
       homepage.href: https://ytp.chenn.dev

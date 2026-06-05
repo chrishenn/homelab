@@ -14,7 +14,7 @@ services:
       DB_NAME: wikijs
     networks: [wikijs, newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Project Management
       homepage.name: WikiJS
       homepage.icon: wikijs.png
       homepage.href: https://wikijs.chenn.dev
