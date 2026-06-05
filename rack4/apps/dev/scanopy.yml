@@ -9,6 +9,7 @@ services:
       - host.docker.internal:host-gateway
     environment:
       SCANOPY_PUBLIC_URL: https://scanopy.chenn.dev
+      SCANOPY_USE_SECURE_SESSION_COOKIES: true
       SCANOPY_LOG_LEVEL: info
       SCANOPY_DATABASE_URL: postgresql://postgres:postgres@scanopy_db:5432/scanopy
       SCANOPY_WEB_EXTERNAL_PATH: /app/static
@@ -22,7 +23,7 @@ services:
         condition: service_started
     networks: [scanopy, newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Development Tools
       homepage.name: Scanopy
       homepage.icon: scanopy.png
       homepage.href: https://scanopy.chenn.dev
@@ -36,17 +37,12 @@ services:
       pangolin.public-resources.scanopy.targets[0].port: 60072
       pangolin.public-resources.scanopy.auth.sso-enabled: true
       pangolin.public-resources.scanopy.auth.sso-roles[0]: Member
-
-      pangolin.public-resources.scanopy.rules[0].action: allow
-      pangolin.public-resources.scanopy.rules[0].match: path
-      pangolin.public-resources.scanopy.rules[0].value: /api/*
-
-      pangolin.public-resources.scanopy.rules[1].action: pass
+      pangolin.public-resources.scanopy.rules[0].action: pass
+      pangolin.public-resources.scanopy.rules[0].match: country
+      pangolin.public-resources.scanopy.rules[0].value: US
+      pangolin.public-resources.scanopy.rules[1].action: deny
       pangolin.public-resources.scanopy.rules[1].match: country
-      pangolin.public-resources.scanopy.rules[1].value: US
-      pangolin.public-resources.scanopy.rules[2].action: deny
-      pangolin.public-resources.scanopy.rules[2].match: country
-      pangolin.public-resources.scanopy.rules[2].value: ALL
+      pangolin.public-resources.scanopy.rules[1].value: ALL
 
   scanopy_daemon:
     profiles: [scanopy]

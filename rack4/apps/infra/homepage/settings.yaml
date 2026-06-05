@@ -1,0 +1,114 @@
+# https://gethomepage.dev/configs/settings/
+---
+instanceName: public
+title: 'Dancing Chicken: Public'
+theme: dark
+color: slate
+statusStyle: 'dot'
+fullWidth: true
+headerStyle: clean
+useEqualHeights: true
+bookmarksStyle: icons
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: true
+  hideVisitURL: false
+  provider: google
+
+background:
+  image: /images/b1.jpg
+  blur: sm
+  saturate: 100
+  brightness: 50
+  opacity: 70
+
+layout:
+  General Media:
+    style: row
+    columns: 5
+    tab: Media
+  Arr:
+    style: row
+    columns: 5
+    tab: Media
+  Books:
+    style: row
+    columns: 5
+    tab: Media
+  Music:
+    style: row
+    columns: 5
+    tab: Media
+  Photos:
+    style: row
+    columns: 5
+    tab: Media
+  Games:
+    style: row
+    columns: 5
+    tab: Media
+
+  Converters:
+    style: row
+    columns: 5
+    tab: Documents
+  PDF:
+    style: row
+    columns: 5
+    tab: Documents
+  File Servers:
+    style: row
+    columns: 5
+    tab: Documents
+  Job:
+    style: row
+    columns: 5
+    tab: Documents
+
+  Development Tools:
+    style: row
+    columns: 5
+    tab: Dev
+  General Tools:
+    style: row
+    columns: 5
+    tab: Dev
+  Project Management:
+    style: row
+    columns: 5
+    tab: Dev
+  Notify:
+    style: row
+    columns: 5
+    tab: Dev
+  AI:
+    style: row
+    columns: 5
+    tab: Dev
+  Search:
+    style: row
+    columns: 5
+    tab: Dev
+  Registry and Code Forge:
+    style: row
+    columns: 5
+    tab: Dev
+
+  Infra:
+    style: row
+    columns: 5
+    tab: Infra
+  Monitoring:
+    style: row
+    columns: 5
+    tab: Infra
+  Backup:
+    style: row
+    columns: 5
+    tab: Infra
+  Download:
+    style: row
+    columns: 5
+    tab: Infra

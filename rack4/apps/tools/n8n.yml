@@ -48,7 +48,7 @@ services:
         condition: service_healthy
     networks: [n8n, newt]
     labels:
-      homepage.group: AI
+      homepage.group: General Tools
       homepage.name: N8n
       homepage.icon: n8n.png
       homepage.href: https://n8n.chenn.dev
@@ -102,13 +102,16 @@ services:
 
   n8n_redis:
     profiles: [n8n]
-    image: redis:6-alpine
+    image: valkey/valkey:alpine
     container_name: n8n_redis
     restart: unless-stopped
     volumes:
-      - $DATA/n8n/n8n_redis:/data
+      - $DATA/n8n/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [n8n]
 
 networks:

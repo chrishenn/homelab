@@ -415,7 +415,6 @@ configs:
       newzbin = ""
       priority = -100
 
-
 services:
   sab:
     # host_whitelist = sab, sab.henn.dev, sab.chenn.dev
@@ -437,7 +436,7 @@ services:
       - $DATA/sab/config:/config
     networks: [newt, arr]
     labels:
-      homepage.group: Media
+      homepage.group: Download
       homepage.name: Sab
       homepage.icon: sabnzbd.png
       homepage.href: https://sab.chenn.dev
@@ -453,12 +452,9 @@ services:
       pangolin.public-resources.sab.auth.sso-roles[0]: Member
       pangolin.public-resources.sab.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
       pangolin.public-resources.sab.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.sab.rules[0].action: allow
-      pangolin.public-resources.sab.rules[0].match: path
-      pangolin.public-resources.sab.rules[0].value: /api/*
-      pangolin.public-resources.sab.rules[1].action: pass
+      pangolin.public-resources.sab.rules[0].action: pass
+      pangolin.public-resources.sab.rules[0].match: country
+      pangolin.public-resources.sab.rules[0].value: US
+      pangolin.public-resources.sab.rules[1].action: deny
       pangolin.public-resources.sab.rules[1].match: country
-      pangolin.public-resources.sab.rules[1].value: US
-      pangolin.public-resources.sab.rules[2].action: deny
-      pangolin.public-resources.sab.rules[2].match: country
-      pangolin.public-resources.sab.rules[2].value: ALL
+      pangolin.public-resources.sab.rules[1].value: ALL

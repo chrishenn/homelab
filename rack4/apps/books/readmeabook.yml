@@ -18,11 +18,11 @@ services:
       - $DATA/qbit/downloads:/qbit/downloads
     networks: [newt, arr]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: Readmeabook
       homepage.icon: read-me-a-book.png
       homepage.href: https://readmeabook.chenn.dev
-      homepage.description: Audiobook Manager
+      homepage.description: Audiobook Downloader
 
       pangolin.public-resources.readmeabook.name: readmeabook
       pangolin.public-resources.readmeabook.full-domain: readmeabook.chenn.dev

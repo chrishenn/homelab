@@ -41,7 +41,7 @@ services:
       - $DATA/pdfding/data:/home/nonroot/pdfding/media
     networks: [pdfding, newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: PDF
       homepage.name: PDF Ding
       homepage.icon: pdfding.png
       homepage.href: https://pdfding.chenn.dev

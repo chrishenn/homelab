@@ -24,7 +24,6 @@ PGID = 1000
 
 # compose host
 DOCKER_HOST = "tcp://192.168.1.142:2375"
-DHOST_SSH = "ssh chris@192.168.1.142 -p 2200"
 
 # paths to data
 DATA = "/mnt/k/docker"
@@ -40,12 +39,15 @@ NEWT_SUBNET = "192.168.200.0/24"
 # SVC_IP is the default bound IP for docker services, including blocky-dns on port 53
 SVC_IP = "192.168.1.142"
 
-# lancache dns
-LANCACHE_IP = "192.168.1.143"
-LANCACHE_DNS = "192.168.1.143"
+# VPS0_USER
+VPS0_USER = "chris"
+VPS0_PORT = "2200"
+VPS0_DATA = "/home/chris/data"
 
 # gitlab runner
 GITLAB_URL = "https://gitlab.henn.dev"
 
 # public oidc provider
 OIDC = "https://pocketid.chenn.dev"
+
+STALWART_URL = "https://mail.chenn.dev"

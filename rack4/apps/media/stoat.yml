@@ -1,0 +1,582 @@
+---
+configs:
+  stoat_toml:
+    content: |
+      [database]
+      mongodb = "mongodb://stoat_db:27017"
+      redis = "redis://stoat_redis:6379"
+
+      [rabbit]
+      host = "stoat_mq"
+      port = 5672
+      username = "rabbituser"
+      password = "rabbitpass"
+
+      [files.s3]
+      endpoint = "http://stoat-s3:9000"
+      region = "stoat-s3"
+      access_key_id = "minioautumn"
+      secret_access_key = "minioautumn"
+      default_bucket = "revolt-uploads"
+
+      [api.registration]
+      invite_only = true
+
+      [api.smtp]
+      host = "${SMTP_HOST}"
+      username = "${SMTP_USER}"
+      password = "${SMTP_TOKEN}"
+      from_address = "${SMTP_USER}"
+      reply_to = "${SMTP_USER}"
+      port = 465
+      use_tls = true
+      use_starttls = false
+
+      [hosts]
+      app = "https://stoat.chenn.dev"
+      api = "https://stoat.chenn.dev/api"
+      events = "wss://stoat.chenn.dev/ws"
+      autumn = "https://stoat.chenn.dev/autumn"
+      january = "https://stoat.chenn.dev/january"
+
+      [pushd.vapid]
+      private_key = "${STOAT_VAPID_PRIVATE_KEY}"
+      public_key = "${STOAT_VAPID_PUBLIC_KEY}"
+
+      [files]
+      encryption_key = "${STOAT_ENCRYPTION_KEY}"
+
+      [hosts.livekit]
+      worldwide = "wss://stoat.chenn.dev/livekit"
+
+      [api.livekit.nodes.worldwide]
+      url = "http://stoat_livekit:7880"
+      lat = 0.0
+      lon = 0.0
+      key = "${STOAT_LIVEKIT_KEY}"
+      secret = "${STOAT_LIVEKIT_SECRET}"
+
+      [features.limits.new_user]
+      video_resolution = [3840, 2160]
+      video_aspect_ratio = [0.3, 10]
+
+      [features.limits.default]
+      video_resolution = [3840, 2160]
+      video_aspect_ratio = [0.3, 10]
+
+  stoat_caddy:
+    content: |
+      {$$HOSTNAME} {
+          route /api* {
+              uri strip_prefix /api
+              reverse_proxy http://stoat_api:14702 {
+                  header_down Location "^/" "/api/"
+              }
+          }
+          route /ws {
+              uri strip_prefix /ws
+              reverse_proxy http://stoat_events:14703 {
+                  header_down Location "^/" "/ws/"
+              }
+          }
+          route /autumn* {
+              uri strip_prefix /autumn
+              reverse_proxy http://stoat_autumn:14704 {
+                  header_down Location "^/" "/autumn/"
+              }
+          }
+          route /january* {
+              uri strip_prefix /january
+              reverse_proxy http://stoat_january:14705 {
+                  header_down Location "^/" "/january/"
+              }
+          }
+          route /gifbox* {
+              uri strip_prefix /gifbox
+              reverse_proxy http://stoat_gifbox:14706 {
+                  header_down Location "^/" "/gifbox/"
+              }
+          }
+          route /livekit* {
+              uri strip_prefix /livekit
+              reverse_proxy http://stoat_livekit:7880 {
+                  header_down Location "^/" "/livekit/"
+              }
+          }
+          route /ingress* {
+              uri strip_prefix /ingress
+              reverse_proxy http://stoat_voice:8500 {
+                  header_down Location "^/" "/ingress/"
+              }
+          }
+          reverse_proxy http://stoat_web:5000
+      }
+
+  stoat_livekit:
+    content: |
+      rtc:
+        use_external_ip: false
+        port_range_start: 50000
+        port_range_end: 50039
+        tcp_port: 7881
+      redis:
+        address: stoat_redis:6379
+      turn:
+        enabled: false
+      keys:
+        ${STOAT_LIVEKIT_KEY}: ${STOAT_LIVEKIT_SECRET}
+      webhook:
+        api_key: ${STOAT_LIVEKIT_KEY}
+        urls:
+          - "http://stoat_voice:8500/worldwide"
+
+x-stoat_web: &stoat_web
+  HOSTNAME: :80
+  REVOLT_PUBLIC_URL: https://stoat.chenn.dev/api
+  VITE_API_URL: https://stoat.chenn.dev/api
+  VITE_WS_URL: wss://stoat.chenn.dev/ws
+  VITE_MEDIA_URL: https://stoat.chenn.dev/autumn
+  VITE_PROXY_URL: https://stoat.chenn.dev/january
+  VITE_CFG_ENABLE_VIDEO: true
+
+x-stoat_mq: &stoat_mq
+  RABBITMQ_DEFAULT_USER: rabbituser
+  RABBITMQ_DEFAULT_PASS: rabbitpass
+
+x-stoat_s3: &stoat_s3
+  RUSTFS_ACCESS_KEY: minioautumn
+  RUSTFS_SECRET_KEY: minioautumn
+  RUSTFS_SERVER_DOMAINS: stoat-s3
+
+services:
+  stoat_caddy:
+    profiles: [stoat]
+    image: caddy
+    container_name: stoat_caddy
+    restart: unless-stopped
+    environment:
+      <<: *stoat_web
+    configs:
+      - source: stoat_caddy
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - $DATA/stoat/caddy-data:/data
+      - $DATA/stoat/caddy-config:/config
+    networks: [stoat, newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: Stoat
+      homepage.icon: stoat.png
+      homepage.href: https://stoat.chenn.dev
+      homepage.description: Private Discord
+
+      pangolin.public-resources.stoat.name: stoat
+      pangolin.public-resources.stoat.full-domain: stoat.chenn.dev
+      pangolin.public-resources.stoat.protocol: http
+      pangolin.public-resources.stoat.ssl: true
+      pangolin.public-resources.stoat.targets[0].method: http
+      pangolin.public-resources.stoat.targets[0].port: 80
+
+  stoat_web:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/for-web:c4a9ac2
+    container_name: stoat_web
+    restart: unless-stopped
+    environment:
+      <<: *stoat_web
+    networks: [stoat]
+
+  stoat_api:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/api:v0.13.7
+    container_name: stoat_api
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat_redis:
+        condition: service_started
+      stoat_mq:
+        condition: service_healthy
+    networks: [stoat]
+
+  stoat_events:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/events:v0.13.7
+    container_name: stoat_events
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat_redis:
+        condition: service_started
+    networks: [stoat]
+
+  stoat_autumn:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/file-server:v0.13.7
+    container_name: stoat_autumn
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat-s3_bucket:
+        condition: service_started
+    networks: [stoat]
+
+  stoat_january:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/proxy:v0.13.7
+    container_name: stoat_january
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    networks: [stoat]
+
+  stoat_gifbox:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/gifbox:v0.13.7
+    container_name: stoat_gifbox
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    networks: [stoat]
+
+  stoat_livekit:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/livekit-server:v1.9.13
+    container_name: stoat_livekit
+    restart: unless-stopped
+    configs:
+      - source: stoat_livekit
+        target: /etc/livekit.yml
+    command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
+    depends_on:
+      stoat_redis:
+        condition: service_started
+    networks: [stoat, newt]
+    labels:
+      pangolin.public-resources.tcp-7881.name: tcp-7881
+      pangolin.public-resources.tcp-7881.mode: tcp
+      pangolin.public-resources.tcp-7881.proxy-port: 7881
+      pangolin.public-resources.tcp-7881.targets[0].port: 7881
+
+      pangolin.public-resources.udp-50000.name: udp-50000
+      pangolin.public-resources.udp-50000.mode: udp
+      pangolin.public-resources.udp-50000.proxy-port: 50000
+      pangolin.public-resources.udp-50000.targets[0].port: 50000
+      pangolin.public-resources.udp-50001.name: udp-50001
+      pangolin.public-resources.udp-50001.mode: udp
+      pangolin.public-resources.udp-50001.proxy-port: 50001
+      pangolin.public-resources.udp-50001.targets[0].port: 50001
+      pangolin.public-resources.udp-50002.name: udp-50002
+      pangolin.public-resources.udp-50002.mode: udp
+      pangolin.public-resources.udp-50002.proxy-port: 50002
+      pangolin.public-resources.udp-50002.targets[0].port: 50002
+      pangolin.public-resources.udp-50003.name: udp-50003
+      pangolin.public-resources.udp-50003.mode: udp
+      pangolin.public-resources.udp-50003.proxy-port: 50003
+      pangolin.public-resources.udp-50003.targets[0].port: 50003
+      pangolin.public-resources.udp-50004.name: udp-50004
+      pangolin.public-resources.udp-50004.mode: udp
+      pangolin.public-resources.udp-50004.proxy-port: 50004
+      pangolin.public-resources.udp-50004.targets[0].port: 50004
+      pangolin.public-resources.udp-50005.name: udp-50005
+      pangolin.public-resources.udp-50005.mode: udp
+      pangolin.public-resources.udp-50005.proxy-port: 50005
+      pangolin.public-resources.udp-50005.targets[0].port: 50005
+      pangolin.public-resources.udp-50006.name: udp-50006
+      pangolin.public-resources.udp-50006.mode: udp
+      pangolin.public-resources.udp-50006.proxy-port: 50006
+      pangolin.public-resources.udp-50006.targets[0].port: 50006
+      pangolin.public-resources.udp-50007.name: udp-50007
+      pangolin.public-resources.udp-50007.mode: udp
+      pangolin.public-resources.udp-50007.proxy-port: 50007
+      pangolin.public-resources.udp-50007.targets[0].port: 50007
+      pangolin.public-resources.udp-50008.name: udp-50008
+      pangolin.public-resources.udp-50008.mode: udp
+      pangolin.public-resources.udp-50008.proxy-port: 50008
+      pangolin.public-resources.udp-50008.targets[0].port: 50008
+      pangolin.public-resources.udp-50009.name: udp-50009
+      pangolin.public-resources.udp-50009.mode: udp
+      pangolin.public-resources.udp-50009.proxy-port: 50009
+      pangolin.public-resources.udp-50009.targets[0].port: 50009
+
+      pangolin.public-resources.udp-50010.name: udp-50010
+      pangolin.public-resources.udp-50010.mode: udp
+      pangolin.public-resources.udp-50010.proxy-port: 50010
+      pangolin.public-resources.udp-50010.targets[0].port: 50010
+      pangolin.public-resources.udp-50011.name: udp-50011
+      pangolin.public-resources.udp-50011.mode: udp
+      pangolin.public-resources.udp-50011.proxy-port: 50011
+      pangolin.public-resources.udp-50011.targets[0].port: 50011
+      pangolin.public-resources.udp-50012.name: udp-50012
+      pangolin.public-resources.udp-50012.mode: udp
+      pangolin.public-resources.udp-50012.proxy-port: 50012
+      pangolin.public-resources.udp-50012.targets[0].port: 50012
+      pangolin.public-resources.udp-50013.name: udp-50013
+      pangolin.public-resources.udp-50013.mode: udp
+      pangolin.public-resources.udp-50013.proxy-port: 50013
+      pangolin.public-resources.udp-50013.targets[0].port: 50013
+      pangolin.public-resources.udp-50014.name: udp-50014
+      pangolin.public-resources.udp-50014.mode: udp
+      pangolin.public-resources.udp-50014.proxy-port: 50014
+      pangolin.public-resources.udp-50014.targets[0].port: 50014
+      pangolin.public-resources.udp-50015.name: udp-50015
+      pangolin.public-resources.udp-50015.mode: udp
+      pangolin.public-resources.udp-50015.proxy-port: 50015
+      pangolin.public-resources.udp-50015.targets[0].port: 50015
+      pangolin.public-resources.udp-50016.name: udp-50016
+      pangolin.public-resources.udp-50016.mode: udp
+      pangolin.public-resources.udp-50016.proxy-port: 50016
+      pangolin.public-resources.udp-50016.targets[0].port: 50016
+      pangolin.public-resources.udp-50017.name: udp-50017
+      pangolin.public-resources.udp-50017.mode: udp
+      pangolin.public-resources.udp-50017.proxy-port: 50017
+      pangolin.public-resources.udp-50017.targets[0].port: 50017
+      pangolin.public-resources.udp-50018.name: udp-50018
+      pangolin.public-resources.udp-50018.mode: udp
+      pangolin.public-resources.udp-50018.proxy-port: 50018
+      pangolin.public-resources.udp-50018.targets[0].port: 50018
+      pangolin.public-resources.udp-50019.name: udp-50019
+      pangolin.public-resources.udp-50019.mode: udp
+      pangolin.public-resources.udp-50019.proxy-port: 50019
+      pangolin.public-resources.udp-50019.targets[0].port: 50019
+
+      pangolin.public-resources.udp-50020.name: udp-50020
+      pangolin.public-resources.udp-50020.mode: udp
+      pangolin.public-resources.udp-50020.proxy-port: 50020
+      pangolin.public-resources.udp-50020.targets[0].port: 50020
+      pangolin.public-resources.udp-50021.name: udp-50021
+      pangolin.public-resources.udp-50021.mode: udp
+      pangolin.public-resources.udp-50021.proxy-port: 50021
+      pangolin.public-resources.udp-50021.targets[0].port: 50021
+      pangolin.public-resources.udp-50022.name: udp-50022
+      pangolin.public-resources.udp-50022.mode: udp
+      pangolin.public-resources.udp-50022.proxy-port: 50022
+      pangolin.public-resources.udp-50022.targets[0].port: 50022
+      pangolin.public-resources.udp-50023.name: udp-50023
+      pangolin.public-resources.udp-50023.mode: udp
+      pangolin.public-resources.udp-50023.proxy-port: 50023
+      pangolin.public-resources.udp-50023.targets[0].port: 50023
+      pangolin.public-resources.udp-50024.name: udp-50024
+      pangolin.public-resources.udp-50024.mode: udp
+      pangolin.public-resources.udp-50024.proxy-port: 50024
+      pangolin.public-resources.udp-50024.targets[0].port: 50024
+      pangolin.public-resources.udp-50025.name: udp-50025
+      pangolin.public-resources.udp-50025.mode: udp
+      pangolin.public-resources.udp-50025.proxy-port: 50025
+      pangolin.public-resources.udp-50025.targets[0].port: 50025
+      pangolin.public-resources.udp-50026.name: udp-50026
+      pangolin.public-resources.udp-50026.mode: udp
+      pangolin.public-resources.udp-50026.proxy-port: 50026
+      pangolin.public-resources.udp-50026.targets[0].port: 50026
+      pangolin.public-resources.udp-50027.name: udp-50027
+      pangolin.public-resources.udp-50027.mode: udp
+      pangolin.public-resources.udp-50027.proxy-port: 50027
+      pangolin.public-resources.udp-50027.targets[0].port: 50027
+      pangolin.public-resources.udp-50028.name: udp-50028
+      pangolin.public-resources.udp-50028.mode: udp
+      pangolin.public-resources.udp-50028.proxy-port: 50028
+      pangolin.public-resources.udp-50028.targets[0].port: 50028
+      pangolin.public-resources.udp-50029.name: udp-50029
+      pangolin.public-resources.udp-50029.mode: udp
+      pangolin.public-resources.udp-50029.proxy-port: 50029
+      pangolin.public-resources.udp-50029.targets[0].port: 50029
+
+      pangolin.public-resources.udp-50030.name: udp-50030
+      pangolin.public-resources.udp-50030.mode: udp
+      pangolin.public-resources.udp-50030.proxy-port: 50030
+      pangolin.public-resources.udp-50030.targets[0].port: 50030
+      pangolin.public-resources.udp-50031.name: udp-50031
+      pangolin.public-resources.udp-50031.mode: udp
+      pangolin.public-resources.udp-50031.proxy-port: 50031
+      pangolin.public-resources.udp-50031.targets[0].port: 50031
+      pangolin.public-resources.udp-50032.name: udp-50032
+      pangolin.public-resources.udp-50032.mode: udp
+      pangolin.public-resources.udp-50032.proxy-port: 50032
+      pangolin.public-resources.udp-50032.targets[0].port: 50032
+      pangolin.public-resources.udp-50033.name: udp-50033
+      pangolin.public-resources.udp-50033.mode: udp
+      pangolin.public-resources.udp-50033.proxy-port: 50033
+      pangolin.public-resources.udp-50033.targets[0].port: 50033
+      pangolin.public-resources.udp-50034.name: udp-50034
+      pangolin.public-resources.udp-50034.mode: udp
+      pangolin.public-resources.udp-50034.proxy-port: 50034
+      pangolin.public-resources.udp-50034.targets[0].port: 50034
+      pangolin.public-resources.udp-50035.name: udp-50035
+      pangolin.public-resources.udp-50035.mode: udp
+      pangolin.public-resources.udp-50035.proxy-port: 50035
+      pangolin.public-resources.udp-50035.targets[0].port: 50035
+      pangolin.public-resources.udp-50036.name: udp-50036
+      pangolin.public-resources.udp-50036.mode: udp
+      pangolin.public-resources.udp-50036.proxy-port: 50036
+      pangolin.public-resources.udp-50036.targets[0].port: 50036
+      pangolin.public-resources.udp-50037.name: udp-50037
+      pangolin.public-resources.udp-50037.mode: udp
+      pangolin.public-resources.udp-50037.proxy-port: 50037
+      pangolin.public-resources.udp-50037.targets[0].port: 50037
+      pangolin.public-resources.udp-50038.name: udp-50038
+      pangolin.public-resources.udp-50038.mode: udp
+      pangolin.public-resources.udp-50038.proxy-port: 50038
+      pangolin.public-resources.udp-50038.targets[0].port: 50038
+      pangolin.public-resources.udp-50039.name: udp-50039
+      pangolin.public-resources.udp-50039.mode: udp
+      pangolin.public-resources.udp-50039.proxy-port: 50039
+      pangolin.public-resources.udp-50039.targets[0].port: 50039
+
+  stoat_voice:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/voice-ingress:v0.13.7
+    container_name: stoat_voice
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat_mq:
+        condition: service_healthy
+    networks: [stoat]
+
+  stoat_crond:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/crond:v0.13.7
+    container_name: stoat_crond
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat-s3:
+        condition: service_started
+    networks: [stoat]
+
+  stoat_pushd:
+    profiles: [stoat]
+    image: ghcr.io/stoatchat/pushd:v0.13.7
+    container_name: stoat_pushd
+    restart: unless-stopped
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+    depends_on:
+      stoat_db:
+        condition: service_healthy
+      stoat_redis:
+        condition: service_started
+      stoat_mq:
+        condition: service_healthy
+    networks: [stoat]
+
+  stoat_db:
+    profiles: [stoat]
+    image: mongo:8
+    container_name: stoat_db
+    restart: unless-stopped
+    environment:
+      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
+    volumes:
+      - $DATA/stoat/db:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [stoat]
+
+  stoat_redis:
+    profiles: [stoat]
+    image: valkey/valkey:alpine
+    container_name: stoat_redis
+    restart: unless-stopped
+    networks: [stoat]
+
+  stoat_mq:
+    profiles: [stoat]
+    image: rabbitmq:4-alpine
+    container_name: stoat_mq
+    restart: unless-stopped
+    environment:
+      <<: *stoat_mq
+    volumes:
+      - $DATA/stoat/rabbit:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks: [stoat]
+
+  stoat-s3:
+    profiles: [stoat]
+    image: rustfs/rustfs:latest
+    container_name: stoat-s3
+    restart: unless-stopped
+    command: /data
+    environment:
+      <<: *stoat_s3
+    volumes:
+      - $DATA/stoat/s3:/data
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+      interval: 5s
+    depends_on:
+      stoat-s3_perm:
+        condition: service_completed_successfully
+    networks:
+      stoat:
+        aliases:
+          - revolt-uploads.stoat-s3
+
+  stoat-s3_perm:
+    profiles: [stoat]
+    image: alpine
+    container_name: stoat-s3_perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/stoat/s3:/data
+    command: chown -R 10001:10001 /data
+
+  stoat-s3_bucket:
+    profiles: [stoat]
+    image: minio/mc
+    container_name: stoat-s3_bucket
+    restart: no
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        until mc alias set rustfs http://stoat-s3:9000 minioautumn minioautumn; do
+          echo 'waiting to connect to stoat-s3'
+          sleep 2
+        done
+        mc mb rustfs/revolt-uploads --ignore-existing
+    depends_on:
+      stoat-s3:
+        condition: service_healthy
+    networks: [stoat]
+
+networks:
+  stoat:

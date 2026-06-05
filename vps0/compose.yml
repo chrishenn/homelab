@@ -1,0 +1,4 @@
+---
+include:
+  - apps/beszel.yml
+  - pangolin/pangolin.yml

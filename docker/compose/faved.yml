@@ -1,0 +1,15 @@
+# doesn't support proxying. wah-wah
+---
+services:
+  faved:
+    profiles: [faved]
+    image: denho/faved
+    container_name: faved
+    restart: unless-stopped
+    working_dir: /var/www/html
+    environment:
+      APP_HOST: faved.chenn.dev
+    volumes:
+      - $DATA/faved/tmp:/tmp/
+      - $DATA/faved/storage:/var/www/html/storage/
+      - $DATA/faved/apache-conf:/etc/apache2/sites-enabled/

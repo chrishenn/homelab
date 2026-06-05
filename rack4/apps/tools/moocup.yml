@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Moocup
       homepage.icon: https://github.com/jellydeck/moocup/raw/refs/heads/main/static/favicon.svg
       homepage.href: https://moocup.chenn.dev

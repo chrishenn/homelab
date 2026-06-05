@@ -1,6 +1,5 @@
 wireguard:
   image: linuxserver/wireguard:latest
-  network_mode: 'service:archivebox'
   cap_add:
     - NET_ADMIN
     - SYS_MODULE

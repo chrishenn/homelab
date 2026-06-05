@@ -14,7 +14,7 @@ services:
       BETTER_AUTH_SECRET: secret_key
     networks: [newt, keeper]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Keeper
       homepage.icon: https://github.com/ridafkih/keeper.sh/blob/main/applications/web/public/512x512-on-light.png?raw=true
       homepage.href: https://keeper.chenn.dev
@@ -55,13 +55,13 @@ services:
 
   keeper_redis:
     profiles: [keeper]
-    image: redis:7-alpine
+    image: valkey/valkey:alpine
     container_name: keeper_redis
     restart: unless-stopped
     volumes:
       - $DATA/keeper/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: redis-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

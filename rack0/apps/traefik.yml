@@ -17,7 +17,7 @@ services:
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $REPO_HOST/rack4/apps/infra/traefik/traefik.yml:/traefik.yml:ro
+      - $REPO_HOST/rack4/apps/infra/traefik/traefik_config.yml:/traefik.yml:ro
       - $REPO_HOST/rack4/apps/infra/traefik/cfg:/cfg:ro
       # CANNOT BE A CIFS MOUNT. Will work the first time, then fail after restarting container
       - $HOME_HOST/rack0_traefik/ssl:/ssl

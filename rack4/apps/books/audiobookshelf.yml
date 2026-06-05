@@ -13,11 +13,11 @@ services:
       - $DATA/audiobookshelf/metadata:/metadata
     networks: [newt]
     labels:
-      homepage.group: Media
+      homepage.group: Books
       homepage.name: AudioBookshelf
       homepage.icon: audiobookshelf.png
       homepage.href: https://audiobookshelf.chenn.dev
-      homepage.description: AudioBook Server
+      homepage.description: Audiobook Server
 
       pangolin.public-resources.audiobookshelf.name: audiobookshelf
       pangolin.public-resources.audiobookshelf.full-domain: audiobookshelf.chenn.dev

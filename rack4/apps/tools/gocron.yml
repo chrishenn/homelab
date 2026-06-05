@@ -37,7 +37,7 @@ services:
       - $DATA/gocron/config:/app/config
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: General Tools
       homepage.name: Go Cron
       homepage.icon: chronograf.png
       homepage.href: https://cron.henn.dev

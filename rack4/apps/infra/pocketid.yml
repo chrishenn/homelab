@@ -12,7 +12,7 @@ x-pid_env: &pid_env
   PUID: $PUID
   PGID: $PGID
   TRUST_PROXY: true
-  MAXMIND_LICENSE_KEY: $MAXMIND_LICENSE
+  MAXMIND_LICENSE_KEY: ${MAXMIND_KEY}
 
   UI_CONFIG_DISABLED: true
   SMTP_HOST: $SMTP_HOST
@@ -55,7 +55,6 @@ services:
       pangolin.public-resources.pocketid.ssl: true
       pangolin.public-resources.pocketid.targets[0].method: http
       pangolin.public-resources.pocketid.targets[0].port: 1411
-
       pangolin.public-resources.pocketid.rules[0].action: pass
       pangolin.public-resources.pocketid.rules[0].match: country
       pangolin.public-resources.pocketid.rules[0].value: US

@@ -1,0 +1,231 @@
+---
+services:
+  stalwart:
+    profiles: [stalwart]
+    image: stalwartlabs/stalwart:latest
+    container_name: stalwart
+    restart: unless-stopped
+    environment:
+      STALWART_PUBLIC_URL: https://mail.chenn.dev
+      CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+      POSTGRES_PASSWORD: stalwart
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/stalwart/data:/etc/stalwart
+      - $DATA/stalwart/var:/var/lib/stalwart
+      - $DATA/stalwart/certs:/data/certs:ro
+    depends_on:
+      stalwart_certs:
+        condition: service_completed_successfully
+    networks:
+      stalwart:
+      newt:
+        ipv4_address: 192.168.200.2
+    labels:
+      pangolin.public-resources.mail.name: mail
+      pangolin.public-resources.mail.full-domain: mail.chenn.dev
+      pangolin.public-resources.mail.mode: http
+      pangolin.public-resources.mail.ssl: true
+      pangolin.public-resources.mail.targets[0].method: http
+      pangolin.public-resources.mail.targets[0].port: 8080
+
+      pangolin.public-resources.mail_1.name: mail_1
+      pangolin.public-resources.mail_1.full-domain: autodiscover.chenn.dev
+      pangolin.public-resources.mail_1.mode: http
+      pangolin.public-resources.mail_1.ssl: true
+      pangolin.public-resources.mail_1.targets[0].method: http
+      pangolin.public-resources.mail_1.targets[0].port: 8080
+
+      pangolin.public-resources.mail_2.name: mail_2
+      pangolin.public-resources.mail_2.full-domain: autoconfig.chenn.dev
+      pangolin.public-resources.mail_2.mode: http
+      pangolin.public-resources.mail_2.ssl: true
+      pangolin.public-resources.mail_2.targets[0].method: http
+      pangolin.public-resources.mail_2.targets[0].port: 8080
+
+      pangolin.public-resources.mail_3.name: mail_3
+      pangolin.public-resources.mail_3.full-domain: mta-sts.chenn.dev
+      pangolin.public-resources.mail_3.mode: http
+      pangolin.public-resources.mail_3.ssl: true
+      pangolin.public-resources.mail_3.targets[0].method: http
+      pangolin.public-resources.mail_3.targets[0].port: 8080
+
+      pangolin.public-resources.smtp.name: smtp
+      pangolin.public-resources.smtp.mode: tcp
+      pangolin.public-resources.smtp.proxy-port: 25
+      pangolin.public-resources.smtp.targets[0].port: 25
+      pangolin.public-resources.smtp.proxy-protocol: true
+      pangolin.public-resources.smtp.proxy-protocol-version: 2
+
+      pangolin.public-resources.smtps.name: smtps
+      pangolin.public-resources.smtps.mode: tcp
+      pangolin.public-resources.smtps.proxy-port: 465
+      pangolin.public-resources.smtps.targets[0].port: 465
+      pangolin.public-resources.smtps.proxy-protocol: true
+      pangolin.public-resources.smtps.proxy-protocol-version: 2
+
+      pangolin.public-resources.imaps.name: imaps
+      pangolin.public-resources.imaps.mode: tcp
+      pangolin.public-resources.imaps.proxy-port: 993
+      pangolin.public-resources.imaps.targets[0].port: 993
+      pangolin.public-resources.imaps.proxy-protocol: true
+      pangolin.public-resources.imaps.proxy-protocol-version: 2
+
+  stalwart_certs:
+    profiles: [stalwart]
+    image: docker:dind
+    container_name: stalwart_certs
+    restart: no
+    privileged: true
+    user: root
+    environment:
+      DOCKER_HOST: ssh://chris@${VPS0_IP}:2200
+    volumes:
+      - $DATA/stalwart:/data
+      - $HOME/.ssh:/ssh
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -x
+        mkdir -p /root/.ssh
+        cp -r /ssh/id_ed* /root/.ssh/
+        chown -R root:root /root/.ssh
+
+        tee /root/.ssh/config <<- 'END'
+        Host *
+          StrictHostKeyChecking no
+        END
+
+        rm -rf /data/certs
+        docker cp traefik_cert:/output /data/certs
+
+        mkdir -p /data/data /data/var
+        chown -R 2000:2000 /data
+        echo "copied certs; exiting: $?"
+        exit $?
+
+  #  stalwart_db:
+  #    profiles: [stalwart]
+  #    image: postgres:18-alpine
+  #    container_name: stalwart_db
+  #    restart: unless-stopped
+  #    environment:
+  #      POSTGRES_USER: stalwart
+  #      POSTGRES_PASSWORD: stalwart
+  #      POSTGRES_DB: stalwart
+  #    volumes:
+  #      # nonstandard dir so that stalwart_certs can set ownership on $DATA/stalwart
+  #      - $DATA/stalwart_db:/var/lib/postgresql
+  #    networks: [stalwart]
+  #
+  #  stalwart-s3:
+  #    profiles: [stalwart]
+  #    image: rustfs/rustfs:latest
+  #    container_name: stalwart-s3
+  #    restart: unless-stopped
+  #    command: /data
+  #    environment:
+  #      RUSTFS_ACCESS_KEY: stalwart
+  #      RUSTFS_SECRET_KEY: stalwart
+  #      RUSTFS_SERVER_DOMAINS: stalwart-s3
+  #    volumes:
+  #      - $DATA/stalwart/s3:/data
+  #    depends_on:
+  #      stalwart-s3_perm:
+  #        condition: service_completed_successfully
+  #    healthcheck:
+  #      test: curl -f http://localhost:9000/health
+  #      timeout: 5s
+  #      retries: 10
+  #      start_period: 15s
+  #      interval: 5s
+  #    networks: [stalwart]
+  #
+  #  stalwart-s3_perm:
+  #    profiles: [stalwart]
+  #    image: alpine
+  #    container_name: stalwart-s3_perm
+  #    restart: no
+  #    user: root
+  #    volumes:
+  #      - $DATA/stalwart/s3:/data
+  #    command: chown -R 10001:10001 /data
+  #
+  #  stalwart-s3_bucket:
+  #    profiles: [stalwart]
+  #    image: minio/mc
+  #    container_name: stalwart-s3_bucket
+  #    restart: no
+  #    entrypoint:
+  #      - /bin/sh
+  #      - -c
+  #      - |
+  #        set -e
+  #        until mc alias set rustfs http://stalwart-s3:9000 stalwart stalwart; do
+  #          echo 'waiting to connect to stalwart-s3'
+  #          sleep 2
+  #        done
+  #        mc mb rustfs/stalwart --ignore-existing
+  #    depends_on:
+  #      stalwart-s3:
+  #        condition: service_healthy
+  #    networks: [stalwart]
+
+  # https://mail.chenn.dev/webmail/admin
+  bulwark:
+    profiles: [bulwark]
+    build:
+      context: https://github.com/bulwarkmail/webmail.git
+      args:
+        NEXT_PUBLIC_BASE_PATH: /webmail
+    image: ${REGISTRY}/bulwarkmail/webmail:latest
+    container_name: bulwark
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_LOCALE_PREFIX: always
+      JMAP_SERVER_URL: https://mail.chenn.dev
+      APP_NAME: Chicken Mail
+      ADMIN_PASSWORD: ${BULWARK_PASS}
+      SESSION_SECRET: ${BULWARK_SESSION}
+      SETTINGS_SYNC_ENABLED: true
+      BULWARK_TELEMETRY: off
+    volumes:
+      - $DATA/bulwark/admin:/app/data/admin
+      - $DATA/bulwark/state:/app/data/admin-state
+    depends_on:
+      bulwark_perm:
+        condition: service_completed_successfully
+    networks: [newt]
+    labels:
+      pangolin.public-resources.mail.targets[1].method: http
+      pangolin.public-resources.mail.targets[1].path: /webmail
+      pangolin.public-resources.mail.targets[1].path-match: prefix
+      pangolin.public-resources.mail.targets[1].port: 3000
+
+  bulwark_perm:
+    profiles: [bulwark]
+    image: alpine
+    container_name: bulwark_perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/bulwark:/data
+    command: /bin/sh -c 'mkdir -p /data/admin /data/state && chown -R 1001:1001 /data'
+
+  test:
+    profiles: [test]
+    image: alpine
+    container_name: test
+    restart: no
+    networks: [newt]
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        apk update && apk add bind-tools
+        eval /bin/sh
+
+networks:
+  stalwart:

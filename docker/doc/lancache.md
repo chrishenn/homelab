@@ -1,7 +1,16 @@
 # lancache
 
 Prefill the lancache
-https://tpill90.github.io/steam-lancache-prefill/
+
+- it did auto-detect the lancache server at LANCACHE_IP
+- selected apps: [730,4465480,1079800,400,620,2012840]
+- you have to do an interactive login to give your steam creds
+- you can only download games you own in that steam acct (duh)
+
+```bash
+dc run --rm -it lancache_prefill select-apps
+dc run --rm -it lancache_prefill prefill
+```
 
 Test the lancache dns setup. Dig/nslookup should find LANCACHE_IP from .env
 

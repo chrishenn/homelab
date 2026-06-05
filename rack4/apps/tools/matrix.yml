@@ -32,11 +32,11 @@ services:
       - $DATA/continuwuity/config.toml:/etc/continuwuity.toml
     networks: [traefik]
     labels:
-      homepage.instance.private.group: Tools
-      homepage.instance.private.name: Matrix Chat
-      homepage.instance.private.icon: matrix.png
-      homepage.instance.private.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
-      homepage.instance.private.description: Federated Discord
+      homepage.group: General Tools
+      homepage.name: Matrix Chat
+      homepage.icon: matrix.png
+      homepage.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
+      homepage.description: Federated Discord
 
       traefik.enable: true
       traefik.http.routers.matrix.rule: (Host(`matrix.henn.dev`) || (Host(`henn.dev`) && PathPrefix(`/.well-known/matrix`)))

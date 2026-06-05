@@ -1,0 +1,39 @@
+# versions after v0.5.0 are borked
+---
+services:
+  dockscope:
+    profiles: [dockscope]
+    image: ghcr.io/manuelr-t/dockscope:v0.5.0
+    container_name: dockscope
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [newt, traefik]
+    labels:
+      homepage.group: Infra
+      homepage.name: Dockscope
+      homepage.icon: docker-engine.png
+      homepage.href: https://dockscope.chenn.dev
+      homepage.description: 3D Docker Visualizer
+
+      traefik.enable: true
+      traefik.http.routers.dockscope.rule: Host(`dockscope.henn.dev`)
+      traefik.http.routers.dockscope.entrypoints: websecure
+      traefik.http.routers.dockscope.middlewares: hdrs@file
+      traefik.http.routers.dockscope.tls.certresolver: cf
+      traefik.http.services.dockscope.loadbalancer.server.port: 4681
+
+      pangolin.public-resources.dockscope.name: dockscope
+      pangolin.public-resources.dockscope.full-domain: dockscope.chenn.dev
+      pangolin.public-resources.dockscope.protocol: http
+      pangolin.public-resources.dockscope.ssl: true
+      pangolin.public-resources.dockscope.targets[0].method: http
+      pangolin.public-resources.dockscope.targets[0].port: 4681
+      pangolin.public-resources.dockscope.auth.sso-enabled: true
+      pangolin.public-resources.dockscope.auth.sso-roles[0]: Member
+      pangolin.public-resources.dockscope.rules[0].action: pass
+      pangolin.public-resources.dockscope.rules[0].match: country
+      pangolin.public-resources.dockscope.rules[0].value: US
+      pangolin.public-resources.dockscope.rules[1].action: deny
+      pangolin.public-resources.dockscope.rules[1].match: country
+      pangolin.public-resources.dockscope.rules[1].value: ALL

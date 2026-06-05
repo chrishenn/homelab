@@ -25,7 +25,7 @@ services:
 
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Job
       homepage.name: Job Ops
       homepage.icon: atlassian-opsgenie.png
       homepage.href: https://ops.chenn.dev

@@ -1,3 +1,5 @@
+# csgo
+
 problem: steam appid changed because csgo was released as its own steam listing instead of a cs2 beta branch
 new appid: 4465480
 

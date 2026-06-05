@@ -29,11 +29,11 @@ services:
       - $DATA/transcodarr/config:/app/config
     networks: [transcodarr, arr, newt]
     labels:
-      homepage.group: Media
+      homepage.group: Arr
       homepage.name: Transcodarr
       homepage.icon: https://raw.githubusercontent.com/reedylab/transcodarr/refs/heads/main/web/static/favicon.svg
       homepage.href: https://transcodarr.chenn.dev
-      homepage.description: Automatic Video Transcode
+      homepage.description: Auto Video Transcode
 
       pangolin.public-resources.transcodarr.name: transcodarr
       pangolin.public-resources.transcodarr.full-domain: transcodarr.chenn.dev

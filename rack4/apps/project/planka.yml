@@ -42,7 +42,7 @@ services:
       test: ['CMD-SHELL', 'wget -qO --no-verbose http://127.0.0.1:1337']
     networks: [planka, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Planka
       homepage.icon: planka.png
       homepage.href: https://planka.chenn.dev

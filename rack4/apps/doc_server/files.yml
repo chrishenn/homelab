@@ -6,11 +6,11 @@ configs:
       frontend:
         name: 'Quantum Chicken'
         description: A file server for the Dancing Chicken
-      
+
       server:
         externalUrl: https://files.chenn.dev
         internalUrl: http://files:80
-      
+
         sources:
           - path: /mnt/r/
             name: r
@@ -28,7 +28,7 @@ configs:
             name: h
             config:
               defaultEnabled: true
-      
+
       auth:
         adminUsername: chris
         methods:
@@ -44,7 +44,7 @@ configs:
             groupsClaim: groups
             adminGroup: admin
             createUser: true
-      
+
       userDefaults:
         loginMethod: oidc
         permissions:

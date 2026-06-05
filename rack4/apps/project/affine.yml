@@ -37,7 +37,7 @@ services:
       <<: *affine_env
     networks: [affine, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Affine
       homepage.icon: affine.png
       homepage.href: https://affine.chenn.dev
@@ -60,23 +60,23 @@ services:
 
   affine_redis:
     profiles: [affine]
-    image: redis
+    image: valkey/valkey:alpine
     container_name: affine_redis
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
-      interval: 10s
+      test: redis-cli ping
+      interval: 5s
       timeout: 5s
       retries: 5
     networks: [affine]
 
   affine_db:
     profiles: [affine]
-    image: pgvector/pgvector:pg16
+    image: pgvector/pgvector:pg18
     container_name: affine_db
     restart: unless-stopped
     volumes:
-      - $DATA/affine/db:/var/lib/postgresql/data
+      - $DATA/affine/db:/var/lib/postgresql
     environment:
       <<: *affine_env
     healthcheck:

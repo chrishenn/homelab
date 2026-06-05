@@ -1,19 +1,58 @@
 ---
+configs:
+  homepage_docker:
+    content: |
+      rack4:
+        socket: /var/run/docker.sock
+  homepage_widgets:
+    content: |
+      - resources:
+          cpu: true
+          memory: true
+      - openmeteo:
+          timezone: America/Chicago
+          latitude: 42.038588
+          longitude: -87.702809
+          units: imperial
+          cache: 5
+          format:
+            maximumFractionDigits: 1
+  homepage_bookmarks:
+    content: ---
+  homepage_services:
+    content: ---
+
 services:
-  homepage_pub:
+  homepage:
     profiles: [homepage]
     image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage_pub
+    container_name: homepage
     restart: unless-stopped
-    volumes:
-      - ./homepage_pub/config:/app/config
-      - ./homepage_pub/images:/app/public/images
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       TZ: $TZ
-      HOMEPAGE_ALLOWED_HOSTS: home.chenn.dev
+      HOMEPAGE_ALLOWED_HOSTS: '*'
+    configs:
+      - source: homepage_docker
+        target: /app/config/docker.yaml
+      - source: homepage_widgets
+        target: /app/config/widgets.yaml
+      - source: homepage_bookmarks
+        target: /app/config/bookmarks.yaml
+      - source: homepage_services
+        target: /app/config/services.yaml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./homepage/settings.yaml:/app/config/settings.yaml
+      - ./homepage/b1.jpg:/app/public/images/b1.jpg
     networks: [traefik, newt]
     labels:
+      traefik.enable: true
+      traefik.http.routers.home.rule: Host(`home.henn.dev`)
+      traefik.http.routers.home.entrypoints: websecure
+      traefik.http.routers.home.middlewares: hdrs@file
+      traefik.http.routers.home.tls.certresolver: cf
+      traefik.http.services.home.loadbalancer.server.port: 3000
+
       pangolin.public-resources.homepage_pub.name: homepage_pub
       pangolin.public-resources.homepage_pub.full-domain: home.chenn.dev
       pangolin.public-resources.homepage_pub.protocol: http
@@ -28,24 +67,3 @@ services:
       pangolin.public-resources.homepage_pub.rules[1].action: deny
       pangolin.public-resources.homepage_pub.rules[1].match: country
       pangolin.public-resources.homepage_pub.rules[1].value: ALL
-
-  homepage:
-    profiles: [homepage]
-    image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage
-    restart: unless-stopped
-    volumes:
-      - ./homepage/config:/app/config
-      - ./homepage/images:/app/public/images
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      TZ: $TZ
-      HOMEPAGE_ALLOWED_HOSTS: home.henn.dev
-    networks: [traefik, newt]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.home.rule: Host(`home.henn.dev`)
-      traefik.http.routers.home.entrypoints: websecure
-      traefik.http.routers.home.middlewares: hdrs@file
-      traefik.http.routers.home.tls.certresolver: cf
-      traefik.http.services.home.loadbalancer.server.port: 3000

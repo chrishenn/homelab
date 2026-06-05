@@ -4,27 +4,27 @@ configs:
   gotify:
     content: |
       server:
-        keepaliveperiodseconds: 0 
-        listenaddr: '' 
-        port: 80 
+        keepaliveperiodseconds: 0
+        listenaddr: ''
+        port: 80
 
         ssl:
-          enabled: false 
-          redirecttohttps: true 
-          listenaddr: '' 
-          port: 443 
+          enabled: false
+          redirecttohttps: true
+          listenaddr: ''
+          port: 443
           certfile:
-          certkey: 
+          certkey:
           letsencrypt:
-            enabled: false 
+            enabled: false
             accepttos: false
             cache: data/certs
-            directoryurl: 
-            hosts: 
+            directoryurl:
+            hosts:
 
-        responseheaders: 
-        trustedproxies: 
-        cors: 
+        responseheaders:
+        trustedproxies:
+        cors:
           alloworigins:
           allowmethods:
           allowheaders:
@@ -32,18 +32,18 @@ configs:
           pingperiodseconds: 45
           allowedorigins:
 
-      database: 
+      database:
         dialect: sqlite3
         connection: data/gotify.db
 
-      defaultuser: 
-        name: ${USER} 
+      defaultuser:
+        name: ${USER}
         pass: ${PASS}
 
-      passstrength: 10 
-      uploadedimagesdir: data/images 
-      pluginsdir: data/plugins 
-      registration: false 
+      passstrength: 10
+      uploadedimagesdir: data/images
+      pluginsdir: data/plugins
+      registration: false
 
 services:
   gotify:
@@ -58,7 +58,7 @@ services:
       - $DATA/gotify/data:/app/data
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Notify
       homepage.name: Gotify
       homepage.icon: gotify.png
       homepage.href: https://gotify.chenn.dev

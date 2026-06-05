@@ -15,4 +15,3 @@ services:
     healthcheck:
       test: ['CMD-SHELL', 'curl -fsS http://localhost:8191/health | grep -q ''"status": "ok''']
     networks: [arr]
-

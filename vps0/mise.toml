@@ -5,3 +5,9 @@ python.uv_venv_auto = "create|source"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
+
+[env]
+DOCKER_HOST = "ssh://chris@${VPS0_IP}:2200"
+DIR_HOST = "/home/chris/Projects/homelab/vps0"
+DATA = "/home/chris/data"
+BACKUP = "/home/chris/backup"

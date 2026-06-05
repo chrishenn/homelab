@@ -33,7 +33,7 @@ services:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
     networks: [rally, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Rally
       homepage.icon: rallly.png
       homepage.href: https://rally.chenn.dev

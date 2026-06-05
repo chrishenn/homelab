@@ -12,7 +12,7 @@ services:
       - $DATA/handbrake/convert:/video
     networks: [handbrake, traefik, newt]
     labels:
-      homepage.group: File Converters
+      homepage.group: Converters
       homepage.name: Handbrake
       homepage.icon: handbrake.png
       homepage.href: https://handbrake.chenn.dev

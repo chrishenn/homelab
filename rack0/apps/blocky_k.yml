@@ -10,14 +10,14 @@ configs:
           fall 2
           rise 2
       }
-        
+
       vrrp_instance VI_1 {
           state BACKUP
           interface ${RACK0_NIC}
           virtual_router_id 55
           priority 125
           advert_int 1
-          
+
           track_script {
               check_blocky
           }
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
-      KEEPALIVED_CUSTOM_CONFIG: 'true'
+      KEEPALIVED_CUSTOM_CONFIG: true
     configs:
       - source: blocky_k
         target: /etc/keepalived/keepalived.conf

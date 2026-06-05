@@ -28,7 +28,7 @@ services:
       - $DATA/nodebb/config:/opt/config
     networks: [nodebb, newt]
     labels:
-      homepage.group: Forums
+      homepage.group: General Media
       homepage.name: Nodebb
       homepage.icon: nodebb.svg
       homepage.href: https://nodebb.chenn.dev
@@ -51,12 +51,17 @@ services:
 
   nodebb_redis:
     profiles: [nodebb]
-    image: redis:8-alpine
+    image: valkey/valkey:alpine
     container_name: nodebb_redis
     restart: unless-stopped
     command: ['redis-server', '--appendonly', 'yes', '--loglevel', 'warning']
     volumes:
       - $DATA/nodebb/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [nodebb]
 
 networks:

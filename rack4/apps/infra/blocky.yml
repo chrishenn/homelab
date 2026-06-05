@@ -11,13 +11,14 @@ services:
       PGID: $PGID
       TZ: $TZ
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $DATA/blocky/blacklists:/app/blacklists/
-      - $DATA/blocky/whitelists:/app/whitelists/
-      - $DATA/blocky/logs:/logs
       - ./blocky/config.yml:/app/config.yml
     ports:
       - '${SVC_IP}:53:53/tcp'
       - '${SVC_IP}:53:53/udp'
+      - '${SVC_IP}:853:853/tcp'
+      - '${SVC_IP}:853:853/udp'
+
       - '${DNS_VIP}:53:53/tcp'
       - '${DNS_VIP}:53:53/udp'
+      - '${DNS_VIP}:853:853/tcp'
+      - '${DNS_VIP}:853:853/udp'

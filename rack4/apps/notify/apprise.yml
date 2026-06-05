@@ -18,7 +18,7 @@ services:
       - $DATA/apprise/attachments:/attachments
     networks: [newt]
     labels:
-      homepage.group: Infra
+      homepage.group: Notify
       homepage.name: Apprise
       homepage.icon: apprise.png
       homepage.href: https://apprise.chenn.dev

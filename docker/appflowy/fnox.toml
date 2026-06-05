@@ -1,6 +1,0 @@
-[providers.onepass]
-type = "1password"
-vault = "homelab"
-account = "my.1password.com"
-
-[secrets]

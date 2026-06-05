@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     networks: [newt]
     labels:
-      homepage.group: Dev
+      homepage.group: Development Tools
       homepage.name: Cyberchef
       homepage.icon: cyberchef.png
       homepage.href: https://cyberchef.chenn.dev

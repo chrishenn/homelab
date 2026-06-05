@@ -3,7 +3,6 @@
 # sudo mkdir -p $DATA/vikunja/db
 # sudo sudo chown -R 1000:1000 $DATA/vikunja
 # note: image contains no shell, so healthcheck is not possible
-
 ---
 services:
   vikunja:
@@ -28,7 +27,7 @@ services:
       - $DATA/vikunja/db:/db
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Vikunja
       homepage.icon: vikunja.png
       homepage.href: https://vikunja.chenn.dev

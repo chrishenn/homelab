@@ -1,0 +1,241 @@
+providers:
+  http:
+    endpoint: 'http://pangolin:3001/api/v1/traefik-config'
+    pollInterval: '5s'
+  file:
+    filename: '/etc/traefik/dynamic_config.yml'
+
+api:
+  insecure: true
+  dashboard: false
+
+http:
+  encodedcharacters:
+    allowEncodedSlash: true
+    allowEncodedQuestionMark: true
+    allowencodedbackslash: true
+    allowencodednullcharacter: true
+    allowencodedsemicolon: true
+    allowencodedpercent: true
+    allowencodedhash: true
+
+experimental:
+  plugins:
+    badger:
+      moduleName: 'github.com/fosrl/badger'
+      version: 'v1.4.1'
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+
+log:
+  level: 'INFO'
+  format: 'common'
+  maxSize: 100
+  maxBackups: 3
+  maxAge: 3
+  compress: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      dnsChallenge:
+        provider: 'cloudflare'
+        resolvers:
+          - '1.1.1.1:53'
+          - '8.8.8.8:53'
+      storage: '/letsencrypt/acme.json'
+      caServer: 'https://acme-v02.api.letsencrypt.org/directory'
+
+entryPoints:
+  web:
+    address: ':80'
+  websecure:
+    address: ':443'
+    transport:
+      respondingTimeouts:
+        readTimeout: '30m'
+        writeTimeout: '30m'
+        idleTimeout: '30m'
+    http:
+      tls:
+        certResolver: 'letsencrypt'
+
+  tcp-25:
+    address: :25
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.200.2
+        - 192.168.200.38
+        - 172.18.0.5
+        - 76.13.30.83
+        - 67.173.84.38
+  tcp-465:
+    address: :465
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.200.2
+        - 192.168.200.38
+        - 172.18.0.5
+        - 76.13.30.83
+        - 67.173.84.38
+  tcp-993:
+    address: :993
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.200.2
+        - 192.168.200.38
+        - 172.18.0.5
+        - 76.13.30.83
+        - 67.173.84.38
+
+  tcp-2424:
+    address: ':2424/tcp'
+  tcp-2525:
+    address: ':2525/tcp'
+  tcp-2626:
+    address: ':2626/tcp'
+
+  udp-10000:
+    address: ':10000/udp'
+
+  tcp-40000:
+    address: ':40000/tcp'
+  tcp-40001:
+    address: ':40001/tcp'
+  tcp-40002:
+    address: ':40002/tcp'
+  tcp-40003:
+    address: ':40003/tcp'
+  tcp-40004:
+    address: ':40004/tcp'
+  tcp-40005:
+    address: ':40005/tcp'
+  tcp-40006:
+    address: ':40006/tcp'
+  tcp-40007:
+    address: ':40007/tcp'
+  tcp-40008:
+    address: ':40008/tcp'
+  tcp-40009:
+    address: ':40009/tcp'
+  tcp-40010:
+    address: ':40010/tcp'
+
+  udp-40000:
+    address: ':40000/udp'
+  udp-40001:
+    address: ':40001/udp'
+  udp-40002:
+    address: ':40002/udp'
+  udp-40003:
+    address: ':40003/udp'
+  udp-40004:
+    address: ':40004/udp'
+  udp-40005:
+    address: ':40005/udp'
+  udp-40006:
+    address: ':40006/udp'
+  udp-40007:
+    address: ':40007/udp'
+  udp-40008:
+    address: ':40008/udp'
+  udp-40009:
+    address: ':40009/udp'
+  udp-40010:
+    address: ':40010/udp'
+
+  tcp-7881:
+    address: ':7881/tcp'
+
+  udp-50000:
+    address: ':50000/udp'
+  udp-50001:
+    address: ':50001/udp'
+  udp-50002:
+    address: ':50002/udp'
+  udp-50003:
+    address: ':50003/udp'
+  udp-50004:
+    address: ':50004/udp'
+  udp-50005:
+    address: ':50005/udp'
+  udp-50006:
+    address: ':50006/udp'
+  udp-50007:
+    address: ':50007/udp'
+  udp-50008:
+    address: ':50008/udp'
+  udp-50009:
+    address: ':50009/udp'
+
+  udp-50010:
+    address: ':50010/udp'
+  udp-50011:
+    address: ':50011/udp'
+  udp-50012:
+    address: ':50012/udp'
+  udp-50013:
+    address: ':50013/udp'
+  udp-50014:
+    address: ':50014/udp'
+  udp-50015:
+    address: ':50015/udp'
+  udp-50016:
+    address: ':50016/udp'
+  udp-50017:
+    address: ':50017/udp'
+  udp-50018:
+    address: ':50018/udp'
+  udp-50019:
+    address: ':50019/udp'
+
+  udp-50020:
+    address: ':50020/udp'
+  udp-50021:
+    address: ':50021/udp'
+  udp-50022:
+    address: ':50022/udp'
+  udp-50023:
+    address: ':50023/udp'
+  udp-50024:
+    address: ':50024/udp'
+  udp-50025:
+    address: ':50025/udp'
+  udp-50026:
+    address: ':50026/udp'
+  udp-50027:
+    address: ':50027/udp'
+  udp-50028:
+    address: ':50028/udp'
+  udp-50029:
+    address: ':50029/udp'
+
+  udp-50030:
+    address: ':50030/udp'
+  udp-50031:
+    address: ':50031/udp'
+  udp-50032:
+    address: ':50032/udp'
+  udp-50033:
+    address: ':50033/udp'
+  udp-50034:
+    address: ':50034/udp'
+  udp-50035:
+    address: ':50035/udp'
+  udp-50036:
+    address: ':50036/udp'
+  udp-50037:
+    address: ':50037/udp'
+  udp-50038:
+    address: ':50038/udp'
+  udp-50039:
+    address: ':50039/udp'
+
+serversTransport:
+  insecureSkipVerify: true
+
+ping:
+  entryPoint: 'web'

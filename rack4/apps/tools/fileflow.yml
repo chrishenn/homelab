@@ -31,7 +31,7 @@ services:
       - $DATA/fileflow/temp:/temp
     networks: [newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Tools
       homepage.name: Fileflow
       homepage.icon: fileflows.png
       homepage.href: https://fileflow.chenn.dev

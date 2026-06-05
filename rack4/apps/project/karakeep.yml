@@ -44,7 +44,7 @@ services:
       - $DATA/karakeep/data:/data
     networks: [karakeep, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: Project Management
       homepage.name: Karakeep
       homepage.icon: karakeep.png
       homepage.href: https://karakeep.chenn.dev

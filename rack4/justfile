@@ -1,4 +1,4 @@
-# compose operations over {profiles, svcs}
+set fallback
 alias a := attach
 alias b := bounce
 alias f := follow
@@ -8,8 +8,16 @@ alias u := up
 alias d := down
 profile := "'*'"
 
+# machine-specific
+
+# 'repo' is the repo location on the remote host
 repo := "/var/home/chris/Projects/homelab"
-dir := repo/"rack4"
+
+[arg("pty", long="pty", short="p")]
+ssh cmd='' pty='true':
+    just rack4 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+
+# compose operations over {profiles, svcs}
 
 up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
@@ -42,7 +50,7 @@ log *args:
 follow *args:
     just log -f {{ args }}
 
-attach svc cmd="/bin/bash":
+attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}
 
 ps *svcs:
@@ -65,7 +73,7 @@ pbounce profile=profile *svcs:
 # logins, keys, helpers
 
 keys:
-    echo "$(op read 'op://homelab/dkey/public key')" | $DHOST_SSH "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+    echo "$(op read 'op://homelab/dkey/public key')" | just ssh 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys' -p=false
 
 login_docker:
     echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin
@@ -75,15 +83,15 @@ login_registry:
 
 rlogin:
     #!/bin/bash
-    $DHOST_SSH "echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin"
-    $DHOST_SSH "echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin"
+    just ssh 'echo $PASS | docker login ${REGISTRY} -u $USER --password-stdin'
+    just ssh 'echo $DOCKERHUB_PASS | docker login docker.io -u $DOCKERHUB_USER --password-stdin'
 
 sync message="sync":
-    git commit -a -m "{{ message }}" || true && git pull && git push
-    $DHOST_SSH -At "cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push"
+    git commit -a -m '{{ message }}' || true && git pull && git push
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
 rsync message="sync":
-    $DHOST_SSH -At "cd {{repo}} && git add --all && git commit -a -m '{{ message }}' || true && git pull && git push"
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
     git commit -a -m "{{ message }}" || true && git pull && git push
 
 # sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
@@ -91,14 +99,7 @@ ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
 reset:
-    $DHOST_SSH -At "cd {{repo}} && git fetch origin"
-    $DHOST_SSH -At "cd {{repo}} && git reset --hard origin/main"
-
-ssh:
-    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && cd {{dir}} && bash -l"
-
-cm:
-    $DHOST_SSH -t "$(op read op://homelab/svc/bash) && bash -i -c 'just cm'"
+    just ssh 'cd {{repo}} && git fetch origin && git reset --hard origin/main'
 
 # service-specific recipes
 
@@ -134,3 +135,8 @@ wasabi_add:
 
 wasabi:
     mc du wasabi
+
+stoat_invite:
+    #!/bin/bash
+    export invite=$(openssl rand -hex 32)
+    docker compose exec -it stoat_db mongosh revolt --eval "db.invites.insertOne({ _id: \"$invite\" })"

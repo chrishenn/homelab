@@ -16,7 +16,7 @@ services:
       DB_PASSWORD: yamtrack
     networks: [yamtrack, newt]
     labels:
-      homepage.group: Media
+      homepage.group: General Media
       homepage.name: Yamtrack
       homepage.icon: yamtrack.png
       homepage.href: https://yamtrack.chenn.dev
@@ -52,11 +52,16 @@ services:
 
   yamtrack_redis:
     profiles: [yamtrack]
-    image: redis:8-alpine
+    image: valkey/valkey:alpine
     container_name: yamtrack_redis
     restart: unless-stopped
     volumes:
       - $DATA/yamtrack/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [yamtrack]
 
 networks:

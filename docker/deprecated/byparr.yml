@@ -1,0 +1,11 @@
+# not sure if it worked
+---
+services:
+  byparr:
+    profiles: [download]
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: byparr
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+    networks: [arr]

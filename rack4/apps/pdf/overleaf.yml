@@ -2,7 +2,7 @@
 ---
 configs:
   overleaf_mongo_init:
-    content: | 
+    content: |
       rs.initiate({ _id: 'overleaf', members: [{ _id: 0, host: 'overleaf_mongo:27017' }] })
 
 services:
@@ -48,7 +48,7 @@ services:
       - $DATA/overleaf/data:/var/lib/overleaf
     networks: [overleaf, newt]
     labels:
-      homepage.group: File Editors
+      homepage.group: PDF
       homepage.name: Overleaf
       homepage.icon: overleaf.png
       homepage.href: https://overleaf.chenn.dev
@@ -76,10 +76,10 @@ services:
     restart: unless-stopped
     extra_hosts:
       - overleaf_mongo:127.0.0.1
-    command: "--replSet overleaf"
+    command: '--replSet overleaf'
     environment:
       MONGO_INITDB_DATABASE: sharelatex
-      GLIBC_TUNABLES: "glibc.cpu.hwcaps=-SHSTK"
+      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
     configs:
       - source: overleaf_mongo_init
         target: /docker-entrypoint-initdb.d/mongodb-init-replica-set.js
@@ -94,11 +94,16 @@ services:
 
   overleaf_redis:
     profiles: [overleaf]
-    image: redis:8-alpine
+    image: valkey/valkey:alpine
     container_name: overleaf_redis
     restart: unless-stopped
     volumes:
       - $DATA/overleaf/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks: [overleaf]
 
 networks:

@@ -1,6 +1,6 @@
 # Nvidia Driver
 
-NOTE: latest open drivers are too new for older gpus like the GTX 1080
+NOTE: latest open drivers are too new for older gpus like the GTX 1080 (older than GTX 1660)
 
 ---
 

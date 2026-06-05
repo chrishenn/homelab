@@ -30,27 +30,9 @@ run = "hk run pre-commit"
 # note this is the local repo path; clones of repo may have diff locations on remotes
 REPO = "{{ config_root | absolute }}"
 REPO_NAME = "{{ config_root | basename }}"
-FNOX_AGE_KEY_FILE = "~/.ssh/id_ed25519"
 HK_MISE = 1
 HK_LIBGIT2 = 0
 MISE_NPM_BUN = 1
-
-# remotes
-RACK0_USR = "chris"
-RACK0_IP = "192.168.1.70"
-RACK0_PORT = "22"
-RACK0_DIR = "/home/chris/Projects/homelab/rack0"
-RACK0_NIC = "nic0"
-
-RACK4_USR = "chris"
-RACK4_IP = "192.168.1.142"
-RACK4_PORT = "2200"
-RACK4_DIR = "/home/chris/Projects/homelab/rack4"
-RACK4_NIC = "enp47s0np0"
-
-VPS0_USR = "chris"
-VPS0_PORT = "2200"
-VPS0_DIR = "/home/chris/Projects/homelab/vps0"
 
 # registries
 REGISTRY = "zot.henn.dev"
@@ -66,3 +48,9 @@ TRAEFIK_VIP_CIDR = "192.168.1.4/24"
 KEEPALIVE_MASTER = "192.168.1.142"
 KEEPALIVE_BACKUP = "192.168.1.70"
 KEEPALIVE_PASS = "E@!#3f$%"
+RACK0_NIC = "nic0"
+RACK4_NIC = "enp47s0np0"
+
+# lancache dns
+LANCACHE_IP = "192.168.1.143"
+LANCACHE_DNS = "192.168.1.143"
