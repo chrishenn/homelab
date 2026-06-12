@@ -69,48 +69,48 @@ curl -L https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/na
 curl -L https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.winoffice.txt -o "$lists/native.winoffice.txt"
 ```
 
-config 
+config
 
 ```yml
 upstreams:
-  init:
-    # startup behavior: {blocking, failOnError, fast}
-    strategy: fast
-  groups:
-    default:
-      - https://1.1.1.1/dns-query
-  #      - tcp-tls:one.one.one.one:853
-  #      - https://dns.nextdns.io/74c891
-  #      - tcp-tls:74c891.dns.nextdns.io:853
-  
+    init:
+        # startup behavior: {blocking, failOnError, fast}
+        strategy: fast
+    groups:
+        default:
+            - https://1.1.1.1/dns-query
+    #      - tcp-tls:one.one.one.one:853
+    #      - https://dns.nextdns.io/74c891
+    #      - tcp-tls:74c891.dns.nextdns.io:853
+
 customDNS:
-  customTTL: 1h
-  filterUnmappedTypes: false
-  # this is not working - I assume because our primary upstream is now https, this mapping does not happen
-  # to use the lancache, manually set an individual machine to use $LANCACHE_IP as the sole dns server
-  # according to https://github.com/uklans/cache-domains, {lancache.steamcontent.com} is the only domain we need to rewrite
-  #  mapping:
-  #    lancache.steamcontent.com: 192.168.1.143
+    customTTL: 1h
+    filterUnmappedTypes: false
+    # this is not working - I assume because our primary upstream is now https, this mapping does not happen
+    # to use the lancache, manually set an individual machine to use $LANCACHE_IP as the sole dns server
+    # according to https://github.com/uklans/cache-domains, {lancache.steamcontent.com} is the only domain we need to rewrite
+    #  mapping:
+    #    lancache.steamcontent.com: 192.168.1.143
 ```
 
 https doh (downstreams)
 
 - https://github.com/0xERR0R/blocky/discussions/576
 
-    Regarding HTTPS: Yes, if you use traefik, it is the preferred way to use traefik as reverse proxy and do HTTPS. Blocky 
-    should only serve traffic on HTTP port, no need to configure https port or any certificate. 
+    Regarding HTTPS: Yes, if you use traefik, it is the preferred way to use traefik as reverse proxy and do HTTPS. Blocky
+    should only serve traffic on HTTP port, no need to configure https port or any certificate.
 
 ```yml
 spec:
-  entryPoints:
-  - dot
-  routes:
-  - match: HostSNI(`*`)
-    services:
-    - name: blocky
-      port: 53
-      terminationDelay: 400
-      weight: 10
-  tls:
-    passthrough: false
+    entryPoints:
+        - dot
+    routes:
+        - match: HostSNI(`*`)
+          services:
+              - name: blocky
+                port: 53
+                terminationDelay: 400
+                weight: 10
+    tls:
+        passthrough: false
 ```

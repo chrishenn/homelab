@@ -172,8 +172,7 @@ x-automation-consumer-env: &automation-consumer-env
   AUTOMATION_EVENT_STREAM_PREFETCH: ${AUTOMATION_EVENT_STREAM_PREFETCH:-10}
   AUTOMATION_EXCHANGE_NAME: ${AUTOMATION_EXCHANGE_NAME:-plane.event_stream}
 
-x-pi-env: &pi-env
-  # PI-only (rest from *app-env, *pg-env, *rabbitmq-env, *docstore-env, *opensearch-env)
+x-pi-env: &pi-env # PI-only (rest from *app-env, *pg-env, *rabbitmq-env, *docstore-env, *opensearch-env)
   FASTAPI_APP_HOST: ${FASTAPI_APP_HOST:-0.0.0.0}
   FASTAPI_APP_WORKERS: ${FASTAPI_APP_WORKERS:-1}
   PLANE_FRONTEND_URL: ${WEB_URL:-http://localhost}
@@ -307,7 +306,7 @@ services:
     command: ./bin/docker-entrypoint-migrator.sh
     environment:
       <<: [*plane, *app-env, *pg-env, *redis-env, *rabbitmq-env, *docstore-env, *opensearch-env]
-    restart: "no"
+    restart: 'no'
     deploy:
       replicas: 1
     volumes:
@@ -329,7 +328,7 @@ services:
 
   pi-db-init:
     image: postgres:15.7-alpine
-    restart: "no"
+    restart: 'no'
     environment:
       <<: [*pg-env]
     command: >
@@ -402,7 +401,7 @@ services:
     environment:
       <<: [*email-env]
     healthcheck:
-      test: ["CMD", "nc", "-zv", "localhost", "10025"]
+      test: ['CMD', 'nc', '-zv', 'localhost', '10025']
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -415,8 +414,7 @@ services:
     image: artifacts.plane.so/makeplane/backend-commercial:v2.4.0
     command: ./bin/docker-entrypoint-automation-consumer.sh
     environment:
-      <<:
-        [*automation-consumer-env, *plane, *app-env, *pg-env, *redis-env, *rabbitmq-env, *docstore-env, *opensearch-env]
+      <<: [*automation-consumer-env, *plane, *app-env, *pg-env, *redis-env, *rabbitmq-env, *docstore-env, *opensearch-env]
     restart: unless-stopped
     deploy:
       replicas: ${AUTOMATION_CONSUMER_REPLICAS:-1}
@@ -464,7 +462,7 @@ services:
   pi-worker:
     image: artifacts.plane.so/makeplane/plane-pi-commercial:v2.4.0
     command: ./bin/entrypoint-celery-worker.sh
-    environment:  
+    environment:
       <<: [*plane, *app-env, *pg-env, *redis-env, *rabbitmq-env, *docstore-env, *opensearch-env, *pi-env]
     restart: unless-stopped
     deploy:
@@ -478,7 +476,7 @@ services:
     command: ./bin/entrypoint-migrator.sh
     environment:
       <<: [*plane, *app-env, *pg-env, *redis-env, *rabbitmq-env, *docstore-env, *opensearch-env, *pi-env]
-    restart: "no"
+    restart: 'no'
     deploy:
       replicas: ${PI_MIGRATOR_REPLICAS:-0}
     depends_on:

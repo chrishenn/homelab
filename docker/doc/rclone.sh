@@ -13,5 +13,3 @@ rm secrets.conf
 
 # chown backed up files
 chown -R 1000:1000 "$dst"
-
-calvin hobbes you're looking lugubrious today

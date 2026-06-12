@@ -18,6 +18,8 @@ Docker compose stacks for:
 - rack4
     - ryzen 3975WX
     - RTX 3090
+- vps0
+    - 8 vcpus (hostinger)
 
 K8s talos pulumi stacks for:
 
@@ -25,12 +27,7 @@ K8s talos pulumi stacks for:
     - ryzen 5800X
 - rack3
     - ryzen 5950X
-    - GTX 1080
-
-Docker compose stacks for:
-
-- vps0
-    - 8 vcpus (hostinger)
+    - GTX 2080
 
 ---
 
@@ -52,7 +49,7 @@ just c
 
 # todo
 
-- [ ] application {dev, test, deploy}: {gpu compute, gpu gui, cli, tui, server, web}
+- [ ] application {dev, test, deploy}: {gpu compute, gpu gui, cli, tui, web server, web client}: {linux, windows, macos}
     - [ ] general compute
         - [x] k8s linux nodes: talos + pulumi
         - [ ] k8s windows nodes

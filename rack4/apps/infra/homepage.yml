@@ -8,7 +8,7 @@ configs:
     content: |
       - resources:
           cpu: true
-          memory: true      
+          memory: true
       - openmeteo:
           timezone: America/Chicago
           latitude: 42.038588
@@ -52,7 +52,7 @@ services:
       traefik.http.routers.home.middlewares: hdrs@file
       traefik.http.routers.home.tls.certresolver: cf
       traefik.http.services.home.loadbalancer.server.port: 3000
-      
+
       pangolin.public-resources.homepage_pub.name: homepage_pub
       pangolin.public-resources.homepage_pub.full-domain: home.chenn.dev
       pangolin.public-resources.homepage_pub.protocol: http
