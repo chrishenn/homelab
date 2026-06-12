@@ -1,12 +1,10 @@
 include:
   - apps/ai/comfy.yml
-  - apps/ai/ldr.yml
   - apps/ai/ollama.yml
   - apps/ai/openwebui.yml
   - apps/ai/speach.yml
 
   - apps/arr/arr.yml
-  - apps/arr/byparr.yml
   - apps/arr/cinephage.yml
   - apps/arr/doplarr.yml
   - apps/arr/muxarr.yml

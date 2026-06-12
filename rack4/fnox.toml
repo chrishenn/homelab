@@ -84,6 +84,7 @@ KANEO_S3_SECRET = { provider = "onepass", value = "op://homelab/kaneo/s3_secret"
 
 PLANE_S3_ACCESS = { provider = "onepass", value = "op://homelab/plane/s3_access" }
 PLANE_S3_SECRET = { provider = "onepass", value = "op://homelab/plane/s3_secret" }
+PLANE_SEARCH_PASS = { provider = "onepass", value = "op://homelab/plane/search_pass" }
 
 DRIVEBASE_MASTER = { provider = "onepass", value = "op://homelab/drivebase/master" }
 DRIVEBASE_BETTER = { provider = "onepass", value = "op://homelab/drivebase/betterauth" }

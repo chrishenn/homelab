@@ -1,4 +1,5 @@
 # "some services might have failed"; wait between 90 seconds and 5 minutes for the 'migrator' to exit, then refresh
+# empty instance idles at 9.5GB. opensearch sits at 1.6GB. WOW
 ---
 x-plane_env: &plane_env
   DOMAIN_NAME: plane.chenn.dev
@@ -29,6 +30,12 @@ x-plane_env: &plane_env
   RUSTFS_CONSOLE_ADDRESS: :9001
   RUSTFS_CORS_ALLOWED_ORIGINS: '*'
   RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: '*'
+
+  OPENSEARCH_ENABLED: 1
+  OPENSEARCH_URL: http://plane_search:9200/
+  OPENSEARCH_USERNAME: admin
+  OPENSEARCH_PASSWORD: ${PASS}
+  OPENSEARCH_INDEX_PREFIX: plane
 
 services:
   plane:
@@ -166,6 +173,47 @@ services:
     volumes:
       - $DATA/plane/s3:/data
     command: chown -R 10001:10001 /data
+
+  # name is hardcoded
+  opensearch-node:
+    profiles: [plane]
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch-node
+    environment:
+      discovery.type: single-node
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${PLANE_SEARCH_PASS}
+    depends_on:
+      plane_search_perm:
+        condition: service_completed_successfully
+    volumes:
+      - $DATA/plane/search:/usr/share/opensearch/data
+    networks: [plane]
+
+  plane_search_perm:
+    profiles: [plane]
+    image: alpine
+    container_name: plane_search_perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/plane/search:/data
+    command: chown -R 1000:1000 /data
+
+  # admin/PLANE_SEARCH_PASS
+  plane_search_dash:
+    profiles: [plane]
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: plane_search_dash
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]'
+    networks: [plane, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_search.rule: Host(`search.plane.henn.dev`)
+      traefik.http.routers.plane_search.entrypoints: websecure
+      traefik.http.routers.plane_search.middlewares: hdrs@file
+      traefik.http.routers.plane_search.tls.certresolver: cf
+      traefik.http.services.plane_search.loadbalancer.server.port: 5601
 
 networks:
   plane:
