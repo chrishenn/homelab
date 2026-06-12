@@ -1,10 +1,10 @@
 # docker deprecated
 
-Do not use any of these deprecated projects except with extreme caution.
+Deploy these with caution
 
-I will probably not try to deploy them in the future;
-
-They're either not ready yet, or big dead, or bad juju
+- abandoned
+- slop
+- replaced by something better
 
 ---
 
