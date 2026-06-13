@@ -7,7 +7,7 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DIR_HOST/beszel_agent_data:/var/lib/beszel-agent
+      - $DATA/beszel:/var/lib/beszel-agent
     environment:
       # do I need to open this on the vps firewall?
       LISTEN: 45876

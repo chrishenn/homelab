@@ -85,9 +85,8 @@ services:
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - $DIR_HOST/pangolin/letsencrypt:/letsencrypt
       - $DIR_HOST/pangolin/traefik:/etc/traefik:ro
-      - $DIR_HOST/pangolin/traefik/logs:/var/log/traefik
+      - $DATA/pangolin/letsencrypt:/letsencrypt
 
   geoipupdate:
     image: ghcr.io/maxmind/geoipupdate
@@ -99,7 +98,7 @@ services:
       GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
       GEOIPUPDATE_FREQUENCY: 72
     volumes:
-      - $DIR_HOST/pangolin/GeoLite2:/usr/share/GeoIP
+      - $DATA/pangolin/GeoLite2:/usr/share/GeoIP
 
 networks:
   default:
