@@ -4,31 +4,58 @@ hosted on hostinger VPS
 
 ---
 
-# update
+## update
+
+- if config or traefik config require manual changes, edit them locally (esp the traefik badger plugin)
+    - https://github.com/fosrl/badger/releases/latest
+
+then:
 
 ```bash
-# https://github.com/fosrl/badger/releases/latest
-# if config or traefik config require manual changes, edit them locally (esp the badger plugin). then:
 j sync
 j backup
 j pullup
 docker system prune -a
 ```
 
-# install
+## install
 
 ```bash
 # in the hostinger web console, open firewall ports:
 # 80 (TCP), 443 (TCP), 51820 (UDP), and 21820 (UDP for clients)
 
-# in the cloudflare web console, add a DNS A record to point to pangolin VPS
+# pulumi up: add a DNS A record to point to pangolin VPS
 
 # run pangolin installer
-mkdir -p ~/pangolin && cd pangolin
 curl -fsSL https://static.pangolin.net/get-installer.sh | bash
 sudo ./installer
 ```
 
+## config
+
+grab the initial setup token from pangolin logs
+
+```bash
+j f pangolin
+```
+
+- log into the pangolin gui using setup token
+- create org
+- connect rack4 newt instance to a new newt site
+    - op://homelab/pangolin/NEWT_ID
+    - op://homelab/pangolin/NEWT_SECRET
+    - go to rack4 and j ssync, j b c newt
+- activate free enterprise license 
+    - https://app.pangolin.net -> billing and licenses -> clear instance name on an existing license key
+- in pangolin GUI, add Identity Provider Pocket ID
+    - op://homelab/pangolin/oidc_client
+    - op://homelab/pangolin/oidc_secret
+    - https://pocketid.chenn.dev/authorize
+    - https://pocketid.chenn.dev/api/oidc/token
+    - add "groups" to scopes
+    - Default Organization Mapping: org
+    - Default Role Mapping: contains(groups, 'admin') && 'Admin' || 'Member'
+      
 ---
 
 # auth
@@ -84,21 +111,3 @@ https://github.com/fosrl/pangolin/compare/main...sippeangelo:pangolin:middleware
 There's a traefik plugin that provides and OIDC middleware, which I assume falls under the same issue as pangolin+tinyauth:
 https://plugins.traefik.io/plugins/66b63d12d29fd1c421b503f5/oidc-authentication
 https://traefik-oidc-auth.sevensolutions.cc/docs/getting-started
-
----
-
-```yml
----
-services:
-    tinyauth:
-        image: ghcr.io/steveiliop56/tinyauth:v4
-        container_name: tinyauth
-        restart: unless-stopped
-        environment:
-            APP_URL: https://auth.chenn.dev
-            USERS: your-username-password-hash
-        labels:
-            traefik.enable: true
-            traefik.http.routers.tinyauth.rule: Host(`auth.chenn.dev`)
-            traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
-```

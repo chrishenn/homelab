@@ -4,9 +4,9 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-NEWT_PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/Pangolin/PANGOLIN_ENDPOINT" }
-NEWT_ID = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_ID" }
-NEWT_SECRET = { provider = "onepass", value = "op://homelab/Pangolin/NEWT_SECRET" }
+NEWT_PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/pangolin/PANGOLIN_ENDPOINT" }
+NEWT_ID = { provider = "onepass", value = "op://homelab/pangolin/NEWT_ID" }
+NEWT_SECRET = { provider = "onepass", value = "op://homelab/pangolin/NEWT_SECRET" }
 
 ARR_PANGOLIN_AUTH_USER = { provider = "onepass", value = "op://homelab/radarr/auth_user" }
 ARR_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/radarr/auth_pass" }
