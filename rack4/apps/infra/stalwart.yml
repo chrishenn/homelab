@@ -1,9 +1,12 @@
+# todo: https://bulwarkmail.org/docs/getting-started/introduction
+# todo: needs its own vps and traefik instance
+
 # admin/creds in docker logs
 # https://mail.henn.dev/admin
 # sudo chown -R 2000:2000 $DATA/stalwart
 
 # will automatically connect to cloudflare to add {dkim, dmarc, etc} dns records ... amazing!
-# but I haven't done that yet - henn.dev is still pointing at protonmail (edit pulumi: homelab/protonmail)
+# note: can't use vps0, as pangolin binds to port 80/443, and you only get one public ip on the vps
 ---
 services:
   stalwart:

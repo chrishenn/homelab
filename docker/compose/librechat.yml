@@ -8,7 +8,7 @@ configs:
       endpoints:
         custom:
           - name: "Ollama"
-            baseURL: "http://ollama:11434/v1/" 
+            baseURL: "http://ollama:11434/v1/"
             models:
               fetch: true
               default: ["llama3-groq-tool-use:8b"]
@@ -47,22 +47,21 @@ x-librechat_env: &librechat_env
   JWT_SECRET: c8c7d3b43cf12929afbf2e218e511e262f626de5e38aa691238f0741c796c8bf
   JWT_REFRESH_SECRET: 05d469f5d65a6f949eaf93757095f7837f5375126b70a740dd0e281afb7ce676
 
-  EMAIL_SERVICE: 
-  EMAIL_HOST: 
+  EMAIL_SERVICE:
+  EMAIL_HOST:
   EMAIL_PORT: 25
-  EMAIL_ENCRYPTION: 
-  EMAIL_ENCRYPTION_HOSTNAME: 
+  EMAIL_ENCRYPTION:
+  EMAIL_ENCRYPTION_HOSTNAME:
   EMAIL_ALLOW_SELFSIGNED:
-  EMAIL_USERNAME: 
-  EMAIL_PASSWORD: 
-  EMAIL_FROM_NAME: 
+  EMAIL_USERNAME:
+  EMAIL_PASSWORD:
+  EMAIL_FROM_NAME:
   EMAIL_FROM: noreply@librechat.ai
 
   APP_TITLE: Chicken Chat
-  CUSTOM_FOOTER: "Chicky Chicky Chat Chat"
+  CUSTOM_FOOTER: 'Chicky Chicky Chat Chat'
 
 services:
-
   # sudo chown -R 1000:1000 $DATA/librechat/logs
   librechat:
     profiles: [librechat]
@@ -70,7 +69,7 @@ services:
     container_name: librechat
     restart: unless-stopped
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     configs:
       - source: librechat
         target: /app/librechat.yaml

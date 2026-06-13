@@ -73,7 +73,7 @@ include:
   - apps/infra/pocketid.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
-  - apps/infra/stalwart.yml
+  #  - apps/infra/stalwart.yml
 
   - apps/job/openresume.yml
   - apps/job/resume.yml

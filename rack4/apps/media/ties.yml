@@ -19,7 +19,7 @@ services:
       homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/ties-link-sharing.png
       homepage.href: https://ties.chenn.dev
       homepage.description: Link Manager
-  
+
       pangolin.public-resources.ties.name: ties
       pangolin.public-resources.ties.full-domain: ties.chenn.dev
       pangolin.public-resources.ties.protocol: http
@@ -53,6 +53,6 @@ services:
       -c maintenance_work_mem=4MB
       -c effective_cache_size=32MB
     networks: [ties]
-      
+
 networks:
   ties:
