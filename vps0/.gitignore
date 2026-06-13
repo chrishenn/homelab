@@ -3,4 +3,4 @@ config/db
 config/GeoLite2
 config/key
 config/letsencrypt
-config_backup
+config_backup/
