@@ -131,14 +131,12 @@ entryPoints:
       trustedIPs:
         - 192.168.100.4
         - 192.168.100.5
-
   smtps:
     address: :465
     proxyProtocol:
       trustedIPs:
         - 192.168.100.4
         - 192.168.100.5
-
   imaps:
     address: :993
     proxyProtocol:

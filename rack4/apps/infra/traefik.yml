@@ -67,5 +67,5 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: $TRAEFIK_SUBNET
-          gateway: $TRAEFIK_GATEWAY
+        - subnet: ${TRAEFIK_SUBNET}
+          gateway: ${TRAEFIK_GATEWAY}

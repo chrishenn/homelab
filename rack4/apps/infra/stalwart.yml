@@ -1,6 +1,9 @@
-# admin creds in docker logs
-# https://stalwart.chenn.dev/admin
+# admin/creds in docker logs
+# https://mail.henn.dev/admin
 # sudo chown -R 2000:2000 $DATA/stalwart
+
+# will automatically connect to cloudflare to add {dkim, dmarc, etc} dns records ... amazing!
+# but I haven't done that yet - henn.dev is still pointing at protonmail (edit pulumi: homelab/protonmail)
 ---
 services:
   stalwart:
@@ -11,11 +14,11 @@ services:
     environment:
       STALWART_PUBLIC_URL: https://mail.henn.dev
     volumes:
-      # mounts traefik ssl certs directory
-      - $DATA/traefik/ssl:/data/certs:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/traefik_certs:/data/certs:ro
+
       - $DATA/stalwart/data:/etc/stalwart
       - $DATA/stalwart/var:/var/lib/stalwart
-      - /etc/localtime:/etc/localtime:ro
     networks:
       traefik:
         ipv4_address: 192.168.100.5
@@ -53,5 +56,12 @@ services:
       traefik.tcp.services.imaps.loadbalancer.server.port: 993
       traefik.tcp.services.imaps.loadbalancer.proxyProtocol.version: 2
 
-
-
+  stalwart_cert:
+    profiles: [stalwart]
+    image: ghcr.io/kereis/traefik-certs-dumper:alpine
+    container_name: stalwart_cert
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/traefik/ssl:/traefik:ro
+      - $DATA/traefik_certs:/output
