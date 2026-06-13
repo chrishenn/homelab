@@ -14,6 +14,11 @@ repo := "/home/chris/Projects/homelab"
 ssh cmd='' pty='true':
     just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
 
+backup:
+    just ssh 'cd $DIR_HOST && sudo rm -rf config_backup && sudo cp -r config config_backup'
+
+# generic
+
 sync message="sync":
     git commit -a -m '{{ message }}' || true && git pull && git push
     just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
@@ -30,6 +35,9 @@ down *svcs:
 bounce *svcs:
     just down {{ svcs }}
     just up {{ svcs }}
+
+pullup *svcs:
+    docker compose up -d --remove-orphans --force-recreate --pull always {{ svcs }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}
