@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Opencut
-      homepage.icon: opencut.png
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/opencut.png
       homepage.href: https://opencut.chenn.dev
       homepage.description: Video Editor
 
@@ -51,11 +51,9 @@ services:
       pangolin.public-resources.opencut.rules[0].action: pass
       pangolin.public-resources.opencut.rules[0].match: country
       pangolin.public-resources.opencut.rules[0].value: US
-      pangolin.public-resources.opencut.rules[0].priority: 0
       pangolin.public-resources.opencut.rules[1].action: deny
       pangolin.public-resources.opencut.rules[1].match: country
       pangolin.public-resources.opencut.rules[1].value: ALL
-      pangolin.public-resources.opencut.rules[1].priority: 10
 
   opencut_db:
     profiles: [opencut]

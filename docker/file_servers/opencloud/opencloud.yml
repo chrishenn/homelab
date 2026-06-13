@@ -80,11 +80,9 @@ services:
       pangolin.public-resources.oc.rules[0].action: pass
       pangolin.public-resources.oc.rules[0].match: country
       pangolin.public-resources.oc.rules[0].value: US
-      pangolin.public-resources.oc.rules[0].priority: 0
       pangolin.public-resources.oc.rules[1].action: deny
       pangolin.public-resources.oc.rules[1].match: country
       pangolin.public-resources.oc.rules[1].value: ALL
-      pangolin.public-resources.oc.rules[1].priority: 10
 
       pangolin.public-resources.oc_wopi.name: oc_wopi
       pangolin.public-resources.oc_wopi.full-domain: wopi.chenn.dev
@@ -95,11 +93,9 @@ services:
       pangolin.public-resources.oc_wopi.rules[0].action: pass
       pangolin.public-resources.oc_wopi.rules[0].match: country
       pangolin.public-resources.oc_wopi.rules[0].value: US
-      pangolin.public-resources.oc_wopi.rules[0].priority: 0
       pangolin.public-resources.oc_wopi.rules[1].action: deny
       pangolin.public-resources.oc_wopi.rules[1].match: country
       pangolin.public-resources.oc_wopi.rules[1].value: ALL
-      pangolin.public-resources.oc_wopi.rules[1].priority: 10
 
     depends_on:
       collabora:
@@ -143,8 +139,6 @@ services:
       pangolin.public-resources.oc_collab.rules[0].action: pass
       pangolin.public-resources.oc_collab.rules[0].match: country
       pangolin.public-resources.oc_collab.rules[0].value: US
-      pangolin.public-resources.oc_collab.rules[0].priority: 0
       pangolin.public-resources.oc_collab.rules[1].action: deny
       pangolin.public-resources.oc_collab.rules[1].match: country
       pangolin.public-resources.oc_collab.rules[1].value: ALL
-      pangolin.public-resources.oc_collab.rules[1].priority: 10

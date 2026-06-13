@@ -46,8 +46,6 @@ services:
       pangolin.public-resources.filewizard.rules[0].action: pass
       pangolin.public-resources.filewizard.rules[0].match: country
       pangolin.public-resources.filewizard.rules[0].value: US
-      pangolin.public-resources.filewizard.rules[0].priority: 10
       pangolin.public-resources.filewizard.rules[1].action: deny
       pangolin.public-resources.filewizard.rules[1].match: country
       pangolin.public-resources.filewizard.rules[1].value: ALL
-      pangolin.public-resources.filewizard.rules[1].priority: 20

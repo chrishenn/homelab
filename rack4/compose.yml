@@ -85,6 +85,7 @@ include:
   - apps/media/yamtrack.yml
   - apps/media/ytp.yml
   - apps/media/opencut.yml
+  - apps/media/ties.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml

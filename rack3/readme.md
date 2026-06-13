@@ -57,7 +57,7 @@ apps
 - [ ] gitops
     - forgejo repo
     - argo? something auto-deploys the cluster with pulumi, and the apps into the cluster
-- [ ] https://github.com/kite-org/kite
+- [ ] dashboard https://github.com/kite-org/kite
 - [ ] autoscaler
     - https://docs.siderolabs.com/kubernetes-guides/advanced-guides/hpa
     - https://docs.siderolabs.com/kubernetes-guides/monitoring-and-observability/deploy-metrics-server

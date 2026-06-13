@@ -1,0 +1,156 @@
+# couldn't get ollama provider to show up in the ui. not sure what I did wrong
+---
+configs:
+  librechat:
+    content: |
+      version: 1.3.12
+      cache: false
+      endpoints:
+        custom:
+          - name: "Ollama"
+            baseURL: "http://ollama:11434/v1/" 
+            models:
+              fetch: true
+              default: ["llama3-groq-tool-use:8b"]
+            titleConvo: true
+            titleModel: "current_model"
+            summarize: false
+            summaryModel: "current_model"
+            modelDisplayLabel: "Ollama"
+
+x-librechat_env: &librechat_env
+  HOST: 0.0.0.0
+  PORT: 3080
+  MONGO_URI: mongodb://librechat_mongo:27017/librechat
+  MEILI_HOST: http://librechat_search:7700
+  RAG_PORT: 8000
+  RAG_API_URL: http://librechat_api:8000
+  DOMAIN_CLIENT: http://localhost:3080
+  DOMAIN_SERVER: http://localhost:3080
+
+  NO_INDEX: true
+  TRUST_PROXY: 1
+  CONSOLE_JSON: false
+  DEBUG_LOGGING: true
+  DEBUG_CONSOLE: false
+  LOG_TO_FILE: true
+  AGENT_DEBUG_LOGGING: false
+  NODE_MAX_OLD_SPACE_SIZE: 6144
+
+  ALLOW_EMAIL_LOGIN: true
+  ALLOW_REGISTRATION: true
+  ALLOW_SOCIAL_LOGIN: false
+  ALLOW_SOCIAL_REGISTRATION: false
+  ALLOW_PASSWORD_RESET: false
+  ALLOW_UNVERIFIED_EMAIL_LOGIN: true
+
+  JWT_SECRET: c8c7d3b43cf12929afbf2e218e511e262f626de5e38aa691238f0741c796c8bf
+  JWT_REFRESH_SECRET: 05d469f5d65a6f949eaf93757095f7837f5375126b70a740dd0e281afb7ce676
+
+  EMAIL_SERVICE: 
+  EMAIL_HOST: 
+  EMAIL_PORT: 25
+  EMAIL_ENCRYPTION: 
+  EMAIL_ENCRYPTION_HOSTNAME: 
+  EMAIL_ALLOW_SELFSIGNED:
+  EMAIL_USERNAME: 
+  EMAIL_PASSWORD: 
+  EMAIL_FROM_NAME: 
+  EMAIL_FROM: noreply@librechat.ai
+
+  APP_TITLE: Chicken Chat
+  CUSTOM_FOOTER: "Chicky Chicky Chat Chat"
+
+services:
+
+  # sudo chown -R 1000:1000 $DATA/librechat/logs
+  librechat:
+    profiles: [librechat]
+    image: registry.librechat.ai/danny-avila/librechat-dev:latest
+    container_name: librechat
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    configs:
+      - source: librechat
+        target: /app/librechat.yaml
+    environment:
+      <<: *librechat_env
+    volumes:
+      - $DATA/librechat/images:/app/client/public/images
+      - $DATA/librechat/uploads:/app/uploads
+      - $DATA/librechat/logs:/app/logs
+      - $DATA/librechat/skill:/app/skill
+    networks: [librechat, newt, ollama]
+    labels:
+      homepage.group: General Tools
+      homepage.name: Librechat
+      homepage.icon: librechat.png
+      homepage.href: https://librechat.chenn.dev
+      homepage.description: AI Something
+
+      pangolin.public-resources.librechat.name: librechat
+      pangolin.public-resources.librechat.full-domain: librechat.chenn.dev
+      pangolin.public-resources.librechat.protocol: http
+      pangolin.public-resources.librechat.ssl: true
+      pangolin.public-resources.librechat.targets[0].method: http
+      pangolin.public-resources.librechat.targets[0].port: 3080
+      pangolin.public-resources.librechat.auth.sso-enabled: true
+      pangolin.public-resources.librechat.auth.sso-roles[0]: Member
+      pangolin.public-resources.librechat.rules[0].action: pass
+      pangolin.public-resources.librechat.rules[0].match: country
+      pangolin.public-resources.librechat.rules[0].value: US
+      pangolin.public-resources.librechat.rules[1].action: deny
+      pangolin.public-resources.librechat.rules[1].match: country
+      pangolin.public-resources.librechat.rules[1].value: ALL
+
+  librechat_mongo:
+    profiles: [librechat]
+    image: mongo:8.0.20
+    container_name: librechat_mongo
+    restart: unless-stopped
+    volumes:
+      - $DATA/librechat/data-node:/data/db
+    command: mongod --noauth
+    networks: [librechat]
+
+  librechat_search:
+    profiles: [librechat]
+    image: getmeili/meilisearch:v1.35.1
+    container_name: librechat_search
+    restart: unless-stopped
+    environment:
+      MEILI_HOST: http://librechat_search:7700
+      MEILI_NO_ANALYTICS: true
+      MEILI_MASTER_KEY: 6fe6e44ee11c5eec7d13acbaf64c7ea1798cf2fcbf19571750efd83d9c9e6bdb
+    volumes:
+      - $DATA/librechat/meili_data_v1.35.1:/meili_data
+    networks: [librechat]
+
+  librechat_api:
+    profiles: [librechat]
+    image: registry.librechat.ai/danny-avila/librechat-rag-api-dev-lite:latest
+    container_name: librechat_api
+    restart: unless-stopped
+    environment:
+      DB_HOST: librechat_db
+      RAG_PORT: 8000
+      <<: *librechat_env
+    networks: [librechat]
+
+  librechat_db:
+    profiles: [librechat]
+    image: pgvector/pgvector:0.8.0-pg15-trixie
+    container_name: librechat_db
+    restart: unless-stopped
+    environment:
+      # hardcoded! lmao
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - $DATA/librechat/db:/var/lib/postgresql
+    networks: [librechat]
+
+networks:
+  librechat:

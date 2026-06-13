@@ -1,0 +1,57 @@
+# admin creds in docker logs
+# https://stalwart.chenn.dev/admin
+# sudo chown -R 2000:2000 $DATA/stalwart
+---
+services:
+  stalwart:
+    profiles: [stalwart]
+    image: stalwartlabs/stalwart:latest
+    container_name: stalwart
+    restart: unless-stopped
+    environment:
+      STALWART_PUBLIC_URL: https://mail.henn.dev
+    volumes:
+      # mounts traefik ssl certs directory
+      - $DATA/traefik/ssl:/data/certs:ro
+      - $DATA/stalwart/data:/etc/stalwart
+      - $DATA/stalwart/var:/var/lib/stalwart
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      traefik:
+        ipv4_address: 192.168.100.5
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mailserver.rule: Host(`mail.henn.dev`) || Host(`autodiscover.henn.dev`) || Host(`autoconfig.henn.dev`) || Host(`mta-sts.henn.dev`)
+      traefik.http.routers.mailserver.entrypoints: websecure
+      traefik.http.routers.mailserver.service: mailserver
+      traefik.http.services.mailserver.loadbalancer.server.port: 8080
+
+      traefik.tcp.routers.smtp.rule: HostSNI(`*`)
+      traefik.tcp.routers.smtp.entrypoints: smtp
+      traefik.tcp.routers.smtp.service: smtp
+      traefik.tcp.services.smtp.loadbalancer.server.port: 25
+      traefik.tcp.services.smtp.loadbalancer.proxyProtocol.version: 2
+
+      traefik.tcp.routers.jmap.rule: HostSNI(`*`)
+      traefik.tcp.routers.jmap.tls.passthrough: true
+      traefik.tcp.routers.jmap.entrypoints: websecure
+      traefik.tcp.routers.jmap.service: jmap
+      traefik.tcp.services.jmap.loadbalancer.server.port: 443
+      traefik.tcp.services.jmap.loadbalancer.proxyProtocol.version: 2
+
+      traefik.tcp.routers.smtps.rule: HostSNI(`*`)
+      traefik.tcp.routers.smtps.tls.passthrough: true
+      traefik.tcp.routers.smtps.entrypoints: smtps
+      traefik.tcp.routers.smtps.service: smtps
+      traefik.tcp.services.smtps.loadbalancer.server.port: 465
+      traefik.tcp.services.smtps.loadbalancer.proxyProtocol.version: 2
+
+      traefik.tcp.routers.imaps.rule: HostSNI(`*`)
+      traefik.tcp.routers.imaps.tls.passthrough: true
+      traefik.tcp.routers.imaps.entrypoints: imaps
+      traefik.tcp.routers.imaps.service: imaps
+      traefik.tcp.services.imaps.loadbalancer.server.port: 993
+      traefik.tcp.services.imaps.loadbalancer.proxyProtocol.version: 2
+
+
+

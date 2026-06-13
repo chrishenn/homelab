@@ -163,5 +163,44 @@ services:
       pangolin.public-resources.bazarr.rules[1].match: country
       pangolin.public-resources.bazarr.rules[1].value: ALL
 
+  # sudo chown -R 1000:1000 $DATA/questarr
+  questarr:
+    profiles: [arr]
+    image: ghcr.io/doezer/questarr:latest
+    container_name: questarr
+    restart: unless-stopped
+    volumes:
+      - $DATA/questarr:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks: [arr, newt]
+    labels:
+      homepage.group: Arr
+      homepage.name: questarr
+      homepage.icon: questarr.png
+      homepage.href: https://questarr.chenn.dev
+      homepage.description: Games Manager
+
+      pangolin.public-resources.questarr.name: questarr
+      pangolin.public-resources.questarr.full-domain: questarr.chenn.dev
+      pangolin.public-resources.questarr.protocol: http
+      pangolin.public-resources.questarr.ssl: true
+      pangolin.public-resources.questarr.targets[0].method: http
+      pangolin.public-resources.questarr.targets[0].port: 5000
+      pangolin.public-resources.questarr.auth.sso-enabled: true
+      pangolin.public-resources.questarr.auth.sso-roles[0]: Member
+      pangolin.public-resources.questarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
+      pangolin.public-resources.questarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
+      pangolin.public-resources.questarr.rules[0].action: pass
+      pangolin.public-resources.questarr.rules[0].match: country
+      pangolin.public-resources.questarr.rules[0].value: US
+      pangolin.public-resources.questarr.rules[1].action: deny
+      pangolin.public-resources.questarr.rules[1].match: country
+      pangolin.public-resources.questarr.rules[1].value: ALL
+      
 networks:
   arr:

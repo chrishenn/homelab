@@ -51,6 +51,7 @@ http:
 entryPoints:
   web:
     address: :80
+    http3: {}
     forwardedHeaders:
       trustedIPs: &trustedIps
         - 127.0.0.1/32
@@ -83,8 +84,10 @@ entryPoints:
         entryPoint:
           to: websecure
           scheme: https
+
   websecure:
     address: :443
+    http3: {}
     transport:
       respondingTimeouts:
         readTimeout: '30m'
@@ -107,6 +110,7 @@ entryPoints:
           - main: henn.dev
             sans:
               - '*.henn.dev'
+
   tcp-2222:
     address: ':2222'
   tcp-2424:
@@ -120,6 +124,27 @@ entryPoints:
     address: ':3128'
   spice-tls:
     address: ':61001'
+
+  smtp:
+    address: :25
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.100.4
+        - 192.168.100.5
+
+  smtps:
+    address: :465
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.100.4
+        - 192.168.100.5
+
+  imaps:
+    address: :993
+    proxyProtocol:
+      trustedIPs:
+        - 192.168.100.4
+        - 192.168.100.5
 
 certificatesResolvers:
   cf:

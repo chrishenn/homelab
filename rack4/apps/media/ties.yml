@@ -1,0 +1,58 @@
+---
+services:
+  ties:
+    profiles: [ties]
+    image: ghcr.io/raffomania/ties
+    container_name: ties
+    restart: unless-stopped
+    environment:
+      LISTEN: 0.0.0.0:3000
+      DATABASE_URL: postgres://ties:ties@ties_db/ties
+      RUST_LOG: info
+      BASE_URL: https://ties.chenn.dev
+      ADMIN_USERNAME: ${USER}
+      ADMIN_PASSWORD: ${PASS}
+    networks: [ties, newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: ties
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/ties-link-sharing.png
+      homepage.href: https://ties.chenn.dev
+      homepage.description: Link Manager
+  
+      pangolin.public-resources.ties.name: ties
+      pangolin.public-resources.ties.full-domain: ties.chenn.dev
+      pangolin.public-resources.ties.protocol: http
+      pangolin.public-resources.ties.ssl: true
+      pangolin.public-resources.ties.targets[0].method: http
+      pangolin.public-resources.ties.targets[0].port: 3000
+      pangolin.public-resources.ties.auth.sso-enabled: true
+      pangolin.public-resources.ties.auth.sso-roles[0]: Member
+      pangolin.public-resources.ties.rules[0].action: pass
+      pangolin.public-resources.ties.rules[0].match: country
+      pangolin.public-resources.ties.rules[0].value: US
+      pangolin.public-resources.ties.rules[1].action: deny
+      pangolin.public-resources.ties.rules[1].match: country
+      pangolin.public-resources.ties.rules[1].value: ALL
+
+  ties_db:
+    profiles: [ties]
+    image: postgres:18-alpine
+    container_name: ties_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ties
+      POSTGRES_USER: ties
+      POSTGRES_PASSWORD: ties
+    volumes:
+      - $DATA/ties/db:/var/lib/postgresql
+    command: |
+      -c shared_buffers=16MB
+      -c work_mem=1MB
+      -c max_connections=10
+      -c maintenance_work_mem=4MB
+      -c effective_cache_size=32MB
+    networks: [ties]
+      
+networks:
+  ties:
