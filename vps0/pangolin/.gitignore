@@ -1,4 +1,5 @@
-db
-GeoLite2
+db/
+GeoLite2/
+letsencrypt/
+logs/
 key
-letsencrypt

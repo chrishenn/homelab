@@ -1,3 +1,10 @@
+providers:
+  http:
+    endpoint: 'http://pangolin:3001/api/v1/traefik-config'
+    pollInterval: '5s'
+  file:
+    filename: '/etc/traefik/dynamic_config.yml'
+
 api:
   insecure: true
   dashboard: true
@@ -11,13 +18,6 @@ http:
     allowencodedsemicolon: true
     allowencodedpercent: true
     allowencodedhash: true
-
-providers:
-  http:
-    endpoint: 'http://pangolin:3001/api/v1/traefik-config'
-    pollInterval: '5s'
-  file:
-    filename: '/etc/traefik/dynamic_config.yml'
 
 experimental:
   plugins:

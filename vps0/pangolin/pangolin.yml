@@ -1,3 +1,5 @@
+# note: nested mounts (like $DATA/pangolin/db) will appear as empty folders under $DIR_HOST/pangolin
+#   but the data is safely stored under $DATA/pangolin
 ---
 services:
   pangolin:
@@ -34,8 +36,8 @@ services:
       - $DIR_HOST/pangolin:/var/config
       - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
-      - $DATA/pangolin/db:/app/config/db
-      - $DATA/pangolin/key:/app/config/key
+      - $DATA/pangolin/db:/var/config/db
+      - $DATA/pangolin/key:/var/config/key
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
