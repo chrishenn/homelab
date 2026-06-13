@@ -15,7 +15,7 @@ ssh cmd='' pty='true':
     just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
 
 backup:
-    just ssh 'cd $DIR_HOST && sudo rm -rf config_backup && sudo cp -r config config_backup'
+    just ssh 'cd $DIR_HOST && sudo rm -rf pangolin_backup && sudo cp -r pangolin pangolin_backup'
 
 # generic
 

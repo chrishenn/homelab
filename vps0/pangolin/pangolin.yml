@@ -9,6 +9,10 @@ services:
       EMAIL_SMTP_PASS: ${SMTP_TOKEN}
     volumes:
       - $DIR_HOST/pangolin:/app/config
+      - $DATA/pangolin/GeoLite2:/app/config/GeoLite2
+      - $DATA/pangolin/letsencrypt:/app/config/letsencrypt
+      - $DATA/pangolin/db:/app/config/db
+      - $DATA/pangolin/key:/app/config/key
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/']
       interval: '10s'
@@ -28,6 +32,10 @@ services:
       - --remoteConfig=http://pangolin:3001/api/v1/
     volumes:
       - $DIR_HOST/pangolin:/var/config
+      - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
+      - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
+      - $DATA/pangolin/db:/app/config/db
+      - $DATA/pangolin/key:/app/config/key
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
