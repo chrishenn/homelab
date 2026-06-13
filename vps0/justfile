@@ -1,6 +1,7 @@
 set fallback
 alias a := attach
 alias b := bounce
+alias f := follow
 alias s := sync
 alias p := ps
 alias u := up
@@ -35,3 +36,9 @@ attach svc cmd="/bin/sh":
 
 ps *svcs:
     docker compose ps {{ svcs }}
+
+log *args:
+    docker compose logs {{ args }}
+
+follow *args:
+    just log -f {{ args }}

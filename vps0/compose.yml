@@ -9,7 +9,7 @@ services:
       SERVER_SECRET: ${PANGOLIN_SERVER_SECRET}
       EMAIL_SMTP_PASS: ${SMTP_TOKEN}
     volumes:
-      - ./config:/app/config
+      - $DIR_HOST/config:/app/config
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/']
       interval: '10s'
@@ -28,7 +28,7 @@ services:
       - --generateAndSaveKeyTo=/var/config/key
       - --remoteConfig=http://pangolin:3001/api/v1/
     volumes:
-      - ./config/:/var/config
+      - $DIR_HOST/config/:/var/config
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -86,9 +86,9 @@ services:
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - ./config/traefik:/etc/traefik:ro
-      - ./config/letsencrypt:/letsencrypt
-      - ./config/traefik/logs:/var/log/traefik
+      - $DIR_HOST/config/traefik:/etc/traefik:ro
+      - $DIR_HOST/config/letsencrypt:/letsencrypt
+      - $DIR_HOST/config/traefik/logs:/var/log/traefik
 
   beszel-agent:
     image: henrygd/beszel-agent
@@ -97,7 +97,7 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./beszel_agent_data:/var/lib/beszel-agent
+      - $DIR_HOST/beszel_agent_data:/var/lib/beszel-agent
     environment:
       # do I need to open this on the vps firewall?
       LISTEN: 45876
@@ -115,7 +115,7 @@ services:
       GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
       GEOIPUPDATE_FREQUENCY: 72
     volumes:
-      - './config/GeoLite2:/usr/share/GeoIP'
+      - $DIR_HOST/config/GeoLite2:/usr/share/GeoIP
 
 networks:
   default:
