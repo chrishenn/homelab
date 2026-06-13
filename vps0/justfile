@@ -16,6 +16,7 @@ ssh cmd='' pty='true':
 
 backup:
     just ssh 'cd $DIR_HOST && sudo rm -rf pangolin_backup && sudo cp -r pangolin pangolin_backup'
+    just ssh 'sudo cp -r $DATA $BACKUP'
 
 # generic
 
