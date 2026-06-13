@@ -14,9 +14,13 @@ repo := "/home/chris/Projects/homelab"
 ssh cmd='' pty='true':
     just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
 
+backup_cmd := """
+sudo rm -rf $DIR_HOST/pangolin_backup && sudo cp -r $DIR_HOST/pangolin $DIR_HOST/pangolin_backup \
+&& sudo rm -rf $BACKUP && sudo cp -r $DATA $BACKUP
+"""
+
 backup:
-    just ssh 'cd $DIR_HOST && sudo rm -rf pangolin_backup && sudo cp -r pangolin pangolin_backup'
-    just ssh 'sudo cp -r $DATA $BACKUP'
+    just ssh '{{backup_cmd}}'
 
 # generic
 
