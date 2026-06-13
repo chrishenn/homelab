@@ -1,7 +1,7 @@
 ---
 services:
   onlyoffice:
-    profiles: []
+    profiles: [onlyoffice]
     image: onlyoffice/documentserver:latest
     container_name: onlyoffice
     restart: unless-stopped
@@ -11,11 +11,11 @@ services:
       JWT_ENABLED: true
 
       DB_TYPE: postgres
-      DB_HOST: onlyoffice-postgresql
+      DB_HOST: onlyoffice_db
       DB_PORT: 5432
       DB_NAME: onlyoffice
       DB_USER: onlyoffice
-      AMQP_URI: amqp://guest:guest@onlyoffice-rabbitmq
+      AMQP_URI: amqp://guest:guest@onlyoffice_mq
       JWT_SECRET: secret
       JWT_HEADER: Authorization
       JWT_IN_BODY: true
@@ -34,36 +34,32 @@ services:
       traefik.http.routers.office.tls.certresolver: cf
       traefik.http.services.office.loadbalancer.server.port: 80
 
-  onlyoffice-rabbitmq:
-    profiles: []
-    container_name: onlyoffice-rabbitmq
-    image: rabbitmq:3
-    restart: always
-    expose:
-      - '5672'
+  onlyoffice_mq:
+    profiles: [onlyoffice]
+    image: rabbitmq:3-alpine
+    container_name: onlyoffice_mq
+    restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'rabbitmq-diagnostics', 'status']
+      test: rabbitmq-diagnostics status
       interval: 10s
       retries: 3
       start_period: 10s
       timeout: 10s
     networks: [traefik]
 
-  onlyoffice-postgresql:
-    profiles: []
-    container_name: onlyoffice-postgresql
+  onlyoffice_db:
+    profiles: [onlyoffice]
     image: postgres:18-alpine
+    container_name: onlyoffice_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: onlyoffice
       POSTGRES_USER: onlyoffice
       POSTGRES_HOST_AUTH_METHOD: trust
-    restart: always
-    expose:
-      - '5432'
     volumes:
-      - $DATA/onlyoffice/pg:/var/lib/postgresql
+      - $DATA/onlyoffice/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U onlyoffice']
+      test: pg_isready -U onlyoffice
       interval: 10s
       retries: 3
       start_period: 10s

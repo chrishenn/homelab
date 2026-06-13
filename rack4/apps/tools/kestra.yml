@@ -13,20 +13,16 @@ services:
     restart: unless-stopped
     user: root
     command: server standalone
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DATA/kestra/kestra:/app/storage
-      - $DATA/kestra/tmp/:/tmp/kestra-wd
     environment:
       EMAIL: ${EMAIL}
       PASS: ${PASS}
       KESTRA_CONFIGURATION: |
         datasources:
           postgres:
-            url: jdbc:postgresql://kestra_pg:5432/kestra
+            url: jdbc:postgresql://kestra_db:5432/kestra
             driverClassName: org.postgresql.Driver
             username: kestra
-            password: k3str4
+            password: kestra
         kestra:
           server:
             basicAuth:
@@ -44,13 +40,23 @@ services:
             tmpDir:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:8080/
-    networks: [kestra, newt]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DATA/kestra/kestra:/app/storage
+      - $DATA/kestra/tmp/:/tmp/kestra-wd
+    networks: [kestra, newt, traefik]
     labels:
-      homepage.group: AI
+      homepage.group: General Tools
       homepage.name: Kestra
       homepage.icon: kestra.png
       homepage.href: https://kestra.chenn.dev
-      homepage.description: Workflow Orchestration
+      homepage.description: Workflow Automation
+
+      traefik.enable: true
+      traefik.http.routers.kestra.rule: Host(`kestra.henn.dev`)
+      traefik.http.routers.kestra.entrypoints: websecure
+      traefik.http.routers.kestra.tls.certresolver: cf
+      traefik.http.services.kestra.loadbalancer.server.port: 8080
 
       pangolin.public-resources.kestra.name: kestra
       pangolin.public-resources.kestra.full-domain: kestra.chenn.dev
@@ -67,19 +73,19 @@ services:
       pangolin.public-resources.kestra.rules[1].match: country
       pangolin.public-resources.kestra.rules[1].value: ALL
 
-  kestra_pg:
+  kestra_db:
     profiles: [kestra]
     image: postgres:18-alpine
-    container_name: kestra_pg
+    container_name: kestra_db
     restart: unless-stopped
     volumes:
-      - $DATA/kestra/kestra_pg:/var/lib/postgresql
+      - $DATA/kestra/kestra_db:/var/lib/postgresql
     environment:
       POSTGRES_DB: kestra
       POSTGRES_USER: kestra
-      POSTGRES_PASSWORD: k3str4
+      POSTGRES_PASSWORD: kestra
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      test: pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
     networks: [kestra]
 
 networks:

@@ -1,0 +1,45 @@
+---
+services:
+  duplicati:
+    profiles: [duplicati]
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      SETTINGS_ENCRYPTION_KEY: ${DUPLICATI_SECRET}
+      DUPLICATI__WEBSERVICE_PASSWORD: ${PASS}
+    volumes:
+      - $DATA/duplicati/config:/config
+      - $DATA/duplicati/backups:/backups
+      - $DATA/duplicati/source:/source
+    networks: [traefik, newt]
+    labels:
+      homepage.group: Backup
+      homepage.name: Duplicati
+      homepage.icon: duplicati.png
+      homepage.href: https://duplicati.chenn.dev
+      homepage.description: Backup Automation
+
+      traefik.enable: true
+      traefik.http.routers.duplicati.rule: Host(`duplicati.henn.dev`)
+      traefik.http.routers.duplicati.entrypoints: websecure
+      traefik.http.routers.duplicati.tls.certresolver: cf
+      traefik.http.services.duplicati.loadbalancer.server.port: 8200
+
+      pangolin.public-resources.duplicati.name: duplicati
+      pangolin.public-resources.duplicati.full-domain: duplicati.chenn.dev
+      pangolin.public-resources.duplicati.protocol: http
+      pangolin.public-resources.duplicati.ssl: true
+      pangolin.public-resources.duplicati.targets[0].method: http
+      pangolin.public-resources.duplicati.targets[0].port: 8200
+      pangolin.public-resources.duplicati.auth.sso-enabled: true
+      pangolin.public-resources.duplicati.auth.sso-users[0]: ${EMAIL}
+      pangolin.public-resources.duplicati.rules[0].action: pass
+      pangolin.public-resources.duplicati.rules[0].match: country
+      pangolin.public-resources.duplicati.rules[0].value: US
+      pangolin.public-resources.duplicati.rules[1].action: deny
+      pangolin.public-resources.duplicati.rules[1].match: country
+      pangolin.public-resources.duplicati.rules[1].value: ALL

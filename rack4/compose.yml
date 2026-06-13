@@ -21,6 +21,7 @@ include:
   - apps/backup/repliqate.yml
   - apps/backup/rsync.yml
   - apps/backup/zerobyte.yml
+  - apps/backup/duplicati.yml
 
   - apps/books/audiobookshelf.yml
   - apps/books/calibre.yml
@@ -83,6 +84,7 @@ include:
   - apps/media/nodebb.yml
   - apps/media/yamtrack.yml
   - apps/media/ytp.yml
+  - apps/media/opencut.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml
@@ -152,3 +154,5 @@ include:
   - apps/tools/rally.yml
   - apps/tools/sure.yml
   - apps/tools/warden.yml
+  - apps/tools/kestra.yml
+  - apps/tools/shlink.yml

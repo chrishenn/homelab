@@ -22,9 +22,6 @@ BONFIRE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bonfire/oidc
 CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
 CLOUDREVE_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/cloudreve/meili_key" }
 
-FREESOUND_CLIENT = { provider = "onepass", value = "op://homelab/freesound/api_client" }
-FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_secret" }
-
 SEAFILE_SECRET = { provider = "onepass", value = "op://homelab/seafile/secret" }
 SEAFILE_SECRET_KEY = { provider = "onepass", value = "op://homelab/seafile/secret_key" }
 SEAFILE_PASS = { provider = "onepass", value = "op://homelab/seafile/password" }

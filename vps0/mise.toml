@@ -5,3 +5,6 @@ python.uv_venv_auto = "create|source"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
+
+[env]
+DOCKER_HOST = "ssh://chris@${VPS0_IP}:2200"

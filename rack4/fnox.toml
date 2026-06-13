@@ -89,6 +89,12 @@ PLANE_SEARCH_PASS = { provider = "onepass", value = "op://homelab/plane/search_p
 DRIVEBASE_MASTER = { provider = "onepass", value = "op://homelab/drivebase/master" }
 DRIVEBASE_BETTER = { provider = "onepass", value = "op://homelab/drivebase/betterauth" }
 
+FREESOUND_CLIENT = { provider = "onepass", value = "op://homelab/freesound/api_client" }
+FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_secret" }
+
+OPENCUT_BETTERAUTH = { provider = "onepass", value = "op://homelab/opencut/betterauth" }
+OPENCUT_UPSTASH = { provider = "onepass", value = "op://homelab/opencut/upstash" }
+
 HARDCOVER_TOKEN = { provider = "onepass", value = "op://homelab/Hardcover/api_token" }
 NEXTERM_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/nexterm/credential" }
 TUDUDI_SECRET = { provider = "onepass", value = "op://homelab/tududi/credential" }
@@ -121,6 +127,8 @@ KANEO_SECRET = { provider = "onepass", value = "op://homelab/kaneo/secret" }
 MM_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/secret" }
 WIKIGO_HTPASSWD = { provider = "onepass", value = "op://homelab/wikigo/htpasswd" }
 ARCANE_SECRET = { provider = "onepass", value = "op://homelab/arcane/secret" }
+DUPLICATI_SECRET = { provider = "onepass", value = "op://homelab/duplicati/secret" }
+MAXMIND_KEY = { provider = "onepass", value = "op://homelab/maxmind/license" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

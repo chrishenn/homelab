@@ -1,8 +1,10 @@
 set fallback
-
+alias a := attach
+alias b := bounce
 alias s := sync
-
-# machine-specific
+alias p := ps
+alias u := up
+alias d := down
 
 # 'repo' is the repo location on the remote host
 repo := "/home/chris/Projects/homelab"
@@ -11,11 +13,25 @@ repo := "/home/chris/Projects/homelab"
 ssh cmd='' pty='true':
     just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
 
-# generic
+sync message="sync":
+    git commit -a -m '{{ message }}' || true && git pull && git push
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-sync message="sync":
-    git commit -a -m '{{ message }}' || true && git pull && git push
-    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
+up *svcs:
+    docker compose up -d --remove-orphans {{ svcs }}
+
+down *svcs:
+    docker compose down {{ svcs }}
+
+bounce *svcs:
+    just down {{ svcs }}
+    just up {{ svcs }}
+
+attach svc cmd="/bin/sh":
+    docker compose exec -it {{ svc }} {{ cmd }}
+
+ps *svcs:
+    docker compose ps {{ svcs }}

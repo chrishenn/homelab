@@ -1,38 +1,31 @@
-# not ready yet. I think pangolin header checks are crashing on these databuddy analytics
-# calls: https://github.com/OpenCut-app/OpenCut/issues/735
 ---
 x-opencut_env: &opencut_env
   NODE_ENV: production
   NEXT_PUBLIC_SITE_URL: https://opencut.chenn.dev
 
   DATABASE_URL: postgresql://opencut:opencut@opencut_db:5432/opencut
-  BETTER_AUTH_SECRET: secret_key
+  BETTER_AUTH_SECRET: ${OPENCUT_BETTERAUTH}
   UPSTASH_REDIS_REST_URL: http://opencut_redis_serverless:80
-  UPSTASH_REDIS_REST_TOKEN: example_token
+  UPSTASH_REDIS_REST_TOKEN: ${OPENCUT_UPSTASH}
 
   NEXT_PUBLIC_MARBLE_API_URL: https://api.marblecms.com
-  MARBLE_WORKSPACE_KEY: $MARBLE_API_KEY
-  FREESOUND_CLIENT_ID: $FREESOUND_CLIENT
-  FREESOUND_API_KEY: $FREESOUND_SECRET
+  MARBLE_WORKSPACE_KEY: ${MARBLE_API_KEY}
+  FREESOUND_CLIENT_ID: ${FREESOUND_CLIENT}
+  FREESOUND_API_KEY: ${FREESOUND_SECRET}
 
 services:
   opencut:
     profiles: [opencut]
     image: ${REGISTRY}/opencut:latest
+    container_name: opencut
     build:
-      context: https://github.com/OpenCut-app/OpenCut.git
+      context: https://github.com/OpenCut-app/OpenCut.git#v0.3.0
       dockerfile: apps/web/Dockerfile
       args:
         <<: *opencut_env
-    container_name: opencut
     restart: unless-stopped
     environment:
       <<: *opencut_env
-    depends_on:
-      opencut_db:
-        condition: service_healthy
-      opencut_redis_serverless:
-        condition: service_healthy
     healthcheck:
       test: wget --spider -q http://0.0.0.0:3000
       interval: 30s
@@ -41,11 +34,11 @@ services:
       start_period: 30s
     networks: [opencut, newt]
     labels:
-      homepage.group: Tools
+      homepage.group: General Media
       homepage.name: Opencut
-      homepage.icon: cap-cut.png
+      homepage.icon: opencut.png
       homepage.href: https://opencut.chenn.dev
-      homepage.description: In-Browser Video Editor
+      homepage.description: Video Editor
 
       pangolin.public-resources.opencut.name: opencut
       pangolin.public-resources.opencut.full-domain: opencut.chenn.dev
@@ -70,13 +63,13 @@ services:
     container_name: opencut_db
     restart: unless-stopped
     environment:
+      POSTGRES_DB: opencut
       POSTGRES_USER: opencut
       POSTGRES_PASSWORD: opencut
-      POSTGRES_DB: opencut
     volumes:
       - $DATA/opencut/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U opencut']
+      test: pg_isready -U $${POSTGRES_USER}
       interval: 30s
       timeout: 10s
       retries: 5
@@ -89,7 +82,7 @@ services:
     container_name: opencut_redis
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: redis-cli ping
       interval: 30s
       timeout: 10s
       retries: 5
@@ -105,11 +98,8 @@ services:
       SRH_MODE: env
       SRH_TOKEN: example_token
       SRH_CONNECTION_STRING: redis://opencut_redis:6379
-    depends_on:
-      opencut_redis:
-        condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'wget --spider -q http://127.0.0.1:80 || exit 1']
+      test: wget --spider -q http://127.0.0.1:80 || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
