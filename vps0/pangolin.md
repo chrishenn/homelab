@@ -45,7 +45,7 @@ j f pangolin
     - op://homelab/pangolin/NEWT_ID
     - op://homelab/pangolin/NEWT_SECRET
     - go to rack4 and j ssync, j b c newt
-- activate free enterprise license 
+- activate free enterprise license
     - https://app.pangolin.net -> billing and licenses -> clear instance name on an existing license key
 - in pangolin GUI, add Identity Provider Pocket ID
     - op://homelab/pangolin/oidc_client
@@ -55,7 +55,7 @@ j f pangolin
     - add "groups" to scopes
     - Default Organization Mapping: org
     - Default Role Mapping: contains(groups, 'admin') && 'Admin' || 'Member'
-      
+
 ---
 
 # auth

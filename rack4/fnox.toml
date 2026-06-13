@@ -70,8 +70,7 @@ KARAKEEP_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/karake
 TRANSCODARR_SECRET = { provider = "onepass", value = "op://homelab/transcodarr/secret" }
 TRANSCODARR_API_KEY = { provider = "onepass", value = "op://homelab/transcodarr/credential" }
 
-MAXMIND_ACCT_ID = { provider = "onepass", value = "op://homelab/maxmind/account_id" }
-MAXMIND_LICENSE = { provider = "onepass", value = "op://homelab/maxmind/license" }
+
 
 RESUME_AUTH_SECRET = { provider = "onepass", value = "op://homelab/resume/credential" }
 RESUME_KEY = { provider = "onepass", value = "op://homelab/rxresume/api_key" }
@@ -128,7 +127,6 @@ MM_SECRET = { provider = "onepass", value = "op://homelab/mediamanager/secret" }
 WIKIGO_HTPASSWD = { provider = "onepass", value = "op://homelab/wikigo/htpasswd" }
 ARCANE_SECRET = { provider = "onepass", value = "op://homelab/arcane/secret" }
 DUPLICATI_SECRET = { provider = "onepass", value = "op://homelab/duplicati/secret" }
-MAXMIND_KEY = { provider = "onepass", value = "op://homelab/maxmind/license" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

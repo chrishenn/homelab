@@ -26,3 +26,6 @@ DOCKERHUB_AUTH = { provider = "onepass", value = "op://homelab/dockerhub/basic_a
 
 FORGEJO_USER = { provider = "onepass", value = "op://homelab/forgejo/username" }
 FORGEJO_PASS = { provider = "onepass", value = "op://homelab/forgejo/password" }
+
+MAXMIND_KEY = { provider = "onepass", value = "op://homelab/maxmind/license" }
+MAXMIND_ACCOUNT = { provider = "onepass", value = "op://homelab/maxmind/account_id" }
