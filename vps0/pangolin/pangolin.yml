@@ -1,0 +1,108 @@
+---
+services:
+  pangolin:
+    image: docker.io/fosrl/pangolin:ee-latest
+    container_name: pangolin
+    restart: unless-stopped
+    environment:
+      SERVER_SECRET: ${PANGOLIN_SERVER_SECRET}
+      EMAIL_SMTP_PASS: ${SMTP_TOKEN}
+    volumes:
+      - $DIR_HOST/pangolin:/app/config
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/']
+      interval: '10s'
+      timeout: '10s'
+      retries: 15
+
+  gerbil:
+    image: docker.io/fosrl/gerbil:latest
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - $DIR_HOST/pangolin:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - '51820:51820/udp'
+      - '21820:21820/udp'
+      - '443:443'
+      - '80:80'
+      - '2424:2424'
+      - '2525:2525'
+      - '2626:2626'
+      - '10000:10000/udp'
+      - '40000:40000/tcp'
+      - '40001:40001/tcp'
+      - '40002:40002/tcp'
+      - '40003:40003/tcp'
+      - '40004:40004/tcp'
+      - '40005:40005/tcp'
+      - '40006:40006/tcp'
+      - '40007:40007/tcp'
+      - '40008:40008/tcp'
+      - '40009:40009/tcp'
+      - '40000:40000/udp'
+      - '40001:40001/udp'
+      - '40002:40002/udp'
+      - '40003:40003/udp'
+      - '40004:40004/udp'
+      - '40005:40005/udp'
+      - '40006:40006/udp'
+      - '40007:40007/udp'
+      - '40008:40008/udp'
+      - '40009:40009/udp'
+      - '7881:7881/tcp'
+      - '50000:50000/udp'
+      - '50001:50001/udp'
+      - '50002:50002/udp'
+      - '50003:50003/udp'
+      - '50004:50004/udp'
+      - '50005:50005/udp'
+      - '50006:50006/udp'
+      - '50007:50007/udp'
+      - '50008:50008/udp'
+      - '50009:50009/udp'
+
+  traefik:
+    image: docker.io/traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - $DIR_HOST/pangolin/letsencrypt:/letsencrypt
+      - $DIR_HOST/pangolin/traefik:/etc/traefik:ro
+      - $DIR_HOST/pangolin/traefik/logs:/var/log/traefik
+
+  geoipupdate:
+    image: ghcr.io/maxmind/geoipupdate
+    container_name: geoipupdate
+    restart: unless-stopped
+    environment:
+      GEOIPUPDATE_ACCOUNT_ID: ${MAXMIND_ACCOUNT}
+      GEOIPUPDATE_LICENSE_KEY: ${MAXMIND_KEY}
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
+      GEOIPUPDATE_FREQUENCY: 72
+    volumes:
+      - $DIR_HOST/pangolin/GeoLite2:/usr/share/GeoIP
+
+networks:
+  default:
+    driver: bridge
+    name: pangolin
+    enable_ipv6: true
