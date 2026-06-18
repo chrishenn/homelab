@@ -1,33 +1,93 @@
 ---
-services:
-  stalwart:
-    profiles: [stalwart]
-    image: stalwartlabs/stalwart:latest
-    container_name: stalwart
-    restart: unless-stopped
-    environment:
-      STALWART_PUBLIC_URL: https://mail.chenn.dev
-      CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
-      POSTGRES_PASSWORD: stalwart
+configs:
+  wg_conf:
+    content: |
+      [Interface]
+      Address = 10.64.133.56/24
+      ListenPort = 51821
+      PrivateKey = ${STALWART_WG_CLIENT_PRIVATE}
+      PostUp = /etc/postup.sh %i
+      PostDown = /etc/postdown.sh %i
 
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $DATA/stalwart/data:/etc/stalwart
-      - $DATA/stalwart/var:/var/lib/stalwart
-      - $DATA/stalwart/certs:/data/certs:ro
-    depends_on:
-      stalwart_certs:
-        condition: service_completed_successfully
-    networks:
-      stalwart:
-      newt:
-        ipv4_address: 192.168.200.2
+      [Peer]
+      PublicKey = ${STALWART_WG_SERVER_PUBLIC}
+      Endpoint = ${VPS0_IP}:51821
+      AllowedIPs = 0.0.0.0/0
+      PersistentKeepalive = 25
+  wg_postup:
+    content: |
+      set -x
+      DROUTE=$$(ip route | grep default | awk '{print $$3}')
+      HOMENET=192.168.0.0/16
+      ip route add $$HOMENET via $$DROUTE
+      iptables -I OUTPUT -d $$HOMENET -j ACCEPT
+      iptables -A OUTPUT ! -o $$1 -m mark ! --mark $$(wg show $$1 fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
+      iptables -t nat -A POSTROUTING -o $$1 -j MASQUERADE
+  wg_postdown:
+    content: |
+      HOMENET=192.168.0.0/16
+      ip route delete $$HOMENET
+      iptables -D OUTPUT ! -o $$1 -m mark ! --mark $$(wg show $$1 fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
+      iptables -D OUTPUT -d $$HOMENET -j ACCEPT
+      iptables -t nat -D POSTROUTING -o $$1 -j MASQUERADE
+  stalwart_s3:
+    content: |
+      metadata_dir = "/var/lib/garage/meta"
+      data_dir = "/var/lib/garage/data"
+      db_engine = "sqlite"
+      replication_factor = 1
+
+      rpc_bind_addr = "[::]:3901"
+      rpc_public_addr = "127.0.0.1:3901"
+      rpc_secret = "${STALWART_S3_RPC}"
+
+      [s3_api]
+      s3_region = "stalwart_s3"
+      api_bind_addr = "[::]:3900"
+      root_domain = ".s3.garage.localhost"
+
+networks:
+  stalwart:
+    ipam:
+      config:
+        # this subnet is excluded from WG tunneling by stalwart_wg config: wg_postup
+        - subnet: 192.168.101.0/24
+          gateway: 192.168.101.1
+
+services:
+  stalwart_wg:
+    profiles: [stalwart]
+    image: linuxserver/wireguard:latest
+    container_name: stalwart_wg
+    restart: unless-stopped
+    cap_add: [NET_ADMIN, SYS_MODULE]
+    configs:
+      - source: wg_conf
+        target: /config/wg_confs/wg0.conf
+      - source: wg_postup
+        target: /etc/postup.sh
+        mode: 0755
+      - source: wg_postdown
+        target: /etc/postdown.sh
+        mode: 0755
+    sysctls:
+      net.ipv4.conf.all.src_valid_mark: 1
+    networks: [stalwart, traefik, newt]
     labels:
+      traefik.enable: true
+      traefik.http.routers.mail.rule: Host(`mail.henn.dev`)
+      traefik.http.routers.mail.entrypoints: websecure
+      traefik.http.routers.mail.middlewares: hdrs@file
+      traefik.http.routers.mail.tls.certresolver: cf
+      traefik.http.services.mail.loadbalancer.server.port: 8080
+
       pangolin.public-resources.mail.name: mail
       pangolin.public-resources.mail.full-domain: mail.chenn.dev
       pangolin.public-resources.mail.mode: http
       pangolin.public-resources.mail.ssl: true
       pangolin.public-resources.mail.targets[0].method: http
+      pangolin.public-resources.mail.targets[0].path: /
+      pangolin.public-resources.mail.targets[0].path-match: prefix
       pangolin.public-resources.mail.targets[0].port: 8080
 
       pangolin.public-resources.mail_1.name: mail_1
@@ -51,27 +111,46 @@ services:
       pangolin.public-resources.mail_3.targets[0].method: http
       pangolin.public-resources.mail_3.targets[0].port: 8080
 
-      pangolin.public-resources.smtp.name: smtp
-      pangolin.public-resources.smtp.mode: tcp
-      pangolin.public-resources.smtp.proxy-port: 25
-      pangolin.public-resources.smtp.targets[0].port: 25
-      pangolin.public-resources.smtp.proxy-protocol: true
-      pangolin.public-resources.smtp.proxy-protocol-version: 2
+  stalwart:
+    profiles: [stalwart]
+    image: stalwartlabs/stalwart:latest
+    container_name: stalwart
+    restart: unless-stopped
+    environment:
+      STALWART_PUBLIC_URL: https://mail.chenn.dev
+      CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+      POSTGRES_PASSWORD: stalwart
+      S3_SECRET_KEY: ${STALWART_S3_SECRET}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/stalwart/data:/etc/stalwart
+      - $DATA/stalwart/var:/var/lib/stalwart
+      - $DATA/stalwart/certs:/data/certs:ro
+    depends_on:
+      stalwart_perm:
+        condition: service_completed_successfully
+    network_mode: service:stalwart_wg
 
-      pangolin.public-resources.smtps.name: smtps
-      pangolin.public-resources.smtps.mode: tcp
-      pangolin.public-resources.smtps.proxy-port: 465
-      pangolin.public-resources.smtps.targets[0].port: 465
-      pangolin.public-resources.smtps.proxy-protocol: true
-      pangolin.public-resources.smtps.proxy-protocol-version: 2
+  stalwart_perm:
+    profiles: [stalwart]
+    image: alpine
+    container_name: stalwart_perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/stalwart:/data
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -x
+        mkdir -p /data/data /data/var
+        chown -R 2000:2000 /data/data /data/var
+        mkdir -p /data/search
+        chown -R 1000:1000 /data/search
+        echo "set perms: $?"
 
-      pangolin.public-resources.imaps.name: imaps
-      pangolin.public-resources.imaps.mode: tcp
-      pangolin.public-resources.imaps.proxy-port: 993
-      pangolin.public-resources.imaps.targets[0].port: 993
-      pangolin.public-resources.imaps.proxy-protocol: true
-      pangolin.public-resources.imaps.proxy-protocol-version: 2
-
+  # todo: clean up this script
   stalwart_certs:
     profiles: [stalwart]
     image: docker:dind
@@ -101,79 +180,68 @@ services:
         rm -rf /data/certs
         docker cp traefik_cert:/output /data/certs
 
-        mkdir -p /data/data /data/var
-        chown -R 2000:2000 /data
+        chown -R 2000:2000 /data/certs
         echo "copied certs; exiting: $?"
         exit $?
 
-  #  stalwart_db:
-  #    profiles: [stalwart]
-  #    image: postgres:18-alpine
-  #    container_name: stalwart_db
-  #    restart: unless-stopped
-  #    environment:
-  #      POSTGRES_USER: stalwart
-  #      POSTGRES_PASSWORD: stalwart
-  #      POSTGRES_DB: stalwart
-  #    volumes:
-  #      # nonstandard dir so that stalwart_certs can set ownership on $DATA/stalwart
-  #      - $DATA/stalwart_db:/var/lib/postgresql
-  #    networks: [stalwart]
-  #
-  #  stalwart-s3:
-  #    profiles: [stalwart]
-  #    image: rustfs/rustfs:latest
-  #    container_name: stalwart-s3
-  #    restart: unless-stopped
-  #    command: /data
-  #    environment:
-  #      RUSTFS_ACCESS_KEY: stalwart
-  #      RUSTFS_SECRET_KEY: stalwart
-  #      RUSTFS_SERVER_DOMAINS: stalwart-s3
-  #    volumes:
-  #      - $DATA/stalwart/s3:/data
-  #    depends_on:
-  #      stalwart-s3_perm:
-  #        condition: service_completed_successfully
-  #    healthcheck:
-  #      test: curl -f http://localhost:9000/health
-  #      timeout: 5s
-  #      retries: 10
-  #      start_period: 15s
-  #      interval: 5s
-  #    networks: [stalwart]
-  #
-  #  stalwart-s3_perm:
-  #    profiles: [stalwart]
-  #    image: alpine
-  #    container_name: stalwart-s3_perm
-  #    restart: no
-  #    user: root
-  #    volumes:
-  #      - $DATA/stalwart/s3:/data
-  #    command: chown -R 10001:10001 /data
-  #
-  #  stalwart-s3_bucket:
-  #    profiles: [stalwart]
-  #    image: minio/mc
-  #    container_name: stalwart-s3_bucket
-  #    restart: no
-  #    entrypoint:
-  #      - /bin/sh
-  #      - -c
-  #      - |
-  #        set -e
-  #        until mc alias set rustfs http://stalwart-s3:9000 stalwart stalwart; do
-  #          echo 'waiting to connect to stalwart-s3'
-  #          sleep 2
-  #        done
-  #        mc mb rustfs/stalwart --ignore-existing
-  #    depends_on:
-  #      stalwart-s3:
-  #        condition: service_healthy
-  #    networks: [stalwart]
+  # todo: verify that these storages are working
+  stalwart_db:
+    profiles: [stalwart]
+    image: postgres:18-alpine
+    container_name: stalwart_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: stalwart
+      POSTGRES_PASSWORD: stalwart
+      POSTGRES_DB: stalwart
+    volumes:
+      - $DATA/stalwart/db:/var/lib/postgresql
+    networks: [stalwart]
 
-  # https://mail.chenn.dev/webmail/admin
+  stalwart_redis:
+    profiles: [stalwart]
+    image: valkey/valkey:alpine
+    container_name: stalwart_redis
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [stalwart]
+
+  stalwart_s3:
+    profiles: [stalwart]
+    image: dxflrs/garage:v2.3.0
+    container_name: stalwart_s3
+    restart: unless-stopped
+    environment:
+      GARAGE_DEFAULT_ACCESS_KEY: stalwart
+      GARAGE_DEFAULT_SECRET_KEY: ${STALWART_S3_SECRET}
+      GARAGE_DEFAULT_BUCKET: stalwart
+    configs:
+      - source: stalwart_s3
+        target: /etc/garage.toml
+    volumes:
+      - $DATA/stalwart/s3/data:/var/lib/garage/data
+      - $DATA/stalwart/s3/meta:/var/lib/garage/meta
+    command: /garage server --single-node --default-bucket
+    networks: [stalwart]
+
+  stalwart_search:
+    profiles: [stalwart]
+    image: opensearchproject/opensearch:latest
+    container_name: stalwart_search
+    environment:
+      node.name: opensearch-node
+      discovery.type: single-node
+      plugins.security.disabled: true
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${STALWART_SEARCH_PASS}
+    volumes:
+      - $DATA/stalwart/search:/usr/share/opensearch/data
+    networks: [stalwart]
+
   bulwark:
     profiles: [bulwark]
     build:
@@ -213,19 +281,3 @@ services:
     volumes:
       - $DATA/bulwark:/data
     command: /bin/sh -c 'mkdir -p /data/admin /data/state && chown -R 1001:1001 /data'
-
-  test:
-    profiles: [test]
-    image: alpine
-    container_name: test
-    restart: no
-    networks: [newt]
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        apk update && apk add bind-tools
-        eval /bin/sh
-
-networks:
-  stalwart:

@@ -104,6 +104,9 @@ STOAT_LIVEKIT_SECRET = { provider = "onepass", value = "op://homelab/stoat/livek
 STALWART_USER = { provider = "onepass", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "onepass", value = "op://homelab/stalwart/password" }
 STALWART_RECOVERY_PASS = { provider = "onepass", value = "op://homelab/stalwart/recovery_password" }
+STALWART_S3_RPC = { provider = "onepass", value = "op://homelab/stalwart/s3_rpc" }
+STALWART_S3_SECRET = { provider = "onepass", value = "op://homelab/stalwart/s3_secret" }
+STALWART_SEARCH_PASS = { provider = "onepass", value = "op://homelab/stalwart/search_pass" }
 BULWARK_SESSION = { provider = "onepass", value = "op://homelab/bulwark/session" }
 BULWARK_PASS = { provider = "onepass", value = "op://homelab/bulwark/password" }
 

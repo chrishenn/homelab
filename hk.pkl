@@ -43,11 +43,11 @@ local linters = new Mapping<String, Step> {
         output_summary = "hide"
         batch = false
     }
-    // ["detect-secrets"] {
-    //     glob = List("*")
-    //     check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
-    //     batch = false
-    // }
+//     ["detect-secrets"] {
+//         glob = List("*")
+//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
+//         batch = false
+//     }
 }
 
 hooks {

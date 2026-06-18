@@ -1,0 +1,54 @@
+---
+configs:
+  wg_conf:
+    content: |
+      [Interface]
+      ListenPort = 51821
+      Address = 10.64.133.57/24
+      PrivateKey = ${STALWART_WG_SERVER_PRIVATE}
+      PostUp = /etc/postup.sh %i
+      PostDown = /etc/postdown.sh %i
+
+      [Peer]
+      PublicKey = ${STALWART_WG_CLIENT_PUBLIC}
+      AllowedIPs = 10.64.133.0/24
+      PersistentKeepalive = 25
+  wg_postup:
+    content: |
+      set -x
+      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      iptables -A FORWARD -i $$1 -j ACCEPT
+      iptables -A FORWARD -o $$1 -j ACCEPT
+      for i in 25 465 993; do
+        iptables -t nat -A PREROUTING -i eth0 -p tcp --dport $$i -j DNAT --to-destination 10.64.133.56:$$i
+      done
+  wg_postdown:
+    content: |
+      iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+      iptables -D FORWARD -i $$1 -j ACCEPT
+      iptables -D FORWARD -o $$1 -j ACCEPT
+      for i in 25 465 993; do
+        iptables -t nat -D PREROUTING -i eth0 -p tcp --dport $$i -j DNAT --to-destination 10.64.133.56:$$i
+      done
+
+services:
+  stalwart_wg_exit:
+    image: linuxserver/wireguard:latest
+    container_name: stalwart_wg_exit
+    restart: unless-stopped
+    privileged: true
+    cap_add: [NET_ADMIN, SYS_MODULE]
+    configs:
+      - source: wg_conf
+        target: /config/wg_confs/wg0.conf
+      - source: wg_postup
+        target: /etc/postup.sh
+        mode: 0755
+      - source: wg_postdown
+        target: /etc/postdown.sh
+        mode: 0755
+    ports:
+      - '51821:51821/udp'
+      - '25:25'
+      - '465:465'
+      - '993:993'

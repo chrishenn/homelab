@@ -28,7 +28,7 @@ experimental:
 tls:
   options:
     default:
-      minVersion: VersionTLS12
+      minVersion: VersionTLS13
 
 log:
   level: 'INFO'
@@ -62,34 +62,6 @@ entryPoints:
     http:
       tls:
         certResolver: 'letsencrypt'
-
-  tcp-25:
-    address: :25
-    proxyProtocol:
-      trustedIPs:
-        - 192.168.200.2
-        - 192.168.200.38
-        - 172.18.0.5
-        - 76.13.30.83
-        - 67.173.84.38
-  tcp-465:
-    address: :465
-    proxyProtocol:
-      trustedIPs:
-        - 192.168.200.2
-        - 192.168.200.38
-        - 172.18.0.5
-        - 76.13.30.83
-        - 67.173.84.38
-  tcp-993:
-    address: :993
-    proxyProtocol:
-      trustedIPs:
-        - 192.168.200.2
-        - 192.168.200.38
-        - 172.18.0.5
-        - 76.13.30.83
-        - 67.173.84.38
 
   tcp-2424:
     address: ':2424/tcp'

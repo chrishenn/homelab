@@ -1,4 +1,5 @@
 ---
 include:
   - apps/beszel.yml
+  - apps/wg.yml
   - pangolin/pangolin.yml

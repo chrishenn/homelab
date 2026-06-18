@@ -21,6 +21,11 @@ SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/sm
 SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_user" }
 SMTP_TOKEN = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_token" }
 
+STALWART_WG_CLIENT_PRIVATE = { provider = "onepass", value = "op://homelab/stalwart/client_private" }
+STALWART_WG_CLIENT_PUBLIC = { provider = "onepass", value = "op://homelab/stalwart/client_public" }
+STALWART_WG_SERVER_PRIVATE = { provider = "onepass", value = "op://homelab/stalwart/server_private" }
+STALWART_WG_SERVER_PUBLIC = { provider = "onepass", value = "op://homelab/stalwart/server_public" }
+
 DOCKERHUB_USER = { provider = "onepass", value = "op://homelab/dockerhub/username" }
 DOCKERHUB_PASS = { provider = "onepass", value = "op://homelab/dockerhub/password" }
 DOCKERHUB_AUTH = { provider = "onepass", value = "op://homelab/dockerhub/basic_auth" }
