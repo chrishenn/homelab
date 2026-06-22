@@ -1,3 +1,4 @@
+# rabbitmq idle cpu usage average ~6% of 32 cores AT IDLE. WHAT IS IT DOING
 ---
 configs:
   stoat_toml:
