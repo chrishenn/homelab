@@ -19,16 +19,28 @@ configs:
       set -x
       DROUTE=$$(ip route | grep default | awk '{print $$3}')
       HOMENET=192.168.0.0/16
+      HOMENET2=192.169.0.0/16
+      HOMENET3=192.170.0.0/16
       ip route add $$HOMENET via $$DROUTE
+      ip route add $$HOMENET2 via $$DROUTE
+      ip route add $$HOMENET3 via $$DROUTE
       iptables -I OUTPUT -d $$HOMENET -j ACCEPT
+      iptables -I OUTPUT -d $$HOMENET2 -j ACCEPT
+      iptables -I OUTPUT -d $$HOMENET3 -j ACCEPT
       iptables -A OUTPUT ! -o $$1 -m mark ! --mark $$(wg show $$1 fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
       iptables -t nat -A POSTROUTING -o $$1 -j MASQUERADE
   wg_postdown:
     content: |
       HOMENET=192.168.0.0/16
+      HOMENET2=192.169.0.0/16
+      HOMENET3=192.170.0.0/16
       ip route delete $$HOMENET
+      ip route delete $$HOMENET2
+      ip route delete $$HOMENET3
       iptables -D OUTPUT ! -o $$1 -m mark ! --mark $$(wg show $$1 fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
       iptables -D OUTPUT -d $$HOMENET -j ACCEPT
+      iptables -D OUTPUT -d $$HOMENET2 -j ACCEPT
+      iptables -D OUTPUT -d $$HOMENET3 -j ACCEPT
       iptables -t nat -D POSTROUTING -o $$1 -j MASQUERADE
   stalwart_s3:
     content: |

@@ -44,6 +44,7 @@ services:
       - '${TRAEFIK_VIP}:25:25' # email
       - '${TRAEFIK_VIP}:465:465' # email
       - '${TRAEFIK_VIP}:993:993' # email
+    networks: [traefik]
     labels:
       homepage.group: Infra
       homepage.name: Traefik-Docker
@@ -57,14 +58,11 @@ services:
       traefik.http.routers.dash.middlewares: hdrs@file
       traefik.http.routers.dash.tls.certresolver: cf
       traefik.http.routers.dash.service: api@internal
-    networks:
-      traefik:
-        ipv4_address: 192.168.100.4
 
 networks:
   traefik:
+    # the traefik instance expects this network name, and the default would be "project-traefik" if now spec'd here
     name: traefik
-    driver: bridge
     ipam:
       config:
         - subnet: ${TRAEFIK_SUBNET}

@@ -20,7 +20,6 @@ services:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
-      JELLYFIN_PublishedServerUrl: 'https://jellyfin.chenn.dev'
     volumes:
       - $DATA/jellyfin/config:/config
       - $DATA/jellyfin/cache:/cache
