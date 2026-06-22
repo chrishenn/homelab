@@ -12,20 +12,20 @@ configs:
         internalUrl: http://files:80
 
         sources:
-          - path: /mnt/r/
-            name: r
-            config:
-              defaultEnabled: true
           - path: /mnt/f/
             name: f
+            config:
+              defaultEnabled: true
+          - path: /mnt/h/
+            name: h
             config:
               defaultEnabled: true
           - path: /mnt/k/
             name: k
             config:
               defaultEnabled: true
-          - path: /mnt/h/
-            name: h
+          - path: /mnt/r/
+            name: r
             config:
               defaultEnabled: true
 
