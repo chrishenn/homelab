@@ -26,15 +26,7 @@ services:
 
       pangolin.public-resources.ytp.name: ytp
       pangolin.public-resources.ytp.full-domain: ytp.chenn.dev
-      pangolin.public-resources.ytp.protocol: http
-      pangolin.public-resources.ytp.ssl: true
+      pangolin.public-resources.ytp.mode: http
       pangolin.public-resources.ytp.targets[0].method: http
       pangolin.public-resources.ytp.targets[0].port: 8081
-      pangolin.public-resources.ytp.auth.sso-enabled: true
-      pangolin.public-resources.ytp.auth.sso-roles[0]: Member
-      pangolin.public-resources.ytp.rules[0].action: pass
-      pangolin.public-resources.ytp.rules[0].match: country
-      pangolin.public-resources.ytp.rules[0].value: US
-      pangolin.public-resources.ytp.rules[1].action: deny
-      pangolin.public-resources.ytp.rules[1].match: country
-      pangolin.public-resources.ytp.rules[1].value: ALL
+      pangolin.public-resources.ytp.policy: member

@@ -20,15 +20,7 @@ services:
 
       pangolin.public-resources.aurral.name: aurral
       pangolin.public-resources.aurral.full-domain: aurral.chenn.dev
-      pangolin.public-resources.aurral.protocol: http
-      pangolin.public-resources.aurral.ssl: true
+      pangolin.public-resources.aurral.mode: http
       pangolin.public-resources.aurral.targets[0].method: http
       pangolin.public-resources.aurral.targets[0].port: 3001
-      pangolin.public-resources.aurral.auth.sso-enabled: true
-      pangolin.public-resources.aurral.auth.sso-roles[0]: Member
-      pangolin.public-resources.aurral.rules[0].action: pass
-      pangolin.public-resources.aurral.rules[0].match: country
-      pangolin.public-resources.aurral.rules[0].value: US
-      pangolin.public-resources.aurral.rules[1].action: deny
-      pangolin.public-resources.aurral.rules[1].match: country
-      pangolin.public-resources.aurral.rules[1].value: ALL
+      pangolin.public-resources.aurral.policy: member

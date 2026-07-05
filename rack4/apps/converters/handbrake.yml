@@ -27,18 +27,10 @@ services:
 
       pangolin.public-resources.handbrake.name: handbrake
       pangolin.public-resources.handbrake.full-domain: handbrake.chenn.dev
-      pangolin.public-resources.handbrake.protocol: http
-      pangolin.public-resources.handbrake.ssl: true
+      pangolin.public-resources.handbrake.mode: http
       pangolin.public-resources.handbrake.targets[0].method: http
       pangolin.public-resources.handbrake.targets[0].port: 9999
-      pangolin.public-resources.handbrake.auth.sso-enabled: true
-      pangolin.public-resources.handbrake.auth.sso-roles[0]: Member
-      pangolin.public-resources.handbrake.rules[0].action: pass
-      pangolin.public-resources.handbrake.rules[0].match: country
-      pangolin.public-resources.handbrake.rules[0].value: US
-      pangolin.public-resources.handbrake.rules[1].action: deny
-      pangolin.public-resources.handbrake.rules[1].match: country
-      pangolin.public-resources.handbrake.rules[1].value: ALL
+      pangolin.public-resources.handbrake.policy: member
 
   handbrake_worker:
     profiles: [handbrake]

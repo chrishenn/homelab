@@ -35,18 +35,10 @@ services:
 
       pangolin.public-resources.ideon.name: ideon
       pangolin.public-resources.ideon.full-domain: ideon.chenn.dev
-      pangolin.public-resources.ideon.protocol: http
-      pangolin.public-resources.ideon.ssl: true
+      pangolin.public-resources.ideon.mode: http
       pangolin.public-resources.ideon.targets[0].method: http
       pangolin.public-resources.ideon.targets[0].port: 3000
-      pangolin.public-resources.ideon.auth.sso-enabled: true
-      pangolin.public-resources.ideon.auth.sso-roles[0]: Member
-      pangolin.public-resources.ideon.rules[0].action: pass
-      pangolin.public-resources.ideon.rules[0].match: country
-      pangolin.public-resources.ideon.rules[0].value: US
-      pangolin.public-resources.ideon.rules[1].action: deny
-      pangolin.public-resources.ideon.rules[1].match: country
-      pangolin.public-resources.ideon.rules[1].value: ALL
+      pangolin.public-resources.ideon.policy: member
 
   ideon_db:
     profiles: [ideon]

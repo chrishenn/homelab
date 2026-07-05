@@ -77,13 +77,10 @@ services:
       # works - just has performance problems. Spin up a separate instance if you need public access
   #      pangolin.public-resources.forgejo.name: forgejo
   #      pangolin.public-resources.forgejo.full-domain: forgejo.chenn.dev
-  #      pangolin.public-resources.forgejo.protocol: http
-  #      pangolin.public-resources.forgejo.ssl: true
+  #      pangolin.public-resources.forgejo.mode: http
   #      pangolin.public-resources.forgejo.targets[0].method: http
   #      pangolin.public-resources.forgejo.targets[0].port: 3000
-  #
-  #      pangolin.public-resources.forgejo.auth.sso-enabled: true
-  #      pangolin.public-resources.forgejo.auth.sso-roles[0]: Member
+  #      pangolin.public-resources.forgejo.policy: member
   #
   #      pangolin.public-resources.forgejo.rules[0].action: allow
   #      pangolin.public-resources.forgejo.rules[0].match: path
@@ -92,13 +89,6 @@ services:
   #      pangolin.public-resources.forgejo.rules[1].action: allow
   #      pangolin.public-resources.forgejo.rules[1].match: path
   #      pangolin.public-resources.forgejo.rules[1].value: /api/*
-  #
-  #      pangolin.public-resources.forgejo.rules[2].action: pass
-  #      pangolin.public-resources.forgejo.rules[2].match: country
-  #      pangolin.public-resources.forgejo.rules[2].value: US
-  #      pangolin.public-resources.forgejo.rules[3].action: deny
-  #      pangolin.public-resources.forgejo.rules[3].match: country
-  #      pangolin.public-resources.forgejo.rules[3].value: ALL
   #
   #      pangolin.public-resources.forgejo_ssh.name: forgejo_ssh
   #      pangolin.public-resources.forgejo_ssh.protocol: tcp

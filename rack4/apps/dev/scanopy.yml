@@ -31,18 +31,10 @@ services:
 
       pangolin.public-resources.scanopy.name: scanopy
       pangolin.public-resources.scanopy.full-domain: scanopy.chenn.dev
-      pangolin.public-resources.scanopy.protocol: http
-      pangolin.public-resources.scanopy.ssl: true
+      pangolin.public-resources.scanopy.mode: http
       pangolin.public-resources.scanopy.targets[0].method: http
       pangolin.public-resources.scanopy.targets[0].port: 60072
-      pangolin.public-resources.scanopy.auth.sso-enabled: true
-      pangolin.public-resources.scanopy.auth.sso-roles[0]: Member
-      pangolin.public-resources.scanopy.rules[0].action: pass
-      pangolin.public-resources.scanopy.rules[0].match: country
-      pangolin.public-resources.scanopy.rules[0].value: US
-      pangolin.public-resources.scanopy.rules[1].action: deny
-      pangolin.public-resources.scanopy.rules[1].match: country
-      pangolin.public-resources.scanopy.rules[1].value: ALL
+      pangolin.public-resources.scanopy.policy: member
 
   scanopy_daemon:
     profiles: [scanopy]

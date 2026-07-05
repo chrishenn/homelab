@@ -87,15 +87,7 @@ services:
 
       pangolin.public-resources.files.name: files
       pangolin.public-resources.files.full-domain: files.chenn.dev
-      pangolin.public-resources.files.protocol: http
-      pangolin.public-resources.files.ssl: true
+      pangolin.public-resources.files.mode: http
       pangolin.public-resources.files.targets[0].method: http
       pangolin.public-resources.files.targets[0].port: 80
-      pangolin.public-resources.files.auth.sso-enabled: true
-      pangolin.public-resources.files.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.files.rules[0].action: pass
-      pangolin.public-resources.files.rules[0].match: country
-      pangolin.public-resources.files.rules[0].value: US
-      pangolin.public-resources.files.rules[1].action: deny
-      pangolin.public-resources.files.rules[1].match: country
-      pangolin.public-resources.files.rules[1].value: ALL
+      pangolin.public-resources.files.policy: chris

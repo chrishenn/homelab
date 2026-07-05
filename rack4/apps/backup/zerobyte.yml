@@ -28,15 +28,7 @@ services:
 
       pangolin.public-resources.zerobyte.name: zerobyte
       pangolin.public-resources.zerobyte.full-domain: zerobyte.chenn.dev
-      pangolin.public-resources.zerobyte.protocol: http
-      pangolin.public-resources.zerobyte.ssl: true
+      pangolin.public-resources.zerobyte.mode: http
       pangolin.public-resources.zerobyte.targets[0].method: http
       pangolin.public-resources.zerobyte.targets[0].port: 4096
-      pangolin.public-resources.zerobyte.auth.sso-enabled: true
-      pangolin.public-resources.zerobyte.auth.sso-roles[0]: Member
-      pangolin.public-resources.zerobyte.rules[0].action: pass
-      pangolin.public-resources.zerobyte.rules[0].match: country
-      pangolin.public-resources.zerobyte.rules[0].value: US
-      pangolin.public-resources.zerobyte.rules[1].action: deny
-      pangolin.public-resources.zerobyte.rules[1].match: country
-      pangolin.public-resources.zerobyte.rules[1].value: ALL
+      pangolin.public-resources.zerobyte.policy: member

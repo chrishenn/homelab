@@ -173,8 +173,7 @@ services:
 
       pangolin.public-resources.stoat.name: stoat
       pangolin.public-resources.stoat.full-domain: stoat.chenn.dev
-      pangolin.public-resources.stoat.protocol: http
-      pangolin.public-resources.stoat.ssl: true
+      pangolin.public-resources.stoat.mode: http
       pangolin.public-resources.stoat.targets[0].method: http
       pangolin.public-resources.stoat.targets[0].port: 80
 

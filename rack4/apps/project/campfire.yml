@@ -33,18 +33,10 @@ services:
 
       pangolin.public-resources.campfire.name: campfire
       pangolin.public-resources.campfire.full-domain: campfire.chenn.dev
-      pangolin.public-resources.campfire.protocol: http
-      pangolin.public-resources.campfire.ssl: true
+      pangolin.public-resources.campfire.mode: http
       pangolin.public-resources.campfire.targets[0].method: http
       pangolin.public-resources.campfire.targets[0].port: 80
-      pangolin.public-resources.campfire.auth.sso-enabled: true
-      pangolin.public-resources.campfire.auth.sso-roles[0]: Member
-      pangolin.public-resources.campfire.rules[0].action: pass
-      pangolin.public-resources.campfire.rules[0].match: country
-      pangolin.public-resources.campfire.rules[0].value: US
-      pangolin.public-resources.campfire.rules[1].action: deny
-      pangolin.public-resources.campfire.rules[1].match: country
-      pangolin.public-resources.campfire.rules[1].value: ALL
+      pangolin.public-resources.campfire.policy: member
 
   campfire_perm:
     profiles: [campfire]

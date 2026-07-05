@@ -24,15 +24,7 @@ services:
 
       pangolin.public-resources.wikigo.name: wikigo
       pangolin.public-resources.wikigo.full-domain: wikigo.chenn.dev
-      pangolin.public-resources.wikigo.protocol: http
-      pangolin.public-resources.wikigo.ssl: true
+      pangolin.public-resources.wikigo.mode: http
       pangolin.public-resources.wikigo.targets[0].method: http
       pangolin.public-resources.wikigo.targets[0].port: 8080
-      pangolin.public-resources.wikigo.auth.sso-enabled: true
-      pangolin.public-resources.wikigo.auth.sso-roles[0]: Member
-      pangolin.public-resources.wikigo.rules[0].action: pass
-      pangolin.public-resources.wikigo.rules[0].match: country
-      pangolin.public-resources.wikigo.rules[0].value: US
-      pangolin.public-resources.wikigo.rules[1].action: deny
-      pangolin.public-resources.wikigo.rules[1].match: country
-      pangolin.public-resources.wikigo.rules[1].value: ALL
+      pangolin.public-resources.wikigo.policy: member

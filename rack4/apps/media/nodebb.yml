@@ -36,18 +36,10 @@ services:
 
       pangolin.public-resources.nodebb.name: nodebb
       pangolin.public-resources.nodebb.full-domain: nodebb.chenn.dev
-      pangolin.public-resources.nodebb.protocol: http
-      pangolin.public-resources.nodebb.ssl: true
+      pangolin.public-resources.nodebb.mode: http
       pangolin.public-resources.nodebb.targets[0].method: http
       pangolin.public-resources.nodebb.targets[0].port: 4567
-      pangolin.public-resources.nodebb.auth.sso-enabled: true
-      pangolin.public-resources.nodebb.auth.sso-roles[0]: Member
-      pangolin.public-resources.nodebb.rules[0].action: pass
-      pangolin.public-resources.nodebb.rules[0].match: country
-      pangolin.public-resources.nodebb.rules[0].value: US
-      pangolin.public-resources.nodebb.rules[1].action: deny
-      pangolin.public-resources.nodebb.rules[1].match: country
-      pangolin.public-resources.nodebb.rules[1].value: ALL
+      pangolin.public-resources.nodebb.policy: member
 
   nodebb_redis:
     profiles: [nodebb]

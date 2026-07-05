@@ -37,18 +37,10 @@ services:
 
       pangolin.public-resources.archive.name: archive
       pangolin.public-resources.archive.full-domain: archive.chenn.dev
-      pangolin.public-resources.archive.protocol: http
-      pangolin.public-resources.archive.ssl: true
+      pangolin.public-resources.archive.mode: http
       pangolin.public-resources.archive.targets[0].method: http
       pangolin.public-resources.archive.targets[0].port: 8000
-      pangolin.public-resources.archive.auth.sso-enabled: true
-      pangolin.public-resources.archive.auth.sso-roles[0]: Member
-      pangolin.public-resources.archive.rules[0].action: pass
-      pangolin.public-resources.archive.rules[0].match: country
-      pangolin.public-resources.archive.rules[0].value: US
-      pangolin.public-resources.archive.rules[1].action: deny
-      pangolin.public-resources.archive.rules[1].match: country
-      pangolin.public-resources.archive.rules[1].value: ALL
+      pangolin.public-resources.archive.policy: member
 
   archive_vnc:
     profiles: [archive]
@@ -68,18 +60,10 @@ services:
 
       pangolin.public-resources.archive_vnc.name: archive_vnc
       pangolin.public-resources.archive_vnc.full-domain: archive_vnc.chenn.dev
-      pangolin.public-resources.archive_vnc.protocol: http
-      pangolin.public-resources.archive_vnc.ssl: true
+      pangolin.public-resources.archive_vnc.mode: http
       pangolin.public-resources.archive_vnc.targets[0].method: http
       pangolin.public-resources.archive_vnc.targets[0].port: 8080
-      pangolin.public-resources.archive_vnc.auth.sso-enabled: true
-      pangolin.public-resources.archive_vnc.auth.sso-roles[0]: Member
-      pangolin.public-resources.archive_vnc.rules[0].action: pass
-      pangolin.public-resources.archive_vnc.rules[0].match: country
-      pangolin.public-resources.archive_vnc.rules[0].value: US
-      pangolin.public-resources.archive_vnc.rules[1].action: deny
-      pangolin.public-resources.archive_vnc.rules[1].match: country
-      pangolin.public-resources.archive_vnc.rules[1].value: ALL
+      pangolin.public-resources.archive_vnc.policy: member
 
   # https://github.com/dgtlmoon/changedetection.io
   archive_change:
@@ -110,15 +94,7 @@ services:
 
       pangolin.public-resources.archive_pywb.name: archive_pywb
       pangolin.public-resources.archive_pywb.full-domain: archive_pywb.chenn.dev
-      pangolin.public-resources.archive_pywb.protocol: http
-      pangolin.public-resources.archive_pywb.ssl: true
+      pangolin.public-resources.archive_pywb.mode: http
       pangolin.public-resources.archive_pywb.targets[0].method: http
       pangolin.public-resources.archive_pywb.targets[0].port: 8080
-      pangolin.public-resources.archive_pywb.auth.sso-enabled: true
-      pangolin.public-resources.archive_pywb.auth.sso-roles[0]: Member
-      pangolin.public-resources.archive_pywb.rules[0].action: pass
-      pangolin.public-resources.archive_pywb.rules[0].match: country
-      pangolin.public-resources.archive_pywb.rules[0].value: US
-      pangolin.public-resources.archive_pywb.rules[1].action: deny
-      pangolin.public-resources.archive_pywb.rules[1].match: country
-      pangolin.public-resources.archive_pywb.rules[1].value: ALL
+      pangolin.public-resources.archive_pywb.policy: member

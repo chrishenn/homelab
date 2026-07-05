@@ -121,8 +121,7 @@ services:
 
       pangolin.public-resources.gitlab.name: gitlab
       pangolin.public-resources.gitlab.full-domain: gitlab.chenn.dev
-      pangolin.public-resources.gitlab.protocol: http
-      pangolin.public-resources.gitlab.ssl: true
+      pangolin.public-resources.gitlab.mode: http
       pangolin.public-resources.gitlab.targets[0].method: http
       pangolin.public-resources.gitlab.targets[0].port: 80
       pangolin.public-resources.gitlab.rules[0].action: allow
@@ -134,8 +133,7 @@ services:
 
       pangolin.public-resources.gitlab_r.name: gitlab_r
       pangolin.public-resources.gitlab_r.full-domain: registry.gitlab.chenn.dev
-      pangolin.public-resources.gitlab_r.protocol: http
-      pangolin.public-resources.gitlab_r.ssl: true
+      pangolin.public-resources.gitlab_r.mode: http
       pangolin.public-resources.gitlab_r.targets[0].method: http
       pangolin.public-resources.gitlab_r.targets[0].port: 5050
       pangolin.public-resources.gitlab_r.rules[0].action: allow

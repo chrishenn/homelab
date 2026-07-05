@@ -57,18 +57,10 @@ services:
 
       pangolin.public-resources.plane.name: plane
       pangolin.public-resources.plane.full-domain: plane.chenn.dev
-      pangolin.public-resources.plane.protocol: http
-      pangolin.public-resources.plane.ssl: true
+      pangolin.public-resources.plane.mode: http
       pangolin.public-resources.plane.targets[0].method: http
       pangolin.public-resources.plane.targets[0].port: 80
-      pangolin.public-resources.plane.auth.sso-enabled: true
-      pangolin.public-resources.plane.auth.sso-roles[0]: Member
-      pangolin.public-resources.plane.rules[0].action: pass
-      pangolin.public-resources.plane.rules[0].match: country
-      pangolin.public-resources.plane.rules[0].value: US
-      pangolin.public-resources.plane.rules[1].action: deny
-      pangolin.public-resources.plane.rules[1].match: country
-      pangolin.public-resources.plane.rules[1].value: ALL
+      pangolin.public-resources.plane.policy: member
 
   plane_db:
     profiles: [plane]

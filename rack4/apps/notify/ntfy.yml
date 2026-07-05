@@ -40,15 +40,7 @@ services:
 
       pangolin.public-resources.ntfy.name: ntfy
       pangolin.public-resources.ntfy.full-domain: ntfy.chenn.dev
-      pangolin.public-resources.ntfy.protocol: http
-      pangolin.public-resources.ntfy.ssl: true
+      pangolin.public-resources.ntfy.mode: http
       pangolin.public-resources.ntfy.targets[0].method: http
       pangolin.public-resources.ntfy.targets[0].port: 80
-      pangolin.public-resources.ntfy.auth.sso-enabled: true
-      pangolin.public-resources.ntfy.auth.sso-roles[0]: Member
-      pangolin.public-resources.ntfy.rules[0].action: pass
-      pangolin.public-resources.ntfy.rules[0].match: country
-      pangolin.public-resources.ntfy.rules[0].value: US
-      pangolin.public-resources.ntfy.rules[1].action: deny
-      pangolin.public-resources.ntfy.rules[1].match: country
-      pangolin.public-resources.ntfy.rules[1].value: ALL
+      pangolin.public-resources.ntfy.policy: member

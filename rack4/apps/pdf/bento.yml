@@ -15,15 +15,7 @@ services:
 
       pangolin.public-resources.bento.name: bento
       pangolin.public-resources.bento.full-domain: bento.chenn.dev
-      pangolin.public-resources.bento.protocol: http
-      pangolin.public-resources.bento.ssl: true
+      pangolin.public-resources.bento.mode: http
       pangolin.public-resources.bento.targets[0].method: http
       pangolin.public-resources.bento.targets[0].port: 8080
-      pangolin.public-resources.bento.auth.sso-enabled: true
-      pangolin.public-resources.bento.auth.sso-roles[0]: Member
-      pangolin.public-resources.bento.rules[0].action: pass
-      pangolin.public-resources.bento.rules[0].match: country
-      pangolin.public-resources.bento.rules[0].value: US
-      pangolin.public-resources.bento.rules[1].action: deny
-      pangolin.public-resources.bento.rules[1].match: country
-      pangolin.public-resources.bento.rules[1].value: ALL
+      pangolin.public-resources.bento.policy: member

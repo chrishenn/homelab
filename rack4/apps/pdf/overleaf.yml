@@ -56,18 +56,10 @@ services:
 
       pangolin.public-resources.overleaf.name: overleaf
       pangolin.public-resources.overleaf.full-domain: overleaf.chenn.dev
-      pangolin.public-resources.overleaf.protocol: http
-      pangolin.public-resources.overleaf.ssl: true
+      pangolin.public-resources.overleaf.mode: http
       pangolin.public-resources.overleaf.targets[0].method: http
       pangolin.public-resources.overleaf.targets[0].port: 80
-      pangolin.public-resources.overleaf.auth.sso-enabled: true
-      pangolin.public-resources.overleaf.auth.sso-roles[0]: Member
-      pangolin.public-resources.overleaf.rules[0].action: pass
-      pangolin.public-resources.overleaf.rules[0].match: country
-      pangolin.public-resources.overleaf.rules[0].value: US
-      pangolin.public-resources.overleaf.rules[1].action: deny
-      pangolin.public-resources.overleaf.rules[1].match: country
-      pangolin.public-resources.overleaf.rules[1].value: ALL
+      pangolin.public-resources.overleaf.policy: member
 
   overleaf_mongo:
     profiles: [overleaf]

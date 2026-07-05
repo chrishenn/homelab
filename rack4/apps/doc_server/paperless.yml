@@ -39,18 +39,10 @@ services:
 
       pangolin.public-resources.paperless.name: paperless
       pangolin.public-resources.paperless.full-domain: paperless.chenn.dev
-      pangolin.public-resources.paperless.protocol: http
-      pangolin.public-resources.paperless.ssl: true
+      pangolin.public-resources.paperless.mode: http
       pangolin.public-resources.paperless.targets[0].method: http
       pangolin.public-resources.paperless.targets[0].port: 8000
-      pangolin.public-resources.paperless.auth.sso-enabled: true
-      pangolin.public-resources.paperless.auth.sso-roles[0]: Member
-      pangolin.public-resources.paperless.rules[0].action: pass
-      pangolin.public-resources.paperless.rules[0].match: country
-      pangolin.public-resources.paperless.rules[0].value: US
-      pangolin.public-resources.paperless.rules[1].action: deny
-      pangolin.public-resources.paperless.rules[1].match: country
-      pangolin.public-resources.paperless.rules[1].value: ALL
+      pangolin.public-resources.paperless.policy: member
 
   paperless_ai:
     profiles: [paperless]
@@ -84,18 +76,10 @@ services:
 
       pangolin.public-resources.paperless_ai.name: paperless_ai
       pangolin.public-resources.paperless_ai.full-domain: paperless_ai.chenn.dev
-      pangolin.public-resources.paperless_ai.protocol: http
-      pangolin.public-resources.paperless_ai.ssl: true
+      pangolin.public-resources.paperless_ai.mode: http
       pangolin.public-resources.paperless_ai.targets[0].method: http
       pangolin.public-resources.paperless_ai.targets[0].port: 3000
-      pangolin.public-resources.paperless_ai.auth.sso-enabled: true
-      pangolin.public-resources.paperless_ai.auth.sso-roles[0]: Member
-      pangolin.public-resources.paperless_ai.rules[0].action: pass
-      pangolin.public-resources.paperless_ai.rules[0].match: country
-      pangolin.public-resources.paperless_ai.rules[0].value: US
-      pangolin.public-resources.paperless_ai.rules[1].action: deny
-      pangolin.public-resources.paperless_ai.rules[1].match: country
-      pangolin.public-resources.paperless_ai.rules[1].value: ALL
+      pangolin.public-resources.paperless_ai.policy: member
 
   paperless_gpt:
     profiles: [paperless]
@@ -138,18 +122,10 @@ services:
 
       pangolin.public-resources.paperless_gpt.name: paperless_gpt
       pangolin.public-resources.paperless_gpt.full-domain: paperless_gpt.chenn.dev
-      pangolin.public-resources.paperless_gpt.protocol: http
-      pangolin.public-resources.paperless_gpt.ssl: true
+      pangolin.public-resources.paperless_gpt.mode: http
       pangolin.public-resources.paperless_gpt.targets[0].method: http
       pangolin.public-resources.paperless_gpt.targets[0].port: 8080
-      pangolin.public-resources.paperless_gpt.auth.sso-enabled: true
-      pangolin.public-resources.paperless_gpt.auth.sso-roles[0]: Member
-      pangolin.public-resources.paperless_gpt.rules[0].action: pass
-      pangolin.public-resources.paperless_gpt.rules[0].match: country
-      pangolin.public-resources.paperless_gpt.rules[0].value: US
-      pangolin.public-resources.paperless_gpt.rules[1].action: deny
-      pangolin.public-resources.paperless_gpt.rules[1].match: country
-      pangolin.public-resources.paperless_gpt.rules[1].value: ALL
+      pangolin.public-resources.paperless_gpt.policy: member
 
   paperless_postgres:
     profiles: [paperless]

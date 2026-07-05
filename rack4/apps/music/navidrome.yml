@@ -18,15 +18,7 @@ services:
 
       pangolin.public-resources.navidrome.name: navidrome
       pangolin.public-resources.navidrome.full-domain: navidrome.chenn.dev
-      pangolin.public-resources.navidrome.protocol: http
-      pangolin.public-resources.navidrome.ssl: true
+      pangolin.public-resources.navidrome.mode: http
       pangolin.public-resources.navidrome.targets[0].method: http
       pangolin.public-resources.navidrome.targets[0].port: 4533
-      pangolin.public-resources.navidrome.auth.sso-enabled: true
-      pangolin.public-resources.navidrome.auth.sso-roles[0]: Member
-      pangolin.public-resources.navidrome.rules[0].action: pass
-      pangolin.public-resources.navidrome.rules[0].match: country
-      pangolin.public-resources.navidrome.rules[0].value: US
-      pangolin.public-resources.navidrome.rules[1].action: deny
-      pangolin.public-resources.navidrome.rules[1].match: country
-      pangolin.public-resources.navidrome.rules[1].value: ALL
+      pangolin.public-resources.navidrome.policy: member

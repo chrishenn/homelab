@@ -60,18 +60,10 @@ services:
 
       pangolin.public-resources.kestra.name: kestra
       pangolin.public-resources.kestra.full-domain: kestra.chenn.dev
-      pangolin.public-resources.kestra.protocol: http
-      pangolin.public-resources.kestra.ssl: true
+      pangolin.public-resources.kestra.mode: http
       pangolin.public-resources.kestra.targets[0].method: http
       pangolin.public-resources.kestra.targets[0].port: 8080
-      pangolin.public-resources.kestra.auth.sso-enabled: true
-      pangolin.public-resources.kestra.auth.sso-roles[0]: Member
-      pangolin.public-resources.kestra.rules[0].action: pass
-      pangolin.public-resources.kestra.rules[0].match: country
-      pangolin.public-resources.kestra.rules[0].value: US
-      pangolin.public-resources.kestra.rules[1].action: deny
-      pangolin.public-resources.kestra.rules[1].match: country
-      pangolin.public-resources.kestra.rules[1].value: ALL
+      pangolin.public-resources.kestra.policy: member
 
   kestra_db:
     profiles: [kestra]

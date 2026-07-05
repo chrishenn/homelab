@@ -51,15 +51,7 @@ services:
 
       pangolin.public-resources.openwebui.name: openwebui
       pangolin.public-resources.openwebui.full-domain: ollama.chenn.dev
-      pangolin.public-resources.openwebui.protocol: http
-      pangolin.public-resources.openwebui.ssl: true
+      pangolin.public-resources.openwebui.mode: http
       pangolin.public-resources.openwebui.targets[0].method: http
       pangolin.public-resources.openwebui.targets[0].port: 8080
-      pangolin.public-resources.openwebui.auth.sso-enabled: true
-      pangolin.public-resources.openwebui.auth.sso-roles[0]: Member
-      pangolin.public-resources.openwebui.rules[0].action: pass
-      pangolin.public-resources.openwebui.rules[0].match: country
-      pangolin.public-resources.openwebui.rules[0].value: US
-      pangolin.public-resources.openwebui.rules[1].action: deny
-      pangolin.public-resources.openwebui.rules[1].match: country
-      pangolin.public-resources.openwebui.rules[1].value: ALL
+      pangolin.public-resources.openwebui.policy: member

@@ -1,0 +1,58 @@
+public-policies:
+  member:
+    name: Default Member Policy
+    sso: true
+    sso-roles:
+      - Member
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL
+
+  chris:
+    name: Chris Only
+    sso: true
+    sso-users:
+      - {{env.EMAIL}}
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL
+
+  arr:
+    name: Arr Basic Auth
+    sso: true
+    sso-roles:
+      - Member
+    basic-auth:
+      user: {{env.ARR_PANGOLIN_AUTH_USER}}
+      password: {{env.ARR_PANGOLIN_AUTH_PASS}}
+      extended-compatibility: true
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL
+
+  us:
+    name: US Only
+    sso: false
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL

@@ -26,15 +26,7 @@ services:
 
       pangolin.public-resources.apprise.name: apprise
       pangolin.public-resources.apprise.full-domain: apprise.chenn.dev
-      pangolin.public-resources.apprise.protocol: http
-      pangolin.public-resources.apprise.ssl: true
+      pangolin.public-resources.apprise.mode: http
       pangolin.public-resources.apprise.targets[0].method: http
       pangolin.public-resources.apprise.targets[0].port: 8000
-      pangolin.public-resources.apprise.auth.sso-enabled: true
-      pangolin.public-resources.apprise.auth.sso-roles[0]: Member
-      pangolin.public-resources.apprise.rules[0].action: pass
-      pangolin.public-resources.apprise.rules[0].match: country
-      pangolin.public-resources.apprise.rules[0].value: US
-      pangolin.public-resources.apprise.rules[1].action: deny
-      pangolin.public-resources.apprise.rules[1].match: country
-      pangolin.public-resources.apprise.rules[1].value: ALL
+      pangolin.public-resources.apprise.policy: member

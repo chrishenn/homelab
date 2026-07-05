@@ -35,15 +35,7 @@ services:
 
       pangolin.public-resources.pluton.name: pluton
       pangolin.public-resources.pluton.full-domain: pluton.chenn.dev
-      pangolin.public-resources.pluton.protocol: http
-      pangolin.public-resources.pluton.ssl: true
+      pangolin.public-resources.pluton.mode: http
       pangolin.public-resources.pluton.targets[0].method: http
       pangolin.public-resources.pluton.targets[0].port: 5173
-      pangolin.public-resources.pluton.auth.sso-enabled: true
-      pangolin.public-resources.pluton.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.pluton.rules[0].action: pass
-      pangolin.public-resources.pluton.rules[0].match: country
-      pangolin.public-resources.pluton.rules[0].value: US
-      pangolin.public-resources.pluton.rules[1].action: deny
-      pangolin.public-resources.pluton.rules[1].match: country
-      pangolin.public-resources.pluton.rules[1].value: ALL
+      pangolin.public-resources.pluton.policy: chris

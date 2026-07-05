@@ -39,15 +39,7 @@ services:
 
       pangolin.public-resources.fileflow.name: fileflow
       pangolin.public-resources.fileflow.full-domain: fileflow.chenn.dev
-      pangolin.public-resources.fileflow.protocol: http
-      pangolin.public-resources.fileflow.ssl: true
+      pangolin.public-resources.fileflow.mode: http
       pangolin.public-resources.fileflow.targets[0].method: http
       pangolin.public-resources.fileflow.targets[0].port: 5000
-      pangolin.public-resources.fileflow.auth.sso-enabled: true
-      pangolin.public-resources.fileflow.auth.sso-roles[0]: Member
-      pangolin.public-resources.fileflow.rules[0].action: pass
-      pangolin.public-resources.fileflow.rules[0].match: country
-      pangolin.public-resources.fileflow.rules[0].value: US
-      pangolin.public-resources.fileflow.rules[1].action: deny
-      pangolin.public-resources.fileflow.rules[1].match: country
-      pangolin.public-resources.fileflow.rules[1].value: ALL
+      pangolin.public-resources.fileflow.policy: member

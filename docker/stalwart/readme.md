@@ -114,6 +114,13 @@ curl ip.me
 - admin shield icon -> Authentication -> automagic oidc setup -> should work magically
 - if you server bulwark on a different domain than stalwart, you'll need to loosen the CORS policy (untested)
 
+### Config: Hostinger VPS
+
+not sure if either or both of these are necessary
+
+- in the hostinger dash, change the hostname of your server to chenn.dev
+- then vps > ip address > set ptr record to chenn.dev
+
 ### Config: CLI
 
 After doing a full config in the web UI, I'll export the configuration objects I've changed. Hopefully I can re-create
@@ -129,21 +136,16 @@ export STALWART_PASSWORD=
 stalwart-cli describe
 
 # output to stdout does not write valid json for later doing cli-apply of the same. odd...output to jsonl instead
-stalwart-cli snapshot SystemSettings Certificate Domain AcmeProvider DnsServer Directory Tenant Role Http \
+stalwart-cli snapshot \
+    SystemSettings Certificate Domain \
+    AcmeProvider DnsServer DnsResolver \
+    Directory Tenant Role Http \
     DataStore BlobStore SearchStore InMemoryStore \
-    --output $REPO/rack4/apps/infra/stalwart/stalwart.jsonl
+    --output $REPO/docker/stalwart/stalwart.jsonl
 
 # (untested)
-stalwart-cli apply $REPO/rack4/apps/infra/stalwart/stalwart.jsonl
+stalwart-cli apply $REPO/docker/stalwart/stalwart.jsonl
 ```
-
-### Config: Loose Ends
-
-- "reverse DNS does not match the sending domain"
-    - I think this PTR record is configurable under hostinger dash for vps0
-    - I set it to 'chenn.dev' but maybe it should be 'mail.chenn.dev'
-    - hostinger dash didn't update the value?
-    - they do warn that it takes hours, so we'll see later
 
 ### Testing
 

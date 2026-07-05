@@ -17,15 +17,7 @@ services:
 
       pangolin.public-resources.dozzle.name: dozzle
       pangolin.public-resources.dozzle.full-domain: dozzle.chenn.dev
-      pangolin.public-resources.dozzle.protocol: http
-      pangolin.public-resources.dozzle.ssl: true
+      pangolin.public-resources.dozzle.mode: http
       pangolin.public-resources.dozzle.targets[0].method: http
       pangolin.public-resources.dozzle.targets[0].port: 8080
-      pangolin.public-resources.dozzle.auth.sso-enabled: true
-      pangolin.public-resources.dozzle.auth.sso-roles[0]: Member
-      pangolin.public-resources.dozzle.rules[0].action: pass
-      pangolin.public-resources.dozzle.rules[0].match: country
-      pangolin.public-resources.dozzle.rules[0].value: US
-      pangolin.public-resources.dozzle.rules[1].action: deny
-      pangolin.public-resources.dozzle.rules[1].match: country
-      pangolin.public-resources.dozzle.rules[1].value: ALL
+      pangolin.public-resources.dozzle.policy: member

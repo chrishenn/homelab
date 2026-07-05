@@ -41,15 +41,7 @@ services:
 
       pangolin.public-resources.omnisearch.name: omnisearch
       pangolin.public-resources.omnisearch.full-domain: omnisearch.chenn.dev
-      pangolin.public-resources.omnisearch.protocol: http
-      pangolin.public-resources.omnisearch.ssl: true
+      pangolin.public-resources.omnisearch.mode: http
       pangolin.public-resources.omnisearch.targets[0].method: http
       pangolin.public-resources.omnisearch.targets[0].port: 5000
-      pangolin.public-resources.omnisearch.auth.sso-enabled: true
-      pangolin.public-resources.omnisearch.auth.sso-roles[0]: Member
-      pangolin.public-resources.omnisearch.rules[0].action: pass
-      pangolin.public-resources.omnisearch.rules[0].match: country
-      pangolin.public-resources.omnisearch.rules[0].value: US
-      pangolin.public-resources.omnisearch.rules[1].action: deny
-      pangolin.public-resources.omnisearch.rules[1].match: country
-      pangolin.public-resources.omnisearch.rules[1].value: ALL
+      pangolin.public-resources.omnisearch.policy: member

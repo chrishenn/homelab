@@ -47,6 +47,15 @@ just c
 
 ---
 
+# public home ip
+
+when moving, your public home ip will need to change in the following places:
+
+- hostinger dashboard, whitelisting the ips that can ssh into the vps
+- nzbgeek ip whitelist
+
+---
+
 # todo
 
 - [ ] application {dev, test, deploy}: {gpu compute, gpu gui, cli, tui, web server, web client}: {linux, windows, macos}

@@ -1,4 +1,5 @@
-# admin portal: grimmory.chenn.dev/login?local=true
+# I'm seeing a ton of errors in the UI and nothing logged
+# only got a UI in firefox, not chrome? It's feeling a little slopp-ish
 ---
 x-grimmory_env: &grimmory_env
   USER_ID: ${PUID}

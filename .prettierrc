@@ -4,9 +4,10 @@ singleQuote: true
 tabWidth: 4
 printWidth: 120
 useTabs: false
+bracketSpacing: false
 
 overrides:
-- files: ['*.yml', '*.yaml', '*.json']
+- files: ['*.yml', '*.yaml', '*.json', '*.jsonl']
   options:
     tabWidth: 2
     printWidth: 240

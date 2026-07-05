@@ -110,18 +110,10 @@ services:
 
       pangolin.public-resources.miro.name: miro
       pangolin.public-resources.miro.full-domain: miro.chenn.dev
-      pangolin.public-resources.miro.protocol: http
-      pangolin.public-resources.miro.ssl: true
+      pangolin.public-resources.miro.mode: http
       pangolin.public-resources.miro.targets[0].method: http
       pangolin.public-resources.miro.targets[0].port: 3000
-      pangolin.public-resources.miro.auth.sso-enabled: true
-      pangolin.public-resources.miro.auth.sso-roles[0]: Member
-      pangolin.public-resources.miro.rules[0].action: pass
-      pangolin.public-resources.miro.rules[0].match: country
-      pangolin.public-resources.miro.rules[0].value: US
-      pangolin.public-resources.miro.rules[1].action: deny
-      pangolin.public-resources.miro.rules[1].match: country
-      pangolin.public-resources.miro.rules[1].value: ALL
+      pangolin.public-resources.miro.policy: member
 
   miros:
     profiles: [miros]
@@ -450,18 +442,10 @@ services:
 
       pangolin.public-resources.miros.name: miros
       pangolin.public-resources.miros.full-domain: miros.chenn.dev
-      pangolin.public-resources.miros.protocol: http
-      pangolin.public-resources.miros.ssl: true
+      pangolin.public-resources.miros.mode: http
       pangolin.public-resources.miros.targets[0].method: http
       pangolin.public-resources.miros.targets[0].port: 3010
-      pangolin.public-resources.miros.auth.sso-enabled: true
-      pangolin.public-resources.miros.auth.sso-roles[0]: Member
-      pangolin.public-resources.miros.rules[0].action: pass
-      pangolin.public-resources.miros.rules[0].match: country
-      pangolin.public-resources.miros.rules[0].value: US
-      pangolin.public-resources.miros.rules[1].action: deny
-      pangolin.public-resources.miros.rules[1].match: country
-      pangolin.public-resources.miros.rules[1].value: ALL
+      pangolin.public-resources.miros.policy: member
 
       pangolin.public-resources.tcp-40000.name: tcp-40000
       pangolin.public-resources.tcp-40000.protocol: tcp

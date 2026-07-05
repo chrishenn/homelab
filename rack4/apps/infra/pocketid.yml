@@ -50,14 +50,8 @@ services:
       homepage.description: OIDC Server
 
       pangolin.public-resources.pocketid.name: pocketid
-      pangolin.public-resources.pocketid.protocol: http
+      pangolin.public-resources.pocketid.mode: http
       pangolin.public-resources.pocketid.full-domain: pocketid.chenn.dev
-      pangolin.public-resources.pocketid.ssl: true
       pangolin.public-resources.pocketid.targets[0].method: http
       pangolin.public-resources.pocketid.targets[0].port: 1411
-      pangolin.public-resources.pocketid.rules[0].action: pass
-      pangolin.public-resources.pocketid.rules[0].match: country
-      pangolin.public-resources.pocketid.rules[0].value: US
-      pangolin.public-resources.pocketid.rules[1].action: deny
-      pangolin.public-resources.pocketid.rules[1].match: country
-      pangolin.public-resources.pocketid.rules[1].value: ALL
+      pangolin.public-resources.pocketid.policy: us

@@ -45,18 +45,10 @@ services:
 
       pangolin.public-resources.affine.name: affine
       pangolin.public-resources.affine.full-domain: affine.chenn.dev
-      pangolin.public-resources.affine.protocol: http
-      pangolin.public-resources.affine.ssl: true
+      pangolin.public-resources.affine.mode: http
       pangolin.public-resources.affine.targets[0].method: http
       pangolin.public-resources.affine.targets[0].port: 3010
-      pangolin.public-resources.affine.auth.sso-enabled: true
-      pangolin.public-resources.affine.auth.sso-roles[0]: Member
-      pangolin.public-resources.affine.rules[0].action: pass
-      pangolin.public-resources.affine.rules[0].match: country
-      pangolin.public-resources.affine.rules[0].value: US
-      pangolin.public-resources.affine.rules[1].action: deny
-      pangolin.public-resources.affine.rules[1].match: country
-      pangolin.public-resources.affine.rules[1].value: ALL
+      pangolin.public-resources.affine.policy: member
 
   affine_redis:
     profiles: [affine]

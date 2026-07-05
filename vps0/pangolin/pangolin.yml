@@ -57,9 +57,6 @@ services:
 
       - '7881:7881'
       - '50000-50040:50000-50040/udp'
-    networks:
-      default:
-        ipv4_address: 172.18.0.5
 
   traefik:
     image: traefik:latest

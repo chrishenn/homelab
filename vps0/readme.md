@@ -23,6 +23,15 @@ verify open ports on vps
 rustscan -a pangolin.chenn.dev -b 10
 ```
 
+## dev
+
+update containers
+
+```bash
+just pullup
+# docker compose up -d --remove-orphans --force-recreate --pull always
+```
+
 ---
 
 ## todo

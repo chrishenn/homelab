@@ -33,18 +33,10 @@ services:
 
       pangolin.public-resources.onedev.name: onedev
       pangolin.public-resources.onedev.full-domain: onedev.chenn.dev
-      pangolin.public-resources.onedev.protocol: http
-      pangolin.public-resources.onedev.ssl: true
+      pangolin.public-resources.onedev.mode: http
       pangolin.public-resources.onedev.targets[0].method: http
       pangolin.public-resources.onedev.targets[0].port: 6610
-      pangolin.public-resources.onedev.auth.sso-enabled: true
-      pangolin.public-resources.onedev.auth.sso-roles[0]: Member
-      pangolin.public-resources.onedev.rules[0].action: pass
-      pangolin.public-resources.onedev.rules[0].match: country
-      pangolin.public-resources.onedev.rules[0].value: US
-      pangolin.public-resources.onedev.rules[1].action: deny
-      pangolin.public-resources.onedev.rules[1].match: country
-      pangolin.public-resources.onedev.rules[1].value: ALL
+      pangolin.public-resources.onedev.policy: member
 
       pangolin.public-resources.onedev_ssh.name: onedev_ssh
       pangolin.public-resources.onedev_ssh.protocol: tcp

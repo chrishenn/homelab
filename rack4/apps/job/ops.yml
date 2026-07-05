@@ -33,15 +33,7 @@ services:
 
       pangolin.public-resources.ops.name: ops
       pangolin.public-resources.ops.full-domain: ops.chenn.dev
-      pangolin.public-resources.ops.protocol: http
-      pangolin.public-resources.ops.ssl: true
+      pangolin.public-resources.ops.mode: http
       pangolin.public-resources.ops.targets[0].method: http
       pangolin.public-resources.ops.targets[0].port: 3001
-      pangolin.public-resources.ops.auth.sso-enabled: true
-      pangolin.public-resources.ops.auth.sso-roles[0]: Member
-      pangolin.public-resources.ops.rules[0].action: pass
-      pangolin.public-resources.ops.rules[0].match: country
-      pangolin.public-resources.ops.rules[0].value: US
-      pangolin.public-resources.ops.rules[1].action: deny
-      pangolin.public-resources.ops.rules[1].match: country
-      pangolin.public-resources.ops.rules[1].value: ALL
+      pangolin.public-resources.ops.policy: member

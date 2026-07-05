@@ -22,18 +22,10 @@ services:
 
       pangolin.public-resources.keeper.name: keeper
       pangolin.public-resources.keeper.full-domain: keeper.chenn.dev
-      pangolin.public-resources.keeper.protocol: http
-      pangolin.public-resources.keeper.ssl: true
+      pangolin.public-resources.keeper.mode: http
       pangolin.public-resources.keeper.targets[0].method: http
       pangolin.public-resources.keeper.targets[0].port: 3000
-      pangolin.public-resources.keeper.auth.sso-enabled: true
-      pangolin.public-resources.keeper.auth.sso-roles[0]: Member
-      pangolin.public-resources.keeper.rules[0].action: pass
-      pangolin.public-resources.keeper.rules[0].match: country
-      pangolin.public-resources.keeper.rules[0].value: US
-      pangolin.public-resources.keeper.rules[1].action: deny
-      pangolin.public-resources.keeper.rules[1].match: country
-      pangolin.public-resources.keeper.rules[1].value: ALL
+      pangolin.public-resources.keeper.policy: member
 
   keeper_db:
     profiles: [keeper]

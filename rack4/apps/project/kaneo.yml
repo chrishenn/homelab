@@ -63,18 +63,10 @@ services:
 
       pangolin.public-resources.kaneo.name: kaneo
       pangolin.public-resources.kaneo.full-domain: kaneo.chenn.dev
-      pangolin.public-resources.kaneo.protocol: http
-      pangolin.public-resources.kaneo.ssl: true
+      pangolin.public-resources.kaneo.mode: http
       pangolin.public-resources.kaneo.targets[0].method: http
       pangolin.public-resources.kaneo.targets[0].port: 5173
-      pangolin.public-resources.kaneo.auth.sso-enabled: true
-      pangolin.public-resources.kaneo.auth.sso-roles[0]: Member
-      pangolin.public-resources.kaneo.rules[0].action: pass
-      pangolin.public-resources.kaneo.rules[0].match: country
-      pangolin.public-resources.kaneo.rules[0].value: US
-      pangolin.public-resources.kaneo.rules[1].action: deny
-      pangolin.public-resources.kaneo.rules[1].match: country
-      pangolin.public-resources.kaneo.rules[1].value: ALL
+      pangolin.public-resources.kaneo.policy: member
 
   kaneo_api:
     profiles: [kaneo]
@@ -87,16 +79,10 @@ services:
     labels:
       pangolin.public-resources.kaneo_api.name: kaneo_api
       pangolin.public-resources.kaneo_api.full-domain: kaneo_api.chenn.dev
-      pangolin.public-resources.kaneo_api.protocol: http
-      pangolin.public-resources.kaneo_api.ssl: true
+      pangolin.public-resources.kaneo_api.mode: http
       pangolin.public-resources.kaneo_api.targets[0].method: http
       pangolin.public-resources.kaneo_api.targets[0].port: 1337
-      pangolin.public-resources.kaneo_api.rules[0].action: pass
-      pangolin.public-resources.kaneo_api.rules[0].match: country
-      pangolin.public-resources.kaneo_api.rules[0].value: US
-      pangolin.public-resources.kaneo_api.rules[1].action: deny
-      pangolin.public-resources.kaneo_api.rules[1].match: country
-      pangolin.public-resources.kaneo_api.rules[1].value: ALL
+      pangolin.public-resources.kaneo_api.policy: us
 
   kaneo_db:
     profiles: [kaneo]
@@ -128,31 +114,17 @@ services:
     labels:
       pangolin.public-resources.kaneo_s3.name: kaneo_s3
       pangolin.public-resources.kaneo_s3.full-domain: files.kaneo.chenn.dev
-      pangolin.public-resources.kaneo_s3.protocol: http
-      pangolin.public-resources.kaneo_s3.ssl: true
+      pangolin.public-resources.kaneo_s3.mode: http
       pangolin.public-resources.kaneo_s3.targets[0].method: http
       pangolin.public-resources.kaneo_s3.targets[0].port: 9000
-      pangolin.public-resources.kaneo_s3.rules[0].action: pass
-      pangolin.public-resources.kaneo_s3.rules[0].match: country
-      pangolin.public-resources.kaneo_s3.rules[0].value: US
-      pangolin.public-resources.kaneo_s3.rules[1].action: deny
-      pangolin.public-resources.kaneo_s3.rules[1].match: country
-      pangolin.public-resources.kaneo_s3.rules[1].value: ALL
+      pangolin.public-resources.kaneo_s3.policy: us
 
       pangolin.public-resources.kaneo_s3_console.name: kaneo_s3_console
       pangolin.public-resources.kaneo_s3_console.full-domain: console.kaneo.chenn.dev
-      pangolin.public-resources.kaneo_s3_console.protocol: http
-      pangolin.public-resources.kaneo_s3_console.ssl: true
+      pangolin.public-resources.kaneo_s3_console.mode: http
       pangolin.public-resources.kaneo_s3_console.targets[0].method: http
       pangolin.public-resources.kaneo_s3_console.targets[0].port: 9001
-      pangolin.public-resources.kaneo_s3_console.auth.sso-enabled: true
-      pangolin.public-resources.kaneo_s3_console.auth.sso-roles[0]: Member
-      pangolin.public-resources.kaneo_s3_console.rules[0].action: pass
-      pangolin.public-resources.kaneo_s3_console.rules[0].match: country
-      pangolin.public-resources.kaneo_s3_console.rules[0].value: US
-      pangolin.public-resources.kaneo_s3_console.rules[1].action: deny
-      pangolin.public-resources.kaneo_s3_console.rules[1].match: country
-      pangolin.public-resources.kaneo_s3_console.rules[1].value: ALL
+      pangolin.public-resources.kaneo_s3_console.policy: member
 
 networks:
   kaneo:

@@ -15,15 +15,7 @@ services:
 
       pangolin.public-resources.mazanoke.name: mazanoke
       pangolin.public-resources.mazanoke.full-domain: mazanoke.chenn.dev
-      pangolin.public-resources.mazanoke.protocol: http
-      pangolin.public-resources.mazanoke.ssl: true
+      pangolin.public-resources.mazanoke.mode: http
       pangolin.public-resources.mazanoke.targets[0].method: http
       pangolin.public-resources.mazanoke.targets[0].port: 80
-      pangolin.public-resources.mazanoke.auth.sso-enabled: true
-      pangolin.public-resources.mazanoke.auth.sso-roles[0]: Member
-      pangolin.public-resources.mazanoke.rules[0].action: pass
-      pangolin.public-resources.mazanoke.rules[0].match: country
-      pangolin.public-resources.mazanoke.rules[0].value: US
-      pangolin.public-resources.mazanoke.rules[1].action: deny
-      pangolin.public-resources.mazanoke.rules[1].match: country
-      pangolin.public-resources.mazanoke.rules[1].value: ALL
+      pangolin.public-resources.mazanoke.policy: member

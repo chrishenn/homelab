@@ -31,18 +31,10 @@ services:
 
       pangolin.public-resources.airtrail.name: airtrail
       pangolin.public-resources.airtrail.full-domain: airtrail.chenn.dev
-      pangolin.public-resources.airtrail.protocol: http
-      pangolin.public-resources.airtrail.ssl: true
+      pangolin.public-resources.airtrail.mode: http
       pangolin.public-resources.airtrail.targets[0].method: http
       pangolin.public-resources.airtrail.targets[0].port: 3000
-      pangolin.public-resources.airtrail.auth.sso-enabled: true
-      pangolin.public-resources.airtrail.auth.sso-roles[0]: Member
-      pangolin.public-resources.airtrail.rules[0].action: pass
-      pangolin.public-resources.airtrail.rules[0].match: country
-      pangolin.public-resources.airtrail.rules[0].value: US
-      pangolin.public-resources.airtrail.rules[1].action: deny
-      pangolin.public-resources.airtrail.rules[1].match: country
-      pangolin.public-resources.airtrail.rules[1].value: ALL
+      pangolin.public-resources.airtrail.policy: member
 
   airtrail_db:
     profiles: [airtrail]

@@ -17,15 +17,7 @@ services:
 
       pangolin.public-resources.metube.name: metube
       pangolin.public-resources.metube.full-domain: metube.chenn.dev
-      pangolin.public-resources.metube.protocol: http
-      pangolin.public-resources.metube.ssl: true
+      pangolin.public-resources.metube.mode: http
       pangolin.public-resources.metube.targets[0].method: http
       pangolin.public-resources.metube.targets[0].port: 8081
-      pangolin.public-resources.metube.auth.sso-enabled: true
-      pangolin.public-resources.metube.auth.sso-roles[0]: Member
-      pangolin.public-resources.metube.rules[0].action: pass
-      pangolin.public-resources.metube.rules[0].match: country
-      pangolin.public-resources.metube.rules[0].value: US
-      pangolin.public-resources.metube.rules[1].action: deny
-      pangolin.public-resources.metube.rules[1].match: country
-      pangolin.public-resources.metube.rules[1].value: ALL
+      pangolin.public-resources.metube.policy: member

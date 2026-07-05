@@ -4,9 +4,13 @@ vault = "homelab"
 account = "my.1password.com"
 
 [secrets]
-NEWT_PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/pangolin/PANGOLIN_ENDPOINT" }
-NEWT_ID = { provider = "onepass", value = "op://homelab/pangolin/NEWT_ID" }
-NEWT_SECRET = { provider = "onepass", value = "op://homelab/pangolin/NEWT_SECRET" }
+VPS0_PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/pangolin/vps0_PANGOLIN_ENDPOINT" }
+
+RACK4_DOCKER_NEWT_ID = { provider = "onepass", value = "op://homelab/pangolin/rack4_docker_NEWT_ID" }
+RACK4_DOCKER_NEWT_SECRET = { provider = "onepass", value = "op://homelab/pangolin/rack4_docker_NEWT_SECRET" }
+
+RACK4_NEWT_ID = { provider = "onepass", value = "op://homelab/pangolin/rack4_NEWT_ID" }
+RACK4_NEWT_SECRET = { provider = "onepass", value = "op://homelab/pangolin/rack4_NEWT_SECRET" }
 
 ARR_PANGOLIN_AUTH_USER = { provider = "onepass", value = "op://homelab/radarr/auth_user" }
 ARR_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/radarr/auth_pass" }
@@ -35,11 +39,6 @@ RADARR_URL = { provider = "onepass", value = "op://homelab/radarr/url" }
 RADARR_KEY = { provider = "onepass", value = "op://homelab/radarr/credential" }
 SONARR_URL = { provider = "onepass", value = "op://homelab/sonarr/url" }
 SONARR_KEY = { provider = "onepass", value = "op://homelab/sonarr/credential" }
-
-NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
-NEWSHOSTING_PASS = { provider = "onepass", value = "op://homelab/newshosting/password" }
-
-SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 
 PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
 PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
@@ -97,6 +96,11 @@ FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_s
 OPENCUT_BETTERAUTH = { provider = "onepass", value = "op://homelab/opencut/betterauth" }
 OPENCUT_UPSTASH = { provider = "onepass", value = "op://homelab/opencut/upstash" }
 
+SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
+SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
+NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
+NEWSHOSTING_PASS = { provider = "onepass", value = "op://homelab/newshosting/password" }
+
 CAMPFIRE_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_public_key" }
 CAMPFIRE_VAPID_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_private_key" }
 
@@ -111,7 +115,8 @@ STALWART_PASSWORD = { provider = "onepass", value = "op://homelab/stalwart/passw
 STALWART_RECOVERY_PASS = { provider = "onepass", value = "op://homelab/stalwart/recovery_password" }
 STALWART_S3_RPC = { provider = "onepass", value = "op://homelab/stalwart/s3_rpc" }
 STALWART_S3_SECRET = { provider = "onepass", value = "op://homelab/stalwart/s3_secret" }
-STALWART_SEARCH_PASS = { provider = "onepass", value = "op://homelab/stalwart/search_passf" }
+STALWART_SEARCH_PASS = { provider = "onepass", value = "op://homelab/stalwart/search_pass" }
+STALWART_MEILI_MASTER_KEY = { provider = "onepass", value = "op://homelab/stalwart/meili_key" }
 BULWARK_SESSION = { provider = "onepass", value = "op://homelab/bulwark/session" }
 BULWARK_PASS = { provider = "onepass", value = "op://homelab/bulwark/password" }
 
@@ -124,7 +129,7 @@ POCKETID_SECRET = { provider = "onepass", value = "op://homelab/Pocketid/secret_
 VIKUNJA_SECRET = { provider = "onepass", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "onepass", value = "op://homelab/rally/secret" }
 DAWARICH_SECRET = { provider = "onepass", value = "op://homelab/dawarich/secret" }
-SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
+
 PROWLARR_API_KEY = { provider = "onepass", value = "op://homelab/prowlarr/credential" }
 DOCMOST_SECRET = { provider = "onepass", value = "op://homelab/docmost/credential" }
 BYTESTASH_JWT_SECRET = { provider = "onepass", value = "op://homelab/bytestash/jwt_secret" }

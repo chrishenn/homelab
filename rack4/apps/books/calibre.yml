@@ -27,18 +27,10 @@ services:
 
       pangolin.public-resources.calibre.name: calibre
       pangolin.public-resources.calibre.full-domain: calibre.chenn.dev
-      pangolin.public-resources.calibre.protocol: http
-      pangolin.public-resources.calibre.ssl: true
+      pangolin.public-resources.calibre.mode: http
       pangolin.public-resources.calibre.targets[0].method: http
       pangolin.public-resources.calibre.targets[0].port: 8083
-      pangolin.public-resources.calibre.auth.sso-enabled: true
-      pangolin.public-resources.calibre.auth.sso-roles[0]: Member
-      pangolin.public-resources.calibre.rules[0].action: pass
-      pangolin.public-resources.calibre.rules[0].match: country
-      pangolin.public-resources.calibre.rules[0].value: US
-      pangolin.public-resources.calibre.rules[1].action: deny
-      pangolin.public-resources.calibre.rules[1].match: country
-      pangolin.public-resources.calibre.rules[1].value: ALL
+      pangolin.public-resources.calibre.policy: member
 
   shelfmark:
     profiles: [calibre]
@@ -69,15 +61,7 @@ services:
 
       pangolin.public-resources.shelfmark.name: shelfmark
       pangolin.public-resources.shelfmark.full-domain: shelfmark.chenn.dev
-      pangolin.public-resources.shelfmark.protocol: http
-      pangolin.public-resources.shelfmark.ssl: true
+      pangolin.public-resources.shelfmark.mode: http
       pangolin.public-resources.shelfmark.targets[0].method: http
       pangolin.public-resources.shelfmark.targets[0].port: 8084
-      pangolin.public-resources.shelfmark.auth.sso-enabled: true
-      pangolin.public-resources.shelfmark.auth.sso-roles[0]: Member
-      pangolin.public-resources.shelfmark.rules[0].action: pass
-      pangolin.public-resources.shelfmark.rules[0].match: country
-      pangolin.public-resources.shelfmark.rules[0].value: US
-      pangolin.public-resources.shelfmark.rules[1].action: deny
-      pangolin.public-resources.shelfmark.rules[1].match: country
-      pangolin.public-resources.shelfmark.rules[1].value: ALL
+      pangolin.public-resources.shelfmark.policy: member

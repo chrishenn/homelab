@@ -1,5 +1,5 @@
-amends "package://github.com/jdx/hk/releases/download/v1.45.0/hk@1.45.0#/Config.pkl"
-import "package://github.com/jdx/hk/releases/download/v1.45.0/hk@1.45.0#/Builtins.pkl"
+amends "package://github.com/jdx/hk/releases/download/v1.50.0/hk@1.50.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.50.0/hk@1.50.0#/Builtins.pkl"
 
 local formatters = new Mapping<String, Step> {
     ["ruff"] = Builtins.ruff
@@ -33,21 +33,15 @@ local linters = new Mapping<String, Step> {
     }
     ["trufflehog"] {
         glob = List("*")
-        exclude = "*Revolt.toml*"
         workspace_indicator = "hk.pkl"
-        check = """
-            trufflehog filesystem --fail --no-update --no-verification --log-level=-1 \\
-            --exclude-detectors=Postgres,RabbitMQ,JDBC \\
-            {{files}}
-        """
+        check = "trufflehog filesystem --fail --no-update --no-verification --exclude-detectors=Postgres,RabbitMQ,JDBC {{files}}"
         output_summary = "hide"
-        batch = false
     }
-//     ["detect-secrets"] {
-//         glob = List("*")
-//         check = "detect-secrets-hook -n --disable-plugin KeywordDetector {{files}}"
-//         batch = false
-//     }
+    ["detect-secrets"] {
+        glob = List("*")
+        exclude = List("docker/*", "*deprecated*")
+        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}"
+    }
 }
 
 hooks {

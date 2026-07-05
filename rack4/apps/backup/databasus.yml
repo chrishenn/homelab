@@ -17,15 +17,7 @@ services:
 
       pangolin.public-resources.databasus.name: databasus
       pangolin.public-resources.databasus.full-domain: databasus.chenn.dev
-      pangolin.public-resources.databasus.protocol: http
-      pangolin.public-resources.databasus.ssl: true
+      pangolin.public-resources.databasus.mode: http
       pangolin.public-resources.databasus.targets[0].method: http
       pangolin.public-resources.databasus.targets[0].port: 4005
-      pangolin.public-resources.databasus.auth.sso-enabled: true
-      pangolin.public-resources.databasus.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.databasus.rules[0].action: pass
-      pangolin.public-resources.databasus.rules[0].match: country
-      pangolin.public-resources.databasus.rules[0].value: US
-      pangolin.public-resources.databasus.rules[1].action: deny
-      pangolin.public-resources.databasus.rules[1].match: country
-      pangolin.public-resources.databasus.rules[1].value: ALL
+      pangolin.public-resources.databasus.policy: chris

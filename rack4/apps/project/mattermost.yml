@@ -65,18 +65,10 @@ services:
 
       pangolin.public-resources.mattermost.name: mattermost
       pangolin.public-resources.mattermost.full-domain: mattermost.chenn.dev
-      pangolin.public-resources.mattermost.protocol: http
-      pangolin.public-resources.mattermost.ssl: true
+      pangolin.public-resources.mattermost.mode: http
       pangolin.public-resources.mattermost.targets[0].method: http
       pangolin.public-resources.mattermost.targets[0].port: 8065
-      pangolin.public-resources.mattermost.auth.sso-enabled: true
-      pangolin.public-resources.mattermost.auth.sso-roles[0]: Member
-      pangolin.public-resources.mattermost.rules[0].action: pass
-      pangolin.public-resources.mattermost.rules[0].match: country
-      pangolin.public-resources.mattermost.rules[0].value: US
-      pangolin.public-resources.mattermost.rules[1].action: deny
-      pangolin.public-resources.mattermost.rules[1].match: country
-      pangolin.public-resources.mattermost.rules[1].value: ALL
+      pangolin.public-resources.mattermost.policy: member
 
   mattermost_db:
     profiles: [mattermost]

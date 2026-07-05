@@ -32,7 +32,7 @@ services:
               capabilities: [gpu, compute, video]
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $DATA/immich/library:/usr/src/app/upload
+      - $DATA/immich/library:/data
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:2283']
     networks: [immich, traefik, newt]
@@ -52,8 +52,7 @@ services:
 
       pangolin.public-resources.immich.name: immich
       pangolin.public-resources.immich.full-domain: immich.chenn.dev
-      pangolin.public-resources.immich.protocol: http
-      pangolin.public-resources.immich.ssl: true
+      pangolin.public-resources.immich.mode: http
       pangolin.public-resources.immich.targets[0].method: http
       pangolin.public-resources.immich.targets[0].port: 2283
       pangolin.public-resources.immich.auth.sso-enabled: true

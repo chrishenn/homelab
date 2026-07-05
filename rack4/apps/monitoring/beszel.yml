@@ -22,21 +22,15 @@ services:
 
       pangolin.public-resources.beszel.name: beszel
       pangolin.public-resources.beszel.full-domain: beszel.chenn.dev
-      pangolin.public-resources.beszel.protocol: http
-      pangolin.public-resources.beszel.ssl: true
+      pangolin.public-resources.beszel.mode: http
       pangolin.public-resources.beszel.targets[0].method: http
       pangolin.public-resources.beszel.targets[0].port: 8090
-      pangolin.public-resources.beszel.auth.sso-enabled: true
-      pangolin.public-resources.beszel.auth.sso-users[0]: ${EMAIL}
+
+      # individual rules always take higher priority than rules from a policy
       pangolin.public-resources.beszel.rules[0].action: allow
       pangolin.public-resources.beszel.rules[0].match: path
       pangolin.public-resources.beszel.rules[0].value: api/beszel/agent-connect
-      pangolin.public-resources.beszel.rules[1].action: pass
-      pangolin.public-resources.beszel.rules[1].match: country
-      pangolin.public-resources.beszel.rules[1].value: US
-      pangolin.public-resources.beszel.rules[2].action: deny
-      pangolin.public-resources.beszel.rules[2].match: country
-      pangolin.public-resources.beszel.rules[2].value: ALL
+      pangolin.public-resources.beszel.policy: chris
 
   beszel_rack4:
     profiles: [beszel]

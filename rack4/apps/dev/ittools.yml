@@ -15,15 +15,7 @@ services:
 
       pangolin.public-resources.ittools.name: ittools
       pangolin.public-resources.ittools.full-domain: ittools.chenn.dev
-      pangolin.public-resources.ittools.protocol: http
-      pangolin.public-resources.ittools.ssl: true
+      pangolin.public-resources.ittools.mode: http
       pangolin.public-resources.ittools.targets[0].method: http
       pangolin.public-resources.ittools.targets[0].port: 80
-      pangolin.public-resources.ittools.auth.sso-enabled: true
-      pangolin.public-resources.ittools.auth.sso-roles[0]: Member
-      pangolin.public-resources.ittools.rules[0].action: pass
-      pangolin.public-resources.ittools.rules[0].match: country
-      pangolin.public-resources.ittools.rules[0].value: US
-      pangolin.public-resources.ittools.rules[1].action: deny
-      pangolin.public-resources.ittools.rules[1].match: country
-      pangolin.public-resources.ittools.rules[1].value: ALL
+      pangolin.public-resources.ittools.policy: member

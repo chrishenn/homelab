@@ -17,15 +17,7 @@ services:
 
       pangolin.public-resources.notediscovery.name: notediscovery
       pangolin.public-resources.notediscovery.full-domain: notediscovery.chenn.dev
-      pangolin.public-resources.notediscovery.protocol: http
-      pangolin.public-resources.notediscovery.ssl: true
+      pangolin.public-resources.notediscovery.mode: http
       pangolin.public-resources.notediscovery.targets[0].method: http
       pangolin.public-resources.notediscovery.targets[0].port: 8000
-      pangolin.public-resources.notediscovery.auth.sso-enabled: true
-      pangolin.public-resources.notediscovery.auth.sso-roles[0]: Member
-      pangolin.public-resources.notediscovery.rules[0].action: pass
-      pangolin.public-resources.notediscovery.rules[0].match: country
-      pangolin.public-resources.notediscovery.rules[0].value: US
-      pangolin.public-resources.notediscovery.rules[1].action: deny
-      pangolin.public-resources.notediscovery.rules[1].match: country
-      pangolin.public-resources.notediscovery.rules[1].value: ALL
+      pangolin.public-resources.notediscovery.policy: member

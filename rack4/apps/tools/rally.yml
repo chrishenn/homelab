@@ -41,18 +41,10 @@ services:
 
       pangolin.public-resources.rally.name: rally
       pangolin.public-resources.rally.full-domain: rally.chenn.dev
-      pangolin.public-resources.rally.protocol: http
-      pangolin.public-resources.rally.ssl: true
+      pangolin.public-resources.rally.mode: http
       pangolin.public-resources.rally.targets[0].method: http
       pangolin.public-resources.rally.targets[0].port: 3000
-      pangolin.public-resources.rally.auth.sso-enabled: true
-      pangolin.public-resources.rally.auth.sso-roles[0]: Member
-      pangolin.public-resources.rally.rules[0].action: pass
-      pangolin.public-resources.rally.rules[0].match: country
-      pangolin.public-resources.rally.rules[0].value: US
-      pangolin.public-resources.rally.rules[1].action: deny
-      pangolin.public-resources.rally.rules[1].match: country
-      pangolin.public-resources.rally.rules[1].value: ALL
+      pangolin.public-resources.rally.policy: member
 
   rally_db:
     profiles: [rally]

@@ -51,18 +51,10 @@ services:
 
       pangolin.public-resources.portabase.name: portabase
       pangolin.public-resources.portabase.full-domain: portabase.chenn.dev
-      pangolin.public-resources.portabase.protocol: http
-      pangolin.public-resources.portabase.ssl: true
+      pangolin.public-resources.portabase.mode: http
       pangolin.public-resources.portabase.targets[0].method: http
       pangolin.public-resources.portabase.targets[0].port: 80
-      pangolin.public-resources.portabase.auth.sso-enabled: true
-      pangolin.public-resources.portabase.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.portabase.rules[0].action: pass
-      pangolin.public-resources.portabase.rules[0].match: country
-      pangolin.public-resources.portabase.rules[0].value: US
-      pangolin.public-resources.portabase.rules[1].action: deny
-      pangolin.public-resources.portabase.rules[1].match: country
-      pangolin.public-resources.portabase.rules[1].value: ALL
+      pangolin.public-resources.portabase.policy: chris
 
   portabase_db:
     profiles: [portabase]

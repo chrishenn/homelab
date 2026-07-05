@@ -58,18 +58,10 @@ services:
 
       pangolin.public-resources.penpot.name: penpot
       pangolin.public-resources.penpot.full-domain: penpot.chenn.dev
-      pangolin.public-resources.penpot.protocol: http
-      pangolin.public-resources.penpot.ssl: true
+      pangolin.public-resources.penpot.mode: http
       pangolin.public-resources.penpot.targets[0].method: http
       pangolin.public-resources.penpot.targets[0].port: 8080
-      pangolin.public-resources.penpot.auth.sso-enabled: true
-      pangolin.public-resources.penpot.auth.sso-roles[0]: Member
-      pangolin.public-resources.penpot.rules[0].action: pass
-      pangolin.public-resources.penpot.rules[0].match: country
-      pangolin.public-resources.penpot.rules[0].value: US
-      pangolin.public-resources.penpot.rules[1].action: deny
-      pangolin.public-resources.penpot.rules[1].match: country
-      pangolin.public-resources.penpot.rules[1].value: ALL
+      pangolin.public-resources.penpot.policy: member
 
   penpot_backend:
     profiles: [penpot]

@@ -25,24 +25,12 @@ services:
 
       pangolin.public-resources.radarr.name: radarr
       pangolin.public-resources.radarr.full-domain: radarr.chenn.dev
-      pangolin.public-resources.radarr.protocol: http
-      pangolin.public-resources.radarr.ssl: true
+      pangolin.public-resources.radarr.mode: http
       pangolin.public-resources.radarr.targets[0].method: http
       pangolin.public-resources.radarr.targets[0].port: 7878
-      pangolin.public-resources.radarr.auth.sso-enabled: true
-      pangolin.public-resources.radarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.radarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.radarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.radarr.rules[0].action: pass
-      pangolin.public-resources.radarr.rules[0].match: country
-      pangolin.public-resources.radarr.rules[0].value: US
-      pangolin.public-resources.radarr.rules[1].action: deny
-      pangolin.public-resources.radarr.rules[1].match: country
-      pangolin.public-resources.radarr.rules[1].value: ALL
+      pangolin.public-resources.radarr.policy: arr
 
   sonarr:
-    # ghost redownloads of failed dl's I think were a retry from sab. Try purging sab's dl history, including faileds
-    # they then became 'orphaned jobs' which sab prompted me to delete
     profiles: [arr]
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -67,20 +55,10 @@ services:
 
       pangolin.public-resources.sonarr.name: sonarr
       pangolin.public-resources.sonarr.full-domain: sonarr.chenn.dev
-      pangolin.public-resources.sonarr.protocol: http
-      pangolin.public-resources.sonarr.ssl: true
+      pangolin.public-resources.sonarr.mode: http
       pangolin.public-resources.sonarr.targets[0].method: http
       pangolin.public-resources.sonarr.targets[0].port: 8989
-      pangolin.public-resources.sonarr.auth.sso-enabled: true
-      pangolin.public-resources.sonarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.sonarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.sonarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.sonarr.rules[0].action: pass
-      pangolin.public-resources.sonarr.rules[0].match: country
-      pangolin.public-resources.sonarr.rules[0].value: US
-      pangolin.public-resources.sonarr.rules[1].action: deny
-      pangolin.public-resources.sonarr.rules[1].match: country
-      pangolin.public-resources.sonarr.rules[1].value: ALL
+      pangolin.public-resources.sonarr.policy: arr
 
   prowlarr:
     profiles: [arr]
@@ -111,20 +89,10 @@ services:
 
       pangolin.public-resources.prowlarr.name: prowlarr
       pangolin.public-resources.prowlarr.full-domain: prowlarr.chenn.dev
-      pangolin.public-resources.prowlarr.protocol: http
-      pangolin.public-resources.prowlarr.ssl: true
+      pangolin.public-resources.prowlarr.mode: http
       pangolin.public-resources.prowlarr.targets[0].method: http
       pangolin.public-resources.prowlarr.targets[0].port: 9696
-      pangolin.public-resources.prowlarr.auth.sso-enabled: true
-      pangolin.public-resources.prowlarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.prowlarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.prowlarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.prowlarr.rules[0].action: pass
-      pangolin.public-resources.prowlarr.rules[0].match: country
-      pangolin.public-resources.prowlarr.rules[0].value: US
-      pangolin.public-resources.prowlarr.rules[1].action: deny
-      pangolin.public-resources.prowlarr.rules[1].match: country
-      pangolin.public-resources.prowlarr.rules[1].value: ALL
+      pangolin.public-resources.prowlarr.policy: arr
 
   bazarr:
     profiles: [arr]
@@ -148,20 +116,10 @@ services:
 
       pangolin.public-resources.bazarr.name: bazarr
       pangolin.public-resources.bazarr.full-domain: bazarr.chenn.dev
-      pangolin.public-resources.bazarr.protocol: http
-      pangolin.public-resources.bazarr.ssl: true
+      pangolin.public-resources.bazarr.mode: http
       pangolin.public-resources.bazarr.targets[0].method: http
       pangolin.public-resources.bazarr.targets[0].port: 6767
-      pangolin.public-resources.bazarr.auth.sso-enabled: true
-      pangolin.public-resources.bazarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.bazarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.bazarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.bazarr.rules[0].action: pass
-      pangolin.public-resources.bazarr.rules[0].match: country
-      pangolin.public-resources.bazarr.rules[0].value: US
-      pangolin.public-resources.bazarr.rules[1].action: deny
-      pangolin.public-resources.bazarr.rules[1].match: country
-      pangolin.public-resources.bazarr.rules[1].value: ALL
+      pangolin.public-resources.bazarr.policy: arr
 
   # sudo chown -R 1000:1000 $DATA/questarr
   questarr:
@@ -187,20 +145,10 @@ services:
 
       pangolin.public-resources.questarr.name: questarr
       pangolin.public-resources.questarr.full-domain: questarr.chenn.dev
-      pangolin.public-resources.questarr.protocol: http
-      pangolin.public-resources.questarr.ssl: true
+      pangolin.public-resources.questarr.mode: http
       pangolin.public-resources.questarr.targets[0].method: http
       pangolin.public-resources.questarr.targets[0].port: 5000
-      pangolin.public-resources.questarr.auth.sso-enabled: true
-      pangolin.public-resources.questarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.questarr.auth.basic-auth.user: ${ARR_PANGOLIN_AUTH_USER}
-      pangolin.public-resources.questarr.auth.basic-auth.password: ${ARR_PANGOLIN_AUTH_PASS}
-      pangolin.public-resources.questarr.rules[0].action: pass
-      pangolin.public-resources.questarr.rules[0].match: country
-      pangolin.public-resources.questarr.rules[0].value: US
-      pangolin.public-resources.questarr.rules[1].action: deny
-      pangolin.public-resources.questarr.rules[1].match: country
-      pangolin.public-resources.questarr.rules[1].value: ALL
+      pangolin.public-resources.questarr.policy: arr
 
 networks:
   arr:

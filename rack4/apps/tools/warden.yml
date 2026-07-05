@@ -42,15 +42,7 @@ services:
 
       pangolin.public-resources.warden.name: warden
       pangolin.public-resources.warden.full-domain: warden.chenn.dev
-      pangolin.public-resources.warden.protocol: http
-      pangolin.public-resources.warden.ssl: true
+      pangolin.public-resources.warden.mode: http
       pangolin.public-resources.warden.targets[0].method: http
       pangolin.public-resources.warden.targets[0].port: 80
-      pangolin.public-resources.warden.auth.sso-enabled: true
-      pangolin.public-resources.warden.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.warden.rules[0].action: pass
-      pangolin.public-resources.warden.rules[0].match: country
-      pangolin.public-resources.warden.rules[0].value: US
-      pangolin.public-resources.warden.rules[1].action: deny
-      pangolin.public-resources.warden.rules[1].match: country
-      pangolin.public-resources.warden.rules[1].value: ALL
+      pangolin.public-resources.warden.policy: chris

@@ -27,18 +27,10 @@ services:
 
       pangolin.public-resources.zipline.name: zipline
       pangolin.public-resources.zipline.full-domain: zipline.chenn.dev
-      pangolin.public-resources.zipline.protocol: http
-      pangolin.public-resources.zipline.ssl: true
+      pangolin.public-resources.zipline.mode: http
       pangolin.public-resources.zipline.targets[0].method: http
       pangolin.public-resources.zipline.targets[0].port: 3000
-      pangolin.public-resources.zipline.auth.sso-enabled: true
-      pangolin.public-resources.zipline.auth.sso-roles[0]: Member
-      pangolin.public-resources.zipline.rules[0].action: pass
-      pangolin.public-resources.zipline.rules[0].match: country
-      pangolin.public-resources.zipline.rules[0].value: US
-      pangolin.public-resources.zipline.rules[1].action: deny
-      pangolin.public-resources.zipline.rules[1].match: country
-      pangolin.public-resources.zipline.rules[1].value: ALL
+      pangolin.public-resources.zipline.policy: member
 
   zipline_db:
     profiles: [zipline]

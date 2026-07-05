@@ -37,18 +37,10 @@ services:
 
       pangolin.public-resources.transcodarr.name: transcodarr
       pangolin.public-resources.transcodarr.full-domain: transcodarr.chenn.dev
-      pangolin.public-resources.transcodarr.protocol: http
-      pangolin.public-resources.transcodarr.ssl: true
+      pangolin.public-resources.transcodarr.mode: http
       pangolin.public-resources.transcodarr.targets[0].method: http
       pangolin.public-resources.transcodarr.targets[0].port: 5025
-      pangolin.public-resources.transcodarr.auth.sso-enabled: true
-      pangolin.public-resources.transcodarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.transcodarr.rules[0].action: pass
-      pangolin.public-resources.transcodarr.rules[0].match: country
-      pangolin.public-resources.transcodarr.rules[0].value: US
-      pangolin.public-resources.transcodarr.rules[1].action: deny
-      pangolin.public-resources.transcodarr.rules[1].match: country
-      pangolin.public-resources.transcodarr.rules[1].value: ALL
+      pangolin.public-resources.transcodarr.policy: member
 
   transcodarr_db:
     profiles: [transcodarr]

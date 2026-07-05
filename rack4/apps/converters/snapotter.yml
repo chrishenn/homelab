@@ -44,15 +44,7 @@ services:
 
       pangolin.public-resources.snapotter.name: snapotter
       pangolin.public-resources.snapotter.full-domain: snapotter.chenn.dev
-      pangolin.public-resources.snapotter.protocol: http
-      pangolin.public-resources.snapotter.ssl: true
+      pangolin.public-resources.snapotter.mode: http
       pangolin.public-resources.snapotter.targets[0].method: http
       pangolin.public-resources.snapotter.targets[0].port: 1349
-      pangolin.public-resources.snapotter.auth.sso-enabled: true
-      pangolin.public-resources.snapotter.auth.sso-roles[0]: Member
-      pangolin.public-resources.snapotter.rules[0].action: pass
-      pangolin.public-resources.snapotter.rules[0].match: country
-      pangolin.public-resources.snapotter.rules[0].value: US
-      pangolin.public-resources.snapotter.rules[1].action: deny
-      pangolin.public-resources.snapotter.rules[1].match: country
-      pangolin.public-resources.snapotter.rules[1].value: ALL
+      pangolin.public-resources.snapotter.policy: member

@@ -15,15 +15,7 @@ services:
 
       pangolin.public-resources.chartdb.name: chartdb
       pangolin.public-resources.chartdb.full-domain: chart.chenn.dev
-      pangolin.public-resources.chartdb.protocol: http
-      pangolin.public-resources.chartdb.ssl: true
+      pangolin.public-resources.chartdb.mode: http
       pangolin.public-resources.chartdb.targets[0].method: http
       pangolin.public-resources.chartdb.targets[0].port: 80
-      pangolin.public-resources.chartdb.auth.sso-enabled: true
-      pangolin.public-resources.chartdb.auth.sso-roles[0]: Member
-      pangolin.public-resources.chartdb.rules[0].action: pass
-      pangolin.public-resources.chartdb.rules[0].match: country
-      pangolin.public-resources.chartdb.rules[0].value: US
-      pangolin.public-resources.chartdb.rules[1].action: deny
-      pangolin.public-resources.chartdb.rules[1].match: country
-      pangolin.public-resources.chartdb.rules[1].value: ALL
+      pangolin.public-resources.chartdb.policy: member

@@ -96,8 +96,7 @@ services:
 
       pangolin.public-resources.syncin.name: syncin
       pangolin.public-resources.syncin.full-domain: syncin.chenn.dev
-      pangolin.public-resources.syncin.protocol: http
-      pangolin.public-resources.syncin.ssl: true
+      pangolin.public-resources.syncin.mode: http
 
       pangolin.public-resources.syncin.targets[0].method: http
       pangolin.public-resources.syncin.targets[0].path-match: prefix

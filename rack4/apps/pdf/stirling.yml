@@ -42,15 +42,7 @@ services:
 
       pangolin.public-resources.stirling.name: stirling
       pangolin.public-resources.stirling.full-domain: stirling.chenn.dev
-      pangolin.public-resources.stirling.protocol: http
-      pangolin.public-resources.stirling.ssl: true
+      pangolin.public-resources.stirling.mode: http
       pangolin.public-resources.stirling.targets[0].method: http
       pangolin.public-resources.stirling.targets[0].port: 8080
-      pangolin.public-resources.stirling.auth.sso-enabled: true
-      pangolin.public-resources.stirling.auth.sso-roles[0]: Member
-      pangolin.public-resources.stirling.rules[0].action: pass
-      pangolin.public-resources.stirling.rules[0].match: country
-      pangolin.public-resources.stirling.rules[0].value: US
-      pangolin.public-resources.stirling.rules[1].action: deny
-      pangolin.public-resources.stirling.rules[1].match: country
-      pangolin.public-resources.stirling.rules[1].value: ALL
+      pangolin.public-resources.stirling.policy: member

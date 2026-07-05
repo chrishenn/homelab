@@ -52,18 +52,10 @@ services:
 
       pangolin.public-resources.karakeep.name: karakeep
       pangolin.public-resources.karakeep.full-domain: karakeep.chenn.dev
-      pangolin.public-resources.karakeep.protocol: http
-      pangolin.public-resources.karakeep.ssl: true
+      pangolin.public-resources.karakeep.mode: http
       pangolin.public-resources.karakeep.targets[0].method: http
       pangolin.public-resources.karakeep.targets[0].port: 3000
-      pangolin.public-resources.karakeep.auth.sso-enabled: true
-      pangolin.public-resources.karakeep.auth.sso-roles[0]: Member
-      pangolin.public-resources.karakeep.rules[0].action: pass
-      pangolin.public-resources.karakeep.rules[0].match: country
-      pangolin.public-resources.karakeep.rules[0].value: US
-      pangolin.public-resources.karakeep.rules[1].action: deny
-      pangolin.public-resources.karakeep.rules[1].match: country
-      pangolin.public-resources.karakeep.rules[1].value: ALL
+      pangolin.public-resources.karakeep.policy: member
 
   karakeep_meili:
     profiles: [karakeep]

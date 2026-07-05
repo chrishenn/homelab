@@ -41,7 +41,7 @@ our local images we must manually build and push them to the local registry ($RE
 
 ```bash
 # Local images requiring a local build. The current list may be longer
-j build openresume transcodarr blocky_k rsync
+j build openresume transcodarr blocky_k rsync bulwark
 
 # there's a bit of an ordering here; the local registry has service deps that it requires to work
 # ie: traefik is needed to route zot.henn.dev; traefik_k binds traefik to the host's vip; zot requires its auth provider
@@ -52,9 +52,6 @@ j pullup
 
 # boot stack fresh
 j login_docker
-j up zot
-j build openresume transcodarr blocky_k rsync
-j up
 ```
 
 ---
@@ -73,4 +70,55 @@ generate secrets
 python3 -c "import secrets; print(secrets.token_urlsafe(64))"
 openssl rand -base64 32
 openssl rand -hex 32
+```
+
+host pangolin install for ssh access
+
+```bash
+newt \
+--id ${RACK4_NEWT_ID} \
+--secret ${RACK4_NEWT_SECRET} \
+--endpoint ${VPS0_PANGOLIN_ENDPOINT}
+
+sudo mkdir -p /etc/newt
+sudo tee -a /etc/newt/newt.env >/dev/null <<- END
+NEWT_ID=${RACK4_NEWT_ID}
+NEWT_SECRET=${RACK4_NEWT_SECRET}
+PANGOLIN_ENDPOINT=${VPS0_PANGOLIN_ENDPOINT}
+END
+sudo chmod 600 /etc/newt/newt.env
+
+sudo tee -a /etc/systemd/system/newt.service >/dev/null <<- END
+[Unit]
+Description=Newt
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/etc/newt/newt.env
+ExecStart=/usr/local/bin/newt
+Restart=always
+RestartSec=2
+UMask=0077
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+END
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now newt
+sudo systemctl status newt
+```
+
+pangolin blueprints for public-policies from docker labels are not applying?
+
+```bash
+curl -fsSL https://static.pangolin.net/get-cli.sh | bash
+pangolin login
+pangolin select org --org coop
+pangolin apply blueprint --file $REPO/rack4/policies.yml
 ```

@@ -4,7 +4,7 @@ status:
 
 - nfs over rdma is working on both fedora and ubuntu
 - Proiority Flow Control (PFC) is needed for a "lossless" network
-    - ~should~ be enabled on mikrotik switch
+    - ~~should~~ be enabled on mikrotik switch
     - can't set Traffic Class (TC) for all ways that connections can be opened
         - (nonworking) this config is used by some: `echo 104 | sudo tee /sys/class/infiniband/$dev/tc/1/traffic_class`
         - (working) this is used by others: `sudo ./sbin/cma_roce_tos -d $dev -t 104`

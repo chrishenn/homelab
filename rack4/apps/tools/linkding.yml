@@ -34,15 +34,7 @@ services:
 
       pangolin.public-resources.linkding.name: linkding
       pangolin.public-resources.linkding.full-domain: linkding.chenn.dev
-      pangolin.public-resources.linkding.protocol: http
-      pangolin.public-resources.linkding.ssl: true
+      pangolin.public-resources.linkding.mode: http
       pangolin.public-resources.linkding.targets[0].method: http
       pangolin.public-resources.linkding.targets[0].port: 9090
-      pangolin.public-resources.linkding.auth.sso-enabled: true
-      pangolin.public-resources.linkding.auth.sso-roles[0]: Member
-      pangolin.public-resources.linkding.rules[0].action: pass
-      pangolin.public-resources.linkding.rules[0].match: country
-      pangolin.public-resources.linkding.rules[0].value: US
-      pangolin.public-resources.linkding.rules[1].action: deny
-      pangolin.public-resources.linkding.rules[1].match: country
-      pangolin.public-resources.linkding.rules[1].value: ALL
+      pangolin.public-resources.linkding.policy: member

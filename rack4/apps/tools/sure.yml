@@ -62,18 +62,10 @@ services:
 
       pangolin.public-resources.sure.name: sure
       pangolin.public-resources.sure.full-domain: sure.chenn.dev
-      pangolin.public-resources.sure.protocol: http
-      pangolin.public-resources.sure.ssl: true
+      pangolin.public-resources.sure.mode: http
       pangolin.public-resources.sure.targets[0].method: http
       pangolin.public-resources.sure.targets[0].port: 3000
-      pangolin.public-resources.sure.auth.sso-enabled: true
-      pangolin.public-resources.sure.auth.sso-roles[0]: Member
-      pangolin.public-resources.sure.rules[0].action: pass
-      pangolin.public-resources.sure.rules[0].match: country
-      pangolin.public-resources.sure.rules[0].value: US
-      pangolin.public-resources.sure.rules[1].action: deny
-      pangolin.public-resources.sure.rules[1].match: country
-      pangolin.public-resources.sure.rules[1].value: ALL
+      pangolin.public-resources.sure.policy: member
 
   sure_worker:
     profiles: [sure]

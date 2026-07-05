@@ -31,18 +31,10 @@ services:
 
       pangolin.public-resources.docmost.name: docmost
       pangolin.public-resources.docmost.full-domain: docmost.chenn.dev
-      pangolin.public-resources.docmost.protocol: http
-      pangolin.public-resources.docmost.ssl: true
+      pangolin.public-resources.docmost.mode: http
       pangolin.public-resources.docmost.targets[0].method: http
       pangolin.public-resources.docmost.targets[0].port: 3000
-      pangolin.public-resources.docmost.auth.sso-enabled: true
-      pangolin.public-resources.docmost.auth.sso-roles[0]: Member
-      pangolin.public-resources.docmost.rules[0].action: pass
-      pangolin.public-resources.docmost.rules[0].match: country
-      pangolin.public-resources.docmost.rules[0].value: US
-      pangolin.public-resources.docmost.rules[1].action: deny
-      pangolin.public-resources.docmost.rules[1].match: country
-      pangolin.public-resources.docmost.rules[1].value: ALL
+      pangolin.public-resources.docmost.policy: member
 
   docmost_pg:
     profiles: [docmost]

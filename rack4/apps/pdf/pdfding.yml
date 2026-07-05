@@ -49,18 +49,10 @@ services:
 
       pangolin.public-resources.pdfding.name: pdfding
       pangolin.public-resources.pdfding.full-domain: pdfding.chenn.dev
-      pangolin.public-resources.pdfding.protocol: http
-      pangolin.public-resources.pdfding.ssl: true
+      pangolin.public-resources.pdfding.mode: http
       pangolin.public-resources.pdfding.targets[0].method: http
       pangolin.public-resources.pdfding.targets[0].port: 8000
-      pangolin.public-resources.pdfding.auth.sso-enabled: true
-      pangolin.public-resources.pdfding.auth.sso-roles[0]: Member
-      pangolin.public-resources.pdfding.rules[0].action: pass
-      pangolin.public-resources.pdfding.rules[0].match: country
-      pangolin.public-resources.pdfding.rules[0].value: US
-      pangolin.public-resources.pdfding.rules[1].action: deny
-      pangolin.public-resources.pdfding.rules[1].match: country
-      pangolin.public-resources.pdfding.rules[1].value: ALL
+      pangolin.public-resources.pdfding.policy: member
 
   pdfding_db:
     profiles: [pdfding]

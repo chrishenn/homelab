@@ -17,15 +17,7 @@ services:
 
       pangolin.public-resources.excalidraw.name: excalidraw
       pangolin.public-resources.excalidraw.full-domain: draw.chenn.dev
-      pangolin.public-resources.excalidraw.protocol: http
-      pangolin.public-resources.excalidraw.ssl: true
+      pangolin.public-resources.excalidraw.mode: http
       pangolin.public-resources.excalidraw.targets[0].method: http
       pangolin.public-resources.excalidraw.targets[0].port: 80
-      pangolin.public-resources.excalidraw.auth.sso-enabled: true
-      pangolin.public-resources.excalidraw.auth.sso-roles[0]: Member
-      pangolin.public-resources.excalidraw.rules[0].action: pass
-      pangolin.public-resources.excalidraw.rules[0].match: country
-      pangolin.public-resources.excalidraw.rules[0].value: US
-      pangolin.public-resources.excalidraw.rules[1].action: deny
-      pangolin.public-resources.excalidraw.rules[1].match: country
-      pangolin.public-resources.excalidraw.rules[1].value: ALL
+      pangolin.public-resources.excalidraw.policy: member

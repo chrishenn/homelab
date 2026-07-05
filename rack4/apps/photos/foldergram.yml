@@ -31,15 +31,7 @@ services:
 
       pangolin.public-resources.foldergram.name: foldergram
       pangolin.public-resources.foldergram.full-domain: foldergram.chenn.dev
-      pangolin.public-resources.foldergram.protocol: http
-      pangolin.public-resources.foldergram.ssl: true
+      pangolin.public-resources.foldergram.mode: http
       pangolin.public-resources.foldergram.targets[0].method: http
       pangolin.public-resources.foldergram.targets[0].port: 4141
-      pangolin.public-resources.foldergram.auth.sso-enabled: true
-      pangolin.public-resources.foldergram.auth.sso-roles[0]: Member
-      pangolin.public-resources.foldergram.rules[0].action: pass
-      pangolin.public-resources.foldergram.rules[0].match: country
-      pangolin.public-resources.foldergram.rules[0].value: US
-      pangolin.public-resources.foldergram.rules[1].action: deny
-      pangolin.public-resources.foldergram.rules[1].match: country
-      pangolin.public-resources.foldergram.rules[1].value: ALL
+      pangolin.public-resources.foldergram.policy: member

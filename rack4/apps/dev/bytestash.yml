@@ -36,15 +36,7 @@ services:
 
       pangolin.public-resources.stash.name: stash
       pangolin.public-resources.stash.full-domain: stash.chenn.dev
-      pangolin.public-resources.stash.protocol: http
-      pangolin.public-resources.stash.ssl: true
+      pangolin.public-resources.stash.mode: http
       pangolin.public-resources.stash.targets[0].method: http
       pangolin.public-resources.stash.targets[0].port: 5000
-      pangolin.public-resources.stash.auth.sso-enabled: true
-      pangolin.public-resources.stash.auth.sso-roles[0]: Member
-      pangolin.public-resources.stash.rules[0].action: pass
-      pangolin.public-resources.stash.rules[0].match: country
-      pangolin.public-resources.stash.rules[0].value: US
-      pangolin.public-resources.stash.rules[1].action: deny
-      pangolin.public-resources.stash.rules[1].match: country
-      pangolin.public-resources.stash.rules[1].value: ALL
+      pangolin.public-resources.stash.policy: member

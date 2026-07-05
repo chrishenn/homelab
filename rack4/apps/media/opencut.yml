@@ -42,18 +42,10 @@ services:
 
       pangolin.public-resources.opencut.name: opencut
       pangolin.public-resources.opencut.full-domain: opencut.chenn.dev
-      pangolin.public-resources.opencut.protocol: http
-      pangolin.public-resources.opencut.ssl: true
+      pangolin.public-resources.opencut.mode: http
       pangolin.public-resources.opencut.targets[0].method: http
       pangolin.public-resources.opencut.targets[0].port: 3000
-      pangolin.public-resources.opencut.auth.sso-enabled: true
-      pangolin.public-resources.opencut.auth.sso-roles[0]: Member
-      pangolin.public-resources.opencut.rules[0].action: pass
-      pangolin.public-resources.opencut.rules[0].match: country
-      pangolin.public-resources.opencut.rules[0].value: US
-      pangolin.public-resources.opencut.rules[1].action: deny
-      pangolin.public-resources.opencut.rules[1].match: country
-      pangolin.public-resources.opencut.rules[1].value: ALL
+      pangolin.public-resources.opencut.policy: member
 
   opencut_db:
     profiles: [opencut]

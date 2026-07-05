@@ -22,18 +22,10 @@ services:
 
       pangolin.public-resources.ties.name: ties
       pangolin.public-resources.ties.full-domain: ties.chenn.dev
-      pangolin.public-resources.ties.protocol: http
-      pangolin.public-resources.ties.ssl: true
+      pangolin.public-resources.ties.mode: http
       pangolin.public-resources.ties.targets[0].method: http
       pangolin.public-resources.ties.targets[0].port: 3000
-      pangolin.public-resources.ties.auth.sso-enabled: true
-      pangolin.public-resources.ties.auth.sso-roles[0]: Member
-      pangolin.public-resources.ties.rules[0].action: pass
-      pangolin.public-resources.ties.rules[0].match: country
-      pangolin.public-resources.ties.rules[0].value: US
-      pangolin.public-resources.ties.rules[1].action: deny
-      pangolin.public-resources.ties.rules[1].match: country
-      pangolin.public-resources.ties.rules[1].value: ALL
+      pangolin.public-resources.ties.policy: member
 
   ties_db:
     profiles: [ties]

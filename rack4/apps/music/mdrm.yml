@@ -27,15 +27,7 @@ services:
 
       pangolin.public-resources.mdrm.name: mdrm
       pangolin.public-resources.mdrm.full-domain: mdrm.chenn.dev
-      pangolin.public-resources.mdrm.protocol: http
-      pangolin.public-resources.mdrm.ssl: true
+      pangolin.public-resources.mdrm.mode: http
       pangolin.public-resources.mdrm.targets[0].method: http
       pangolin.public-resources.mdrm.targets[0].port: 8338
-      pangolin.public-resources.mdrm.auth.sso-enabled: true
-      pangolin.public-resources.mdrm.auth.sso-roles[0]: Member
-      pangolin.public-resources.mdrm.rules[0].action: pass
-      pangolin.public-resources.mdrm.rules[0].match: country
-      pangolin.public-resources.mdrm.rules[0].value: US
-      pangolin.public-resources.mdrm.rules[1].action: deny
-      pangolin.public-resources.mdrm.rules[1].match: country
-      pangolin.public-resources.mdrm.rules[1].value: ALL
+      pangolin.public-resources.mdrm.policy: member

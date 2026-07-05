@@ -66,15 +66,7 @@ services:
 
       pangolin.public-resources.gotify.name: gotify
       pangolin.public-resources.gotify.full-domain: gotify.chenn.dev
-      pangolin.public-resources.gotify.protocol: http
-      pangolin.public-resources.gotify.ssl: true
+      pangolin.public-resources.gotify.mode: http
       pangolin.public-resources.gotify.targets[0].method: http
       pangolin.public-resources.gotify.targets[0].port: 80
-      pangolin.public-resources.gotify.auth.sso-enabled: true
-      pangolin.public-resources.gotify.auth.sso-roles[0]: Member
-      pangolin.public-resources.gotify.rules[0].action: pass
-      pangolin.public-resources.gotify.rules[0].match: country
-      pangolin.public-resources.gotify.rules[0].value: US
-      pangolin.public-resources.gotify.rules[1].action: deny
-      pangolin.public-resources.gotify.rules[1].match: country
-      pangolin.public-resources.gotify.rules[1].value: ALL
+      pangolin.public-resources.gotify.policy: member

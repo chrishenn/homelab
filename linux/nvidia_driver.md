@@ -24,7 +24,7 @@ sudo mokutil --import /var/lib/shim-signed/mok/MOK.der
 ## purge
 
 ```bash
-sudo apt purge nvidia* 
+sudo apt purge nvidia*
 sudo apt autoremove --purge
 sudo rm -rf /lib/firmware/nvidia
 sudo reboot now

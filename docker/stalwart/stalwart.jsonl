@@ -31,9 +31,7 @@
   "object": "Role",
   "value": {
     "role-e": {
-      "roleIds": {},
-      "disabledPermissions": {},
-      "memberTenantId": null,
+      "description": "System Administrator",
       "enabledPermissions": {
         "authenticate": true,
         "authenticateWithAlias": true,
@@ -488,12 +486,12 @@
         "sysWebHookDestroy": true,
         "sysWebHookQuery": true
       },
-      "description": "System Administrator"
-    },
-    "role-d": {
-      "roleIds": {},
       "disabledPermissions": {},
       "memberTenantId": null,
+      "roleIds": {}
+    },
+    "role-d": {
+      "description": "Tenant Administrator",
       "enabledPermissions": {
         "authenticate": true,
         "authenticateWithAlias": true,
@@ -546,12 +544,12 @@
         "sysRoleDestroy": true,
         "sysRoleQuery": true
       },
-      "description": "Tenant Administrator"
-    },
-    "role-c": {
-      "roleIds": {},
       "disabledPermissions": {},
       "memberTenantId": null,
+      "roleIds": {}
+    },
+    "role-c": {
+      "description": "Group",
       "enabledPermissions": {
         "emailSend": true,
         "emailReceive": true,
@@ -783,12 +781,12 @@
         "sysSpamTrainingSampleQuery": true,
         "jmapFileNodeCopy": true
       },
-      "description": "Group"
-    },
-    "role-b": {
-      "roleIds": {},
       "disabledPermissions": {},
       "memberTenantId": null,
+      "roleIds": {}
+    },
+    "role-b": {
+      "description": "User",
       "enabledPermissions": {
         "authenticate": true,
         "authenticateWithAlias": true,
@@ -1035,7 +1033,9 @@
         "sysSpamTrainingSampleQuery": true,
         "jmapFileNodeCopy": true
       },
-      "description": "User"
+      "disabledPermissions": {},
+      "memberTenantId": null,
+      "roleIds": {}
     }
   }
 }
@@ -1045,17 +1045,17 @@
   "value": {
     "dnsserver-iwvhjd2oabaa": {
       "@type": "Cloudflare",
+      "pollingInterval": 15000,
+      "timeout": 30000,
+      "ttl": 300000,
+      "memberTenantId": null,
+      "description": "cf",
+      "propagationTimeout": 60000,
       "propagationDelay": null,
       "secret": {
         "@type": "EnvironmentVariable",
         "variableName": "CLOUDFLARE_DNS_API_TOKEN"
-      },
-      "description": "cf",
-      "memberTenantId": null,
-      "pollingInterval": 15000,
-      "timeout": 30000,
-      "ttl": 300000,
-      "propagationTimeout": 60000
+      }
     }
   }
 }
@@ -1064,36 +1064,12 @@
   "object": "Domain",
   "value": {
     "domain-b": {
-      "logo": null,
-      "name": "chenn.dev",
-      "reportAddressUri": "mailto:admin",
-      "subAddressing": {
-        "@type": "Enabled"
-      },
-      "allowRelaying": false,
-      "dkimManagement": {
-        "@type": "Automatic",
-        "deleteAfter": 2592000000,
-        "retireAfter": 604800000,
-        "rotateAfter": 7776000000,
-        "selectorTemplate": "v{version}-{algorithm}-{date-%Y%m%d}",
-        "algorithms": {
-          "Dkim1Ed25519Sha256": true,
-          "Dkim1RsaSha256": true
-        }
-      },
-      "aliases": {},
-      "catchAllAddress": "catchall@chenn.dev",
       "description": null,
-      "isEnabled": true,
-      "directoryId": null,
-      "certificateManagement": {
-        "@type": "Manual"
-      },
+      "logo": null,
       "memberTenantId": null,
+      "name": "chenn.dev",
       "dnsManagement": {
         "@type": "Automatic",
-        "origin": null,
         "publishRecords": {
           "autoConfig": true,
           "autoConfigLegacy": true,
@@ -1108,8 +1084,32 @@
           "tlsRpt": true,
           "tlsa": true
         },
+        "origin": null,
         "dnsServerId": "#dnsserver-iwvhjd2oabaa"
-      }
+      },
+      "dkimManagement": {
+        "@type": "Automatic",
+        "rotateAfter": 7776000000,
+        "selectorTemplate": "v{version}-{algorithm}-{date-%Y%m%d}",
+        "algorithms": {
+          "Dkim1Ed25519Sha256": true,
+          "Dkim1RsaSha256": true
+        },
+        "deleteAfter": 2592000000,
+        "retireAfter": 604800000
+      },
+      "catchAllAddress": "catchall@chenn.dev",
+      "allowRelaying": false,
+      "subAddressing": {
+        "@type": "Enabled"
+      },
+      "certificateManagement": {
+        "@type": "Manual"
+      },
+      "isEnabled": true,
+      "aliases": {},
+      "directoryId": null,
+      "reportAddressUri": "mailto:admin"
     }
   }
 }
@@ -1133,19 +1133,16 @@
   "@type": "update",
   "object": "SystemSettings",
   "value": {
-    "defaultDomainId": "#domain-b",
+    "providerInfo": {},
+    "defaultHostname": "chenn.dev",
     "mailExchangers": {
       "0": {
-        "hostname": null,
-        "priority": 10
+        "priority": 10,
+        "hostname": null
       }
     },
-    "defaultCertificateId": "#certificate-iwvgu1ckaaqa",
-    "threadPoolSize": null,
-    "proxyTrustedNetworks": {},
     "maxConnections": 8192,
-    "providerInfo": {},
-    "defaultHostname": "mail.chenn.dev",
+    "defaultDomainId": "#domain-b",
     "services": {
       "caldav": {
         "hostname": null,
@@ -1179,29 +1176,47 @@
         "hostname": null,
         "cleartext": false
       }
-    }
+    },
+    "defaultCertificateId": "#certificate-iwvgu1ckaaqa",
+    "threadPoolSize": null,
+    "proxyTrustedNetworks": {}
+  }
+}
+{
+  "@type": "update",
+  "object": "DnsResolver",
+  "value": {
+    "@type": "Cloudflare",
+    "useTls": true,
+    "enableEdns": true,
+    "timeout": 5000,
+    "preserveIntermediates": true,
+    "concurrency": 2,
+    "tcpOnError": true,
+    "attempts": 2
   }
 }
 {
   "@type": "update",
   "object": "Http",
   "value": {
-    "useXForwarded": true,
-    "enableHsts": true,
-    "rateLimitAnonymous": {
-      "period": 60000,
-      "count": 100
-    },
-    "allowedEndpoints": {
-      "match": {},
-      "else": "200"
-    },
     "responseHeaders": {},
+    "usePermissiveCors": false,
+    "useXForwarded": true,
+    "allowedEndpoints": {
+      "else": "200",
+      "match": {}
+    },
     "rateLimitAuthenticated": {
       "period": 60000,
       "count": 1000
     },
-    "usePermissiveCors": false
+    "redirectRoot": "/account",
+    "enableHsts": true,
+    "rateLimitAnonymous": {
+      "period": 60000,
+      "count": 100
+    }
   }
 }
 {
@@ -1209,20 +1224,20 @@
   "object": "DataStore",
   "value": {
     "@type": "PostgreSql",
+    "database": "stalwart",
+    "readReplicas": {},
+    "poolMaxConnections": 10,
     "useTls": false,
+    "port": 5432,
+    "authUsername": "stalwart",
     "host": "stalwart_db",
+    "options": null,
+    "poolRecyclingMethod": "fast",
+    "allowInvalidCerts": false,
     "authSecret": {
       "@type": "EnvironmentVariable",
       "variableName": "POSTGRES_PASSWORD"
     },
-    "authUsername": "stalwart",
-    "options": null,
-    "poolMaxConnections": 10,
-    "database": "stalwart",
-    "poolRecyclingMethod": "fast",
-    "allowInvalidCerts": false,
-    "port": 5432,
-    "readReplicas": {},
     "timeout": 15000
   }
 }
@@ -1231,28 +1246,28 @@
   "object": "BlobStore",
   "value": {
     "@type": "S3",
-    "profile": null,
-    "accessKey": "stalwart",
-    "bucket": "stalwart",
     "keyPrefix": null,
-    "secretKey": {
-      "@type": "EnvironmentVariable",
-      "variableName": "S3_SECRET_KEY"
-    },
     "securityToken": {
       "@type": "None"
     },
+    "allowInvalidCerts": false,
     "timeout": 30000,
+    "accessKey": "stalwart",
+    "maxRetries": 3,
     "sessionToken": {
       "@type": "None"
     },
-    "verifyAfterWrite": true,
-    "allowInvalidCerts": false,
-    "maxRetries": 3,
+    "profile": null,
     "region": {
       "@type": "Custom",
-      "customEndpoint": "http://stalwart_s3:3900",
-      "customRegion": "stalwart_s3"
+      "customRegion": "stalwart_s3",
+      "customEndpoint": "http://stalwart_s3:3900"
+    },
+    "verifyAfterWrite": true,
+    "bucket": "stalwart",
+    "secretKey": {
+      "@type": "EnvironmentVariable",
+      "variableName": "S3_SECRET_KEY"
     }
   }
 }
@@ -1260,16 +1275,20 @@
   "@type": "update",
   "object": "SearchStore",
   "value": {
-    "@type": "ElasticSearch",
+    "@type": "Meilisearch",
+    "url": "http://stalwart_meili:7700",
     "httpHeaders": {},
-    "allowInvalidCerts": false,
+    "pollInterval": 500,
+    "failOnTimeout": true,
+    "maxRetries": 120,
     "timeout": 30000,
-    "url": "http://stalwart_search",
-    "numReplicas": 0,
-    "includeSource": false,
-    "numShards": 3,
+    "allowInvalidCerts": true,
     "httpAuth": {
-      "@type": "Unauthenticated"
+      "@type": "Bearer",
+      "bearerToken": {
+        "@type": "EnvironmentVariable",
+        "variableName": "MEILI_MASTER_KEY"
+      }
     }
   }
 }
@@ -1278,11 +1297,11 @@
   "object": "InMemoryStore",
   "value": {
     "@type": "Redis",
-    "poolTimeoutCreate": 30000,
-    "timeout": 10000,
-    "poolTimeoutRecycle": 30000,
-    "url": "redis://stalwart_redis",
     "poolMaxConnections": 10,
-    "poolTimeoutWait": 30000
+    "poolTimeoutCreate": 30000,
+    "poolTimeoutRecycle": 30000,
+    "poolTimeoutWait": 30000,
+    "url": "redis://stalwart_redis",
+    "timeout": 10000
   }
 }

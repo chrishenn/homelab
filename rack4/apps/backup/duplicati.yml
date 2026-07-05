@@ -31,15 +31,7 @@ services:
 
       pangolin.public-resources.duplicati.name: duplicati
       pangolin.public-resources.duplicati.full-domain: duplicati.chenn.dev
-      pangolin.public-resources.duplicati.protocol: http
-      pangolin.public-resources.duplicati.ssl: true
+      pangolin.public-resources.duplicati.mode: http
       pangolin.public-resources.duplicati.targets[0].method: http
       pangolin.public-resources.duplicati.targets[0].port: 8200
-      pangolin.public-resources.duplicati.auth.sso-enabled: true
-      pangolin.public-resources.duplicati.auth.sso-users[0]: ${EMAIL}
-      pangolin.public-resources.duplicati.rules[0].action: pass
-      pangolin.public-resources.duplicati.rules[0].match: country
-      pangolin.public-resources.duplicati.rules[0].value: US
-      pangolin.public-resources.duplicati.rules[1].action: deny
-      pangolin.public-resources.duplicati.rules[1].match: country
-      pangolin.public-resources.duplicati.rules[1].value: ALL
+      pangolin.public-resources.duplicati.policy: chris

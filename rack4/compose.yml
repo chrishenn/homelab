@@ -1,5 +1,5 @@
 include:
-  #  - apps/ai/comfy.yml
+  - apps/ai/comfy.yml
   - apps/ai/ollama.yml
   - apps/ai/openwebui.yml
   #  - apps/ai/speach.yml
@@ -10,7 +10,6 @@ include:
   - apps/arr/muxarr.yml
   - apps/arr/recyclarr.yml
   - apps/arr/seerr.yml
-  - apps/arr/solverr.yml
   - apps/arr/tracearr.yml
   - apps/arr/transcodarr.yml
 
@@ -25,7 +24,6 @@ include:
 
   - apps/books/audiobookshelf.yml
   - apps/books/calibre.yml
-  - apps/books/grimmory.yml
   - apps/books/kavita.yml
   - apps/books/listenarr.yml
   - apps/books/readmeabook.yml
@@ -58,6 +56,8 @@ include:
 
   - apps/download/qbit.yml
   - apps/download/sab.yml
+  - apps/download/byparr.yml
+  - apps/download/solverr.yml
 
   #  - apps/games/cs2.yml
   #  - apps/games/csgo.yml

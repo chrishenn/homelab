@@ -42,8 +42,8 @@ j f pangolin
 - log into the pangolin gui using setup token
 - create org
 - connect rack4 newt instance to a new newt site
-    - op://homelab/pangolin/NEWT_ID
-    - op://homelab/pangolin/NEWT_SECRET
+    - op://homelab/pangolin/rack4_docker_NEWT_ID
+    - op://homelab/pangolin/rack4_docker_NEWT_SECRET
     - go to rack4 and j ssync, j b c newt
 - activate free enterprise license
     - https://app.pangolin.net -> billing and licenses -> clear instance name on an existing license key

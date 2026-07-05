@@ -20,18 +20,10 @@ services:
 
       pangolin.public-resources.shlink.name: shlink
       pangolin.public-resources.shlink.full-domain: shlink.chenn.dev
-      pangolin.public-resources.shlink.protocol: http
-      pangolin.public-resources.shlink.ssl: true
+      pangolin.public-resources.shlink.mode: http
       pangolin.public-resources.shlink.targets[0].method: http
       pangolin.public-resources.shlink.targets[0].port: 8080
-      pangolin.public-resources.shlink.auth.sso-enabled: true
-      pangolin.public-resources.shlink.auth.sso-roles[0]: Member
-      pangolin.public-resources.shlink.rules[0].action: pass
-      pangolin.public-resources.shlink.rules[0].match: country
-      pangolin.public-resources.shlink.rules[0].value: US
-      pangolin.public-resources.shlink.rules[1].action: deny
-      pangolin.public-resources.shlink.rules[1].match: country
-      pangolin.public-resources.shlink.rules[1].value: ALL
+      pangolin.public-resources.shlink.policy: member
 
   # must be accessible from the browser running the web client
   shlink_api:
@@ -60,8 +52,7 @@ services:
     labels:
       pangolin.public-resources.shlink_api.name: shlink_api
       pangolin.public-resources.shlink_api.full-domain: shlink_api.chenn.dev
-      pangolin.public-resources.shlink_api.protocol: http
-      pangolin.public-resources.shlink_api.ssl: true
+      pangolin.public-resources.shlink_api.mode: http
       pangolin.public-resources.shlink_api.targets[0].method: http
       pangolin.public-resources.shlink_api.targets[0].port: 8080
       pangolin.public-resources.shlink_api.rules[0].action: pass

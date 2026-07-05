@@ -24,18 +24,10 @@ services:
 
       pangolin.public-resources.yamtrack.name: yamtrack
       pangolin.public-resources.yamtrack.full-domain: yamtrack.chenn.dev
-      pangolin.public-resources.yamtrack.protocol: http
-      pangolin.public-resources.yamtrack.ssl: true
+      pangolin.public-resources.yamtrack.mode: http
       pangolin.public-resources.yamtrack.targets[0].method: http
       pangolin.public-resources.yamtrack.targets[0].port: 8000
-      pangolin.public-resources.yamtrack.auth.sso-enabled: true
-      pangolin.public-resources.yamtrack.auth.sso-roles[0]: Member
-      pangolin.public-resources.yamtrack.rules[0].action: pass
-      pangolin.public-resources.yamtrack.rules[0].match: country
-      pangolin.public-resources.yamtrack.rules[0].value: US
-      pangolin.public-resources.yamtrack.rules[1].action: deny
-      pangolin.public-resources.yamtrack.rules[1].match: country
-      pangolin.public-resources.yamtrack.rules[1].value: ALL
+      pangolin.public-resources.yamtrack.policy: member
 
   yamtrack_db:
     profiles: [yamtrack]

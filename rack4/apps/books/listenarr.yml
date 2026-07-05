@@ -30,15 +30,7 @@ services:
 
       pangolin.public-resources.listenarr.name: listenarr
       pangolin.public-resources.listenarr.full-domain: listenarr.chenn.dev
-      pangolin.public-resources.listenarr.protocol: http
-      pangolin.public-resources.listenarr.ssl: true
+      pangolin.public-resources.listenarr.mode: http
       pangolin.public-resources.listenarr.targets[0].method: http
       pangolin.public-resources.listenarr.targets[0].port: 4545
-      pangolin.public-resources.listenarr.auth.sso-enabled: true
-      pangolin.public-resources.listenarr.auth.sso-roles[0]: Member
-      pangolin.public-resources.listenarr.rules[0].action: pass
-      pangolin.public-resources.listenarr.rules[0].match: country
-      pangolin.public-resources.listenarr.rules[0].value: US
-      pangolin.public-resources.listenarr.rules[1].action: deny
-      pangolin.public-resources.listenarr.rules[1].match: country
-      pangolin.public-resources.listenarr.rules[1].value: ALL
+      pangolin.public-resources.listenarr.policy: member

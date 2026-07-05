@@ -18,9 +18,9 @@ configs:
     content: |
       set -x
       DROUTE=$$(ip route | grep default | awk '{print $$3}')
-      HOMENET=192.168.0.0/16
-      HOMENET2=192.169.0.0/16
-      HOMENET3=192.170.0.0/16
+      HOMENET=${HOME_SUBNET}
+      HOMENET2=${TRAEFIK_SUBNET}
+      HOMENET3=${NEWT_SUBNET}
       ip route add $$HOMENET via $$DROUTE
       ip route add $$HOMENET2 via $$DROUTE
       ip route add $$HOMENET3 via $$DROUTE
@@ -31,9 +31,9 @@ configs:
       iptables -t nat -A POSTROUTING -o $$1 -j MASQUERADE
   wg_postdown:
     content: |
-      HOMENET=192.168.0.0/16
-      HOMENET2=192.169.0.0/16
-      HOMENET3=192.170.0.0/16
+      HOMENET=${HOME_SUBNET}
+      HOMENET2=${TRAEFIK_SUBNET}
+      HOMENET3=${NEWT_SUBNET}
       ip route delete $$HOMENET
       ip route delete $$HOMENET2
       ip route delete $$HOMENET3
@@ -96,7 +96,6 @@ services:
       pangolin.public-resources.mail.name: mail
       pangolin.public-resources.mail.full-domain: mail.chenn.dev
       pangolin.public-resources.mail.mode: http
-      pangolin.public-resources.mail.ssl: true
       pangolin.public-resources.mail.targets[0].method: http
       pangolin.public-resources.mail.targets[0].path: /
       pangolin.public-resources.mail.targets[0].path-match: prefix
@@ -105,21 +104,18 @@ services:
       pangolin.public-resources.mail_1.name: mail_1
       pangolin.public-resources.mail_1.full-domain: autodiscover.chenn.dev
       pangolin.public-resources.mail_1.mode: http
-      pangolin.public-resources.mail_1.ssl: true
       pangolin.public-resources.mail_1.targets[0].method: http
       pangolin.public-resources.mail_1.targets[0].port: 8080
 
       pangolin.public-resources.mail_2.name: mail_2
       pangolin.public-resources.mail_2.full-domain: autoconfig.chenn.dev
       pangolin.public-resources.mail_2.mode: http
-      pangolin.public-resources.mail_2.ssl: true
       pangolin.public-resources.mail_2.targets[0].method: http
       pangolin.public-resources.mail_2.targets[0].port: 8080
 
       pangolin.public-resources.mail_3.name: mail_3
       pangolin.public-resources.mail_3.full-domain: mta-sts.chenn.dev
       pangolin.public-resources.mail_3.mode: http
-      pangolin.public-resources.mail_3.ssl: true
       pangolin.public-resources.mail_3.targets[0].method: http
       pangolin.public-resources.mail_3.targets[0].port: 8080
 
@@ -133,6 +129,7 @@ services:
       CLOUDFLARE_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
       POSTGRES_PASSWORD: stalwart
       S3_SECRET_KEY: ${STALWART_S3_SECRET}
+      MEILI_MASTER_KEY: ${STALWART_MEILI_MASTER_KEY}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/stalwart/data:/etc/stalwart
@@ -141,6 +138,8 @@ services:
     depends_on:
       stalwart_perm:
         condition: service_completed_successfully
+    #      stalwart_certs:
+    #        condition: service_completed_successfully
     network_mode: service:stalwart_wg
 
   stalwart_perm:
@@ -162,41 +161,68 @@ services:
         chown -R 1000:1000 /data/search
         echo "set perms: $?"
 
-  # todo: clean up this script
-  stalwart_certs:
+  # todo: clean up this script - read ssh creds from env instead of mounting .ssh
+  #  stalwart_certs:
+  #    profiles: [stalwart]
+  #    image: docker:dind
+  #    container_name: stalwart_certs
+  #    restart: no
+  #    privileged: true
+  #    user: root
+  #    environment:
+  #      DOCKER_HOST: ssh://chris@${VPS0_IP}:2200
+  #    volumes:
+  #      - $DATA/stalwart:/data
+  #      - $HOME/.ssh:/ssh
+  #    command:
+  #      - /bin/sh
+  #      - -c
+  #      - |
+  #        set -x
+  #        mkdir -p /root/.ssh
+  #        cp -r /ssh/id_ed* /root/.ssh/
+  #        chown -R root:root /root/.ssh
+  #
+  #        tee /root/.ssh/config <<- 'END'
+  #        Host *
+  #          StrictHostKeyChecking no
+  #        END
+  #
+  #        rm -rf /tmp/output
+  #        timeout 10 docker cp traefik_cert:/output /tmp
+  #        stat=$$?
+  #        if [ $$stat -ne 0 ]; then
+  #          echo "docker cp with timeout failed with code: $$stat"
+  #          exit $$stat
+  #        fi
+  #
+  #        rm -rf /data/certs
+  #        mv /tmp/output /data/certs
+  #
+  #        chown -R 2000:2000 /data/certs
+  #        echo "Copied certs. Exited with: $$?"
+  #        exit 0
+
+  stalwart_meili:
     profiles: [stalwart]
-    image: docker:dind
-    container_name: stalwart_certs
-    restart: no
-    privileged: true
-    user: root
+    image: getmeili/meilisearch:latest
+    container_name: stalwart_meili
+    restart: unless-stopped
     environment:
-      DOCKER_HOST: ssh://chris@${VPS0_IP}:2200
+      MEILI_MASTER_KEY: ${STALWART_MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: true
     volumes:
-      - $DATA/stalwart:/data
-      - $HOME/.ssh:/ssh
-    command:
-      - /bin/sh
-      - -c
-      - |
-        set -x
-        mkdir -p /root/.ssh
-        cp -r /ssh/id_ed* /root/.ssh/
-        chown -R root:root /root/.ssh
+      - $DATA/stalwart/meili:/meili_data
+    networks: [stalwart, traefik]
+    labels:
+      traefik.enable: true
+      traefik.http.routers.stalwart_search.rule: Host(`search.stalwart.henn.dev`)
+      traefik.http.routers.stalwart_search.entrypoints: websecure
+      traefik.http.routers.stalwart_search.middlewares: hdrs@file
+      traefik.http.routers.stalwart_search.tls.certresolver: cf
+      traefik.http.services.stalwart_search.loadbalancer.server.port: 7700
 
-        tee /root/.ssh/config <<- 'END'
-        Host *
-          StrictHostKeyChecking no
-        END
-
-        rm -rf /data/certs
-        docker cp traefik_cert:/output /data/certs
-
-        chown -R 2000:2000 /data/certs
-        echo "copied certs; exiting: $?"
-        exit $?
-
-  # todo: verify that these storages are working
+  # todo: verify that these are working
   stalwart_db:
     profiles: [stalwart]
     image: postgres:18-alpine
@@ -239,19 +265,6 @@ services:
       - $DATA/stalwart/s3/data:/var/lib/garage/data
       - $DATA/stalwart/s3/meta:/var/lib/garage/meta
     command: /garage server --single-node --default-bucket
-    networks: [stalwart]
-
-  stalwart_search:
-    profiles: [stalwart]
-    image: opensearchproject/opensearch:latest
-    container_name: stalwart_search
-    environment:
-      node.name: opensearch-node
-      discovery.type: single-node
-      plugins.security.disabled: true
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${STALWART_SEARCH_PASS}
-    volumes:
-      - $DATA/stalwart/search:/usr/share/opensearch/data
     networks: [stalwart]
 
   bulwark:
