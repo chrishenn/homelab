@@ -142,6 +142,9 @@ services:
         done
         mc mb -p seaweedfs/reactive-resume
         exit 0
+    depends_on:
+      resume_seaweed:
+        condition: service_healthy
     networks: [resume]
 
 networks:

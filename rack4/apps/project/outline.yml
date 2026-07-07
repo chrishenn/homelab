@@ -1,0 +1,105 @@
+---
+x-outline_env: &outline_env
+  NODE_ENV: production
+  URL: https://outline.chenn.dev
+  PORT: 3000
+  COLLABORATION_URL:
+  CDN_URL:
+  WEB_CONCURRENCY: 1
+  SECRET_KEY: ${OUTLINE_SECRET}
+  UTILS_SECRET: ${OUTLINE_UTILS}
+  DEFAULT_LANGUAGE: en_US
+  FORCE_HTTPS: true
+  PROXY_HEADERS_TRUSTED: true
+  ENABLE_UPDATES: true
+  DEBUG: http
+  LOG_LEVEL: info
+
+  REDIS_URL: redis://outline_redis:6379
+  DATABASE_URL: postgres://outline:outline@outline_db:5432/outline
+  POSTGRES_USER: outline
+  POSTGRES_PASSWORD: outline
+  POSTGRES_DB: outline
+  PGSSLMODE: disable
+
+  FILE_STORAGE: local
+  FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
+  FILE_STORAGE_UPLOAD_MAX_SIZE: 262144000
+
+  OIDC_CLIENT_ID: ${OUTLINE_OIDC_CLIENT}
+  OIDC_CLIENT_SECRET: ${OUTLINE_OIDC_SECRET}
+  OIDC_AUTH_URI: https://pocketid.chenn.dev/authorize
+  OIDC_TOKEN_URI: https://pocketid.chenn.dev/api/oidc/token
+  OIDC_USERINFO_URI: https://pocketid.chenn.dev/api/oidc/userinfo
+  OIDC_LOGOUT_URI: https://pocketid.chenn.dev/api/oidc/end-session
+  OIDC_USERNAME_CLAIM: preferred_username
+  OIDC_DISPLAY_NAME: Pocket ID
+  OIDC_SCOPES: openid profile email groups
+
+  SMTP_SERVICE: Proton
+  SMTP_USERNAME: ${SMTP_USER}
+  SMTP_PASSWORD: ${SMTP_TOKEN}
+  SMTP_FROM_EMAIL: ${SMTP_USER}
+
+  RATE_LIMITER_ENABLED: true
+  RATE_LIMITER_REQUESTS: 1000
+  RATE_LIMITER_DURATION_WINDOW: 60
+  RATE_LIMITER_MULTIPLIER: 1
+
+services:
+  outline:
+    profiles: [outline]
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    container_name: outline
+    restart: unless-stopped
+    environment:
+      <<: *outline_env
+    volumes:
+      - $DATA/outline/data:/var/lib/outline/data
+    networks: [outline, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: outline
+      homepage.icon: outline.png
+      homepage.href: https://outline.chenn.dev
+      homepage.description: Documentation Wiki
+
+      pangolin.public-resources.outline.name: outline
+      pangolin.public-resources.outline.full-domain: outline.chenn.dev
+      pangolin.public-resources.outline.mode: http
+      pangolin.public-resources.outline.targets[0].method: http
+      pangolin.public-resources.outline.targets[0].port: 3000
+      pangolin.public-resources.outline.policy: member
+
+  outline_db:
+    profiles: [outline]
+    image: postgres:18-alpine
+    container_name: outline_db
+    restart: unless-stopped
+    environment:
+      <<: *outline_env
+    volumes:
+      - $DATA/outline/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-d', 'outline', '-U', 'user']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks: [outline]
+
+  outline_redis:
+    profiles: [outline]
+    image: valkey/valkey:alpine
+    container_name: outline_redis
+    restart: unless-stopped
+    environment:
+      <<: *outline_env
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 30s
+      retries: 3
+    networks: [outline]
+
+networks:
+  outline:

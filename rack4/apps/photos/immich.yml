@@ -98,7 +98,7 @@ services:
 
   immich_redis:
     profiles: [immich]
-    image: docker.io/valkey/valkey:9
+    image: valkey/valkey:9
     container_name: immich_redis
     restart: unless-stopped
     healthcheck:
