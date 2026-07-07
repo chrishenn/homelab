@@ -100,6 +100,8 @@ SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
 NEWSHOSTING_PASS = { provider = "onepass", value = "op://homelab/newshosting/password" }
+NEWSHOSTING_RETENTION = { provider = "onepass", value = "op://homelab/newshosting/retention" }
+NEWSHOSTING_CONNECTIONS = { provider = "onepass", value = "op://homelab/newshosting/connections" }
 
 CAMPFIRE_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_public_key" }
 CAMPFIRE_VAPID_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_private_key" }

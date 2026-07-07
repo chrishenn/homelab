@@ -189,7 +189,8 @@ configs:
       timeout = 60
       username = ${NEWSHOSTING_USER}
       password = ${NEWSHOSTING_PASS}
-      connections = 30
+      connections = ${NEWSHOSTING_CONNECTIONS}
+      retention = ${NEWSHOSTING_RETENTION}
       ssl = 1
       ssl_verify = 3
       ssl_ciphers = ""
@@ -197,7 +198,6 @@ configs:
       required = 0
       optional = 0
       pipelining_requests = 1
-      retention = 6134
       expire_date = ""
       quota = ""
       usage_at_start = 0
