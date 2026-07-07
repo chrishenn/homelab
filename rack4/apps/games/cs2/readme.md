@@ -89,3 +89,13 @@ css_plugins list
 # [#1:LOADED]: "Retakes Plugin" (3.0.3) by B3none
 #   https://github.com/b3none/cs2-retakes
 ```
+
+notables
+
+- https://github.com/JensForstmann/tmt2
+- https://github.com/Lan2Play/PugSharp
+- https://github.com/DuelistRag3/cs2-pugsharp-manager
+- https://github.com/Egosar93/standalone-rcon-client
+
+- https://github.com/5stackgg/5stack-panel/
+    - https://docs.5stack.gg/

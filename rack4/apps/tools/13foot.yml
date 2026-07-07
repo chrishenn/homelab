@@ -1,0 +1,21 @@
+---
+services:
+  13ft:
+    profiles: [13ft]
+    image: ghcr.io/wasi-master/13ft:latest
+    container_name: 13ft
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      homepage.group: General Tools
+      homepage.name: 13ft
+      homepage.icon: 13ft.png
+      homepage.href: https://13ft.chenn.dev
+      homepage.description: Paywall Defeat
+
+      pangolin.public-resources.13ft.name: 13ft
+      pangolin.public-resources.13ft.full-domain: 13ft.chenn.dev
+      pangolin.public-resources.13ft.mode: http
+      pangolin.public-resources.13ft.targets[0].method: http
+      pangolin.public-resources.13ft.targets[0].port: 5000
+      pangolin.public-resources.13ft.policy: chris

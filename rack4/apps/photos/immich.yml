@@ -1,4 +1,5 @@
 ---
+# https://awesome.immich.app
 x-immich_env: &immich_env
   TZ: $TZ
   IMMICH_MACHINE_LEARNING_URL: http://immich_ml:3003
@@ -98,7 +99,7 @@ services:
 
   immich_redis:
     profiles: [immich]
-    image: docker.io/valkey/valkey:9
+    image: valkey/valkey:9
     container_name: immich_redis
     restart: unless-stopped
     healthcheck:

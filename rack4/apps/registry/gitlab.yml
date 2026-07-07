@@ -11,7 +11,7 @@ services:
       GITLAB_ROOT_PASSWORD: ${PASS}
       SMTP_HOST: ${SMTP_HOST}
       SMTP_USER: ${SMTP_USER}
-      SMTP_TOKEN: ${SMTP_TOKEN}
+      SMTP_PASS: ${SMTP_PASS}
       OIDC: ${OIDC}
       GITLAB_OIDC_CLIENT: ${GITLAB_OIDC_CLIENT}
       GITLAB_OIDC_SECRET: ${GITLAB_OIDC_SECRET}
@@ -42,7 +42,7 @@ services:
         gitlab_rails['smtp_address']          = ENV['SMTP_HOST']
         gitlab_rails['smtp_port']             = 465
         gitlab_rails['smtp_user_name']        = ENV['SMTP_USER']
-        gitlab_rails['smtp_password']         = ENV['SMTP_TOKEN']
+        gitlab_rails['smtp_password']         = ENV['SMTP_PASS']
         gitlab_rails['smtp_authentication']   = "login"
         gitlab_rails['smtp_ssl']              = true
         gitlab_rails['smtp_force_ssl']        = true

@@ -5,6 +5,9 @@ services:
     image: deluan/navidrome:latest
     container_name: navidrome
     restart: unless-stopped
+    environment:
+      ND_BASEURL: https://navidrome.chenn.dev
+      ND_JUKEBOX_ENABLED: true
     volumes:
       - $DATA/navidrome:/data
       - $MEDIA/Music:/music:ro
@@ -22,3 +25,15 @@ services:
       pangolin.public-resources.navidrome.targets[0].method: http
       pangolin.public-resources.navidrome.targets[0].port: 4533
       pangolin.public-resources.navidrome.policy: member
+
+      pangolin.public-resources.navidrome.rules[0].action: allow
+      pangolin.public-resources.navidrome.rules[0].match: path
+      pangolin.public-resources.navidrome.rules[0].value: /api/*
+
+      pangolin.public-resources.navidrome.rules[1].action: allow
+      pangolin.public-resources.navidrome.rules[1].match: path
+      pangolin.public-resources.navidrome.rules[1].value: /rest/*
+
+      pangolin.public-resources.navidrome.rules[2].action: allow
+      pangolin.public-resources.navidrome.rules[2].match: path
+      pangolin.public-resources.navidrome.rules[2].value: /auth/*

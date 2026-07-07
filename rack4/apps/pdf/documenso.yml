@@ -48,7 +48,7 @@ services:
       NEXT_PRIVATE_SMTP_HOST: ${SMTP_HOST}
       NEXT_PRIVATE_SMTP_PORT: 465
       NEXT_PRIVATE_SMTP_USERNAME: ${SMTP_USER}
-      NEXT_PRIVATE_SMTP_PASSWORD: ${SMTP_TOKEN}
+      NEXT_PRIVATE_SMTP_PASSWORD: ${SMTP_PASS}
       NEXT_PRIVATE_SMTP_SECURE: true
       NEXT_PRIVATE_SMTP_UNSAFE_IGNORE_TLS: false
       NEXT_PRIVATE_SMTP_FROM_NAME: ${SMTP_USER}
@@ -88,7 +88,7 @@ services:
     volumes:
       - $DATA/documenso/documenso_db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
     networks: [documenso]
 
 networks:

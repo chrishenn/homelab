@@ -1,6 +1,8 @@
 # bonfire
 
 sadly, still just a tech demo / experiment
+def worth a revisit - intriguing {elixir, rust, just} languages, and tiered deployment types
+
 why is it making so many damn db connections? there's too many already!
 I can't convince the app that its being served from https, because it's behind a reverse proxy
 so oidc is impossible to configure - the redirect url is wrong - becuase of their rigid justfile setup, or how they

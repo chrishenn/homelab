@@ -42,7 +42,7 @@ x-bonfire_env: &bonfire_env # oidc redirects to http://bonfire.chenn.dev:4000 wh
 
   MAIL_BACKEND: smtp
   MAIL_DOMAIN: ${SMTP_HOST}
-  MAIL_KEY: ${SMTP_TOKEN}
+  MAIL_KEY: ${SMTP_PASS}
   MAIL_FROM: ${SMTP_USER}
 
   OPENID_1_DISCOVERY: https://pocketid.chenn.dev/.well-known/openid-configuration

@@ -39,7 +39,7 @@ services:
       OVERLEAF_EMAIL_SMTP_PORT: 465
       OVERLEAF_EMAIL_SMTP_SECURE: true
       OVERLEAF_EMAIL_SMTP_USER: $SMTP_USER
-      OVERLEAF_EMAIL_SMTP_PASS: $SMTP_TOKEN
+      OVERLEAF_EMAIL_SMTP_PASS: $SMTP_PASS
       OVERLEAF_EMAIL_SMTP_TLS_REJECT_UNAUTH: true
       OVERLEAF_EMAIL_SMTP_IGNORE_TLS: false
       OVERLEAF_EMAIL_SMTP_NAME: '127.0.0.1'
@@ -68,10 +68,10 @@ services:
     restart: unless-stopped
     extra_hosts:
       - overleaf_mongo:127.0.0.1
-    command: '--replSet overleaf'
+    command: --replSet overleaf
     environment:
       MONGO_INITDB_DATABASE: sharelatex
-      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
+      GLIBC_TUNABLES: glibc.cpu.hwcaps=-SHSTK
     configs:
       - source: overleaf_mongo_init
         target: /docker-entrypoint-initdb.d/mongodb-init-replica-set.js

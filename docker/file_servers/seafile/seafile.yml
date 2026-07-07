@@ -95,7 +95,7 @@ x-seafile_env: &seafile_env
 
   SMTP_HOST: $SMTP_HOST
   SMTP_USER: $SMTP_USER
-  SMTP_PASS: $SMTP_TOKEN
+  SMTP_PASS: $SMTP_PASS
   SMTP_FROM: $SMTP_HOST
 
 services:

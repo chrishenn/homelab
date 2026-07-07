@@ -45,19 +45,19 @@ services:
       NOTIFICATIONS_SMTP_PORT: 465
       NOTIFICATIONS_SMTP_SENDER: oc.chenn.dev
       NOTIFICATIONS_SMTP_USERNAME: ${SMTP_USER}
-      NOTIFICATIONS_SMTP_PASSWORD: ${SMTP_TOKEN}
+      NOTIFICATIONS_SMTP_PASSWORD: ${SMTP_PASS}
       NOTIFICATIONS_SMTP_INSECURE: false
       NOTIFICATIONS_SMTP_AUTHENTICATION:
       NOTIFICATIONS_SMTP_ENCRYPTION: tls
 
-      COLLABORA_DOMAIN: collabora.chenn.dev
+      COLLABORA_DOMAIN: oc_collab.chenn.dev
       TRAEFIK_PORT_HTTPS: :443
       FRONTEND_APP_HANDLER_SECURE_VIEW_APP_ADDR: eu.opencloud.api.collaboration
       COLLABORATION_WOPI_SRC: https://wopi.chenn.dev
       COLLABORATION_APP_NAME: CollaboraOnline
       COLLABORATION_APP_PRODUCT: Collabora
-      COLLABORATION_APP_ADDR: https://collabora.chenn.dev
-      COLLABORATION_APP_ICON: https://collabora.chenn.dev/favicon.ico
+      COLLABORATION_APP_ADDR: https://oc_collab.chenn.dev
+      COLLABORATION_APP_ICON: https://oc_collab.chenn.dev/favicon.ico
       COLLABORATION_APP_INSECURE: false
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: false
 
@@ -73,10 +73,11 @@ services:
     labels:
       pangolin.public-resources.oc.name: oc
       pangolin.public-resources.oc.full-domain: oc.chenn.dev
-      pangolin.public-resources.oc.protocol: http
-      pangolin.public-resources.oc.ssl: true
+      pangolin.public-resources.oc.mode: http
+
       pangolin.public-resources.oc.targets[0].method: http
       pangolin.public-resources.oc.targets[0].port: 9200
+
       pangolin.public-resources.oc.rules[0].action: pass
       pangolin.public-resources.oc.rules[0].match: country
       pangolin.public-resources.oc.rules[0].value: US
@@ -86,10 +87,11 @@ services:
 
       pangolin.public-resources.oc_wopi.name: oc_wopi
       pangolin.public-resources.oc_wopi.full-domain: wopi.chenn.dev
-      pangolin.public-resources.oc_wopi.protocol: http
-      pangolin.public-resources.oc_wopi.ssl: true
+      pangolin.public-resources.oc_wopi.mode: http
+
       pangolin.public-resources.oc_wopi.targets[0].method: http
       pangolin.public-resources.oc_wopi.targets[0].port: 9300
+
       pangolin.public-resources.oc_wopi.rules[0].action: pass
       pangolin.public-resources.oc_wopi.rules[0].match: country
       pangolin.public-resources.oc_wopi.rules[0].value: US
@@ -97,31 +99,30 @@ services:
       pangolin.public-resources.oc_wopi.rules[1].match: country
       pangolin.public-resources.oc_wopi.rules[1].value: ALL
 
-    depends_on:
-      collabora:
-        condition: service_healthy
-
-  collabora:
+  opencloud_collabora:
     profiles: [opencloud]
-    image: collabora/code:latest
+    image: collabora/code:26.04.2.1.1
     container_name: opencloud_collabora
     restart: unless-stopped
-    cap_add: [SYS_ADMIN, MKNOD]
-    security_opt: [seccomp=unconfined, apparmor:unconfined]
+
     entrypoint: ['/bin/bash', '-c']
     command: ['coolconfig generate-proof-key && /start-collabora-online.sh']
+    cap_drop: [ALL]
+    cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
+
     environment:
       username: ${USER}
       password: ${PASS}
       server_name: collabora.chenn.dev
       aliasgroup1: https://wopi.chenn.dev
       DONT_GEN_SSL_CERT: YES
-      extra_params: |
-        --o:ssl.enable=false \
-        --o:ssl.ssl_verification=true \
-        --o:ssl.termination=true \
-        --o:welcome.enable=false \
-        --o:net.frame_ancestors=oc.chenn.dev \
+      extra_params: >-
+        --o:ssl.enable=false
+        --o:ssl.ssl_verification=true
+        --o:ssl.termination=true
+        --o:welcome.enable=false
+        --o:home_mode.enable=false
+        --o:net.frame_ancestors=oc.chenn.dev
         --o:net.lok_allow.host[14]=oc.chenn.dev
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
@@ -131,11 +132,12 @@ services:
     networks: [newt]
     labels:
       pangolin.public-resources.oc_collab.name: oc_collab
-      pangolin.public-resources.oc_collab.full-domain: collabora.chenn.dev
-      pangolin.public-resources.oc_collab.protocol: http
-      pangolin.public-resources.oc_collab.ssl: true
-      pangolin.public-resources.oc_collab.targets[0].method: http
+      pangolin.public-resources.oc_collab.full-domain: oc_collab.chenn.dev
+      pangolin.public-resources.oc_collab.mode: http
+
+      pangolin.public-resources.oc_collab.targets[0].mode: http
       pangolin.public-resources.oc_collab.targets[0].port: 9980
+
       pangolin.public-resources.oc_collab.rules[0].action: pass
       pangolin.public-resources.oc_collab.rules[0].match: country
       pangolin.public-resources.oc_collab.rules[0].value: US

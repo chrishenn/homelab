@@ -22,7 +22,7 @@ x-sure_env: &sure_env
   SMTP_ADDRESS: ${SMTP_HOST}
   SMTP_PORT: 465
   SMTP_USERNAME: ${SMTP_USER}
-  SMTP_PASSWORD: ${SMTP_TOKEN}
+  SMTP_PASSWORD: ${SMTP_PASS}
   SMTP_TLS_ENABLED: true
   SMTP_TLS_SKIP_VERIFY: false
   EMAIL_SENDER: ${SMTP_USER}
@@ -94,7 +94,7 @@ services:
     volumes:
       - $DATA/sure/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

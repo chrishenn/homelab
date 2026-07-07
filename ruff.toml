@@ -33,6 +33,7 @@ exclude = [
     "dist",
     "node_modules",
     "deprecated",
+    "rack4/apps/infra/netbox/*"
 ]
 
 [lint]
@@ -76,6 +77,9 @@ ignore = [
     "S110",     # try-except-pass should log
     "N805",     # First argument of a method should be named `self` (conflicts with decorated type)
     "TC003",    # move import into type-checking block (breaks pydantic runtime type-checking)
+
+    # copyright notice
+    "CPY001"
 ]
 
 [lint.per-file-ignores]

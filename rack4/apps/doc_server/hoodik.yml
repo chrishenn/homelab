@@ -1,5 +1,7 @@
-# it looks like you'll need to build from source to get this to work at all
 # no files on disk - only encrypted blobs in the db
+# the generated QR code doesn't respect my server url - uses the default hoodik.io server instead :/
+# E2E encryption
+# there's a 'create file' button in UI - pretty fancy
 ---
 services:
   hoodik:
@@ -13,38 +15,44 @@ services:
       HTTP_PORT: 5443
       HTTP_ADDRESS: 0.0.0.0
       SSL_DISABLED: true
+      JWT_SECRET: ${HOODIK_SECRET}
 
-      DATABASE_URL: postgresql://postgres:postgres@hoodik_db:5432/postgres
+      DATABASE_URL: postgres://postgres:postgres@hoodik_db:5432/postgres
       STORAGE_PROVIDER: local
       DATA_DIR: /data
 
       MAILER_TYPE: smtp
       SMTP_ADDRESS: ${SMTP_HOST}
       SMTP_USERNAME: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_PASSWORD: ${SMTP_PASS}
       SMTP_PORT: 465
+      SMTP_DEFAULT_FROM_EMAIL: ${SMTP_USER}
     volumes:
       - $DATA/hoodik/data:/data
     networks: [hoodik, newt]
     labels:
+      homepage.group: File Servers
+      homepage.name: Hoodik
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/hoodik.png
+      homepage.href: https://hoodik.chenn.dev
+      homepage.description: Rust File Server
+
       pangolin.public-resources.hoodik.name: hoodik
-      pangolin.public-resources.hoodik.protocol: http
       pangolin.public-resources.hoodik.full-domain: hoodik.chenn.dev
-      pangolin.public-resources.hoodik.ssl: true
+      pangolin.public-resources.hoodik.mode: http
       pangolin.public-resources.hoodik.targets[0].method: http
       pangolin.public-resources.hoodik.targets[0].port: 5443
-      pangolin.public-resources.hoodik.auth.sso-enabled: true
-      pangolin.public-resources.hoodik.auth.sso-roles[0]: Member
-      pangolin.public-resources.hoodik.rules[0].action: pass
-      pangolin.public-resources.hoodik.rules[0].match: country
-      pangolin.public-resources.hoodik.rules[0].value: US
-      pangolin.public-resources.hoodik.rules[1].action: deny
-      pangolin.public-resources.hoodik.rules[1].match: country
-      pangolin.public-resources.hoodik.rules[1].value: ALL
+      pangolin.public-resources.hoodik.policy: member
+
+      pangolin.public-resources.hoodik.rules[0].action: allow
+      pangolin.public-resources.hoodik.rules[0].match: path
+      pangolin.public-resources.hoodik.rules[0].value: /api/*
 
   hoodik_db:
     profiles: [hoodik]
     image: postgres:18-alpine
+    container_name: hoodik_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

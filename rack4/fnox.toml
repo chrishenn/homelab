@@ -86,6 +86,7 @@ KANEO_S3_SECRET = { provider = "onepass", value = "op://homelab/kaneo/s3_secret"
 PLANE_S3_ACCESS = { provider = "onepass", value = "op://homelab/plane/s3_access" }
 PLANE_S3_SECRET = { provider = "onepass", value = "op://homelab/plane/s3_secret" }
 PLANE_SEARCH_PASS = { provider = "onepass", value = "op://homelab/plane/search_pass" }
+PLANE_SECRET = { provider = "onepass", value = "op://homelab/plane/secret" }
 
 DRIVEBASE_MASTER = { provider = "onepass", value = "op://homelab/drivebase/master" }
 DRIVEBASE_BETTER = { provider = "onepass", value = "op://homelab/drivebase/betterauth" }
@@ -96,13 +97,44 @@ FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_s
 OPENCUT_BETTERAUTH = { provider = "onepass", value = "op://homelab/opencut/betterauth" }
 OPENCUT_UPSTASH = { provider = "onepass", value = "op://homelab/opencut/upstash" }
 
+OUTLINE_SECRET = { provider = "onepass", value = "op://homelab/outline/secret_key" }
+OUTLINE_UTILS = { provider = "onepass", value = "op://homelab/outline/utils_secret" }
+
+MYDIA_SECRET = { provider = "onepass", value = "op://homelab/mydia/secret" }
+MYDIA_GUARDIAN = { provider = "onepass", value = "op://homelab/mydia/guardian" }
+
+INFISICAL_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/infisical/encryption_key" }
+INFISICAL_AUTH_SECRET = { provider = "onepass", value = "op://homelab/infisical/auth_secret" }
+
 SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
 NEWSHOSTING_PASS = { provider = "onepass", value = "op://homelab/newshosting/password" }
+NEWSHOSTING_RETENTION = { provider = "onepass", value = "op://homelab/newshosting/retention" }
+NEWSHOSTING_CONNECTIONS = { provider = "onepass", value = "op://homelab/newshosting/connections" }
 
 CAMPFIRE_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_public_key" }
 CAMPFIRE_VAPID_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/campfire/vapid_private_key" }
+
+NETBOX_SECRET = { provider = "onepass", value = "op://homelab/netbox/secret" }
+NETBOX_PEPPER = { provider = "onepass", value = "op://homelab/netbox/pepper" }
+
+BOOKORBIT_SECRET = { provider = "onepass", value = "op://homelab/bookorbit/secret" }
+BOOKORBIT_BOOT = { provider = "onepass", value = "op://homelab/bookorbit/boot" }
+
+PODCAST_INDEX_API_KEY = { provider = "onepass", value = "op://homelab/podcastindex/api_key" }
+PODCAST_INDEX_API_SECRET = { provider = "onepass", value = "op://homelab/podcastindex/api_secret" }
+
+MAILFLOW_ENCRYPTION = { provider = "onepass", value = "op://homelab/mailflow/encryption" }
+MAILFLOW_VAPID_PUB = { provider = "onepass", value = "op://homelab/mailflow/vapid_pub" }
+MAILFLOW_VAPID_PRIV = { provider = "onepass", value = "op://homelab/mailflow/vapid_priv" }
+MAILFLOW_SESSION = { provider = "onepass", value = "op://homelab/mailflow/session" }
+
+APPFLOWY_S3_ACCESS = { provider = "onepass", value = "op://homelab/appflowy/s3_access" }
+APPFLOWY_S3_SECRET = { provider = "onepass", value = "op://homelab/appflowy/s3_secret" }
+APPFLOWY_S3_BUCKET = { provider = "onepass", value = "op://homelab/appflowy/s3_bucket" }
+APPFLOWY_S3_REGION = { provider = "onepass", value = "op://homelab/appflowy/s3_region" }
+APPFLOWY_GOTRUE_JWT = { provider = "onepass", value = "op://homelab/appflowy/gotrue_jwt" }
 
 STOAT_VAPID_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/stoat/vapid_private_key" }
 STOAT_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/stoat/vapid_public_key" }
@@ -155,6 +187,10 @@ ARCANE_SECRET = { provider = "onepass", value = "op://homelab/arcane/secret" }
 DUPLICATI_SECRET = { provider = "onepass", value = "op://homelab/duplicati/secret" }
 MATTERMOST_SEARCH_PASS = { provider = "onepass", value = "op://homelab/mattermost/search_pass" }
 CAMPFIRE_SECRET_KEY_BASE = { provider = "onepass", value = "op://homelab/Campfire/secret_key_base" }
+DAGU_SECRET = { provider = "onepass", value = "op://homelab/dagu/secret" }
+KAN_SECRET = { provider = "onepass", value = "op://homelab/kan/secret" }
+HOODIK_SECRET = { provider = "onepass", value = "op://homelab/hoodik/secret" }
+MINUSPOD_SECRET = { provider = "onepass", value = "op://homelab/minuspod/secret" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -236,3 +272,15 @@ WUD_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/wud/oidc_client"
 WUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/wud/oidc_secret" }
 BONFIRE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bonfire/oidc_client" }
 BONFIRE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bonfire/oidc_secret" }
+OUTLINE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/outline/oidc_client" }
+OUTLINE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/outline/oidc_secret" }
+NETBOX_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/netbox/oidc_client" }
+NETBOX_OIDC_SECRET = { provider = "onepass", value = "op://homelab/netbox/oidc_secret" }
+AFFINE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/affine/oidc_client" }
+AFFINE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/affine/oidc_secret" }
+MYDIA_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/mydia/oidc_client" }
+MYDIA_OIDC_SECRET = { provider = "onepass", value = "op://homelab/mydia/oidc_secret" }
+REITTI_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/reitti/oidc_client" }
+REITTI_OIDC_SECRET = { provider = "onepass", value = "op://homelab/reitti/oidc_secret" }
+KAN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kan/oidc_client" }
+KAN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kan/oidc_secret" }

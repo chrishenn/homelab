@@ -65,7 +65,7 @@ services:
       SETTING_EMAIL_USE_SSL: 'True'
       SETTING_EMAIL_USE_TLS: 'False'
       SETTING_SEND_LOGIN_EMAILS: 'False'
-      SECRETS_email_password: '$SMTP_TOKEN'
+      SECRETS_email_password: '$SMTP_PASS'
 
       ZULIP_CUSTOM_SETTINGS: |
         SOCIAL_AUTH_OIDC_ENABLED_IDPS: dict[str, Any] = {

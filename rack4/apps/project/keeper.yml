@@ -39,7 +39,7 @@ services:
     volumes:
       - $DATA/keeper/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U keeper -d keeper']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

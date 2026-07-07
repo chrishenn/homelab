@@ -10,7 +10,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: Project Management
-      homepage.name: notediscovery
+      homepage.name: Notediscovery
       homepage.icon: notediscovery.png
       homepage.href: https://notediscovery.chenn.dev
       homepage.description: Note Server

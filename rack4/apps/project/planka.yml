@@ -27,7 +27,7 @@ services:
       SMTP_SECURE: true
       SMTP_TLS_REJECT_UNAUTHORIZED: true
       SMTP_USER: $SMTP_USER
-      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_PASSWORD: $SMTP_PASS
 
       OIDC_ISSUER: $OIDC
       OIDC_CLIENT_ID: $PLANKA_OIDC_CLIENT
@@ -46,7 +46,7 @@ services:
       homepage.name: Planka
       homepage.icon: planka.png
       homepage.href: https://planka.chenn.dev
-      homepage.description: Private Trello
+      homepage.description: Trello Clone
 
       pangolin.public-resources.planka.name: planka
       pangolin.public-resources.planka.full-domain: planka.chenn.dev
@@ -66,7 +66,7 @@ services:
       POSTGRES_DB: planka
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d planka']
+      test: pg_isready -q -d $$POSTGRES_DB
     networks: [planka]
 
 networks:

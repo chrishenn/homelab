@@ -1,0 +1,40 @@
+---
+services:
+  dagu:
+    profiles: [dagu]
+    image: ghcr.io/dagucloud/dagu:latest
+    container_name: dagu
+    restart: unless-stopped
+    user: '0:0'
+    entrypoint: ['/usr/local/bin/tini', '-g', '--']
+    command: ['dagu', 'start-all']
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      DAGU_TZ: $TZ
+
+      DAGU_HOST: 0.0.0.0
+      DAGU_PORT: 8080
+      DAGU_DEBUG: false
+      DAGU_DAGS_DIR: /var/lib/dagu/dags
+
+      DAGU_AUTH_MODE: builtin
+      DAGU_AUTH_TOKEN_SECRET: ${DAGU_SECRET}
+
+    volumes:
+      - $DATA/dagu/data:/var/lib/dagu
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: Dagu
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dagu-dark.png
+      homepage.href: https://dagu.chenn.dev
+      homepage.description: Task Runner
+
+      pangolin.public-resources.dagu.name: dagu
+      pangolin.public-resources.dagu.full-domain: dagu.chenn.dev
+      pangolin.public-resources.dagu.mode: http
+      pangolin.public-resources.dagu.targets[0].method: http
+      pangolin.public-resources.dagu.targets[0].port: 8080
+      pangolin.public-resources.dagu.policy: member

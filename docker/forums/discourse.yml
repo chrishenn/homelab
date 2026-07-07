@@ -1,14 +1,18 @@
-# typical ruby crap. Nothing works, terrible defaults, 30 layers of nonsense, and everything is slow as hell to make fixing a nightmare
-# documentation is some forum garbage mixed in with posts and guides
-# no page with explanations of environment vars. have to use poorly-explained example config file
+# Typical ruby crap. Nothing works, terrible defaults, 30 layers of nonsense, and everything is slow as hell to make
+#   fixing a nightmare
+# Documentation is some forum garbage mixed in with posts and guides
+#   no page with explanations of environment vars. have to use poorly-explained example config file
+
 # smtp errors aren't logged. I hate these ruby apps jesus christ people get it together
 # smtp blocked a thread for 30 seconds and then crashed. JESUS CHRIS WHAT
 # THIS IS THE SIMPLEST FUKCING THING. HOW CAN I EXPECT THE OTHER SHIT TO WORK IF YOU CAN'T HANDLE A SIMPLE AUTH ERROR
+
 # pulling icons from some made-up http address for no reason
 # initial setup for admin account failed on email verification, but let me log in anyway. great job
 # docker container doesn't log to stdout, and there's no obvious way to change it
 # no way to change log level? WHAT THE F@#$%@#$%
-# no obvious way to set SMTP to use SSL. WHY DO I NEED TO ENABLE TLS MANUALLY AND THE CONFIG HAS FORCE IN IT WHEN IT SHOULD BE DEFAULT!!!!
+# no obvious way to set SMTP to use SSL. WHY DO I NEED TO ENABLE TLS MANUALLY AND THE CONFIG HAS FORCE IN IT WHEN IT
+#   SHOULD BE DEFAULT!!!!
 ---
 services:
   discourse:
@@ -28,7 +32,7 @@ services:
       DISCOURSE_SMTP_ADDRESS: '$SMTP_HOST'
       DISCOURSE_SMTP_PORT: 465
       DISCOURSE_SMTP_USER_NAME: '$SMTP_USER'
-      DISCOURSE_SMTP_PASSWORD: '$SMTP_TOKEN'
+      DISCOURSE_SMTP_PASSWORD: '$SMTP_PASS'
       DISCOURSE_SMTP_ENABLE_START_TLS: false
       DISCOURSE_SMTP_FORCE_TLS: true
       DISCOURSE_SMTP_AUTHENTICATION: login

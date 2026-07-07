@@ -44,7 +44,7 @@ services:
     volumes:
       - $DATA/zipline/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'zipline']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
       timeout: 5s
       retries: 5

@@ -38,7 +38,7 @@ x-dawarich_env: &dawarich_env
   SMTP_PORT: 465
   SMTP_DOMAIN: $SMTP_USER
   SMTP_USERNAME: $SMTP_USER
-  SMTP_PASSWORD: $SMTP_TOKEN
+  SMTP_PASSWORD: $SMTP_PASS
   SMTP_FROM: $SMTP_USER
 
 services:
@@ -135,7 +135,7 @@ services:
     environment:
       <<: *dawarich_env
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d dawarich_development']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
       retries: 5
       start_period: 30s

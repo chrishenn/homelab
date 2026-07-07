@@ -8,7 +8,7 @@ x-rally_env: &rally_env
   SUPPORT_EMAIL: $SMTP_USER
   SMTP_HOST: $SMTP_HOST
   SMTP_USER: $SMTP_USER
-  SMTP_PWD: $SMTP_TOKEN
+  SMTP_PWD: $SMTP_PASS
   SMTP_PORT: 465
   SMTP_SECURE: true
 
@@ -57,7 +57,7 @@ services:
     volumes:
       - $DATA/rally/rally_db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
     networks: [rally]
 
 networks:

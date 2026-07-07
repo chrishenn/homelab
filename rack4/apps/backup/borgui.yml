@@ -1,0 +1,60 @@
+---
+# unhandled python exception when oidc data format unexpected. amateurish
+services:
+  borgui:
+    profiles: [borgui]
+    image: ainullcode/borg-ui:latest
+    container_name: borgui
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+      PUBLIC_BASE_URL: https://borgui.chenn.dev
+      LOCAL_MOUNT_POINTS: /local
+      INITIAL_ADMIN_PASSWORD: ${PASS}
+
+      REDIS_HOST: borgui_redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/borgui/data:/data
+      - $DATA/borgui/cache:/home/borg/.cache/borg
+      - $DATA/borgui/local:/local
+    networks: [borgui, newt]
+    labels:
+      homepage.group: Backup
+      homepage.name: Borg UI
+      homepage.icon: borg.png
+      homepage.href: https://borgui.chenn.dev
+      homepage.description: Another Borg Backup GUI
+
+      pangolin.public-resources.borgui.name: borgui
+      pangolin.public-resources.borgui.full-domain: borgui.chenn.dev
+      pangolin.public-resources.borgui.mode: http
+      pangolin.public-resources.borgui.targets[0].method: http
+      pangolin.public-resources.borgui.targets[0].port: 8081
+      pangolin.public-resources.borgui.policy: chris
+
+  borgui_redis:
+    profiles: [borgui]
+    image: valkey/valkey:alpine
+    container_name: borgui_redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 2gb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks: [borgui]
+
+networks:
+  borgui:

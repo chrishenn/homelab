@@ -18,7 +18,7 @@ configs:
 services:
   gocron:
     profiles: [gocron]
-    image: ghcr.io/flohoss/gocron:latest
+    image: ghcr.io/flohoss/gocron:v0.9.14
     restart: unless-stopped
     container_name: gocron
     hostname: gocron
@@ -37,11 +37,11 @@ services:
       - $DATA/gocron/config:/app/config
     networks: [newt]
     labels:
-      homepage.group: General Tools
+      homepage.group: Development Tools
       homepage.name: Go Cron
       homepage.icon: chronograf.png
       homepage.href: https://cron.henn.dev
-      homepage.description: Go Cron
+      homepage.description: Cron UI
 
       pangolin.public-resources.gocron.name: gocron
       pangolin.public-resources.gocron.full-domain: gocron.chenn.dev

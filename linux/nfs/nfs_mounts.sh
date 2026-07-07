@@ -7,9 +7,10 @@ END
 
 # shares
 sudo tee -a /etc/exports >/dev/null <<-END
-	/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
-	/mnt/k 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
-	/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+	/var/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+	/var/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+	/var/mnt/k 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+	/var/mnt/r 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
 END
 
 # shares: zfs

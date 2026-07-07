@@ -1,0 +1,196 @@
+---
+# feels like abandonware.
+# The networking setup either doesn't work or isn't documented.
+# UI is broken on firefox.
+configs:
+  colanode:
+    content: |
+      {
+        "name": "env://APP_NAME",
+        "web": {
+          "domain": "env://APP_DOMAIN"
+        },
+        "mode": "standalone",
+        "cors": {
+          "origin": "env://APP_URL",
+          "maxAge": 7200
+        },
+        "account": {
+          "verificationType": "email",
+          "otpTimeout": 600
+        },
+        "postgres": {
+          "url": "env://POSTGRES_URL"
+        },
+        "redis": {
+          "url": "env://REDIS_URL",
+          "db": 0,
+          "eventsChannel": "events"
+        },
+        "storage": {
+          "provider": {
+            "type": "file",
+            "directory": "/var/lib/colanode/storage"
+          },
+          "tus": {
+            "locker": {
+              "type": "redis",
+              "prefix": "colanode:tus:lock"
+            },
+            "cache": {
+              "type": "redis",
+              "prefix": "colanode:tus:cache"
+            }
+          }
+        },
+        "email": {
+          "enabled": true,
+          "from": {
+            "email": "env://EMAIL_SMTP_USER",
+            "name": "env://APP_NAME"
+          },
+          "provider": {
+            "type": "smtp",
+            "host": "env://EMAIL_SMTP_HOST",
+            "port": 465,
+            "secure": true,
+            "auth": {
+              "user": "env://EMAIL_SMTP_USER",
+              "password": "env://EMAIL_SMTP_PASS"
+            }
+          }
+        },
+        "jobs": {
+          "queue": {
+            "name": "jobs",
+            "prefix": "colanode"
+          },
+          "nodeUpdatesMerge": {
+            "enabled": true,
+            "cron": "0 5 */2 * * *",
+            "batchSize": 500,
+            "mergeWindow": 3600,
+            "cutoffWindow": 7200
+          },
+          "documentUpdatesMerge": {
+            "enabled": true,
+            "cron": "0 5 */2 * * *",
+            "batchSize": 500,
+            "mergeWindow": 3600,
+            "cutoffWindow": 7200
+          },
+          "cleanup": {
+            "enabled": true,
+            "cron": "0 5 */2 * * *"
+          }
+        },
+        "logging": {
+          "level": "info"
+        }
+      }
+
+services:
+  colanode:
+    profiles: [colanode]
+    image: ghcr.io/colanode/web:latest
+    container_name: colanode
+    restart: unless-stopped
+    networks: [colanode, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Colanode
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/colanode-dark.png
+      homepage.href: https://colanode.chenn.dev
+      homepage.description: Slack with Wiki
+
+      pangolin.public-resources.colanode.name: colanode
+      pangolin.public-resources.colanode.full-domain: colanode.chenn.dev
+      pangolin.public-resources.colanode.mode: http
+      pangolin.public-resources.colanode.policy: member
+
+      pangolin.public-resources.colanode.targets[0].method: http
+      pangolin.public-resources.colanode.targets[0].path-match: prefix
+      pangolin.public-resources.colanode.targets[0].path: /
+      pangolin.public-resources.colanode.targets[0].port: 80
+      pangolin.public-resources.colanode.targets[0].priority: 1
+
+      pangolin.public-resources.colanode.rules[0].action: allow
+      pangolin.public-resources.colanode.rules[0].match: path
+      pangolin.public-resources.colanode.rules[0].value: /api/*
+
+      pangolin.public-resources.colanode.rules[1].action: allow
+      pangolin.public-resources.colanode.rules[1].match: path
+      pangolin.public-resources.colanode.rules[1].value: /config/*
+
+      pangolin.public-resources.colanode.rules[2].action: allow
+      pangolin.public-resources.colanode.rules[2].match: path
+      pangolin.public-resources.colanode.rules[2].value: /client/*
+
+  colanode_api:
+    profiles: [colanode]
+    image: ghcr.io/colanode/server:latest
+    container_name: colanode_api
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: colanode.chenn.dev
+      APP_URL: https://colanode.chenn.dev
+      APP_NAME: Chicken Colanode
+
+      NODE_ENV: production
+      POSTGRES_URL: postgres://colanode:colanode@colanode_db/colanode
+      REDIS_URL: redis://colanode_redis/0
+
+      EMAIL_SMTP_HOST: ${SMTP_HOST}
+      EMAIL_SMTP_USER: ${SMTP_USER}
+      EMAIL_SMTP_PASS: ${SMTP_PASS}
+    configs:
+      - source: colanode
+        target: /app/apps/server/config.json
+    volumes:
+      - $DATA/colanode/data:/var/lib/colanode/storage
+    networks: [colanode, newt]
+    labels:
+      # this is the correct setup, and afaict it is completely undocumented
+      # the "server" you add in the UI is at https://colanode.chenn.dev/config - also undocumented
+      pangolin.public-resources.colanode.targets[1].method: http
+      pangolin.public-resources.colanode.targets[1].path-match: prefix
+      pangolin.public-resources.colanode.targets[1].path: /api
+      pangolin.public-resources.colanode.targets[1].port: 3000
+      pangolin.public-resources.colanode.targets[1].priority: 2
+
+      pangolin.public-resources.colanode.targets[2].method: http
+      pangolin.public-resources.colanode.targets[2].path-match: prefix
+      pangolin.public-resources.colanode.targets[2].path: /config
+      pangolin.public-resources.colanode.targets[2].port: 3000
+      pangolin.public-resources.colanode.targets[2].priority: 3
+
+      pangolin.public-resources.colanode.targets[3].method: http
+      pangolin.public-resources.colanode.targets[3].path-match: prefix
+      pangolin.public-resources.colanode.targets[3].path: /client
+      pangolin.public-resources.colanode.targets[3].port: 3000
+      pangolin.public-resources.colanode.targets[3].priority: 4
+
+  colanode_db:
+    profiles: [colanode]
+    image: pgvector/pgvector:pg18
+    container_name: colanode_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: colanode
+      POSTGRES_PASSWORD: colanode
+      POSTGRES_DB: colanode
+    volumes:
+      - $DATA/colanode/db:/var/lib/postgresql
+    networks: [colanode]
+
+  colanode_redis:
+    profiles: [colanode]
+    image: valkey/valkey:alpine
+    container_name: colanode_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/colanode/redis:/data
+    networks: [colanode]
+
+networks:
+  colanode:

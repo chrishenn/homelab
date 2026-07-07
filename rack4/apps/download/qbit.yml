@@ -95,18 +95,18 @@ services:
       homepage.description: Torrent Client
 
       traefik.enable: true
-      traefik.http.routers.qbit_novpn.rule: Host(`novpn.qbit.henn.dev`)
-      traefik.http.routers.qbit_novpn.entrypoints: websecure
-      traefik.http.routers.qbit_novpn.middlewares: hdrs@file
-      traefik.http.routers.qbit_novpn.tls.certresolver: cf
-      traefik.http.services.qbit_novpn.loadbalancer.server.port: 8080
+      traefik.http.routers.qbit-novpn.rule: Host(`novpn.qbit.henn.dev`)
+      traefik.http.routers.qbit-novpn.entrypoints: websecure
+      traefik.http.routers.qbit-novpn.middlewares: hdrs@file
+      traefik.http.routers.qbit-novpn.tls.certresolver: cf
+      traefik.http.services.qbit-novpn.loadbalancer.server.port: 8080
 
-      pangolin.public-resources.qbit_novpn.name: qbit_novpn
-      pangolin.public-resources.qbit_novpn.full-domain: novpn.qbit.chenn.dev
-      pangolin.public-resources.qbit_novpn.mode: http
-      pangolin.public-resources.qbit_novpn.targets[0].method: http
-      pangolin.public-resources.qbit_novpn.targets[0].port: 8080
-      pangolin.public-resources.qbit_novpn.policy: member
+      pangolin.public-resources.qbit-novpn.name: qbit-novpn
+      pangolin.public-resources.qbit-novpn.full-domain: novpn.qbit.chenn.dev
+      pangolin.public-resources.qbit-novpn.mode: http
+      pangolin.public-resources.qbit-novpn.targets[0].method: http
+      pangolin.public-resources.qbit-novpn.targets[0].port: 8080
+      pangolin.public-resources.qbit-novpn.policy: member
 
   qui:
     # crashes if oidc redirect not set. sadge

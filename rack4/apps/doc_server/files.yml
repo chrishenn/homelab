@@ -63,6 +63,7 @@ services:
     image: gtstef/filebrowser:stable
     container_name: files
     restart: unless-stopped
+    user: root
     configs:
       - source: files
         target: /config.yaml
@@ -73,9 +74,9 @@ services:
       FILEBROWSER_OIDC_CLIENT_SECRET: ${FILES_OIDC_SECRET}
     volumes:
       - $DATA/files/data:/home/filebrowser/data
-      - /mnt/k:/mnt/k
-      - /mnt/h:/mnt/h
       - /mnt/f:/mnt/f
+      - /mnt/h:/mnt/h
+      - /mnt/k:/mnt/k
       - /mnt/r:/mnt/r
     networks: [newt]
     labels:

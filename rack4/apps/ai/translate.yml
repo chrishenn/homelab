@@ -1,0 +1,45 @@
+services:
+  translate:
+    profiles: [translate]
+    image: libretranslate/libretranslate:latest-cuda
+    container_name: translate
+    restart: unless-stopped
+    tty: true
+    command: --debug
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      LT_API_KEYS_DB_PATH: /app/db/api_keys.db
+      LT_API_KEYS: True
+      LT_REQ_LIMIT: 120
+      LT_UPDATE_MODELS: True
+      LT_DEBUG: True
+      PUID: root
+    volumes:
+      - $DATA/translate/db:/app/db
+      - $DATA/translate/data:/root/.local
+    healthcheck:
+      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+      interval: 10s
+      timeout: 4s
+      retries: 4
+      start_period: 5s
+    networks: [newt]
+    labels:
+      homepage.group: AI
+      homepage.name: LibreTranslate
+      homepage.icon: libretranslate
+      homepage.href: https://translate.henn.dev
+      homepage.description: AI Translation
+
+      pangolin.public-resources.translate.name: translate
+      pangolin.public-resources.translate.full-domain: translate.chenn.dev
+      pangolin.public-resources.translate.mode: http
+      pangolin.public-resources.translate.targets[0].method: http
+      pangolin.public-resources.translate.targets[0].port: 5000
+      pangolin.public-resources.translate.policy: member

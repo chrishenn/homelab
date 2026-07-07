@@ -56,6 +56,14 @@ j f pangolin
     - Default Organization Mapping: org
     - Default Role Mapping: contains(groups, 'admin') && 'Admin' || 'Member'
 
+NOTE
+
+- resource identifiers cannot include underscores - only numbers, letters, and dashes
+    - the tricky thing here is that pangolin will balk at this in the web UI, but will happily apply them from docker
+- hostnames (ie docker service names) can have underscores unless you're using an S3 client that can't handle it
+- domain names with underscores (eg my_serv.chenn.dev) may or may not be kosher - stack overflow is unclear on it
+    - the pangolin web UI will not allow this, but the docker blueprint does, and browsers seem to be ok with it
+
 ---
 
 # auth

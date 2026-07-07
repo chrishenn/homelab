@@ -1,0 +1,53 @@
+---
+# https://minuspod.chenn.dev/ui
+# the fact that the server does not redirect browser '/' to '/ui' suggests that it may be slop
+services:
+  minuspod:
+    profiles: [minuspod]
+    image: ttlequals0/minuspod:latest
+    container_name: minuspod
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      BASE_URL: https://minuspod.chenn.dev
+      MINUSPOD_MASTER_PASSPHRASE: ${MINUSPOD_SECRET}
+      MINUSPOD_TRUSTED_PROXY_COUNT: 1
+
+      LLM_PROVIDER: ollama
+      OPENAI_BASE_URL: http://ollama:11434
+      OPENAI_MODEL: qwen3:14b
+      OLLAMA_NUM_CTX: 8192
+      WHISPER_MODEL: small
+      WHISPER_DEVICE: cuda
+      MAX_AUDIO_DOWNLOAD_MB: 2000
+
+      PODCAST_INDEX_API_KEY: ${PODCAST_INDEX_API_KEY}
+      PODCAST_INDEX_API_SECRET: ${PODCAST_INDEX_API_SECRET}
+    volumes:
+      - $DATA/minuspod/data:/app/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:$${MINUSPOD_PORT:-8000}/api/v1/health || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks: [newt, ollama]
+    labels:
+      homepage.group: General Media
+      homepage.name: Minuspod
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/minuspod.png
+      homepage.href: https://minuspod.chenn.dev/ui
+      homepage.description: Podcast Server
+
+      pangolin.public-resources.minuspod.name: minuspod
+      pangolin.public-resources.minuspod.full-domain: minuspod.chenn.dev
+      pangolin.public-resources.minuspod.mode: http
+      pangolin.public-resources.minuspod.targets[0].method: http
+      pangolin.public-resources.minuspod.targets[0].port: 8000
+      pangolin.public-resources.minuspod.policy: member

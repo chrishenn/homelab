@@ -20,7 +20,7 @@ services:
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: 465
       SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_PASSWORD: ${SMTP_PASS}
       SMTP_FROM_EMAIL: ${SMTP_USER}
       SMTP_USE_TLS: true
     volumes:
@@ -31,7 +31,7 @@ services:
       homepage.name: Ideon
       homepage.icon: https://github.com/3xpyth0n/ideon/blob/main/public/dark-icon.png?raw=true
       homepage.href: https://ideon.chenn.dev
-      homepage.description: Collaborative Workspace Tool
+      homepage.description: Figma Clone
 
       pangolin.public-resources.ideon.name: ideon
       pangolin.public-resources.ideon.full-domain: ideon.chenn.dev
@@ -52,7 +52,7 @@ services:
     volumes:
       - $DATA/ideon/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ideon']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

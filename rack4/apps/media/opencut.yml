@@ -59,7 +59,7 @@ services:
     volumes:
       - $DATA/opencut/db:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -U $${POSTGRES_USER}
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 30s
       timeout: 10s
       retries: 5

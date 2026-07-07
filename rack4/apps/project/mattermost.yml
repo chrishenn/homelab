@@ -1,3 +1,4 @@
+# using opensearch appears to require enterprise license
 ---
 services:
   mattermost:
@@ -27,18 +28,10 @@ services:
       MM_EMAILSETTINGS_SMTPSERVER: ${SMTP_HOST}
       MM_EMAILSETTINGS_SMTPPORT: 465
       MM_EMAILSETTINGS_SMTPUSERNAME: ${SMTP_USER}
-      MM_EMAILSETTINGS_SMTPPASSWORD: ${SMTP_TOKEN}
+      MM_EMAILSETTINGS_SMTPPASSWORD: ${SMTP_PASS}
       MM_EMAILSETTINGS_ENABLESMTPAUTH: true
       MM_EMAILSETTINGS_CONNECTIONSECURITY: TLS
       MM_EMAILSETTINGS_FEEDBACKEMAIL: ${SMTP_USER}
-
-      MM_ELASTICSEARCHSETTINGS_ENABLEINDEXING: true
-      MM_ELASTICSEARCHSETTINGS_ENABLESEARCHING: true
-      MM_ELASTICSEARCHSETTINGS_ENABLEAUTOCOMPLETE: true
-      MM_ELASTICSEARCHSETTINGS_BACKEND: opensearch
-      MM_ELASTICSEARCHSETTINGS_CONNECTIONURL: http://mattermost_search:9200
-      MM_ELASTICSEARCHSETTINGS_USERNAME: admin
-      MM_ELASTICSEARCHSETTINGS_PASSWORD: ${MATTERMOST_SEARCH_PASS}
 
       MM_SQLSETTINGS_DRIVERNAME: postgres
       MM_SQLSETTINGS_DATASOURCE: postgres://mm:mm@mattermost_db/mm?sslmode=disable&connect_timeout=10
@@ -61,7 +54,7 @@ services:
       homepage.name: Mattermost
       homepage.icon: mattermost.png
       homepage.href: https://mattermost.chenn.dev
-      homepage.description: Private Slack
+      homepage.description: Slack Clone
 
       pangolin.public-resources.mattermost.name: mattermost
       pangolin.public-resources.mattermost.full-domain: mattermost.chenn.dev
@@ -89,19 +82,6 @@ services:
       POSTGRES_DB: mm
     volumes:
       - $DATA/mattermost/db:/var/lib/postgresql
-    networks: [mattermost]
-
-  mattermost_search:
-    profiles: [mattermost]
-    image: opensearchproject/opensearch:latest
-    container_name: mattermost_search
-    environment:
-      node.name: opensearch-node
-      discovery.type: single-node
-      plugins.security.disabled: true
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${MATTERMOST_SEARCH_PASS}
-    volumes:
-      - $DATA/mattermost/search:/usr/share/opensearch/data
     networks: [mattermost]
 
   mattermost_perm:

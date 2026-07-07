@@ -1,0 +1,24 @@
+---
+# sudo chown -R 1000:1000 $DATA/linkbreeze
+services:
+  linkbreeze:
+    profiles: [linkbreeze]
+    image: ghcr.io/manak-hash/linkbreeze:latest
+    container_name: linkbreeze
+    restart: unless-stopped
+    volumes:
+      - $DATA/linkbreeze/data:/app/data
+    networks: [newt]
+    labels:
+      homepage.group: General Tools
+      homepage.name: linkbreeze
+      homepage.icon: linkbreeze.png
+      homepage.href: https://linkbreeze.chenn.dev
+      homepage.description: Linktree Clone
+
+      pangolin.public-resources.linkbreeze.name: linkbreeze
+      pangolin.public-resources.linkbreeze.full-domain: linkbreeze.chenn.dev
+      pangolin.public-resources.linkbreeze.mode: http
+      pangolin.public-resources.linkbreeze.targets[0].method: http
+      pangolin.public-resources.linkbreeze.targets[0].port: 3000
+      pangolin.public-resources.linkbreeze.policy: member

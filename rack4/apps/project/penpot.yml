@@ -3,7 +3,7 @@ x-penpot_env: &penpot_env
   PENPOT_PUBLIC_URI: https://penpot.chenn.dev
   PENPOT_BACKEND_URI: http://penpot_backend:6060
   PENPOT_EXPORTER_URI: http://penpot_exporter:6061
-  PENPOT_REDIS_URI: redis://penpot_valkey/0
+  PENPOT_REDIS_URI: redis://penpot_redis/0
 
   PENPOT_DATABASE_URI: postgresql://penpot_db/penpot
   PENPOT_DATABASE_USERNAME: penpot
@@ -30,7 +30,7 @@ x-penpot_env: &penpot_env
   PENPOT_SMTP_HOST: ${SMTP_HOST}
   PENPOT_SMTP_PORT: 465
   PENPOT_SMTP_USERNAME: ${SMTP_USER}
-  PENPOT_SMTP_PASSWORD: ${SMTP_TOKEN}
+  PENPOT_SMTP_PASSWORD: ${SMTP_PASS}
   PENPOT_SMTP_TLS: false
   PENPOT_SMTP_SSL: true
 
@@ -54,7 +54,7 @@ services:
       homepage.name: PenPot
       homepage.icon: penpot.png
       homepage.href: https://penpot.chenn.dev
-      homepage.description: Collaborative Design
+      homepage.description: Figma Clone
 
       pangolin.public-resources.penpot.name: penpot
       pangolin.public-resources.penpot.full-domain: penpot.chenn.dev
@@ -90,7 +90,7 @@ services:
     restart: unless-stopped
     stop_signal: SIGINT
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U penpot']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 2s
       timeout: 10s
       retries: 5
@@ -101,10 +101,10 @@ services:
       - $DATA/penpot/db:/var/lib/postgresql
     networks: [penpot]
 
-  penpot_valkey:
+  penpot_redis:
     profiles: [penpot]
     image: valkey/valkey:alpine
-    container_name: penpot_valkey
+    container_name: penpot_redis
     restart: unless-stopped
     healthcheck:
       test: ['CMD-SHELL', 'valkey-cli ping | grep PONG']

@@ -1,6 +1,6 @@
-/.vscode/
+*.venv*
+.vscode/
 .idea/
-.venv/
 *__pycache__*
 *secret*
 *.env

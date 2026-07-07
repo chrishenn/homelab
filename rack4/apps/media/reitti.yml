@@ -1,0 +1,78 @@
+---
+services:
+  reitti:
+    profiles: [reitti]
+    image: dedicatedcode/reitti:latest
+    container_name: reitti
+    restart: unless-stopped
+    environment:
+      TILES_CACHE: http://reitti_cache
+
+      POSTGIS_HOST: reitti_db
+      POSTGIS_DB: reitti
+      POSTGIS_USER: reitti
+      POSTGIS_PASSWORD: reitti
+      REDIS_HOST: reitti_redis
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER_URI: $OIDC
+      OIDC_CLIENT_ID: ${REITTI_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${REITTI_OIDC_SECRET}
+    volumes:
+      - $DATA/reitti/data:/data/
+    networks: [reitti, newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: reitti
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/reitti-dark.png
+      homepage.href: https://reitti.chenn.dev
+      homepage.description: Location Tracking
+
+      pangolin.public-resources.reitti.name: reitti
+      pangolin.public-resources.reitti.full-domain: reitti.chenn.dev
+      pangolin.public-resources.reitti.mode: http
+      pangolin.public-resources.reitti.targets[0].method: http
+      pangolin.public-resources.reitti.targets[0].port: 8080
+      pangolin.public-resources.reitti.policy: member
+
+  reitti_cache:
+    profiles: [reitti]
+    image: dedicatedcode/reitti-tile-cache:latest
+    container_name: reitti_cache
+    restart: unless-stopped
+    volumes:
+      - $DATA/reitti/cache:/var/cache/nginx
+    networks: [reitti]
+
+  reitti_db:
+    profiles: [reitti]
+    image: postgis/postgis:18-3.6-alpine
+    container_name: reitti_db
+    environment:
+      POSTGRES_USER: reitti
+      POSTGRES_PASSWORD: reitti
+      POSTGRES_DB: reitti
+    volumes:
+      - $DATA/reitti/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [reitti]
+
+  reitti_redis:
+    profiles: [reitti]
+    image: valkey/valkey:alpine
+    container_name: reitti_redis
+    volumes:
+      - $DATA/reitti/redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [reitti]
+
+networks:
+  reitti:

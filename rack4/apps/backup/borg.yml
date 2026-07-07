@@ -1,0 +1,29 @@
+---
+services:
+  borg:
+    profiles: [borg]
+    image: marcpope/borgbackupserver:latest
+    container_name: borg
+    restart: unless-stopped
+    environment:
+      APP_URL: https://borg.chenn.dev
+      #      SSH_PORT: 2222
+      PUID: ${PUID}
+      PGID: ${PGID}
+      ADMIN_PASS: ${PASS}
+    volumes:
+      - $DATA/borg/backup:/var/bbs
+    networks: [newt]
+    labels:
+      homepage.group: Backup
+      homepage.name: Borg
+      homepage.icon: borg.png
+      homepage.href: https://borg.chenn.dev
+      homepage.description: Borg Backup GUI
+
+      pangolin.public-resources.borg.name: borg
+      pangolin.public-resources.borg.full-domain: borg.chenn.dev
+      pangolin.public-resources.borg.mode: http
+      pangolin.public-resources.borg.targets[0].method: http
+      pangolin.public-resources.borg.targets[0].port: 80
+      pangolin.public-resources.borg.policy: chris

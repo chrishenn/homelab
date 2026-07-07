@@ -1,6 +1,8 @@
-# harbor
+# NOTE: HARBOR IS ABANDONWARE. DO NOT USE IT.
 
-## NOTE: HARBOR IS ABANDONWARE. DO NOT USE IT.
+---
+
+# harbor
 
 I can't push a very basic image built on top of alpine, becuase of a bug that is almost a year old:
 https://github.com/goharbor/harbor/issues/22078

@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     environment:
       SERVER_SECRET: ${PANGOLIN_SERVER_SECRET}
-      EMAIL_SMTP_PASS: ${SMTP_TOKEN}
+      EMAIL_SMTP_PASS: ${SMTP_PASS}
     volumes:
       - $DIR_HOST/pangolin:/app/config
       - $DATA/pangolin/GeoLite2:/app/config/GeoLite2

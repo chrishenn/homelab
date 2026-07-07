@@ -77,7 +77,7 @@ services:
       POSTGRES_USER: kestra
       POSTGRES_PASSWORD: kestra
     healthcheck:
-      test: pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
     networks: [kestra]
 
 networks:

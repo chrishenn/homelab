@@ -56,7 +56,7 @@ services:
       SYNCIN_MAIL_PORT: 465
       SYNCIN_MAIL_SENDER: $SMTP_USER
       SYNCIN_MAIL_AUTH_USER: $SMTP_USER
-      SYNCIN_MAIL_AUTH_PASS: $SMTP_TOKEN
+      SYNCIN_MAIL_AUTH_PASS: $SMTP_PASS
       SYNCIN_MAIL_SECURE: true
       SYNCIN_MAIL_REJECTUNAUTHORIZED: true
 
@@ -146,10 +146,11 @@ services:
 
   syncin_collabora:
     profiles: [syncin]
-    image: collabora/code:latest
+    image: collabora/code:26.04.2.1.1
     container_name: syncin_collabora
     restart: unless-stopped
     environment:
+      aliasgroup1: https://syncin.chenn.dev,https://syncin.henn.dev
       extra_params: >-
         --o:ssl.enable=false
         --o:ssl.termination=true

@@ -1,0 +1,93 @@
+---
+# elixir/dart/rust. crashes every few seconds, and some visual jank - otherwise very snappy
+# openssl rand -base64 48
+configs:
+  mydia:
+    content: |
+      server:
+        port: 4000
+        host: "0.0.0.0"
+
+      database:
+        path: "/data/mydia.db"
+        pool_size: 5
+
+      auth:
+        local_enabled: true
+
+      downloads:
+        monitor_interval_minutes: 2
+
+      hooks:
+        enabled: true
+        directory: "hooks"
+        default_timeout_ms: 5000
+        max_timeout_ms: 30000
+
+      logging:
+        level: "info"
+        format: "[$$level] $$message\n"
+
+      oban:
+        poll_interval: 1000
+        max_age_days: 7
+
+services:
+  mydia:
+    profiles: [mydia]
+    image: ghcr.io/getmydia/mydia:latest
+    container_name: mydia
+    restart: unless-stopped
+    configs:
+      - source: mydia
+        target: /config/config.yaml
+    environment:
+      SECRET_KEY_BASE: ${MYDIA_SECRET}
+      GUARDIAN_SECRET_KEY: ${MYDIA_GUARDIAN}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+      PHX_HOST: mydia.chenn.dev
+      MOVIES_PATH: /media/Movies
+      TV_PATH: /media/TV
+
+      OIDC_ENABLED: true
+      OIDC_ISSUER: ${OIDC}
+      OIDC_CLIENT_ID: ${MYDIA_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${MYDIA_OIDC_SECRET}
+      OIDC_SCOPES: openid profile email groups
+
+      DOWNLOAD_CLIENT_1_NAME: SABnzbd
+      DOWNLOAD_CLIENT_1_TYPE: sabnzbd
+      DOWNLOAD_CLIENT_1_HOST: sab
+      DOWNLOAD_CLIENT_1_PORT: 8080
+      DOWNLOAD_CLIENT_1_API_KEY: ${SAB_API_KEY}
+
+      DOWNLOAD_CLIENT_2_NAME: qBittorrent
+      DOWNLOAD_CLIENT_2_TYPE: qbittorrent
+      DOWNLOAD_CLIENT_2_HOST: gluetun
+      DOWNLOAD_CLIENT_2_PORT: 8080
+      DOWNLOAD_CLIENT_2_USERNAME: ${USER}
+      DOWNLOAD_CLIENT_2_PASSWORD: ${PASS}
+
+      INDEXER_1_NAME: Prowlarr
+      INDEXER_1_TYPE: prowlarr
+      INDEXER_1_BASE_URL: http://prowlarr:9696
+      INDEXER_1_API_KEY: ${PROWLARR_API_KEY}
+    volumes:
+      - $MEDIA:/media
+    networks: [arr, newt]
+    labels:
+      homepage.group: Arr
+      homepage.name: Mydia
+      homepage.icon: https://github.com/getmydia/mydia/blob/master/player/assets/icon.png?raw=true
+      homepage.href: https://mydia.chenn.dev
+      homepage.description: Video Manager
+
+      pangolin.public-resources.mydia.name: mydia
+      pangolin.public-resources.mydia.full-domain: mydia.chenn.dev
+      pangolin.public-resources.mydia.mode: http
+      pangolin.public-resources.mydia.targets[0].method: http
+      pangolin.public-resources.mydia.targets[0].port: 4000
+      pangolin.public-resources.mydia.policy: member

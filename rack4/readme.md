@@ -40,18 +40,19 @@ if services depend on images that are built locally, and depend on images that m
 our local images we must manually build and push them to the local registry ($REGISTRY)
 
 ```bash
+# boot stack fresh
+j login_docker
+
 # Local images requiring a local build. The current list may be longer
-j build openresume transcodarr blocky_k rsync bulwark
+imgs="openresume transcodarr blocky_k rsync bulwark campfire opencut"
+j build "$imgs"
+j pullup core "$imgs"
 
 # there's a bit of an ordering here; the local registry has service deps that it requires to work
 # ie: traefik is needed to route zot.henn.dev; traefik_k binds traefik to the host's vip; zot requires its auth provider
 # pocketid or else it crashes; pocketid is routed by pangolin via rack4 newt.
-j down
 j pullup core zot traefik traefik_k pocketid newt
 j pullup
-
-# boot stack fresh
-j login_docker
 ```
 
 ---

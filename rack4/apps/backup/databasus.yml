@@ -9,7 +9,7 @@ services:
       - $DATA/databasus/data:/databasus-data
     networks: [newt]
     labels:
-      homepage.group: Development Tools
+      homepage.group: Backup
       homepage.name: Databasus
       homepage.icon: databasus.png
       homepage.href: https://databasus.chenn.dev

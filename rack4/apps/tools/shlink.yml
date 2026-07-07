@@ -8,7 +8,7 @@ services:
     container_name: shlink
     restart: unless-stopped
     environment:
-      SHLINK_SERVER_URL: https://shlink_api.chenn.dev
+      SHLINK_SERVER_URL: https://shlink-api.chenn.dev
       SHLINK_SERVER_API_KEY: ${SHLINK_API_KEY}
     networks: [shlink, newt]
     labels:
@@ -50,17 +50,17 @@ services:
       DB_NAME: shlink
     networks: [shlink, newt]
     labels:
-      pangolin.public-resources.shlink_api.name: shlink_api
-      pangolin.public-resources.shlink_api.full-domain: shlink_api.chenn.dev
-      pangolin.public-resources.shlink_api.mode: http
-      pangolin.public-resources.shlink_api.targets[0].method: http
-      pangolin.public-resources.shlink_api.targets[0].port: 8080
-      pangolin.public-resources.shlink_api.rules[0].action: pass
-      pangolin.public-resources.shlink_api.rules[0].match: country
-      pangolin.public-resources.shlink_api.rules[0].value: US
-      pangolin.public-resources.shlink_api.rules[1].action: deny
-      pangolin.public-resources.shlink_api.rules[1].match: country
-      pangolin.public-resources.shlink_api.rules[1].value: ALL
+      pangolin.public-resources.shlink-api.name: shlink-api
+      pangolin.public-resources.shlink-api.full-domain: shlink-api.chenn.dev
+      pangolin.public-resources.shlink-api.mode: http
+      pangolin.public-resources.shlink-api.targets[0].method: http
+      pangolin.public-resources.shlink-api.targets[0].port: 8080
+      pangolin.public-resources.shlink-api.rules[0].action: pass
+      pangolin.public-resources.shlink-api.rules[0].match: country
+      pangolin.public-resources.shlink-api.rules[0].value: US
+      pangolin.public-resources.shlink-api.rules[1].action: deny
+      pangolin.public-resources.shlink-api.rules[1].match: country
+      pangolin.public-resources.shlink-api.rules[1].value: ALL
 
   shlink_db:
     profiles: [shlink]
@@ -74,7 +74,7 @@ services:
     volumes:
       - $DATA/shlink/db:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

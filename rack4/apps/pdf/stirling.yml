@@ -21,7 +21,7 @@ services:
       MAIL_HOST: ${SMTP_HOST}
       MAIL_PORT: 587
       MAIL_USERNAME: ${SMTP_USER}
-      MAIL_PASSWORD: ${SMTP_TOKEN}
+      MAIL_PASSWORD: ${SMTP_PASS}
       MAIL_FROM: ${SMTP_USER}
       MAIL_TLS_ENABLED: true
     volumes:

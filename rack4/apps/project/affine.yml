@@ -1,5 +1,26 @@
 # seems amateurish to have a one-time migration container, but the project looks legit otherwise
+# documentation is out of sync with repo, and there are typos - sloppy
+
+# echo "{\"clientId\":\"$AFFINE_OIDC_CLIENT\",\"clientSecret\":\"$AFFINE_OIDC_SECRET\",\"issuer\":\"$OIDC\",\"allowPrivateNetwork\":false,\"args\":{}}"
+
 ---
+configs:
+  affine:
+    content: |
+      {
+        "$$schema": "https://github.com/toeverything/affine/releases/latest/download/config.schema.json",
+        "server": {
+          "name": "AFFiNE Chicken",
+          "externalUrl": "https://affine.chenn.dev"
+        },
+        "copilot": {
+          "enabled": false,
+          "byok": {
+            "enabled": false
+          }
+        }
+      }
+
 x-affine_env: &affine_env
   REDIS_SERVER_HOST: affine_redis
   DATABASE_URL: postgresql://affine:affine@affine_db:5432/affine
@@ -20,7 +41,7 @@ x-affine_env: &affine_env
   MAILER_HOST: ${SMTP_HOST}
   MAILER_PORT: 465
   MAILER_USER: ${SMTP_USER}
-  MAILER_PASSWORD: ${SMTP_TOKEN}
+  MAILER_PASSWORD: ${SMTP_PASS}
   MAILER_SENDER: ${SMTP_USER}
   MAILER_IGNORE_TLS: false
 
@@ -30,18 +51,21 @@ services:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine
     restart: unless-stopped
+    configs:
+      - source: affine
+        target: /root/.affine/config/config.json
+    environment:
+      <<: *affine_env
     volumes:
       - $DATA/affine/storage:/root/.affine/storage
       - $DATA/affine/config:/root/.affine/config
-    environment:
-      <<: *affine_env
     networks: [affine, newt]
     labels:
       homepage.group: Project Management
       homepage.name: Affine
       homepage.icon: affine.png
       homepage.href: https://affine.chenn.dev
-      homepage.description: Private Wiki
+      homepage.description: Linear Clone
 
       pangolin.public-resources.affine.name: affine
       pangolin.public-resources.affine.full-domain: affine.chenn.dev
@@ -67,12 +91,12 @@ services:
     image: pgvector/pgvector:pg18
     container_name: affine_db
     restart: unless-stopped
-    volumes:
-      - $DATA/affine/db:/var/lib/postgresql
     environment:
       <<: *affine_env
+    volumes:
+      - $DATA/affine/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
       timeout: 5s
       retries: 5
@@ -83,12 +107,12 @@ services:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine_migration
     restart: no
+    environment:
+      <<: *affine_env
     volumes:
       - $DATA/affine/storage:/root/.affine/storage
       - $DATA/affine/config:/root/.affine/config
     command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
-    environment:
-      <<: *affine_env
     networks: [affine]
 
 networks:

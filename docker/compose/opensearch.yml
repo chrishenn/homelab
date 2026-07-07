@@ -1,0 +1,14 @@
+# high idle mem usage, like 1.6GB by default. These JAVA_OPTS takes it down to like 1GB
+mattermost_search:
+  profiles: [mattermost]
+  image: opensearchproject/opensearch:latest
+  container_name: mattermost_search
+  environment:
+    node.name: opensearch-node
+    discovery.type: single-node
+    plugins.security.disabled: true
+    OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${MATTERMOST_SEARCH_PASS}
+    OPENSEARCH_JAVA_OPTS: '-Xms128m -Xmx256m'
+  volumes:
+    - $DATA/mattermost/search:/usr/share/opensearch/data
+  networks: [mattermost]

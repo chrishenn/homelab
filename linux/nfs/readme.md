@@ -49,10 +49,29 @@ https://forums.developer.nvidia.com/t/pfc-not-working-with-rdma-over-rocev2-and-
 
 # doca
 
+https://networking-docs.nvidia.com/doca/archive/3-4-0/doca-host-installation-and-upgrade#DOCA-Extra-Package-and-doca-kernel-support
+
+install
+
 ```bash
-# (fedora) online rpm install had a python dependency issue. try manual install
-curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host-3.3.0-088000_26.01_rhel10.x86_64.rpm
+# no dice with this either
+curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.4.0/host/doca-host-3.4.0-085000_26.04_rhel10.x86_64.rpm
 sudo rpm-ostree install doca.rpm
+rm doca.rpm
+
+# did not work; build failed with cryptic err
+curl -Lo abi.rpm https://dl.rockylinux.org/pub/rocky/10/BaseOS/x86_64/os/Packages/k/kernel-abi-stablelists-6.12.0-211.34.1.el10_2.noarch.rpm
+sudo rpm-ostree install abi.rpm
+rm abi.rpm
+sudo rpm-ostree install doca-extra
+sudo rpm-ostree install createrepo rpm-build autoconf automake libtool kernel-rpm-macros
+sudo /opt/mellanox/doca/tools/doca-kernel-support
+```
+
+uninstall
+
+```bash
+sudo rpm-ostree remove doca-host
 ```
 
 # troubleshooting
@@ -98,7 +117,6 @@ sudo ./sbin/cma_roce_mode -d $dev
 # verify pfc is working
 ethtool -S $ifname | grep prio3
 ethtool -S $ifname | grep -Ei 'pfc|pause|stopped|drop|disc'
-rdma link show
 ls /dev/infiniband/
 
 # set mtu to 9216?
@@ -198,6 +216,14 @@ sudo mount -t nfs 192.168.1.142:/tmp /mnt/tmp -o proto=rdma,port=20049,async,noa
 # mount fstab
 sudo nano /etc/fstab
 192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
+```
+
+## server (fedora)
+
+all packages/kernels for nfs over rdma server are included ootb, but the server does not autostart on boot
+
+```bash
+sudo systemctl enable --now nfs-server
 ```
 
 ## client (fedora)

@@ -51,11 +51,10 @@ services:
       traefik.http.routers.home.entrypoints: websecure
       traefik.http.routers.home.middlewares: hdrs@file
       traefik.http.routers.home.tls.certresolver: cf
-      traefik.http.services.home.loadbalancer.server.port: 3000
 
-      pangolin.public-resources.homepage_pub.name: homepage_pub
-      pangolin.public-resources.homepage_pub.full-domain: home.chenn.dev
-      pangolin.public-resources.homepage_pub.mode: http
-      pangolin.public-resources.homepage_pub.targets[0].method: http
-      pangolin.public-resources.homepage_pub.targets[0].port: 3000
-      pangolin.public-resources.homepage_pub.policy: member
+      pangolin.public-resources.homepage.name: homepage
+      pangolin.public-resources.homepage.full-domain: home.chenn.dev
+      pangolin.public-resources.homepage.mode: http
+      pangolin.public-resources.homepage.targets[0].method: http
+      pangolin.public-resources.homepage.targets[0].port: 3000
+      pangolin.public-resources.homepage.policy: member

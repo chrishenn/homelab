@@ -1,5 +1,5 @@
 # mkdir -p $DATA/paperless/data $DATA/paperless/media $DATA/paperless/export $DATA/paperless/consume \
-# $DATA/paperless/paperless_ai $DATA/paperless/paperless_gpt $DATA/paperless/paperless_postgres $DATA/paperless/paperless_redis
+# $DATA/paperless/paperless_ai $DATA/paperless/paperless_gpt $DATA/paperless/paperless_db $DATA/paperless/paperless_redis
 ---
 services:
   paperless:
@@ -16,7 +16,7 @@ services:
       PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
       PAPERLESS_OCR_LANGUAGE: eng
 
-      PAPERLESS_DBHOST: paperless_postgres
+      PAPERLESS_DBHOST: paperless_db
       PAPERLESS_DBNAME: paperless
       PAPERLESS_DBUSER: paperless
       PAPERLESS_DBPASS: paperless
@@ -74,12 +74,12 @@ services:
       homepage.href: https://paperless_ai.chenn.dev
       homepage.description: AI Document Processing
 
-      pangolin.public-resources.paperless_ai.name: paperless_ai
-      pangolin.public-resources.paperless_ai.full-domain: paperless_ai.chenn.dev
-      pangolin.public-resources.paperless_ai.mode: http
-      pangolin.public-resources.paperless_ai.targets[0].method: http
-      pangolin.public-resources.paperless_ai.targets[0].port: 3000
-      pangolin.public-resources.paperless_ai.policy: member
+      pangolin.public-resources.paperless-ai.name: paperless-ai
+      pangolin.public-resources.paperless-ai.full-domain: paperless-ai.chenn.dev
+      pangolin.public-resources.paperless-ai.mode: http
+      pangolin.public-resources.paperless-ai.targets[0].method: http
+      pangolin.public-resources.paperless-ai.targets[0].port: 3000
+      pangolin.public-resources.paperless-ai.policy: member
 
   paperless_gpt:
     profiles: [paperless]
@@ -120,25 +120,25 @@ services:
       homepage.href: https://paperless_gpt.chenn.dev
       homepage.description: AI Document Processing
 
-      pangolin.public-resources.paperless_gpt.name: paperless_gpt
-      pangolin.public-resources.paperless_gpt.full-domain: paperless_gpt.chenn.dev
-      pangolin.public-resources.paperless_gpt.mode: http
-      pangolin.public-resources.paperless_gpt.targets[0].method: http
-      pangolin.public-resources.paperless_gpt.targets[0].port: 8080
-      pangolin.public-resources.paperless_gpt.policy: member
+      pangolin.public-resources.paperless-gpt.name: paperless-gpt
+      pangolin.public-resources.paperless-gpt.full-domain: paperless-gpt.chenn.dev
+      pangolin.public-resources.paperless-gpt.mode: http
+      pangolin.public-resources.paperless-gpt.targets[0].method: http
+      pangolin.public-resources.paperless-gpt.targets[0].port: 8080
+      pangolin.public-resources.paperless-gpt.policy: member
 
-  paperless_postgres:
+  paperless_db:
     profiles: [paperless]
     image: postgres:18-alpine
+    container_name: paperless_db
     restart: unless-stopped
-    container_name: paperless_postgres
     environment:
       TZ: ${TZ}
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: paperless
     volumes:
-      - $DATA/paperless/paperless_postgres:/var/lib/postgresql
+      - $DATA/paperless/paperless_db:/var/lib/postgresql
     networks: [paperless]
 
   paperless_redis:

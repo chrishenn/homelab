@@ -22,7 +22,7 @@ services:
       homepage.name: Campfire
       homepage.icon: firebase.png
       homepage.href: https://campfire.chenn.dev
-      homepage.description: Private Slack
+      homepage.description: Slack Clone
 
       traefik.enable: true
       traefik.http.routers.campfire.rule: Host(`campfire.henn.dev`)

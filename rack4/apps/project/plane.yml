@@ -1,14 +1,34 @@
 # "some services might have failed"; wait between 90 seconds and 5 minutes for the 'migrator' to exit, then refresh
-# empty instance idles at 9.5GB. opensearch sits at 1.6GB. WOW
 ---
+configs:
+  plane_s3:
+    # no underscore allowed in bucket name
+    # no underscore allowed in hostname (service name)
+    # rpc secret is required to be openssl rand -hex 32
+    content: |
+      metadata_dir = "/var/lib/garage/meta"
+      data_dir = "/var/lib/garage/data"
+      db_engine = "sqlite"
+      replication_factor = 1
+
+      rpc_bind_addr = "[::]:3901"
+      rpc_public_addr = "127.0.0.1:3901"
+      rpc_secret = "96583a814158bbef48f19ec9ccfe0903dd7f1703adde2dd9df85cf4dfd53b9f8"
+
+      [s3_api]
+      s3_region = "plane"
+      api_bind_addr = "[::]:9000"
+      root_domain = ".s3.garage.localhost"
+
 x-plane_env: &plane_env
   DOMAIN_NAME: plane.chenn.dev
-  FILE_SIZE_LIMIT: 10485760
-  DATABASE_URL: postgresql://plane:plane@plane_db/plane
+  DATABASE_URL: postgresql://plane:plane@plane_db:5432/plane
   REDIS_URL: redis://plane_redis:6379
   AMQP_URL: amqp://plane:plane@plane_mq:5672/plane
-  AWS_S3_ENDPOINT_URL: http://plane_s3:9000
-  AWS_REGION: us-east-1
+  FILE_SIZE_LIMIT: 10485760
+
+  AWS_S3_ENDPOINT_URL: http://plane-s3:9000
+  AWS_REGION: plane
   AWS_S3_BUCKET_NAME: plane
   AWS_ACCESS_KEY_ID: ${PLANE_S3_ACCESS}
   AWS_SECRET_ACCESS_KEY: ${PLANE_S3_SECRET}
@@ -21,39 +41,42 @@ x-plane_env: &plane_env
   RABBITMQ_DEFAULT_PASS: plane
   RABBITMQ_DEFAULT_VHOST: plane
 
-  RUSTFS_ACCESS_KEY: ${PLANE_S3_ACCESS}
-  RUSTFS_SECRET_KEY: ${PLANE_S3_SECRET}
-  RUSTFS_VOLUMES: /data
-  RUSTFS_ADDRESS: :9000
-  RUSTFS_EXTERNAL_ADDRESS: :9000
-  RUSTFS_CONSOLE_ENABLE: true
-  RUSTFS_CONSOLE_ADDRESS: :9001
-  RUSTFS_CORS_ALLOWED_ORIGINS: '*'
-  RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: '*'
+  GARAGE_DEFAULT_ACCESS_KEY: ${PLANE_S3_ACCESS}
+  GARAGE_DEFAULT_SECRET_KEY: ${PLANE_S3_SECRET}
+  GARAGE_DEFAULT_BUCKET: plane
 
-  OPENSEARCH_ENABLED: 1
-  OPENSEARCH_URL: http://plane_search:9200/
-  OPENSEARCH_USERNAME: admin
-  OPENSEARCH_PASSWORD: ${PLANE_SEARCH_PASS}
-  OPENSEARCH_INDEX_PREFIX: plane
+  OPENSEARCH_ENABLED: 0
+  #  OPENSEARCH_URL: http://plane_search:9200/
+  #  OPENSEARCH_USERNAME: admin
+  #  OPENSEARCH_PASSWORD: ${PLANE_SEARCH_PASS}
+  #  OPENSEARCH_INDEX_PREFIX: plane
+
+  # required for non-aio
+  LIVE_SERVER_SECRET_KEY: ${PLANE_SECRET}
+  SECRET_KEY: ${PLANE_SECRET}
+  GUNICORN_WORKERS: 1
+  USE_MINIO: 0
+  DEBUG: 0
+  CORS_ALLOWED_ORIGINS: https://plane.chenn.dev
+  WEB_URL: https://plane.chenn.dev
+#  API_BASE_URL: https://plane.chenn.dev
 
 services:
   plane:
     profiles: [plane]
-    image: artifacts.plane.so/makeplane/plane-aio-commercial:stable
+    # broken in v3.0.1 ?
+    image: makeplane/plane-aio-commercial:v3.0.0
     container_name: plane
+    restart: unless-stopped
     environment:
       <<: *plane_env
-    depends_on:
-      plane_s3_setup:
-        condition: service_completed_successfully
-    networks: [plane, traefik, newt]
+    networks: [plane, newt]
     labels:
       homepage.group: Project Management
       homepage.name: Plane
       homepage.icon: plane.png
       homepage.href: https://plane.chenn.dev
-      homepage.description: Linear Alternative
+      homepage.description: Linear Clone
 
       pangolin.public-resources.plane.name: plane
       pangolin.public-resources.plane.full-domain: plane.chenn.dev
@@ -80,11 +103,6 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/plane/redis:/data
-    healthcheck:
-      test: redis-cli ping
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks: [plane]
 
   plane_mq:
@@ -97,114 +115,166 @@ services:
       <<: *plane_env
     volumes:
       - $DATA/plane/mq:/var/lib/rabbitmq
-    networks: [plane, traefik]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.plane_mq.rule: Host(`mq.plane.henn.dev`)
-      traefik.http.routers.plane_mq.entrypoints: websecure
-      traefik.http.routers.plane_mq.middlewares: hdrs@file
-      traefik.http.routers.plane_mq.tls.certresolver: cf
-      traefik.http.services.plane_mq.loadbalancer.server.port: 15672
-
-  plane_s3_setup:
-    profiles: [plane]
-    image: minio/mc
-    container_name: plane_s3_setup
-    restart: no
-    environment:
-      <<: *plane_env
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        set -e
-        until mc alias set rustfs $${AWS_S3_ENDPOINT_URL} $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY}; do
-          echo 'waiting to connect to plane_s3'
-          sleep 2
-        done
-        mc mb rustfs/$${AWS_S3_BUCKET_NAME} --ignore-existing
-    depends_on:
-      plane_s3:
-        condition: service_healthy
     networks: [plane]
 
-  plane_s3:
+  # no underscore allowed in service name
+  plane-s3:
     profiles: [plane]
-    image: rustfs/rustfs:latest
+    image: dxflrs/garage:v2.3.0
     container_name: plane_s3
     restart: unless-stopped
-    command: /data
+    command: /garage server --single-node --default-bucket
+    configs:
+      - source: plane_s3
+        target: /etc/garage.toml
     environment:
       <<: *plane_env
     volumes:
-      - $DATA/plane/s3:/data
-    healthcheck:
-      test: curl -f http://localhost:9000/health
-      timeout: 5s
-      retries: 10
-      start_period: 15s
-      interval: 5s
-    depends_on:
-      plane_perm:
-        condition: service_completed_successfully
-    networks: [plane, traefik]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.plane_s3.rule: Host(`s3.plane.henn.dev`)
-      traefik.http.routers.plane_s3.entrypoints: websecure
-      traefik.http.routers.plane_s3.middlewares: hdrs@file
-      traefik.http.routers.plane_s3.tls.certresolver: cf
-      traefik.http.services.plane_s3.loadbalancer.server.port: 9001
-
-  plane_search:
-    profiles: [plane]
-    image: opensearchproject/opensearch:latest
-    container_name: plane_search
-    environment:
-      node.name: opensearch-node
-      discovery.type: single-node
-      plugins.security.disabled: true
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${PLANE_SEARCH_PASS}
-    depends_on:
-      plane_perm:
-        condition: service_completed_successfully
-    volumes:
-      - $DATA/plane/search:/usr/share/opensearch/data
+      - $DATA/plane/s3/data:/var/lib/garage/data
+      - $DATA/plane/s3/meta:/var/lib/garage/meta
     networks: [plane]
 
-  # admin/PLANE_SEARCH_PASS
-  plane_search_dash:
-    profiles: [plane]
-    image: opensearchproject/opensearch-dashboards:latest
-    container_name: plane_search_dash
-    environment:
-      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]'
-    networks: [plane, traefik]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.plane_search.rule: Host(`search.plane.henn.dev`)
-      traefik.http.routers.plane_search.entrypoints: websecure
-      traefik.http.routers.plane_search.middlewares: hdrs@file
-      traefik.http.routers.plane_search.tls.certresolver: cf
-      traefik.http.services.plane_search.loadbalancer.server.port: 5601
+  # opensearch
+#  plane_search:
+#    profiles: [plane]
+#    image: opensearchproject/opensearch:latest
+#    container_name: plane_search
+#    environment:
+#      node.name: opensearch-node
+#      discovery.type: single-node
+#      plugins.security.disabled: true
+#      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${PLANE_SEARCH_PASS}
+#    depends_on:
+#      plane_perm:
+#        condition: service_completed_successfully
+#    volumes:
+#      - $DATA/plane/search:/usr/share/opensearch/data
+#    networks: [plane]
+#
+#  # admin/PLANE_SEARCH_PASS
+#  plane_search_dash:
+#    profiles: [plane]
+#    image: opensearchproject/opensearch-dashboards:latest
+#    container_name: plane_search_dash
+#    environment:
+#      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]'
+#    networks: [plane, traefik]
+#    labels:
+#      traefik.enable: true
+#      traefik.http.routers.plane_search.rule: Host(`search.plane.henn.dev`)
+#      traefik.http.routers.plane_search.entrypoints: websecure
+#      traefik.http.routers.plane_search.middlewares: hdrs@file
+#      traefik.http.routers.plane_search.tls.certresolver: cf
+#      traefik.http.services.plane_search.loadbalancer.server.port: 5601
+#
+#  plane_perm:
+#    profiles: [plane]
+#    image: alpine
+#    container_name: plane_perm
+#    restart: no
+#    user: root
+#    volumes:
+#      - $DATA/plane/s3:/data/s3
+#      - $DATA/plane/search:/data/search
+#    command:
+#      - /bin/sh
+#      - -c
+#      - |
+#        set -x
+#        chown -R 1000:1000 /data/search
+#        echo "set perms; exit: $?"
 
-  plane_perm:
-    profiles: [plane]
-    image: alpine
-    container_name: plane_perm
-    restart: no
-    user: root
-    volumes:
-      - $DATA/plane/s3:/data/s3
-      - $DATA/plane/search:/data/search
-    command:
-      - /bin/sh
-      - -c
-      - |
-        set -x
-        chown -R 10001:10001 /data/s3
-        chown -R 1000:1000 /data/search
-        echo "set perms; exit: $?"
+# non-aio. you get some logging for troubleshooting
+#  plane_web:
+#    profiles: [plane]
+#    image: makeplane/plane-frontend:v1.4.1
+#    container_name: plane_web
+#    restart: unless-stopped
+#    networks: [plane, newt]
+#    labels:
+#      homepage.group: Project Management
+#      homepage.name: Plane
+#      homepage.icon: plane.png
+#      homepage.href: https://plane.chenn.dev
+#      homepage.description: Linear Alternative
+#
+#      pangolin.public-resources.plane.name: plane
+#      pangolin.public-resources.plane.full-domain: plane.chenn.dev
+#      pangolin.public-resources.plane.mode: http
+#      pangolin.public-resources.plane.targets[0].method: http
+#      pangolin.public-resources.plane.targets[0].port: 80
+#      pangolin.public-resources.plane.policy: member
+#
+#  plane_space:
+#    profiles: [plane]
+#    image: makeplane/plane-space:v1.4.1
+#    container_name: plane_space
+#    restart: unless-stopped
+#    networks: [plane]
+#
+#  plane_admin:
+#    profiles: [plane]
+#    image: makeplane/plane-admin:v1.4.1
+#    container_name: plane_admin
+#    restart: unless-stopped
+#    networks: [plane]
+#
+#  plane_live:
+#    profiles: [plane]
+#    image: makeplane/plane-live:v1.4.1
+#    container_name: plane_live
+#    restart: unless-stopped
+#    environment:
+#      <<: *plane_env
+#    networks: [plane]
+#
+#  plane_api:
+#    profiles: [plane]
+#    image: makeplane/plane-backend:v1.4.1
+#    container_name: plane_api
+#    restart: unless-stopped
+#    command: ./bin/docker-entrypoint-api.sh
+#    environment:
+#      <<: *plane_env
+#    volumes:
+#      - $DATA/plane/logs_api:/code/plane/logs
+#    networks: [plane]
+#
+#  plane_worker:
+#    profiles: [plane]
+#    image: makeplane/plane-backend:v1.4.1
+#    container_name: plane_worker
+#    restart: unless-stopped
+#    command: ./bin/docker-entrypoint-worker.sh
+#    environment:
+#      <<: *plane_env
+#    volumes:
+#      - $DATA/plane/logs_worker:/code/plane/logs
+#    networks: [plane]
+#
+#  plane_beat-worker:
+#    profiles: [plane]
+#    image: makeplane/plane-backend:v1.4.1
+#    container_name: plane_beat
+#    restart: unless-stopped
+#    command: ./bin/docker-entrypoint-beat.sh
+#    environment:
+#      <<: *plane_env
+#    volumes:
+#      - $DATA/plane/logs_beat-worker:/code/plane/logs
+#    networks: [plane]
+#
+#  plane_migrator:
+#    profiles: [plane]
+#    image: makeplane/plane-backend:v1.4.1
+#    container_name: plane_migrator
+#    restart: unless-stopped
+#    command: ./bin/docker-entrypoint-migrator.sh
+#    environment:
+#      <<: *plane_env
+#    volumes:
+#      - $DATA/plane/logs_migrator:/code/plane/logs
+#    networks: [plane]
 
 networks:
   plane:

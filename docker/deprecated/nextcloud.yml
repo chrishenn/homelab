@@ -17,7 +17,7 @@
 # docker exec nextcloud occ config:system:set mail_smtpport --value=465
 # docker exec nextcloud occ config:system:set mail_smtpauth --value=true
 # docker exec nextcloud occ config:system:set mail_smtpname --value=${SMTP_USER}
-# docker exec nextcloud occ config:system:set mail_smtppassword --value=${SMTP_TOKEN}
+# docker exec nextcloud occ config:system:set mail_smtppassword --value=${SMTP_PASS}
 # docker exec nextcloud occ config:system:set redis host --value=nextcloud_redis
 # docker exec nextcloud occ config:system:set overwritehost --value=nextcloud.henn.dev
 # docker exec nextcloud occ config:system:set overwriteprotocol --value=https

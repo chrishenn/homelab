@@ -101,23 +101,23 @@ services:
       pangolin.public-resources.mail.targets[0].path-match: prefix
       pangolin.public-resources.mail.targets[0].port: 8080
 
-      pangolin.public-resources.mail_1.name: mail_1
-      pangolin.public-resources.mail_1.full-domain: autodiscover.chenn.dev
-      pangolin.public-resources.mail_1.mode: http
-      pangolin.public-resources.mail_1.targets[0].method: http
-      pangolin.public-resources.mail_1.targets[0].port: 8080
+      pangolin.public-resources.mail-1.name: mail-1
+      pangolin.public-resources.mail-1.full-domain: autodiscover.chenn.dev
+      pangolin.public-resources.mail-1.mode: http
+      pangolin.public-resources.mail-1.targets[0].method: http
+      pangolin.public-resources.mail-1.targets[0].port: 8080
 
-      pangolin.public-resources.mail_2.name: mail_2
-      pangolin.public-resources.mail_2.full-domain: autoconfig.chenn.dev
-      pangolin.public-resources.mail_2.mode: http
-      pangolin.public-resources.mail_2.targets[0].method: http
-      pangolin.public-resources.mail_2.targets[0].port: 8080
+      pangolin.public-resources.mail-2.name: mail-2
+      pangolin.public-resources.mail-2.full-domain: autoconfig.chenn.dev
+      pangolin.public-resources.mail-2.mode: http
+      pangolin.public-resources.mail-2.targets[0].method: http
+      pangolin.public-resources.mail-2.targets[0].port: 8080
 
-      pangolin.public-resources.mail_3.name: mail_3
-      pangolin.public-resources.mail_3.full-domain: mta-sts.chenn.dev
-      pangolin.public-resources.mail_3.mode: http
-      pangolin.public-resources.mail_3.targets[0].method: http
-      pangolin.public-resources.mail_3.targets[0].port: 8080
+      pangolin.public-resources.mail-3.name: mail-3
+      pangolin.public-resources.mail-3.full-domain: mta-sts.chenn.dev
+      pangolin.public-resources.mail-3.mode: http
+      pangolin.public-resources.mail-3.targets[0].method: http
+      pangolin.public-resources.mail-3.targets[0].port: 8080
 
   stalwart:
     profiles: [stalwart]
@@ -136,6 +136,8 @@ services:
       - $DATA/stalwart/var:/var/lib/stalwart
       - $DATA/stalwart/certs:/data/certs:ro
     depends_on:
+      stalwart_wg:
+        condition: service_started
       stalwart_perm:
         condition: service_completed_successfully
     #      stalwart_certs:
@@ -205,7 +207,8 @@ services:
 
   stalwart_meili:
     profiles: [stalwart]
-    image: getmeili/meilisearch:latest
+    # migrating between meili versions requires manual steps
+    image: getmeili/meilisearch:v1.49.0
     container_name: stalwart_meili
     restart: unless-stopped
     environment:

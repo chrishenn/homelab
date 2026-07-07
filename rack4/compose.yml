@@ -2,16 +2,18 @@ include:
   - apps/ai/comfy.yml
   - apps/ai/ollama.yml
   - apps/ai/openwebui.yml
-  #  - apps/ai/speach.yml
+  - apps/ai/speach.yml
+  - apps/ai/translate.yml
 
   - apps/arr/arr.yml
-  #  - apps/arr/cinephage.yml
+  - apps/arr/cinephage.yml
   - apps/arr/doplarr.yml
   - apps/arr/muxarr.yml
   - apps/arr/recyclarr.yml
   - apps/arr/seerr.yml
   - apps/arr/tracearr.yml
   - apps/arr/transcodarr.yml
+  - apps/arr/mydia.yml
 
   - apps/backup/backrest.yml
   - apps/backup/databasus.yml
@@ -21,12 +23,15 @@ include:
   - apps/backup/rsync.yml
   - apps/backup/zerobyte.yml
   - apps/backup/duplicati.yml
+  - apps/backup/borg.yml
+  - apps/backup/borgui.yml
 
   - apps/books/audiobookshelf.yml
   - apps/books/calibre.yml
   - apps/books/kavita.yml
   - apps/books/listenarr.yml
   - apps/books/readmeabook.yml
+  - apps/books/bookorbit.yml
 
   - apps/converters/8mb.yml
   - apps/converters/convertx.yml
@@ -44,6 +49,9 @@ include:
   - apps/dev/pgadmin.yml
   - apps/dev/scanopy.yml
   - apps/dev/bytestash.yml
+  - apps/dev/infisical.yml
+  - apps/dev/dagu.yml
+  - apps/dev/gocron.yml
 
   - apps/doc_server/docmost.yml
   - apps/doc_server/files.yml
@@ -53,6 +61,8 @@ include:
   - apps/doc_server/syncin.yml
   - apps/doc_server/syncthing.yml
   - apps/doc_server/zipline.yml
+  - apps/doc_server/oxicloud.yml
+  - apps/doc_server/hoodik.yml
 
   - apps/download/qbit.yml
   - apps/download/sab.yml
@@ -74,9 +84,10 @@ include:
   - apps/infra/traefik_k.yml
   #  - apps/infra/watchtower.yml
   - apps/infra/stalwart.yml
+  - apps/infra/netbox.yml
 
   - apps/job/openresume.yml
-  #  - apps/job/resume.yml
+  - apps/job/resume.yml
   - apps/job/ops.yml
 
   - apps/media/archive.yml
@@ -88,12 +99,16 @@ include:
   - apps/media/opencut.yml
   - apps/media/ties.yml
   - apps/media/stoat.yml
+  - apps/media/minuspod.yml
+  - apps/media/reitti.yml
+  - apps/media/ghost.yml
+  - apps/media/jellyglance.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml
   - apps/monitoring/dozzle.yml
   - apps/monitoring/kuma.yml
-  #  - apps/monitoring/peekaping.yml
+  - apps/monitoring/peekaping.yml
   - apps/monitoring/termix.yml
   - apps/monitoring/dockscope.yml
 
@@ -102,6 +117,7 @@ include:
   - apps/music/mdrm.yml
   - apps/music/mseerr.yml
   - apps/music/navidrome.yml
+  - apps/music/feishin.yml
 
   - apps/notify/apprise.yml
   - apps/notify/gotify.yml
@@ -109,7 +125,7 @@ include:
 
   - apps/pdf/bento.yml
   - apps/pdf/documenso.yml
-  #  - apps/pdf/overleaf.yml
+  - apps/pdf/overleaf.yml
   - apps/pdf/pdfding.yml
   - apps/pdf/stirling.yml
 
@@ -117,22 +133,26 @@ include:
   - apps/photos/foldergram.yml
   - apps/photos/immich.yml
 
-  #  - apps/project/affine.yml
-  #  - apps/project/ideon.yml
-  #  - apps/project/kaneo.yml
-  #  - apps/project/karakeep.yml
-  #  - apps/project/keeper.yml
-  #  - apps/project/memos.yml
+  - apps/project/affine.yml
+  - apps/project/ideon.yml
+  - apps/project/kaneo.yml
+  - apps/project/karakeep.yml
+  - apps/project/keeper.yml
+  - apps/project/memos.yml
   - apps/project/notediscovery.yml
-  #  - apps/project/planka.yml
-  #  - apps/project/tududi.yml
+  - apps/project/planka.yml
+  - apps/project/tududi.yml
   - apps/project/vikunja.yml
   - apps/project/wikigo.yml
   - apps/project/wikijs.yml
-  #  - apps/project/penpot.yml
-  #  - apps/project/plane.yml
-  #  - apps/project/mattermost.yml
-  #  - apps/project/campfire.yml
+  - apps/project/penpot.yml
+  - apps/project/plane.yml
+  - apps/project/mattermost.yml
+  - apps/project/campfire.yml
+  - apps/project/outline.yml
+  - apps/project/appflowy.yml
+  - apps/project/kan.yml
+  - apps/project/colanode.yml
 
   - apps/registry/aptcache.yml
   #  - apps/registry/gitlab.yml
@@ -147,8 +167,8 @@ include:
   - apps/tools/airtrail.yml
   - apps/tools/dumb.yml
   - apps/tools/fileflow.yml
-  - apps/tools/gocron.yml
   - apps/tools/linkding.yml
+  - apps/tools/linkbreeze.yml
   - apps/tools/matrix.yml
   - apps/tools/miro.yml
   - apps/tools/moocup.yml
@@ -158,5 +178,7 @@ include:
   - apps/tools/rally.yml
   - apps/tools/sure.yml
   - apps/tools/warden.yml
+  - apps/tools/mailflow.yml
+  - apps/tools/13foot.yml
 #  - apps/tools/kestra.yml
 #  - apps/tools/shlink.yml

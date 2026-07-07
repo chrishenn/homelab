@@ -28,7 +28,7 @@ services:
       - '1900:1900/udp'
     healthcheck:
       test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8096']
-    networks: [traefik, newt]
+    networks: [arr, traefik, newt]
     labels:
       homepage.group: General Media
       homepage.name: Jellyfin

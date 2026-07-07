@@ -1,0 +1,43 @@
+---
+# ERR_SSL_WRONG_VERSION_NUMBER some err in their build process or in my network setup. not worth the effort
+services:
+  cronmaster:
+    profiles: [cronmaster]
+    image: ghcr.io/fccview/cronmaster:2.3.0
+    container_name: cronmaster
+    restart: unless-stopped
+    init: true
+    user: root
+    pid: host
+    privileged: true
+    environment:
+      NODE_ENV: production
+      DOCKER: true
+      NEXT_PUBLIC_CLOCK_UPDATE_INTERVAL: 30000
+      HOST_CRONTAB_USER: root
+      AUTH_PASSWORD: ${PASS}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/cronmaster/data:/app/data
+      - $DATA/cronmaster/scripts:/app/scripts
+      - $DATA/cronmaster/snippets:/app/snippets
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    networks: [newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: Cronmaster
+      homepage.icon: cronmaster-dark.png
+      homepage.href: https://cronmaster.chenn.dev
+      homepage.description: Cron UI
+
+      pangolin.public-resources.cronmaster.name: cronmaster
+      pangolin.public-resources.cronmaster.full-domain: cronmaster.chenn.dev
+      pangolin.public-resources.cronmaster.mode: http
+      pangolin.public-resources.cronmaster.targets[0].method: http
+      pangolin.public-resources.cronmaster.targets[0].port: 3000
+      pangolin.public-resources.cronmaster.policy: member

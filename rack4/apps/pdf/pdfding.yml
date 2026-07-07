@@ -34,7 +34,7 @@ services:
       SMTP_HOST: $SMTP_HOST
       SMTP_PORT: 465
       SMTP_USER: $SMTP_USER
-      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_PASSWORD: $SMTP_PASS
       SMTP_USE_SSL: 'TRUE'
 
     volumes:

@@ -33,7 +33,7 @@ services:
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: 465
       SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_TOKEN}
+      SMTP_PASSWORD: ${SMTP_PASS}
       SMTP_FROM: ${SMTP_USER}
       SMTP_SECURE: true
     volumes:
@@ -68,7 +68,7 @@ services:
       POSTGRES_USER: portabase
       POSTGRES_PASSWORD: portabase
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
       timeout: 5s
       retries: 5

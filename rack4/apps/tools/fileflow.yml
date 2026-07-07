@@ -20,7 +20,7 @@ services:
       SmtpFrom: $SMTP_USER
       SmtpFromAddress: $SMTP_USER
       SmtpUser: $SMTP_USER
-      SmtpPassword: $SMTP_TOKEN
+      SmtpPassword: $SMTP_PASS
 
       OidcAuthority: $OIDC
       OidcClientId: ${FILEFLOW_OIDC_CLIENT}

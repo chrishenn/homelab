@@ -1,0 +1,164 @@
+---
+x-netbox_env: &netbox_env
+  API_TOKEN_PEPPER_1: ${NETBOX_PEPPER}
+  CORS_ORIGIN_ALLOW_ALL: True
+
+  DB_HOST: netbox_db
+  DB_NAME: netbox
+  DB_PASSWORD: netbox
+  DB_USER: netbox
+
+  POSTGRES_DB: netbox
+  POSTGRES_PASSWORD: netbox
+  POSTGRES_USER: netbox
+
+  EMAIL_FROM: netbox@bar.com
+  EMAIL_PASSWORD:
+  EMAIL_PORT: 25
+  EMAIL_SERVER: localhost
+  EMAIL_SSL_CERTFILE:
+  EMAIL_SSL_KEYFILE:
+  EMAIL_TIMEOUT: 5
+  EMAIL_USERNAME: netbox
+  EMAIL_USE_SSL: true
+  EMAIL_USE_TLS: false
+
+  GRANIAN_BACKPRESSURE: 4
+  GRANIAN_WORKERS: 4
+  GRAPHQL_ENABLED: true
+  MEDIA_ROOT: /opt/netbox/netbox/media
+  METRICS_ENABLED: false
+
+  REDIS_CACHE_DATABASE: 1
+  REDIS_CACHE_HOST: netbox_redis_cache
+  REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY: false
+  REDIS_CACHE_PASSWORD: netbox
+  REDIS_CACHE_SSL: false
+
+  REDIS_DATABASE: 1
+  REDIS_HOST: netbox_redis
+  REDIS_INSECURE_SKIP_TLS_VERIFY: false
+  REDIS_PASSWORD: netbox
+  REDIS_SSL: false
+  RELEASE_CHECK_URL: https://api.github.com/repos/netbox-community/netbox/releases
+  SECRET_KEY: ${NETBOX_SECRET}
+  SKIP_SUPERUSER: true
+  WEBHOOKS_ENABLED: true
+
+  REMOTE_AUTH_BACKEND: 'social_core.backends.open_id_connect.OpenIdConnectAuth'
+  SOCIAL_AUTH_OIDC_OIDC_ENDPOINT: $OIDC
+  SOCIAL_AUTH_OIDC_KEY: ${NETBOX_OIDC_CLIENT}
+  SOCIAL_AUTH_OIDC_SECRET: ${NETBOX_OIDC_SECRET}
+  SOCIAL_AUTH_OIDC_SCOPE: openid profile email groups
+#  LOGOUT_REDIRECT_URL: https://p
+#  SOCIAL_AUTH_OIDC_JWT_ALGORITHMS: RS256
+
+services:
+  netbox:
+    profiles: [netbox]
+    image: netboxcommunity/netbox:v4.6-5.0.2
+    container_name: netbox
+    environment:
+      <<: *netbox_env
+    user: 'netbox:root'
+    healthcheck:
+      test: curl -f http://localhost:8080/login/ || exit 1
+      start_period: 90s
+      timeout: 3s
+      interval: 15s
+    volumes:
+      - ./netbox:/etc/netbox/config
+      - $DATA/netbox/media:/opt/netbox/netbox/media
+      - $DATA/netbox/reports:/opt/netbox/netbox/reports
+      - $DATA/netbox/scripts:/opt/netbox/netbox/scripts
+    networks: [netbox, newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Netbox
+      homepage.icon: netbox.png
+      homepage.href: https://netbox.chenn.dev
+      homepage.description: Network Automation
+
+      pangolin.public-resources.netbox.name: netbox
+      pangolin.public-resources.netbox.full-domain: netbox.chenn.dev
+      pangolin.public-resources.netbox.mode: http
+      pangolin.public-resources.netbox.targets[0].method: http
+      pangolin.public-resources.netbox.targets[0].port: 8080
+      pangolin.public-resources.netbox.policy: member
+
+  netbox_worker:
+    profiles: [netbox]
+    image: netboxcommunity/netbox:v4.6-5.0.2
+    container_name: netbox_worker
+    user: 'netbox:root'
+    command:
+      - /opt/netbox/venv/bin/python
+      - /opt/netbox/netbox/manage.py
+      - rqworker
+    healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+    environment:
+      <<: *netbox_env
+    volumes:
+      - ./netbox:/etc/netbox/config
+      - $DATA/netbox/media:/opt/netbox/netbox/media
+      - $DATA/netbox/reports:/opt/netbox/netbox/reports
+      - $DATA/netbox/scripts:/opt/netbox/netbox/scripts
+    networks: [netbox]
+
+  netbox_db:
+    profiles: [netbox]
+    image: postgres:18-alpine
+    container_name: netbox_db
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      start_period: 20s
+      timeout: 30s
+      interval: 10s
+      retries: 5
+    environment:
+      <<: *netbox_env
+    volumes:
+      - $DATA/netbox/db:/var/lib/postgresql
+    networks: [netbox]
+
+  netbox_redis:
+    profiles: [netbox]
+    image: valkey/valkey:alpine
+    container_name: netbox_redis
+    command:
+      - sh
+      - -c
+      - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
+    healthcheck: &redis-healthcheck
+      test: '[ $$(valkey-cli --pass "$${REDIS_PASSWORD}" ping) = ''PONG'' ]'
+      start_period: 5s
+      timeout: 3s
+      interval: 1s
+      retries: 5
+    environment:
+      <<: *netbox_env
+    volumes:
+      - $DATA/netbox/redis:/data
+    networks: [netbox]
+
+  netbox_redis_cache:
+    profiles: [netbox]
+    image: valkey/valkey:alpine
+    container_name: netbox_redis_cache
+    command:
+      - sh
+      - -c
+      - valkey-server --requirepass $$REDIS_PASSWORD
+    healthcheck: *redis-healthcheck
+    environment:
+      <<: *netbox_env
+    volumes:
+      - $DATA/netbox/redis_cache:/data
+    networks: [netbox]
+
+networks:
+  netbox:

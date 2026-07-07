@@ -14,7 +14,7 @@ services:
       SMTP_PORT: 465
       SMTP_SECURITY: force_tls
       SMTP_USERNAME: $SMTP_USER
-      SMTP_PASSWORD: $SMTP_TOKEN
+      SMTP_PASSWORD: $SMTP_PASS
 
       SSO_ENABLED: true
       SSO_ONLY: true
