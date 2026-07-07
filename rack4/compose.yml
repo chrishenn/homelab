@@ -2,10 +2,10 @@ include:
   - apps/ai/comfy.yml
   - apps/ai/ollama.yml
   - apps/ai/openwebui.yml
-  #  - apps/ai/speach.yml
+  - apps/ai/speach.yml
 
   - apps/arr/arr.yml
-  #  - apps/arr/cinephage.yml
+  - apps/arr/cinephage.yml
   - apps/arr/doplarr.yml
   - apps/arr/muxarr.yml
   - apps/arr/recyclarr.yml
@@ -17,7 +17,7 @@ include:
   - apps/backup/databasus.yml
   - apps/backup/pluton.yml
   - apps/backup/portabase.yml
-  #  - apps/backup/repliqate.yml
+#  - apps/backup/repliqate.yml
   - apps/backup/rsync.yml
   - apps/backup/zerobyte.yml
   - apps/backup/duplicati.yml
@@ -76,7 +76,7 @@ include:
   - apps/infra/stalwart.yml
 
   - apps/job/openresume.yml
-  #  - apps/job/resume.yml
+  - apps/job/resume.yml
   - apps/job/ops.yml
 
   - apps/media/archive.yml
@@ -93,7 +93,7 @@ include:
   - apps/monitoring/beszel.yml
   - apps/monitoring/dozzle.yml
   - apps/monitoring/kuma.yml
-  #  - apps/monitoring/peekaping.yml
+  - apps/monitoring/peekaping.yml
   - apps/monitoring/termix.yml
   - apps/monitoring/dockscope.yml
 
@@ -109,7 +109,7 @@ include:
 
   - apps/pdf/bento.yml
   - apps/pdf/documenso.yml
-  #  - apps/pdf/overleaf.yml
+  - apps/pdf/overleaf.yml
   - apps/pdf/pdfding.yml
   - apps/pdf/stirling.yml
 
@@ -117,22 +117,22 @@ include:
   - apps/photos/foldergram.yml
   - apps/photos/immich.yml
 
-  #  - apps/project/affine.yml
-  #  - apps/project/ideon.yml
-  #  - apps/project/kaneo.yml
-  #  - apps/project/karakeep.yml
-  #  - apps/project/keeper.yml
-  #  - apps/project/memos.yml
+  - apps/project/affine.yml
+  - apps/project/ideon.yml
+  - apps/project/kaneo.yml
+  - apps/project/karakeep.yml
+  - apps/project/keeper.yml
+  - apps/project/memos.yml
   - apps/project/notediscovery.yml
-  #  - apps/project/planka.yml
-  #  - apps/project/tududi.yml
+  - apps/project/planka.yml
+  - apps/project/tududi.yml
   - apps/project/vikunja.yml
   - apps/project/wikigo.yml
   - apps/project/wikijs.yml
-  #  - apps/project/penpot.yml
-  #  - apps/project/plane.yml
-  #  - apps/project/mattermost.yml
-  #  - apps/project/campfire.yml
+  - apps/project/penpot.yml
+  - apps/project/plane.yml
+  - apps/project/mattermost.yml
+  - apps/project/campfire.yml
 
   - apps/registry/aptcache.yml
   #  - apps/registry/gitlab.yml

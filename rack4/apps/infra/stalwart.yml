@@ -205,7 +205,8 @@ services:
 
   stalwart_meili:
     profiles: [stalwart]
-    image: getmeili/meilisearch:latest
+    # migrating between meili versions requires manual steps
+    image: getmeili/meilisearch:v1.49.0
     container_name: stalwart_meili
     restart: unless-stopped
     environment:
