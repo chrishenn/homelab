@@ -150,6 +150,7 @@ services:
     container_name: syncin_collabora
     restart: unless-stopped
     environment:
+      aliasgroup1: https://syncin.chenn.dev,https://syncin.henn.dev
       extra_params: >-
         --o:ssl.enable=false
         --o:ssl.termination=true

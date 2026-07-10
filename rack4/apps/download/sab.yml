@@ -1,21 +1,20 @@
 ---
 configs:
   sab:
-    # add newt and traefik subnets to the default local_ranges
     content: |
       __encoding__ = utf-8
       __version__ = 19
       [misc]
       api_key = ${SAB_API_KEY}
       nzb_key = ${SAB_NZB_KEY}
+      inet_exposure = 5
       host_whitelist = sab, sab.henn.dev, sab.chenn.dev
       download_dir = /sab/incomplete
       complete_dir = /sab/downloads
       host = ::
       port = 8080
       enable_https = 0
-      local_ranges = ${HOME_IP}, ${HOME_SUBNET}, ${TRAEFIK_SUBNET}, ${NEWT_SUBNET}, 172.16.0.0/12, 10.0.0.0/8, fd00::/8
-
+      local_ranges = ,
       config_conversion_version = 5
       helpful_warnings = 1
       queue_complete = ""
@@ -43,7 +42,6 @@ configs:
       https_cert = server.cert
       https_key = server.key
       https_chain = ""
-      inet_exposure = 0
       socks5_proxy_url = ""
       permissions = ""
       download_free = 500M
