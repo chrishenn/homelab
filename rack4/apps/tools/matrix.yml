@@ -47,7 +47,7 @@ services:
 
   matrix_turn:
     profiles: [matrix]
-    image: docker.io/coturn/coturn
+    image: coturn/coturn
     container_name: matrix_turn
     restart: unless-stopped
     network_mode: host

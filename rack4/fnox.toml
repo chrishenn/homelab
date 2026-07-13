@@ -96,6 +96,9 @@ FREESOUND_SECRET = { provider = "onepass", value = "op://homelab/freesound/api_s
 OPENCUT_BETTERAUTH = { provider = "onepass", value = "op://homelab/opencut/betterauth" }
 OPENCUT_UPSTASH = { provider = "onepass", value = "op://homelab/opencut/upstash" }
 
+OUTLINE_SECRET = { provider = "onepass", value = "op://homelab/outline/secret_key" }
+OUTLINE_UTILS = { provider = "onepass", value = "op://homelab/outline/utils_secret" }
+
 SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
@@ -238,3 +241,5 @@ WUD_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/wud/oidc_client"
 WUD_OIDC_SECRET = { provider = "onepass", value = "op://homelab/wud/oidc_secret" }
 BONFIRE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/bonfire/oidc_client" }
 BONFIRE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/bonfire/oidc_secret" }
+OUTLINE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/outline/oidc_client" }
+OUTLINE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/outline/oidc_secret" }

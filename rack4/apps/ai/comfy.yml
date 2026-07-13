@@ -2,7 +2,7 @@
 services:
   comfy:
     profiles: [comfy]
-    image: docker.io/yanwk/comfyui-boot:cu130-slim
+    image: yanwk/comfyui-boot:cu130-slim
     container_name: comfy
     restart: unless-stopped
     stdin_open: true

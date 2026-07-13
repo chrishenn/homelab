@@ -2,7 +2,7 @@
 services:
   ollama:
     profiles: [ollama]
-    image: docker.io/ollama/ollama:latest
+    image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
     runtime: nvidia

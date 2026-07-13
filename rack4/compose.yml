@@ -133,6 +133,7 @@ include:
   - apps/project/plane.yml
   - apps/project/mattermost.yml
   - apps/project/campfire.yml
+  - apps/project/outline.yml
 
   - apps/registry/aptcache.yml
   #  - apps/registry/gitlab.yml
