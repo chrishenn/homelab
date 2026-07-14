@@ -75,16 +75,6 @@ function installs {
 	# zed
 	curl -f https://zed.dev/install.sh | sh
 
-	# op
-	curl -Lo op.rpm https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
-	sudo rpm-ostree install op.rpm
-	rm op.rpm
-
-	# you might need to reboot before doing this install
-	# sudo nano /etc/yum.repos.d/1password.repo
-	# set gpg_check=0
-	# sudo rpm-ostree install 1password 1password-cli
-
 	# kvantum
 	sudo rpm-ostree install kvantum
 
@@ -99,6 +89,62 @@ function gclone {
 	# depends on chezmoi, mise tools, and other tools (def brew) being bootstrapped
 	sudo chmod +x ~/.gclone.sh
 	~/.gclone.sh
+}
+
+function 1password {
+	# add the repo, install
+	sudo sh -c 'echo -e "[1password]\nname=1Password Stable Channel\nbaseurl=https://downloads.1password.com/linux/rpm/stable/\$basearch\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=\"https://downloads.1password.com/linux/keys/1password.asc\"" > /etc/yum.repos.d/1password.repo'
+	sudo rpm-ostree install 1password 1password-cli
+
+	# not sure I would do this?
+	# curl -Lo op.rpm https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
+	# sudo rpm-ostree install op.rpm
+	# rm op.rpm
+
+	# latest stable
+	# https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
+	# latest beta
+	# https://downloads.1password.com/linux/rpm/beta/x86_64/1password-latest.rpm
+	# latest nightly
+	# https://downloads.1password.com/linux/rpm/edge/x86_64/1password-latest.rpm
+
+	### manual repo files for diff channels
+	# sudo nano /etc/yum.repos.d/1password.repo
+
+	# [1password]
+	# name=1Password Stable Channel
+	# baseurl=https://downloads.1password.com/linux/rpm/stable/$basearch
+	# enabled=1
+
+	# [1password]
+	# name=1Password Beta Channel
+	# baseurl=https://downloads.1password.com/linux/rpm/beta/$basearch
+	# enabled=1
+
+	# [1password]
+	# name=1Password Edge Channel
+	# baseurl=https://downloads.1password.com/linux/rpm/edge/$basearch
+	# enabled=1
+
+	### problem: they broke the installer script bundled into the rpm
+	# I actually downloaded the tar and used their instlaler script, which does some stuff below
+
+	# manual install
+	# curl -Lo 1password.tar.gz https://downloads.1password.com/linux/tar/stable/x86_64/1password-latest.tar.gz
+	# sudo mkdir -p /opt/1Password
+	# sudo tar -xf 1password.tar.gz --strip-components=1 -C /opt/1Password
+	# sudo cp /opt/1Password/resources/1password.desktop /var/home/chris/.local/share/applications
+	# sudo cp -rf /opt/1Password/resources/icons/* /var/home/chris/.local/share/icons
+	# touch /var/home/chris/.local/share/icons/hicolor
+
+	# sudo chmod 4755 /opt/1Password/chrome-sandbox
+	# GROUP_NAME="onepassword"
+	# if [ ! "$(getent group "${GROUP_NAME}")" ]; then
+	#    sudo groupadd "${GROUP_NAME}"
+	# fi
+	#  BROWSER_SUPPORT_PATH="/opt/1Password/1Password-BrowserSupport"
+	#  sudo chgrp "${GROUP_NAME}" $BROWSER_SUPPORT_PATH
+	#  sudo chmod g+s $BROWSER_SUPPORT_PATH
 }
 
 function proton_vpn {

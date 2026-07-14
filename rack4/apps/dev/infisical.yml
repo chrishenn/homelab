@@ -1,0 +1,74 @@
+---
+x-infisical_env: &infisical_env
+  SITE_URL: https://infisical.chenn.dev
+  ENCRYPTION_KEY: ${INFISICAL_ENCRYPTION_KEY}
+  AUTH_SECRET: ${INFISICAL_AUTH_SECRET}
+  NODE_ENV: production
+
+  DB_CONNECTION_URI: postgres://infisical:infisical@infisical_db:5432/infisical
+  POSTGRES_PASSWORD: infisical
+  POSTGRES_USER: infisical
+  POSTGRES_DB: infisical
+
+  REDIS_URL: redis://infisical_redis:6379
+  ALLOW_EMPTY_PASSWORD: yes
+
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: 465
+  SMTP_FROM_ADDRESS: ${SMTP_USER}
+  SMTP_FROM_NAME: chris
+  SMTP_USERNAME: ${SMTP_USER}
+  SMTP_PASSWORD: ${SMTP_TOKEN}
+
+services:
+  infisical:
+    profiles: [infisical]
+    image: infisical/infisical:latest
+    container_name: infisical
+    restart: unless-stopped
+    environment:
+      <<: *infisical_env
+    networks: [infisical, newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: Infisical
+      homepage.icon: infisical.png
+      homepage.href: https://infisical.chenn.dev
+      homepage.description: Dev Secrets
+
+      pangolin.public-resources.infisical.name: infisical
+      pangolin.public-resources.infisical.full-domain: infisical.chenn.dev
+      pangolin.public-resources.infisical.mode: http
+      pangolin.public-resources.infisical.targets[0].method: http
+      pangolin.public-resources.infisical.targets[0].port: 8080
+      pangolin.public-resources.infisical.policy: member
+
+  infisical_redis:
+    profiles: [infisical]
+    image: valkey/valkey:alpine
+    container_name: infisical_redis
+    restart: unless-stopped
+    environment:
+      <<: *infisical_env
+    volumes:
+      - $DATA/infisical/redis:/data
+    networks: [infisical]
+
+  infisical_db:
+    profiles: [infisical]
+    image: postgres:18-alpine
+    container_name: infisical_db
+    restart: unless-stopped
+    volumes:
+      - $DATA/infisical/db:/var/lib/postgresql
+    environment:
+      <<: *infisical_env
+    healthcheck:
+      test: pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks: [infisical]
+
+networks:
+  infisical:
