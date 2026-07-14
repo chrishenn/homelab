@@ -140,3 +140,6 @@ stoat_invite:
     #!/bin/bash
     export invite=$(openssl rand -hex 32)
     docker compose exec -it stoat_db mongosh revolt --eval "db.invites.insertOne({ _id: \"$invite\" })"
+
+ark args:
+   docker compose exec -it -u archivebox archive archivebox {{args}}
