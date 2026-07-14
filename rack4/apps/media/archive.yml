@@ -7,7 +7,7 @@ services:
     profiles: [archive]
     image: archivebox/archivebox:dev
     container_name: archive
-    shm_size: "1gb"
+    shm_size: '1gb'
     environment:
       ADMIN_USERNAME: ${USER}
       ADMIN_PASSWORD: ${PASS}
