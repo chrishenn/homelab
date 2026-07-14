@@ -5,28 +5,16 @@ services:
   # https://github.com/ArchiveBox/ArchiveBox/wiki/Chromium-Install#setting-up-a-chromium-user-profile
   archive:
     profiles: [archive]
-    image: archivebox/archivebox:latest
+    image: archivebox/archivebox:dev
     container_name: archive
-    dns:
-      - ${DNS_VIP}
-    volumes:
-      - $DATA/archive/data:/data
-      # ./archive/profile:/data/personas/Default/chrome_profile/Default
+    shm_size: "1gb"
     environment:
       ADMIN_USERNAME: ${USER}
       ADMIN_PASSWORD: ${PASS}
-      LISTEN_HOST: archive.chenn.dev
-      ALLOWED_HOSTS: archive.chenn.dev
-      CSRF_TRUSTED_ORIGINS: https://archive.chenn.dev
-      PUBLIC_INDEX: True
-      PUBLIC_SNAPSHOTS: True
-      PUBLIC_ADD_VIEW: False
-      SEARCH_BACKEND_ENGINE: sonic
-      SEARCH_BACKEND_HOST_NAME: 127.0.0.1
-      SEARCH_BACKEND_PASSWORD: SomeSecretPassword
-      USE_COLOR: True
-      SHOW_PROGRESS: True
-      CHECK_SSL_VALIDITY: False
+      BASE_URL: https://archive.chenn.dev
+      SERVER_SECURITY_MODE: safe-subdomains-fullreplay
+    volumes:
+      - $DATA/archive/data:/data
     networks: [newt]
     labels:
       homepage.group: General Media
@@ -42,59 +30,59 @@ services:
       pangolin.public-resources.archive.targets[0].port: 8000
       pangolin.public-resources.archive.policy: member
 
-  archive_vnc:
-    profiles: [archive]
-    image: theasp/novnc:latest
-    container_name: archive_vnc
-    environment:
-      DISPLAY_WIDTH: 1920
-      DISPLAY_HEIGHT: 1080
-      RUN_XTERM: no
-    networks: [newt]
-    labels:
-      homepage.group: General Media
-      homepage.name: Archivebox VNC
-      homepage.icon: archivebox.png
-      homepage.href: https://archive_vnc.chenn.dev
-      homepage.description: Web Archive Viewer
-
-      pangolin.public-resources.archive_vnc.name: archive_vnc
-      pangolin.public-resources.archive_vnc.full-domain: archive_vnc.chenn.dev
-      pangolin.public-resources.archive_vnc.mode: http
-      pangolin.public-resources.archive_vnc.targets[0].method: http
-      pangolin.public-resources.archive_vnc.targets[0].port: 8080
-      pangolin.public-resources.archive_vnc.policy: member
-
-  # https://github.com/dgtlmoon/changedetection.io
-  archive_change:
-    profiles: [archive]
-    image: ghcr.io/dgtlmoon/changedetection.io
-    container_name: archive_change
-    volumes:
-      - $DATA/archive/change:/datastore
-
-  # https://github.com/webrecorder/pywb
-  archive_pywb:
-    profiles: [archive]
-    image: webrecorder/pywb:latest
-    container_name: archive_pywb
-    entrypoint: /bin/sh -c '(wb-manager init default || test $$? -eq 2) && wb-manager add default /archivebox/archive/*/warc/*.warc.gz; wayback;'
-    environment:
-      INIT_COLLECTION: archivebox
-    volumes:
-      - $DATA/archive/archivebox:/archivebox
-      - $DATA/archive/webarchive:/webarchive
-    networks: [newt]
-    labels:
-      homepage.group: General Media
-      homepage.name: Archivebox PyWB
-      homepage.icon: archivebox.png
-      homepage.href: https://archive_pywb.chenn.dev
-      homepage.description: Web Archive Recorder
-
-      pangolin.public-resources.archive_pywb.name: archive_pywb
-      pangolin.public-resources.archive_pywb.full-domain: archive_pywb.chenn.dev
-      pangolin.public-resources.archive_pywb.mode: http
-      pangolin.public-resources.archive_pywb.targets[0].method: http
-      pangolin.public-resources.archive_pywb.targets[0].port: 8080
-      pangolin.public-resources.archive_pywb.policy: member
+#  archive_vnc:
+#    profiles: [archive]
+#    image: theasp/novnc:latest
+#    container_name: archive_vnc
+#    environment:
+#      DISPLAY_WIDTH: 1920
+#      DISPLAY_HEIGHT: 1080
+#      RUN_XTERM: no
+#    networks: [newt]
+#    labels:
+#      homepage.group: General Media
+#      homepage.name: Archivebox VNC
+#      homepage.icon: archivebox.png
+#      homepage.href: https://archive_vnc.chenn.dev
+#      homepage.description: Web Archive Viewer
+#
+#      pangolin.public-resources.archive_vnc.name: archive_vnc
+#      pangolin.public-resources.archive_vnc.full-domain: archive_vnc.chenn.dev
+#      pangolin.public-resources.archive_vnc.mode: http
+#      pangolin.public-resources.archive_vnc.targets[0].method: http
+#      pangolin.public-resources.archive_vnc.targets[0].port: 8080
+#      pangolin.public-resources.archive_vnc.policy: member
+#
+#  # https://github.com/dgtlmoon/changedetection.io
+#  archive_change:
+#    profiles: [archive]
+#    image: ghcr.io/dgtlmoon/changedetection.io
+#    container_name: archive_change
+#    volumes:
+#      - $DATA/archive/change:/datastore
+#
+#  # https://github.com/webrecorder/pywb
+#  archive_pywb:
+#    profiles: [archive]
+#    image: webrecorder/pywb:latest
+#    container_name: archive_pywb
+#    entrypoint: /bin/sh -c '(wb-manager init default || test $$? -eq 2) && wb-manager add default /archivebox/archive/*/warc/*.warc.gz; wayback;'
+#    environment:
+#      INIT_COLLECTION: archivebox
+#    volumes:
+#      - $DATA/archive/archivebox:/archivebox
+#      - $DATA/archive/webarchive:/webarchive
+#    networks: [newt]
+#    labels:
+#      homepage.group: General Media
+#      homepage.name: Archivebox PyWB
+#      homepage.icon: archivebox.png
+#      homepage.href: https://archive_pywb.chenn.dev
+#      homepage.description: Web Archive Recorder
+#
+#      pangolin.public-resources.archive_pywb.name: archive_pywb
+#      pangolin.public-resources.archive_pywb.full-domain: archive_pywb.chenn.dev
+#      pangolin.public-resources.archive_pywb.mode: http
+#      pangolin.public-resources.archive_pywb.targets[0].method: http
+#      pangolin.public-resources.archive_pywb.targets[0].port: 8080
+#      pangolin.public-resources.archive_pywb.policy: member
