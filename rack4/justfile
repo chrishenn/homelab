@@ -146,20 +146,3 @@ ark *args:
 
 zellij_serve:
     zellij web --start -d 2>/dev/null || true
-    just zellij_status
-
-zellij_status:
-    @echo "┌─ Zellij web server ──────────────────────────────────────"
-    @zellij web --status 2>/dev/null || echo "  offline"
-    @echo "│"
-    @echo "├─ Access ─────────────────────────────────────────────────"
-    @{ echo "${DOMAIN}"; [ -n "${EXTRA_DOMAINS:-}" ] && echo "${EXTRA_DOMAINS}" | tr ',' '\n'; } | awk '!seen[$0]++' | while read d; do echo "  https://${d}:${HTTPS_PORT:-443}"; done
-    @echo "│"
-    @echo "├─ Sessions ───────────────────────────────────────────────"
-    @zellij list-sessions 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' | awk -v base="https://${DOMAIN}:${HTTPS_PORT:-443}" '{print "  " $1 "  →  " base "/" $1}' || echo "  none"
-    @echo "│"
-    @echo "├─ Tokens ─────────────────────────────────────────────────"
-    @zellij web --list-tokens 2>/dev/null | sed 's/^/  /' || echo "  none"
-    @echo "│"
-    @echo "└─ Containers ─────────────────────────────────────────────"
-    @podman compose ps 2>/dev/null
