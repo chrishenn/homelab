@@ -1,7 +1,8 @@
 ---
 services:
-  # dc run --rm -it archive archivebox init --setup
+  # j ark init --setup
   # j ark add --depth=1 'https://tory110191.wordpress.com'
+  # j ark add --update-all --depth=1 'https://tory110191.wordpress.com'
   # j ark schedule --add --every=day --depth=1 'https://tory110191.wordpress.com'
 
   # sudo chown -R 911:911 /var/home/chris/.config/google-chrome
