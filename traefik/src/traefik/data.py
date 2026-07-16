@@ -2,7 +2,7 @@ from .paths import PATHS, YamlPath
 
 
 class LocalPaths(YamlPath):
-    dyncfg = PATHS.repo / "rack4/apps/traefik/cfg/dyncfg.yml"
+    dyncfg = PATHS.repo / "rack4/apps/infra/traefik/cfg/dyncfg.yml"
 
 
 def svc_map() -> dict:

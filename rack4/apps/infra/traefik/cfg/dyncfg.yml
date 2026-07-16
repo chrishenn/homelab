@@ -60,6 +60,12 @@ http:
       service: two-mikrotik
       tls:
         certResolver: cf
+    zellij_router:
+      entryPoints: websecure
+      rule: Host(`zellij.henn.dev`)
+      service: zellij
+      tls:
+        certResolver: cf
     zyxel_router:
       entryPoints: websecure
       rule: Host(`zyxel.henn.dev`)
@@ -107,6 +113,10 @@ http:
       loadBalancer:
         servers:
           - url: http://192.168.1.2
+    zellij:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.142:8082
     zyxel:
       loadBalancer:
         servers:
