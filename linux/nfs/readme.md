@@ -56,6 +56,8 @@ install
 curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.4.0/host/doca-host-3.4.0-085000_26.04_rhel10.x86_64.rpm
 sudo rpm-ostree install doca.rpm
 rm doca.rpm
+
+sudo rpm-ostree install python3.12 python3-pyyaml
 ```
 
 uninstall
