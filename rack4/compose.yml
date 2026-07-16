@@ -44,6 +44,7 @@ include:
   - apps/dev/pgadmin.yml
   - apps/dev/scanopy.yml
   - apps/dev/bytestash.yml
+  - apps/dev/infisical.yml
 
   - apps/doc_server/docmost.yml
   - apps/doc_server/files.yml

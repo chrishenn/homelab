@@ -1,13 +1,11 @@
 ---
 services:
   # dc run --rm -it archive archivebox init --setup
-  # dc exec -it -u archivebox archive archivebox add --depth=1 'https://tory110191.wordpress.com'
-  # dc exec -it -u archivebox archive archivebox schedule --add --every=day --depth=1 'https://example.com/some/rss/feed.xml'
+  # j ark add --depth=1 'https://tory110191.wordpress.com'
+  # j ark schedule --add --every=day --depth=1 'https://tory110191.wordpress.com'
 
   # sudo chown -R 911:911 /var/home/chris/.config/google-chrome
-  # dc exec -it -u archivebox archive archivebox update --overwrite 'https://tory110191.wordpress.com/2009/01/27/day-6-2/'
-  #
-  # dc exec -it -u archivebox archive /bin/bash -c "URL_ALLOWLIST='^https:\/\/tory110191\.wordpress\.com.*$' archivebox add --depth 1 'https://tory110191.wordpress.com'"
+  # j ark update --overwrite 'https://tory110191.wordpress.com/2009/01/27/day-6-2/'
   archive:
     profiles: [archive]
     image: archivebox/archivebox:stable

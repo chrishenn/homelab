@@ -99,6 +99,9 @@ OPENCUT_UPSTASH = { provider = "onepass", value = "op://homelab/opencut/upstash"
 OUTLINE_SECRET = { provider = "onepass", value = "op://homelab/outline/secret_key" }
 OUTLINE_UTILS = { provider = "onepass", value = "op://homelab/outline/utils_secret" }
 
+INFISICAL_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/infisical/encryption_key" }
+INFISICAL_AUTH_SECRET = { provider = "onepass", value = "op://homelab/infisical/auth_secret" }
+
 SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
