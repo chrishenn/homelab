@@ -16,7 +16,7 @@ services:
       RESTIC_PASSWORD: ${WASABI_RESTIC_PASSWORD}
       SCRIPT_GITHUB: |
         . /scripts/deps.sh
-        && /scripts/gclone.sh 'chrishenn' 'github.com' "/mnt/h/github/github.com/chrishenn" "$$HOME/.ssh/id_ed25519"
+        && /scripts/gclone.sh 'chrishenn' 'github.com' '/mnt/h/github/github.com/chrishenn'
         && chown -R 1000:1000 /mnt/h/github
 
     volumes:

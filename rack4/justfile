@@ -143,3 +143,6 @@ stoat_invite:
 
 ark *args:
    docker compose exec -it -u archivebox archive archivebox {{args}}
+
+zellij_serve:
+    zellij web --start -d 2>/dev/null || true

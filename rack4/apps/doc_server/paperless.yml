@@ -75,7 +75,7 @@ services:
       homepage.description: AI Document Processing
 
       pangolin.public-resources.paperless_ai.name: paperless_ai
-      pangolin.public-resources.paperless_ai.full-domain: paperless_ai.chenn.dev
+      pangolin.public-resources.paperless_ai.full-domain: paperless-ai.chenn.dev
       pangolin.public-resources.paperless_ai.mode: http
       pangolin.public-resources.paperless_ai.targets[0].method: http
       pangolin.public-resources.paperless_ai.targets[0].port: 3000
@@ -121,7 +121,7 @@ services:
       homepage.description: AI Document Processing
 
       pangolin.public-resources.paperless_gpt.name: paperless_gpt
-      pangolin.public-resources.paperless_gpt.full-domain: paperless_gpt.chenn.dev
+      pangolin.public-resources.paperless_gpt.full-domain: paperless-gpt.chenn.dev
       pangolin.public-resources.paperless_gpt.mode: http
       pangolin.public-resources.paperless_gpt.targets[0].method: http
       pangolin.public-resources.paperless_gpt.targets[0].port: 8080

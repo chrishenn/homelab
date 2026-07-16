@@ -2,7 +2,7 @@ from .paths import PATHS, YamlPath
 
 
 class LocalPaths(YamlPath):
-    dyncfg = PATHS.repo / "rack4/apps/traefik/cfg/dyncfg.yml"
+    dyncfg = PATHS.repo / "rack4/apps/infra/traefik/cfg/dyncfg.yml"
 
 
 def svc_map() -> dict:
@@ -19,6 +19,7 @@ def svc_map() -> dict:
         "netalert": "http://192.168.1.142:20211",
         "speedtest": "http://192.168.1.142:3030",
         "librespeed": "http://192.168.1.142:3040",
+        "zellij": "https://192.168.1.142:8082",
     }
 
 

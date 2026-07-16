@@ -76,6 +76,9 @@ ignore = [
     "S110",     # try-except-pass should log
     "N805",     # First argument of a method should be named `self` (conflicts with decorated type)
     "TC003",    # move import into type-checking block (breaks pydantic runtime type-checking)
+
+    # ??
+    "CPY001" # copyright notice
 ]
 
 [lint.per-file-ignores]

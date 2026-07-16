@@ -1,4 +1,5 @@
 # don't inline this config; it's used by both rack0 and rack4's blocky instances
+# creating a mapping for lancache doesn't work. Manually set device's DNS to use lancache IP
 
 upstreams:
   init:
