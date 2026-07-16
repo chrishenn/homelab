@@ -19,7 +19,8 @@ def svc_map() -> dict:
         "netalert": "http://192.168.1.142:20211",
         "speedtest": "http://192.168.1.142:3030",
         "librespeed": "http://192.168.1.142:3040",
-        "zellij": "http://192.168.1.142:8082",
+        # zellij web server will serve a self-signed cert if you bind to 0.0.0.0
+        "zellij": "http://127.0.0.1:8082",
     }
 
 

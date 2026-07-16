@@ -76,48 +76,48 @@ http:
     brother:
       loadBalancer:
         servers:
-          - url: https://192.168.1.9
+        - url: https://192.168.1.9
     kube-traefik:
       loadBalancer:
         servers:
-          - url: http://192.168.30.80:8080
+        - url: http://192.168.30.80:8080
     kvm0:
       loadBalancer:
         servers:
-          - url: http://192.168.1.22:80
+        - url: http://192.168.1.22:80
     librespeed:
       loadBalancer:
         servers:
-          - url: http://192.168.1.142:3040
+        - url: http://192.168.1.142:3040
     netalert:
       loadBalancer:
         servers:
-          - url: http://192.168.1.142:20211
+        - url: http://192.168.1.142:20211
     one-mikrotik:
       loadBalancer:
         servers:
-          - url: http://192.168.1.1
+        - url: http://192.168.1.1
     pikvm:
       loadBalancer:
         servers:
-          - url: https://192.168.1.31
+        - url: https://192.168.1.31
     proxmox:
       loadBalancer:
         servers:
-          - url: https://192.168.1.42:8006
+        - url: https://192.168.1.42:8006
     speedtest:
       loadBalancer:
         servers:
-          - url: http://192.168.1.142:3030
+        - url: http://192.168.1.142:3030
     two-mikrotik:
       loadBalancer:
         servers:
-          - url: http://192.168.1.2
+        - url: http://192.168.1.2
     zellij:
       loadBalancer:
         servers:
-          - url: http://192.168.1.142:8082
+        - url: http://127.0.0.1:8082
     zyxel:
       loadBalancer:
         servers:
-          - url: https://192.168.1.12
+        - url: https://192.168.1.12
