@@ -49,10 +49,19 @@ https://forums.developer.nvidia.com/t/pfc-not-working-with-rdma-over-rocev2-and-
 
 # doca
 
+install
+
 ```bash
 # (fedora) online rpm install had a python dependency issue. try manual install
-curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.3.0/host/doca-host-3.3.0-088000_26.01_rhel10.x86_64.rpm
+curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.4.0/host/doca-host-3.4.0-085000_26.04_rhel10.x86_64.rpm
 sudo rpm-ostree install doca.rpm
+rm doca.rpm
+```
+
+uninstall
+
+```bash
+sudo rpm-ostree remove doca-host
 ```
 
 # troubleshooting
