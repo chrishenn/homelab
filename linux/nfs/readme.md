@@ -49,15 +49,23 @@ https://forums.developer.nvidia.com/t/pfc-not-working-with-rdma-over-rocev2-and-
 
 # doca
 
+https://networking-docs.nvidia.com/doca/archive/3-4-0/doca-host-installation-and-upgrade#DOCA-Extra-Package-and-doca-kernel-support
+
 install
 
 ```bash
-# (fedora) online rpm install had a python dependency issue. try manual install
+# no dice with this either
 curl -Lo doca.rpm https://www.mellanox.com/downloads/DOCA/DOCA_v3.4.0/host/doca-host-3.4.0-085000_26.04_rhel10.x86_64.rpm
 sudo rpm-ostree install doca.rpm
 rm doca.rpm
 
-sudo rpm-ostree install python3.12 python3-pyyaml
+# did not work; build failed with cryptic err
+curl -Lo abi.rpm https://dl.rockylinux.org/pub/rocky/10/BaseOS/x86_64/os/Packages/k/kernel-abi-stablelists-6.12.0-211.34.1.el10_2.noarch.rpm
+sudo rpm-ostree install abi.rpm
+rm abi.rpm
+sudo rpm-ostree install doca-extra
+sudo rpm-ostree install createrepo rpm-build autoconf automake libtool kernel-rpm-macros
+sudo /opt/mellanox/doca/tools/doca-kernel-support
 ```
 
 uninstall
