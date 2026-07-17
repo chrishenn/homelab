@@ -1,0 +1,387 @@
+{
+  "modno": 41,
+  "version": 6,
+  "instance": "docker-backrest",
+  "repos": [
+    {
+      "id": "wasabi0",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket0.henn.dev",
+      "guid": "556325a6eff50296d7d413fb6f9013c52255fd9dea42cabb163710e9114d5bd3",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi1",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket1.henn.dev",
+      "guid": "c852e55b76a213f1a4d02c808262f445e2f5f862cf5b54758762dc40afbba833",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi2",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket2.henn.dev",
+      "guid": "b91448b1ccf012d9fa1fb1dfc5390912a82d598b77b8463f200ae6644a7ca294",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi3",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket3.henn.dev",
+      "guid": "45e9630f707657013d284924515565f50a630a09cbc4e3d01cd8453d5a5c7931",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi4",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket4.henn.dev",
+      "guid": "471b2ce83a8bb33ed5e3a58e5d9017fb740cadf0c2e47369ea944ea45c060569",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi5",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket5.henn.dev",
+      "guid": "618cb796be73f1d31ceb630ecd36055f0685a8e78a9f9a7c45a2c11d6ce95fa1",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi6",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket6.henn.dev",
+      "guid": "6e383ebfdeac0c741dd4bf490e715125d3cbd9a7d41072e122689b9afc9e9ae6",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi7",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket7.henn.dev",
+      "guid": "8227d1052f013002943a01cf05a4f9c08c56aadf99e5c51fa56864326550a36b",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    },
+    {
+      "id": "wasabi8",
+      "uri": "s3:https://s3.us-east-1.wasabisys.com/bucket8.henn.dev",
+      "guid": "dff434c9f1a53911844ee82490e171a84297e5da58c42913b36d591a27b672a8",
+      "env": ["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "RESTIC_PASSWORD=${RESTIC_PASSWORD}"],
+      "flags": ["--limit-upload 12000"],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 * * 0",
+          "clock": "CLOCK_LOCAL"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 17 * * 1",
+          "clock": "CLOCK_LOCAL"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {}
+    }
+  ],
+  "plans": [
+    {
+      "id": "wasabi0_github",
+      "repo": "wasabi0",
+      "paths": ["/mnt/h/github"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "hooks": [
+        {
+          "conditions": ["CONDITION_SNAPSHOT_START"],
+          "onError": "ON_ERROR_FATAL",
+          "actionCommand": {
+            "command": "set -eux\necho \"$SCRIPT_GITHUB\"\necho $SCRIPT_GITHUB | bash\necho {{ .ShellEscape .Summary }}"
+          }
+        }
+      ],
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi1_backup",
+      "repo": "wasabi1",
+      "paths": ["/mnt/h/backup/"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi2_archive",
+      "repo": "wasabi2",
+      "paths": ["/mnt/k/docker/archive/data"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi3_media",
+      "repo": "wasabi3",
+      "paths": ["/mnt/h/media"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi4_porn",
+      "repo": "wasabi4",
+      "paths": ["/mnt/h/porn"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi5_apps",
+      "repo": "wasabi5",
+      "paths": ["/mnt/h/android", "/mnt/h/linux", "/mnt/h/windows"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi6_datasets",
+      "repo": "wasabi6",
+      "paths": ["/mnt/h/datasets"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    },
+    {
+      "id": "wasabi7_immich",
+      "repo": "wasabi7",
+      "paths": ["/mnt/k/docker/immich/library"],
+      "schedule": {
+        "cron": "0 5 * * *",
+        "clock": "CLOCK_LOCAL"
+      },
+      "retention": {
+        "policyTimeBucketed": {
+          "hourly": 24,
+          "daily": 7,
+          "weekly": 4,
+          "monthly": 12,
+          "yearly": 100,
+          "keepLastN": 2
+        }
+      },
+      "backup_flags": ["--skip-if-unchanged"]
+    }
+  ],
+  "auth": {
+    "disabled": true,
+    "users": [
+      {
+        "name": "chris"
+      }
+    ]
+  },
+  "sync": {
+    "identity": {}
+  }
+}
