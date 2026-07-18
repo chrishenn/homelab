@@ -67,7 +67,7 @@ services:
     labels:
       pangolin.public-resources.pydio_collabora.name: pydio_collabora
       pangolin.public-resources.pydio_collabora.protocol: http
-      pangolin.public-resources.pydio_collabora.full-domain: pydio_collabora.chenn.dev
+      pangolin.public-resources.pydio_collabora.full-domain: pydio-collabora.chenn.dev
       pangolin.public-resources.pydio_collabora.ssl: true
       pangolin.public-resources.pydio_collabora.targets[0].method: http
       pangolin.public-resources.pydio_collabora.targets[0].port: 9980

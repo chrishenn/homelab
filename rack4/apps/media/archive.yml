@@ -65,7 +65,7 @@ services:
 #      homepage.description: Web Archive Viewer
 #
 #      pangolin.public-resources.archive_vnc.name: archive_vnc
-#      pangolin.public-resources.archive_vnc.full-domain: archive_vnc.chenn.dev
+#      pangolin.public-resources.archive_vnc.full-domain: archive-vnc.chenn.dev
 #      pangolin.public-resources.archive_vnc.mode: http
 #      pangolin.public-resources.archive_vnc.targets[0].method: http
 #      pangolin.public-resources.archive_vnc.targets[0].port: 8080
@@ -99,7 +99,7 @@ services:
 #      homepage.description: Web Archive Recorder
 #
 #      pangolin.public-resources.archive_pywb.name: archive_pywb
-#      pangolin.public-resources.archive_pywb.full-domain: archive_pywb.chenn.dev
+#      pangolin.public-resources.archive_pywb.full-domain: archive-pywb.chenn.dev
 #      pangolin.public-resources.archive_pywb.mode: http
 #      pangolin.public-resources.archive_pywb.targets[0].method: http
 #      pangolin.public-resources.archive_pywb.targets[0].port: 8080

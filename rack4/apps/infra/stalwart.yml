@@ -136,6 +136,8 @@ services:
       - $DATA/stalwart/var:/var/lib/stalwart
       - $DATA/stalwart/certs:/data/certs:ro
     depends_on:
+      stalwart_wg:
+        condition: service_started
       stalwart_perm:
         condition: service_completed_successfully
     #      stalwart_certs:

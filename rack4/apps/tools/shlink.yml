@@ -8,7 +8,7 @@ services:
     container_name: shlink
     restart: unless-stopped
     environment:
-      SHLINK_SERVER_URL: https://shlink_api.chenn.dev
+      SHLINK_SERVER_URL: https://shlink-api.chenn.dev
       SHLINK_SERVER_API_KEY: ${SHLINK_API_KEY}
     networks: [shlink, newt]
     labels:
@@ -51,7 +51,7 @@ services:
     networks: [shlink, newt]
     labels:
       pangolin.public-resources.shlink_api.name: shlink_api
-      pangolin.public-resources.shlink_api.full-domain: shlink_api.chenn.dev
+      pangolin.public-resources.shlink_api.full-domain: shlink-api.chenn.dev
       pangolin.public-resources.shlink_api.mode: http
       pangolin.public-resources.shlink_api.targets[0].method: http
       pangolin.public-resources.shlink_api.targets[0].port: 8080

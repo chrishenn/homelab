@@ -77,7 +77,7 @@ include:
   - apps/infra/stalwart.yml
 
   - apps/job/openresume.yml
-  - apps/job/resume.yml
+  #  - apps/job/resume.yml
   - apps/job/ops.yml
 
   - apps/media/archive.yml

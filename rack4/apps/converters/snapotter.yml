@@ -21,6 +21,9 @@ services:
       DEFAULT_PASSWORD: ${PASS}
       DEFAULT_THEME: dark
 
+      DATABASE_URL: postgres://snapotter:snapotter@snapotter_db:5432/snapotter
+      REDIS_URL: redis://snapotter_redis:6379
+
       OIDC_ENABLED: true
       OIDC_ISSUER_URL: ${OIDC}
       OIDC_CLIENT_ID: ${SNAPOTTER_OIDC_CLIENT}
@@ -31,10 +34,9 @@ services:
       OIDC_PROVIDER_NAME: Pocket ID
     volumes:
       - $DATA/snapotter/data:/data
-      - $DATA/snapotter/workspace:/tmp/workspace
     healthcheck:
       test: curl http://0.0.0.0:1349/api/v1/health
-    networks: [newt]
+    networks: [snapotter, newt]
     labels:
       homepage.group: Converters
       homepage.name: Snap Otter
@@ -48,3 +50,28 @@ services:
       pangolin.public-resources.snapotter.targets[0].method: http
       pangolin.public-resources.snapotter.targets[0].port: 1349
       pangolin.public-resources.snapotter.policy: member
+
+  snapotter_db:
+    profiles: [snapotter]
+    image: postgres:18-alpine
+    container_name: snapotter_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: snapotter
+      POSTGRES_PASSWORD: snapotter
+      POSTGRES_DB: snapotter
+    volumes:
+      - $DATA/snapotter/db:/var/lib/postgresql
+    networks: [snapotter]
+
+  snapotter_redis:
+    profiles: [snapotter]
+    image: valkey/valkey:alpine
+    container_name: snapotter_redis
+    restart: unless-stopped
+    volumes:
+      - $DATA/snapotter/redis:/data
+    networks: [snapotter]
+
+networks:
+  snapotter:
