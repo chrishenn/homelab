@@ -50,7 +50,7 @@ public-policies:
     sso: false
     apply-rules: true
     rules:
-      - action: pass
+      - action: allow
         match: country
         value: US
       - action: deny

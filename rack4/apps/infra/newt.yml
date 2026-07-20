@@ -13,6 +13,20 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [newt]
+#    labels:
+#      pangolin.public-policies.test.name: test policy
+#      pangolin.public-policies.test.soo: false
+#      pangolin.public-policies.test.auto-login-idp: null
+#      pangolin.public-policies.test.sso-roles:
+#      pangolin.public-policies.test.sso-users:
+#      pangolin.public-policies.test.password: null
+#      pangolin.public-policies.test.pincode: null
+#      pangolin.public-policies.test.basic-auth: null
+#      pangolin.public-policies.test.email-whitelist-enabled: false
+#      pangolin.public-policies.test.whitelist-users:
+#      pangolin.public-policies.test.apply-rules: true
+#      pangolin.public-policies.test.rules:
+
 
 networks:
   newt:

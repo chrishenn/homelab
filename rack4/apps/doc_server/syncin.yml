@@ -146,7 +146,7 @@ services:
 
   syncin_collabora:
     profiles: [syncin]
-    image: collabora/code:latest
+    image: collabora/code:26.04.2.1.1
     container_name: syncin_collabora
     restart: unless-stopped
     environment:
