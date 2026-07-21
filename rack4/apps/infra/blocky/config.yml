@@ -23,6 +23,9 @@ connectIPVersion: v4
 customDNS:
   customTTL: 1h
   filterUnmappedTypes: false
+  mapping:
+    steam.cache.lancache.net: 192.168.1.143
+    lancache.steamcontent.com: 192.168.1.143
 
 blocking:
   # Note: if the same group has both allow/denylists, allowlists take precedence

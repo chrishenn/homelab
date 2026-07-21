@@ -1,5 +1,7 @@
 ---
 services:
+  # nslookup steam.cache.lancache.net
+  # nslookup lancache.steamcontent.com
   lancache:
     profiles: [lancache]
     image: lancachenet/monolithic:latest
