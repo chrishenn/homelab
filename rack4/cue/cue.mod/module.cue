@@ -1,4 +1,4 @@
-module: "rack4"
+module: "rack4.henn.dev"
 language: {
 	version: "v0.17.1"
 }

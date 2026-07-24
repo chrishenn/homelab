@@ -1,7 +1,7 @@
-package rack4
+package apps
 
 #HomepageGroup:  "Arr" | "AI"
-#PangolinPolicy: *"member" | "arr"
+#PangolinPolicy: *"member" | "arr" | "chris"
 
 services: [Service=_]: {
 	profiles: [string]
