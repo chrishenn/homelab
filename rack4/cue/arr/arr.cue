@@ -17,11 +17,10 @@ services: {
 			"$MEDIA:/media_library",
 		]
 		networks: ["arr", "newt"]
-		expose: ["8989"]
+		expose: ["7878"]
+		_pangolin:                                 true
 		labels: {
 			"homepage.group": "Arr"
-
-			_pangolin:                                 true
 			"pangolin.public-resources.radarr.policy": "arr"
 		}
 	}
@@ -43,14 +42,12 @@ services: {
 		]
 		networks: ["arr", "newt"]
 		expose: ["8989"]
+		_pangolin:                                 true
 		labels: {
 			"homepage.group": "Arr"
-
-			_pangolin:                                 true
 			"pangolin.public-resources.sonarr.policy": "arr"
 		}
 	}
-
 }
 
 networks: arr: null

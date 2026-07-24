@@ -1,16 +1,11 @@
 package rack4
 
 services: comfy: {
-	profiles: ["comfy"]
 	image:      "yanwk/comfyui-boot:cu130-slim"
 	stdin_open: true
 	tty:        true
 	runtime:    "nvidia"
-	deploy: resources: reservations: devices: [{
-		driver: "nvidia"
-		count:  "all"
-		capabilities: ["gpu"]
-	}]
+	deploy:     #NVGpu
 	environment: CLI_ARGS: "--fast --listen 0.0.0.0"
 	volumes: [
 		"$DATA/comfy/root:/root",
@@ -22,14 +17,13 @@ services: comfy: {
 		"$DATA/comfy/output:/root/ComfyUI/output",
 		"$DATA/comfy/workflows:/root/ComfyUI/user/default/workflows",
 	]
-	healthcheck: test: ["CMD", "curl", "-ILfSs", "http://localhost:8188"]
+	healthcheck: test: "curl -ILfSs http://localhost:8188"
 	expose: ["8188"]
-	networks: ["newt"]
+	_pangolin: true
 	labels: {
 		"homepage.group":                         "AI"
 		"homepage.icon":                          "comfy-ui.png"
 		"homepage.description":                   "Image Gen"
-		_pangolin:                                true
 		"pangolin.public-resources.comfy.policy": "chris"
 	}
 }

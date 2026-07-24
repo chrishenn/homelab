@@ -1,10 +1,7 @@
 package rack4
 
 services: openwebui: {
-	profiles: ["openwebui"]
-	image:          "ghcr.io/open-webui/open-webui:latest"
-	container_name: "openwebui"
-	restart:        "unless-stopped"
+	image: "ghcr.io/open-webui/open-webui:latest"
 	volumes: ["$DATA/ollama/webui:/app/backend/data"]
 	environment: {
 		ENABLE_PERSISTENT_CONFIG:       false
@@ -34,12 +31,13 @@ services: openwebui: {
 		ENABLE_LOGIN_FORM:              true
 		ENABLE_PASSWORD_AUTH:           true
 	}
-	healthcheck: test: ["CMD", "curl", "-ILfSs", "http://localhost:8080"]
+	healthcheck: test: "curl -ILfSs http://localhost:8080"
 	networks: ["newt", "ollama"]
 	expose: ["8080"]
+	_pangolin: true
+	_domain: "ollama.chenn.dev"
 	labels: {
-		"homepage.group":                                        "AI"
-		"homepage.description":                                  "AI Chat"
-		_pangolin: true
+		"homepage.group":                                  "AI"
+		"homepage.description":                            "AI Chat"
 	}
 }

@@ -1,14 +1,9 @@
 package rack4
 
 services: ollama: {
-	profiles: ["ollama"]
-	image:          "ollama/ollama:latest"
-	runtime:        "nvidia"
-	deploy: resources: reservations: devices: [{
-		driver: "nvidia"
-		count: "all"
-		capabilities: ["gpu"]
-	}]
+	image:   "ollama/ollama:latest"
+	runtime: "nvidia"
+	deploy:  #NVGpu
 	environment: {
 		OLLAMA_CONTEXT_LENGTH:  32000
 		OLLAMA_FLASH_ATTENTION: 1
