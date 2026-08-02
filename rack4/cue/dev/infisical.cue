@@ -20,7 +20,6 @@ package rack4
 }
 _InfisicalCommon: {
 	_group: "infisical"
-	profiles: [_group]
 	environment: #InfisicalEnv
 	networks: ["infisical", ...string]
 }

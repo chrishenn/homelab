@@ -9,7 +9,7 @@ services:
       TZ: $TZ
       APP_URL: https://docmost.chenn.dev
       APP_SECRET: ${DOCMOST_SECRET}
-      DATABASE_URL: postgresql://docmost@docmost_pg/docmost
+      DATABASE_URL: postgresql://docmost:docmost@docmost_db/docmost
       REDIS_URL: redis://docmost_redis:6379
 
       MAIL_DRIVER: smtp
@@ -36,17 +36,17 @@ services:
       pangolin.public-resources.docmost.targets[0].port: 3000
       pangolin.public-resources.docmost.policy: member
 
-  docmost_pg:
+  docmost_db:
     profiles: [docmost]
     image: postgres:18-alpine
-    container_name: docmost_pg
+    container_name: docmost_db
     restart: unless-stopped
     environment:
       POSTGRES_DB: docmost
       POSTGRES_USER: docmost
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: docmost
     volumes:
-      - $DATA/docmost/docmost_pg:/var/lib/postgresql
+      - $DATA/docmost/docmost_db:/var/lib/postgresql
     networks: [docmost]
 
   docmost_redis:

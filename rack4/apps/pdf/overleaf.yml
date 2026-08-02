@@ -68,10 +68,10 @@ services:
     restart: unless-stopped
     extra_hosts:
       - overleaf_mongo:127.0.0.1
-    command: '--replSet overleaf'
+    command: --replSet overleaf
     environment:
       MONGO_INITDB_DATABASE: sharelatex
-      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
+      GLIBC_TUNABLES: glibc.cpu.hwcaps=-SHSTK
     configs:
       - source: overleaf_mongo_init
         target: /docker-entrypoint-initdb.d/mongodb-init-replica-set.js

@@ -8,8 +8,6 @@ import "list"
 #PangolinPolicy: *"member" | "arr" | "chris"
 
 services: [Service=_]: {
-	_group: *Service | string
-
 	let _traefik = list.Contains(networks, "traefik")
 	let _pangolin = list.Contains(networks, "newt")
 
@@ -20,7 +18,10 @@ services: [Service=_]: {
 		_domain: *"\(Service).chenn.dev" | string
 	}
 
-	profiles: *[Service] | [...string]
+	_group: *Service | string
+	_store: *"$DATA/\(_group)" | string
+
+	profiles: *[_group] | [...string]
 	image:          string
 	container_name: *Service | string
 	restart:        *"unless-stopped" | string
@@ -62,10 +63,16 @@ services: [=~"_redis"]: _RedisService
 
 _PGService: {
 	image:       *"postgres:18-alpine" | string
+	environment: {
+		POSTGRES_DB: string
+		POSTGRES_USER: string
+		POSTGRES_PASSWORD: string
+	}
 	healthcheck: #PGHealth
 	expose: ["5432", ...string]
 	_group!: string
-	volumes: ["$DATA/\(_group)/db:/var/lib/postgresql"]
+	_store: *"$DATA/\(_group)" | string
+	volumes: ["\(_store)/db:/var/lib/postgresql"]
 }
 #PGHealth: {
 	test:     "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
@@ -79,7 +86,8 @@ _RedisService: {
 	healthcheck: #RedisHealth
 	expose: ["6379", ...string]
 	_group!: string
-	volumes: ["$DATA/\(_group)/redis:/data"]
+	_store: *"$DATA/\(_group)" | string
+	volumes: ["\(_store)/redis:/data"]
 }
 #RedisHealth: {
 	"test":     "redis-cli ping"

@@ -42,7 +42,7 @@ services:
       homepage.name: Snap Otter
       homepage.icon: https://github.com/snapotter-hq/SnapOtter/blob/main/apps/web/public/logo.png?raw=true
       homepage.href: https://snapotter.chenn.dev
-      homepage.description: Image Converters
+      homepage.description: Media Converters
 
       pangolin.public-resources.snapotter.name: snapotter
       pangolin.public-resources.snapotter.full-domain: snapotter.chenn.dev

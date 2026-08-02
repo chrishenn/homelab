@@ -1,4 +1,3 @@
-# rabbitmq idle cpu usage average ~6% of 32 cores AT IDLE. WHAT IS IT DOING
 ---
 configs:
   stoat_toml:
@@ -143,6 +142,7 @@ x-stoat_web: &stoat_web
 x-stoat_mq: &stoat_mq
   RABBITMQ_DEFAULT_USER: rabbituser
   RABBITMQ_DEFAULT_PASS: rabbitpass
+  SERVER_ADDITIONAL_ERL_ARGS: '+S 1:1'
 
 x-stoat_s3: &stoat_s3
   RUSTFS_ACCESS_KEY: minioautumn
@@ -194,13 +194,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat_redis:
-        condition: service_started
-      stoat_mq:
-        condition: service_healthy
     networks: [stoat]
 
   stoat_events:
@@ -211,11 +204,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat_redis:
-        condition: service_started
     networks: [stoat]
 
   stoat_autumn:
@@ -226,11 +214,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat-s3_bucket:
-        condition: service_started
     networks: [stoat]
 
   stoat_january:
@@ -262,9 +245,6 @@ services:
       - source: stoat_livekit
         target: /etc/livekit.yml
     command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
-    depends_on:
-      stoat_redis:
-        condition: service_started
     networks: [stoat, newt]
     labels:
       pangolin.public-resources.tcp-7881.name: tcp-7881
@@ -444,11 +424,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat_mq:
-        condition: service_healthy
     networks: [stoat]
 
   stoat_crond:
@@ -459,11 +434,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat-s3:
-        condition: service_started
     networks: [stoat]
 
   stoat_pushd:
@@ -474,13 +444,6 @@ services:
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    depends_on:
-      stoat_db:
-        condition: service_healthy
-      stoat_redis:
-        condition: service_started
-      stoat_mq:
-        condition: service_healthy
     networks: [stoat]
 
   stoat_db:
@@ -509,19 +472,13 @@ services:
 
   stoat_mq:
     profiles: [stoat]
-    image: rabbitmq:4-alpine
+    image: rabbitmq:4
     container_name: stoat_mq
     restart: unless-stopped
     environment:
       <<: *stoat_mq
     volumes:
       - $DATA/stoat/rabbit:/var/lib/rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
     networks: [stoat]
 
   stoat-s3:
