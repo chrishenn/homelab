@@ -33,7 +33,7 @@ services: {
 			"homepage.description": "Dev Secrets"
 		}
 	}
-	infisical_db:    _InfisicalCommon
-	infisical_redis: _InfisicalCommon
+	infisical_db:    _InfisicalCommon & _DbService
+	infisical_redis: _InfisicalCommon & _RdService
 }
 networks: infisical: {}

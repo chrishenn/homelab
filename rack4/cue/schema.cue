@@ -4,22 +4,30 @@ package rack4
 
 import "list"
 
-#HomepageGroup:  "Arr" | "AI" | "Infra" | "Development Tools"
-#PangolinPolicy: *"member" | "arr" | "chris"
-
 services: [Service=_]: {
-	let _traefik = list.Contains(networks, "traefik")
-	let _pangolin = list.Contains(networks, "newt")
+	_group: *Service | string
+	_store: *"$DATA/\(_group)" | string
+	_homepage?: #Homepage
+	_pangolin?: #Pangolin
+	_traefik?: #Traefik
+
+	let _is_pangolin = _pangolin != _|_
+	let _is_traefik = _traefik != _|_
+
+	networks: [...string]
+	if _is_pangolin {
+		networks: list.Contains("newt")
+	}
+	if _is_traefik {
+		networks: list.Contains("traefik")
+	}
 
 	_domain: string
-	if _traefik && !_pangolin {
+	if _is_traefik && !_is_pangolin {
 		_domain: *"\(Service).henn.dev" | string
 	} else {
 		_domain: *"\(Service).chenn.dev" | string
 	}
-
-	_group: *Service | string
-	_store: *"$DATA/\(_group)" | string
 
 	profiles: *[_group] | [...string]
 	image:          string
@@ -27,17 +35,20 @@ services: [Service=_]: {
 	restart:        *"unless-stopped" | string
 	environment: {}
 	volumes: [...string]
-	networks: [...string]
 	expose: [...string]
 
 	labels: {
-		_hgroup="homepage.group"?: #HomepageGroup
-		if _hgroup != _|_ {
-			"homepage.group":        #HomepageGroup
-			"homepage.name":         *Service | string
-			"homepage.icon":         *(Service + ".png") | string
-			"homepage.href":         *("https://" + _domain) | string
-			"homepage.description"?: string
+		if _homepage != _|_ {
+			_homepage_defaults: {
+				group:        *"Arr" | #HomepageGroup
+				name:         *Service | string
+				icon:         *"\(Service).png" | string
+				href:         *"https://\(_domain)" | string
+				description:  *"" | string
+			}
+			for k, v in (_homepage & _homepage_defaults) {
+				(#HomepageLabels[k]): v
+			}
 		}
 		if _traefik {
 			"traefik.enable":                                             true
@@ -45,51 +56,61 @@ services: [Service=_]: {
 			"traefik.http.routers.\(Service).entrypoints":                *"websecure" | string
 			"traefik.http.routers.\(Service).middlewares":                *"hdrs@file" | string
 			"traefik.http.routers.\(Service).tls.certresolver":           *"cf" | string
-			"traefik.http.services.\(Service).loadbalancer.server.port"?: int
 		}
-		if _pangolin {
-			"pangolin.public-resources.\(Service).name":              *Service | string
-			"pangolin.public-resources.\(Service).full-domain":       *_domain | string
-			"pangolin.public-resources.\(Service).mode":              *"http" | string
-			"pangolin.public-resources.\(Service).targets[0].method": *"http" | string
-			"pangolin.public-resources.\(Service).targets[0].port"?:  int
-			"pangolin.public-resources.\(Service).policy":            #PangolinPolicy
+		if _pangolin != _|_ {
+			_pangolin_labels: {
+					domain: "pangolin.public-resources.\(Service).full-domain"
+					mode: "pangolin.public-resources.\(Service).mode"
+					name: "pangolin.public-resources.\(Service).name"
+					policy: "pangolin.public-resources.\(Service).policy"
+					method: "pangolin.public-resources.\(Service).targets[0].method"
+				}
+			_pangolin_defaults: {
+				domain: *_domain | string
+				mode: *"http" | #PangolinMode
+				name: *Service | string
+				policy: *"member" | #PangolinPolicy
+				method: *"http" | #PangolinMethod
+			}
+			for k, v in (_pangolin & _pangolin_defaults) {
+				(_pangolin_labels[k]): v
+			}
 		}
 	}
 }
 
-services: [=~"_db"]:    _PGService
-services: [=~"_redis"]: _RedisService
+services: [=~"_db"]:    _DbService
+services: [=~"_redis"]: _RdService
 
-_PGService: {
+_DbService: {
 	image:       *"postgres:18-alpine" | string
 	environment: {
 		POSTGRES_DB: string
 		POSTGRES_USER: string
 		POSTGRES_PASSWORD: string
 	}
-	healthcheck: #PGHealth
+	healthcheck: #DbHealth
 	expose: ["5432", ...string]
 	_group!: string
 	_store: *"$DATA/\(_group)" | string
 	volumes: ["\(_store)/db:/var/lib/postgresql"]
 }
-#PGHealth: {
+#DbHealth: {
 	test:     "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
 	interval: "5s"
 	timeout:  "5s"
 	retries:  10
 }
 
-_RedisService: {
+_RdService: {
 	image:       *"valkey/valkey:alpine" | string
-	healthcheck: #RedisHealth
+	healthcheck: #RdHealth
 	expose: ["6379", ...string]
 	_group!: string
 	_store: *"$DATA/\(_group)" | string
 	volumes: ["\(_store)/redis:/data"]
 }
-#RedisHealth: {
+#RdHealth: {
 	"test":     "redis-cli ping"
 	"interval": "5s"
 	"timeout":  "5s"
@@ -104,3 +125,32 @@ _gpu: {
 		capabilities: ["gpu"]
 	}]
 }
+
+#PangolinMethod: *"http" | "https" | "h2c"
+#PangolinMode: *"http" | "tcp" | "udp" | "ssh" | "rdp" | "vnc"
+#PangolinPolicy: *"member" | "arr" | "chris"
+#Pangolin: {
+	domain: string
+	mode: #PangolinMode
+	name: string
+	policy: #PangolinPolicy
+	method: #PangolinMethod
+}
+
+#HomepageGroup:  "Arr" | "AI" | "Infra" | "Development Tools"
+#Homepage: {
+	group:        #HomepageGroup
+	name:         string
+	icon:         string
+	href:         string
+	description:  string
+}
+#HomepageLabels: {
+	group: "homepage.group"
+	name: "homepage.name"
+	icon: "homepage.icon"
+	href: "homepage.href"
+	description: "homepage.description"
+}
+
+
