@@ -18,7 +18,7 @@ configs:
 services:
   gocron:
     profiles: [gocron]
-    image: ghcr.io/flohoss/gocron:latest
+    image: ghcr.io/flohoss/gocron:v0.9.14
     restart: unless-stopped
     container_name: gocron
     hostname: gocron
