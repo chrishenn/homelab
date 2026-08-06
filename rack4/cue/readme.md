@@ -1,6 +1,6 @@
 # cue
 
-Converting a small sampling of the rack4 docker compose yaml files into cuelang, to see what it would be like. 
+Converting a small sampling of the rack4 docker compose yaml files into cuelang, to see what it would be like.
 
 So far,
 it looks like the line count of most files can be cut nearly in half. Especially the very boilerplate services, like
@@ -11,7 +11,7 @@ evident advantages from explicit type and value restrictions. Pretty neat.
 
 # usage
 
-export all to stdout 
+export all to stdout
 
 ```bash
 cue export -s --out yaml ./...

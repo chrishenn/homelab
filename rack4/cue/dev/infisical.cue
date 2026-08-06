@@ -19,7 +19,7 @@ package rack4
 	SMTP_PASSWORD:        "${SMTP_TOKEN}"
 }
 _InfisicalCommon: {
-	_group: "infisical"
+	_group:      "infisical"
 	environment: #InfisicalEnv
 	networks: ["infisical", ...string]
 }

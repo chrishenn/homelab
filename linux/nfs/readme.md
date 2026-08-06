@@ -117,7 +117,6 @@ sudo ./sbin/cma_roce_mode -d $dev
 # verify pfc is working
 ethtool -S $ifname | grep prio3
 ethtool -S $ifname | grep -Ei 'pfc|pause|stopped|drop|disc'
-rdma link show
 ls /dev/infiniband/
 
 # set mtu to 9216?
@@ -217,6 +216,14 @@ sudo mount -t nfs 192.168.1.142:/tmp /mnt/tmp -o proto=rdma,port=20049,async,noa
 # mount fstab
 sudo nano /etc/fstab
 192.168.1.142:/tmp /mnt/tmp nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
+```
+
+## server (fedora)
+
+all packages/kernels for nfs over rdma server are included ootb, but the server does not autostart on boot
+
+```bash
+sudo systemctl enable --now nfs-server
 ```
 
 ## client (fedora)

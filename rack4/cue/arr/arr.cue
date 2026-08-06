@@ -31,23 +31,23 @@ services: {
 		}
 
 	}
-//	sonarr: _ArrCmn & {
-//		image: "lscr.io/linuxserver/sonarr:latest"
-//		environment: {
-//			SONARR__AUTH__METHOD: "External"
-//		}
-//		volumes: [
-//			"$DATA/sonarr:/config",
-//			"$DATA/sab/downloads:/sab/downloads",
-//			"$DATA/qbit/downloads:/qbit/downloads",
-//			"$MEDIA:/media_library",
-//		]
-//		networks: ["arr", "newt"]
-//		expose: ["8989"]
-//		labels: {
-//			"homepage.group":                          "Arr"
-//			"pangolin.public-resources.sonarr.policy": "arr"
-//		}
-//	}
+	//	sonarr: _ArrCmn & {
+	//		image: "lscr.io/linuxserver/sonarr:latest"
+	//		environment: {
+	//			SONARR__AUTH__METHOD: "External"
+	//		}
+	//		volumes: [
+	//			"$DATA/sonarr:/config",
+	//			"$DATA/sab/downloads:/sab/downloads",
+	//			"$DATA/qbit/downloads:/qbit/downloads",
+	//			"$MEDIA:/media_library",
+	//		]
+	//		networks: ["arr", "newt"]
+	//		expose: ["8989"]
+	//		labels: {
+	//			"homepage.group":                          "Arr"
+	//			"pangolin.public-resources.sonarr.policy": "arr"
+	//		}
+	//	}
 }
 networks: arr: {}
