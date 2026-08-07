@@ -31,6 +31,18 @@ The more obvious downside is that you're adding an additional obfuscating step b
 control and the text that is consumed by the tool (k8s, protobuf, docker compose, etc). I imagine that cuelang argues
 the additional automatic validation will catch bugs before they make it into the final exported text.
 
+A typical behavior for applications is to override configuration values from hierarchical sources - perhaps a global
+config file,
+overridden by a project file, and perhaps a package file, and then maybe a developer's local configuration file, and
+then lastly, environment variables take highest precedence. In more complicated (possibly distributed) systems,
+configuration might be read over the network at initialization, or at runtime, and possibly from a kv-store. Cue does
+not participate in the resolution of hierarchical configurations, since it cannot unify conflicting concrete values by
+design. In that case you would build a configuration from whatever sources and validate the result with your cue schema.
+In this case, it would be really nice to have access to the cue validator from application code - which presumably is
+running the hierarchical configuration logic at startup (or, heaven forbid, on-the-fly). At the time of writing, this
+first-class SDK support for cuelang is only available in go, so you would be writing the SDK if you wanted to integrate
+cue into your application in this way, or, sadly, shelling out to the cue binary from your application.
+
 More granular notes:
 
 My first stab at some simple conditional logic was not the most concise. Probably there are language features I've not
