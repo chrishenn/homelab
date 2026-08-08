@@ -55,3 +55,10 @@ sure what it's called) into a cuelang object.
 Tried to set a flag on a service like "_db" or "_redis" that would trigger adding a service like "service_db" with the
 standard database or redis template. However, I couldn't figure out how to construct that map using the service's name,
 and then add the resulting map into the "services" map one level higher.
+
+
+cp 1000
+66521974
+
+CP 1001
+66521974
