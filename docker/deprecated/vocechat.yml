@@ -1,0 +1,27 @@
+# extreme crunch; proceed with caution
+# video calls are technically supported, as either:
+# 1. the UI will attempt to automatically deploy livekit on your behalf
+# 2. external integration with Agora
+---
+services:
+  vocechat:
+    profiles: [vocechat]
+    image: privoce/vocechat-server:latest
+    container_name: vocechat
+    restart: unless-stopped
+    volumes:
+      - $DATA/vocechat/data:/home/vocechat-server/data
+    networks: [newt]
+    labels:
+      homepage.group: Tools
+      homepage.name: VoceChat
+      homepage.icon: https://github.com/Privoce/vocechat-server-rust/blob/master/src/api/assets/organization-logo.png?raw=true
+      homepage.href: https://vocechat.chenn.dev
+      homepage.description: Slack Clone
+
+      pangolin.public-resources.vocechat.name: vocechat
+      pangolin.public-resources.vocechat.full-domain: vocechat.chenn.dev
+      pangolin.public-resources.vocechat.mode: http
+      pangolin.public-resources.vocechat.policy: member
+      pangolin.public-resources.vocechat.targets[0].method: http
+      pangolin.public-resources.vocechat.targets[0].port: 3000

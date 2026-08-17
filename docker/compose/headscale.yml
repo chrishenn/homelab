@@ -1,4 +1,4 @@
-# works. unused for now
+# works
 # openssl rand -base64 32
 
 # just attach headscale 'headscale apikeys create'

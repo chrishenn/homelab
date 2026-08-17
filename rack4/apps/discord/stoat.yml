@@ -1,0 +1,388 @@
+---
+# Stoat is lacking polish compared to fluxer. There are desktop clients, but no phone apps.
+# video playback works on firefox-linux, chrome-windows. But not chrome-linux or firefox-windows.
+
+# config reference https://github.com/stoatchat/stoatchat/blob/main/crates/core/config/Revolt.toml
+
+# the official desktop client cannot play most videos
+# third-party android: https://github.com/upryzing/clerotri/releases/tag/v0.14.1
+
+# video playback works on this third-party fork
+# download the linux binary and launch with: --force-server=https://stoat.chenn.dev
+# third-party desktop: https://github.com/AvaLilac/for-desktop/releases/tag/1.8.4
+
+# Livekit documentation is shiny but dumb as hell. No coherent explanation of udp port anywhere on the internet.
+# As far as I can guess, single-port udp is equivalent to a port range, and one instance can serve "hundreds" of users.
+# https://meet-doc.bebopo.eu/self-hosting/simple/livekit/
+# https://sheerbit.com/self-hosted-livekit-complete-deployment-guide/
+
+# j stoat_invite
+configs:
+  stoat_toml:
+    content: |
+      production = true
+
+      [api.registration]
+      invite_only = true
+
+      [api.security]
+      tenor_key = "${STOAT_TENOR}"
+
+      [api.smtp]
+      host = "${SMTP_HOST}"
+      username = "${SMTP_USER}"
+      password = "${SMTP_PASS}"
+      from_address = "${SMTP_USER}"
+      reply_to = "${SMTP_USER}"
+      port = 465
+      use_tls = true
+      use_starttls = false
+
+      [api.livekit.nodes.worldwide]
+      url = "http://stoat_livekit:7880"
+      lat = 0.0
+      lon = 0.0
+      key = "${STOAT_LIVEKIT_KEY}"
+      secret = "${STOAT_LIVEKIT_SECRET}"
+
+      [database]
+      mongodb = "mongodb://stoat_db:27017"
+      redis = "redis://stoat_redis:6379"
+
+      [rabbit]
+      host = "stoat_mq"
+      port = 5672
+      username = "rabbituser"
+      password = "rabbitpass"
+
+      [files.s3]
+      endpoint = "http://stoat-s3:9000"
+      region = "stoat-s3"
+      access_key_id = "minioautumn"
+      secret_access_key = "minioautumn"
+      default_bucket = "revolt-uploads"
+
+      [hosts]
+      app = "https://stoat.chenn.dev"
+      api = "https://stoat.chenn.dev/api"
+      events = "wss://stoat.chenn.dev/ws"
+      autumn = "https://stoat.chenn.dev/autumn"
+      january = "https://stoat.chenn.dev/january"
+
+      [pushd.vapid]
+      private_key = "${STOAT_VAPID_PRIVATE_KEY}"
+      public_key = "${STOAT_VAPID_PUBLIC_KEY}"
+
+      [files]
+      encryption_key = "${STOAT_ENCRYPTION_KEY}"
+
+      [files.limit]
+      max_mega_pixels = 400
+      max_pixel_side = 1_000_000_000
+
+      [hosts.livekit]
+      worldwide = "wss://stoat.chenn.dev/livekit"
+
+      [features.limits.default]
+      video = true
+      video_resolution = [3840, 2160]
+      video_aspect_ratio = [0.3, 10]
+
+      [features.limits.default.file_upload_size_limit]
+      attachments = 1_000_000_000
+      avatars = 10_000_000
+      backgrounds = 10_000_000
+      icons = 10_000_000
+      banners = 10_000_000
+      emojis = 500_000
+
+  stoat_caddy:
+    content: |
+      :80 {
+          route /api* {
+              uri strip_prefix /api
+              reverse_proxy http://stoat_api:14702 {
+                  header_down Location "^/" "/api/"
+              }
+          }
+          route /ws {
+              uri strip_prefix /ws
+              reverse_proxy http://stoat_events:14703 {
+                  header_down Location "^/" "/ws/"
+              }
+          }
+          route /autumn* {
+              uri strip_prefix /autumn
+              reverse_proxy http://stoat_autumn:14704 {
+                  header_down Location "^/" "/autumn/"
+              }
+          }
+          route /january* {
+              uri strip_prefix /january
+              reverse_proxy http://stoat_january:14705 {
+                  header_down Location "^/" "/january/"
+              }
+          }
+          route /gifbox* {
+              uri strip_prefix /gifbox
+              reverse_proxy http://stoat_gifbox:14706 {
+                  header_down Location "^/" "/gifbox/"
+              }
+          }
+          route /livekit* {
+              uri strip_prefix /livekit
+              reverse_proxy http://stoat_livekit:7880 {
+                  header_down Location "^/" "/livekit/"
+              }
+          }
+          route /ingress* {
+              uri strip_prefix /ingress
+              reverse_proxy http://stoat_voice:8500 {
+                  header_down Location "^/" "/ingress/"
+              }
+          }
+          reverse_proxy http://stoat_web:5000
+      }
+
+  stoat_livekit:
+    content: |
+      rtc:
+        use_external_ip: false
+        tcp_port: 7881
+        udp_port: 7882
+        stun_servers:
+          - stun.l.google.com:19302
+          - stun1.l.google.com:19302
+      redis:
+        address: stoat_redis:6379
+      keys:
+        ${STOAT_LIVEKIT_KEY}: ${STOAT_LIVEKIT_SECRET}
+      webhook:
+        api_key: ${STOAT_LIVEKIT_KEY}
+        urls:
+          - http://stoat_voice:8500/worldwide
+
+x-stoat_web_env: &stoat_web_env
+  REVOLT_PUBLIC_URL: https://stoat.chenn.dev/api
+  VITE_CFG_ENABLE_VIDEO: true
+  VITE_API_URL: https://stoat.chenn.dev/api
+  VITE_WS_URL: wss://stoat.chenn.dev/ws
+  VITE_MEDIA_URL: https://stoat.chenn.dev/autumn
+  VITE_PROXY_URL: https://stoat.chenn.dev/january
+
+x-stoat_mq_env: &stoat_mq_env
+  RABBITMQ_DEFAULT_USER: rabbituser
+  RABBITMQ_DEFAULT_PASS: rabbitpass
+
+x-stoat_s3_env: &stoat_s3_env
+  RUSTFS_ACCESS_KEY: minioautumn
+  RUSTFS_SECRET_KEY: minioautumn
+  RUSTFS_SERVER_DOMAINS: stoat-s3
+
+x-stoat_common: &stoat_common
+  profiles: [stoat]
+  restart: unless-stopped
+  networks: [stoat]
+
+services:
+  stoat_caddy:
+    image: caddy
+    container_name: stoat_caddy
+    <<: *stoat_common
+    configs:
+      - source: stoat_caddy
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - $DATA/stoat/caddy-data:/data
+      - $DATA/stoat/caddy-config:/config
+    networks: [stoat, newt]
+    labels:
+      homepage.group: Discordalikes
+      homepage.name: Stoat
+      homepage.icon: stoat.png
+      homepage.href: https://stoat.chenn.dev
+      homepage.description: Discord Clone
+
+      pangolin.public-resources.stoat.name: stoat
+      pangolin.public-resources.stoat.full-domain: stoat.chenn.dev
+      pangolin.public-resources.stoat.mode: http
+      pangolin.public-resources.stoat.targets[0].method: http
+      pangolin.public-resources.stoat.targets[0].port: 80
+      pangolin.public-resources.stoat.policy: member
+
+      pangolin.public-resources.stoat.rules[0].action: allow
+      pangolin.public-resources.stoat.rules[0].match: path
+      pangolin.public-resources.stoat.rules[0].value: /livekit/*
+
+  stoat_livekit:
+    image: ghcr.io/stoatchat/livekit-server:latest
+    container_name: stoat_livekit
+    <<: *stoat_common
+    command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
+    configs:
+      - source: stoat_livekit
+        target: /etc/livekit.yml
+    networks: [stoat, newt]
+    labels:
+      pangolin.public-resources.tcp-7881.name: tcp-7881
+      pangolin.public-resources.tcp-7881.mode: tcp
+      pangolin.public-resources.tcp-7881.proxy-port: 7881
+      pangolin.public-resources.tcp-7881.targets[0].port: 7881
+
+      pangolin.public-resources.udp-7882.name: udp-7882
+      pangolin.public-resources.udp-7882.mode: udp
+      pangolin.public-resources.udp-7882.proxy-port: 7882
+      pangolin.public-resources.udp-7882.targets[0].port: 7882
+
+  stoat_web:
+    # "latest" for api/events/etc right now is "v0.15.1" so compatible set is {0c31cf0, v0.15.1}
+    # NOTE: "latest" release of for-web is incompatible with "latest" release of other containers api,events,etc!
+    image: ghcr.io/stoatchat/for-web:0c31cf0
+    container_name: stoat_web
+    <<: *stoat_common
+    environment:
+      <<: *stoat_web_env
+
+  stoat_api:
+    image: ghcr.io/stoatchat/api:latest
+    container_name: stoat_api
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_events:
+    image: ghcr.io/stoatchat/events:latest
+    container_name: stoat_events
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_autumn:
+    image: ghcr.io/stoatchat/file-server:latest
+    container_name: stoat_autumn
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_january:
+    image: ghcr.io/stoatchat/proxy:latest
+    restart: unless-stopped
+    container_name: stoat_january
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_gifbox:
+    image: ghcr.io/stoatchat/gifbox:latest
+    container_name: stoat_gifbox
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_voice:
+    image: ghcr.io/stoatchat/voice-ingress:latest
+    container_name: stoat_voice
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_crond:
+    image: ghcr.io/stoatchat/crond:latest
+    container_name: stoat_crond
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_pushd:
+    image: ghcr.io/stoatchat/pushd:latest
+    container_name: stoat_pushd
+    <<: *stoat_common
+    configs:
+      - source: stoat_toml
+        target: /Revolt.toml
+
+  stoat_db:
+    image: mongo:8
+    container_name: stoat_db
+    <<: *stoat_common
+    environment:
+      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
+    volumes:
+      - $DATA/stoat/db:/data/db
+
+  stoat_redis:
+    image: valkey/valkey:alpine
+    container_name: stoat_redis
+    <<: *stoat_common
+
+  stoat_mq:
+    image: rabbitmq:4
+    container_name: stoat_mq
+    <<: *stoat_common
+    environment:
+      <<: *stoat_mq_env
+    volumes:
+      - $DATA/stoat/rabbit:/var/lib/rabbitmq
+
+  stoat-s3:
+    image: rustfs/rustfs:latest
+    container_name: stoat-s3
+    <<: *stoat_common
+    command: /data
+    environment:
+      <<: *stoat_s3_env
+    volumes:
+      - $DATA/stoat/s3:/data
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+      interval: 5s
+    depends_on:
+      stoat-s3-perm: {condition: service_completed_successfully}
+    # presumably, this is necessary for S3 "virtual-hosted style" access (rather than path-style access)
+    networks:
+      stoat: {aliases: [revolt-uploads.stoat-s3]}
+
+  stoat-s3-perm:
+    image: alpine
+    container_name: stoat-s3-perm
+    <<: *stoat_common
+    restart: no
+    user: root
+    volumes:
+      - $DATA/stoat/s3:/data
+    command: chown -R 10001:10001 /data
+
+  stoat-s3-init:
+    image: minio/mc
+    container_name: stoat-s3-init
+    <<: *stoat_common
+    restart: no
+    environment:
+      S3_ENDPOINT: http://stoat-s3:9000
+      S3_ACCESS_KEY: minioautumn
+      S3_SECRET_KEY: minioautumn
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        until mc alias set fs $$S3_ENDPOINT $$S3_ACCESS_KEY $$S3_SECRET_KEY; do
+          echo 'waiting to connect to s3 host'
+          sleep 2
+        done
+        mc mb fs/revolt-uploads --ignore-existing
+    depends_on:
+      stoat-s3: {condition: service_healthy}
+
+networks:
+  stoat:

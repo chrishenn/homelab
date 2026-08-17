@@ -33,6 +33,7 @@ configs:
 
 services:
   stalwart_wg_exit:
+    profiles: [wg]
     image: linuxserver/wireguard:latest
     container_name: stalwart_wg_exit
     restart: unless-stopped

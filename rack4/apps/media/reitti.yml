@@ -24,7 +24,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: reitti
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/reitti-dark.png
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/reitti.png
       homepage.href: https://reitti.chenn.dev
       homepage.description: Location Tracking
 
@@ -68,7 +68,7 @@ services:
     volumes:
       - $DATA/reitti/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: valkey-cli ping
       interval: 10s
       timeout: 5s
       retries: 5

@@ -18,7 +18,7 @@ local formatters = new Mapping<String, Step> {
     }
     ["mise"] {
         workspace_indicator = "hk.pkl"
-        fix = "mise fmt"
+        fix = "mise fmt -a"
     }
 }
 

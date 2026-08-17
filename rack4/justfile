@@ -22,9 +22,6 @@ ssh cmd='' pty='true':
 up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
-pullup profile=profile *svcs:
-    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
-
 down profile=profile *svcs:
     docker compose --profile {{ profile }} down {{ svcs }}
 
@@ -32,6 +29,9 @@ bounce profile=profile *svcs:
     #!/bin/bash
     docker compose --profile {{ profile }} down {{ svcs }} && \
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
+
+pullup profile=profile *svcs:
+    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
 
 pb profile=profile *svcs:
     #!/bin/bash
@@ -146,3 +146,9 @@ ark *args:
 
 zellij_serve:
     zellij web --start -d 2>/dev/null || true
+
+check:
+    hk check --all
+
+fix:
+    hk fix --all

@@ -1,0 +1,60 @@
+---
+services:
+  termix:
+    profiles: [termix]
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    volumes:
+      - $DATA/termix:/app/data
+    environment:
+      PORT: 8080
+      ALLOW_REGISTRATION: false
+
+      ENABLE_GUACAMOLE: true
+      GUACD_URL: tcp://termix_guacd:4822
+      GUACD_TUNNEL_HOST: termix
+      GUACD_RECORDING_PATH: /termix-data/session_recordings/guacamole
+
+      OIDC_CLIENT_ID: $TERMIX_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $TERMIX_OIDC_SECRET
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_AUTHORIZATION_URL: https://pocketid.chenn.dev/authorize
+      OIDC_TOKEN_URL: https://pocketid.chenn.dev/api/oidc/token
+      OIDC_USERINFO_URL: https://pocketid.chenn.dev/api/oidc/userinfo
+      OIDC_SCOPES: openid email profile groups
+      OIDC_ADMIN_GROUP: admin
+      OIDC_ALLOW_REGISTRATION: true
+    networks: [termix, newt, traefik]
+    labels:
+      homepage.group: Monitoring
+      homepage.name: Termix
+      homepage.icon: termix.png
+      homepage.href: https://termix.chenn.dev
+      homepage.description: Server Manager
+
+      traefik.enable: true
+      traefik.http.routers.termix.rule: Host(`termix.henn.dev`)
+      traefik.http.routers.termix.entrypoints: websecure
+      traefik.http.routers.termix.middlewares: hdrs@file
+      traefik.http.routers.termix.tls.certresolver: cf
+      traefik.http.services.termix.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.termix.name: termix
+      pangolin.public-resources.termix.full-domain: termix.chenn.dev
+      pangolin.public-resources.termix.mode: http
+      pangolin.public-resources.termix.targets[0].method: http
+      pangolin.public-resources.termix.targets[0].port: 8080
+      pangolin.public-resources.termix.policy: chris
+
+  termix_guacd:
+    profiles: [termix]
+    image: guacamole/guacd:1.6.0
+    container_name: termix_guacd
+    restart: unless-stopped
+    volumes:
+      - $DATA/termix:/termix-data
+    networks: [termix]
+
+networks:
+  termix:

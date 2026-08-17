@@ -1,0 +1,56 @@
+---
+services:
+  vert:
+    profiles: [vert]
+    image: ghcr.io/vert-sh/vert:latest
+    container_name: vert
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Vert
+      homepage.icon: converse-light.png
+      homepage.href: https://vert.chenn.dev
+      homepage.description: Image + Video Converter
+
+      pangolin.public-resources.vert.name: vert
+      pangolin.public-resources.vert.full-domain: vert.chenn.dev
+      pangolin.public-resources.vert.mode: http
+      pangolin.public-resources.vert.targets[0].method: http
+      pangolin.public-resources.vert.targets[0].port: 80
+      pangolin.public-resources.vert.policy: member
+
+  vertd:
+    profiles: [vert]
+    image: ghcr.io/vert-sh/vertd:latest
+    container_name: vertd
+    restart: unless-stopped
+    environment:
+      PORT: 24153
+      WEBHOOK_URL:
+      WEBHOOK_PINGS:
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, video, compute]
+    healthcheck:
+      test: ['CMD', 'curl', 'http://localhost:24153/api/version']
+    networks: [newt]
+    labels:
+      pangolin.public-resources.vertd.name: vertd
+      pangolin.public-resources.vertd.full-domain: vertd.chenn.dev
+      pangolin.public-resources.vertd.mode: http
+      pangolin.public-resources.vertd.targets[0].method: http
+      pangolin.public-resources.vertd.targets[0].port: 24153
+      pangolin.public-resources.vertd.rules[0].action: pass
+      pangolin.public-resources.vertd.rules[0].match: country
+      pangolin.public-resources.vertd.rules[0].value: US
+      pangolin.public-resources.vertd.rules[1].action: deny
+      pangolin.public-resources.vertd.rules[1].match: country
+      pangolin.public-resources.vertd.rules[1].value: ALL

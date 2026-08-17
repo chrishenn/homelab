@@ -1,6 +1,6 @@
-# no files on disk - only encrypted blobs in the db
-# the generated QR code doesn't respect my server url - uses the default hoodik.io server instead :/
+# no files on disk - only blobs
 # E2E encryption
+# the generated QR code doesn't respect my server url - uses the default hoodik.io server instead :/
 # there's a 'create file' button in UI - pretty fancy
 ---
 services:

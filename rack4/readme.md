@@ -1,25 +1,9 @@
-# Rack4 Docker Compose Stack
+# Rack4 Docker Compose
 
 Deploys to machine: rack4
 
 You have to clone+pull the repo to the remote machine, to sync config files via github. Is it great? No. Do I want to
 deal with a more complicated setup? Also no.
-
----
-
-# todo
-
-- [x] netbootxyz
-- [x] use a docker registry that requires no manual config (zot. done!)
-    - [ ] enable mTLS
-- [ ] a way to PXE boot windows
-    - [ ] iventoy?
-    - [ ] netbootxyz?
-- [ ] grafana + loki
-- [ ] fluxer server (not quite ready yet)
-    - https://fluxer.app/
-- [ ] stoat chat server (not quite ready yet)
-    - https://stoat.chat/
 
 ---
 
@@ -40,9 +24,6 @@ if services depend on images that are built locally, and depend on images that m
 our local images we must manually build and push them to the local registry ($REGISTRY)
 
 ```bash
-# boot stack fresh
-j login_docker
-
 # Local images requiring a local build. The current list may be longer
 imgs="openresume transcodarr blocky_k rsync bulwark campfire opencut"
 j build "$imgs"
@@ -57,13 +38,7 @@ j pullup
 
 ---
 
-# ref
-
-- https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/docker-compose.yml
-- https://github.com/juftin/homelab/blob/main/docker-compose.yaml
-- https://github.com/bluepuma77/traefik-best-practice
-- https://github.com/easyselfhost/self-host/blob/main/apps/webtop/docker-compose.yml
-- https://devhints.io/docker-compose
+# dev
 
 generate secrets
 
@@ -71,6 +46,12 @@ generate secrets
 python3 -c "import secrets; print(secrets.token_urlsafe(64))"
 openssl rand -base64 32
 openssl rand -hex 32
+```
+
+generate vapid keys
+
+```bash
+npx web-push generate-vapid-keys
 ```
 
 host pangolin install for ssh access
@@ -115,7 +96,7 @@ sudo systemctl enable --now newt
 sudo systemctl status newt
 ```
 
-pangolin blueprints for public-policies from docker labels are not applying?
+apply pangolin blueprint from cli
 
 ```bash
 curl -fsSL https://static.pangolin.net/get-cli.sh | bash

@@ -57,7 +57,7 @@ services:
     volumes:
       - $DATA/docmost/redis:/data
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

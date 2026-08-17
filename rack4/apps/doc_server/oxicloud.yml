@@ -1,5 +1,4 @@
 ---
-# one deal-breaker, and other mild quibbles:
 # - files are stored as postgres blobs on disk. No files on disk! :/
 # - no button to create a document in the interface; have to upload docs to create them
 services:
@@ -22,8 +21,7 @@ services:
 
       OXICLOUD_AUTH_METHODS: password,magic_link,oidc
       OXICLOUD_ALLOW_EXTERNAL_USERS: true
-      #      OXICLOUD_AUTH_METHODS: oidc
-      #      OXICLOUD_AUTH_POLICIES: auto_redirect_if_standalone_oidc
+      # OXICLOUD_AUTH_POLICIES: auto_redirect_if_standalone_oidc
 
       OXICLOUD_OIDC_ENABLED: true
       OXICLOUD_OIDC_PROVIDER_NAME: PocketID
@@ -39,14 +37,16 @@ services:
       OXICLOUD_WOPI_ENABLED: true
       OXICLOUD_WOPI_DISCOVERY_URL: https://oxicloud.chenn.dev/hosting/discovery
 
-      OXICLOUD_SMTP_HOST: $SMTP_HOST
-      OXICLOUD_SMTP_PORT: 465
-      OXICLOUD_SMTP_USER: $SMTP_USER
-      OXICLOUD_SMTP_PASS: $SMTP_PASS
-      OXICLOUD_SMTP_FROM: $SMTP_USER
+      OXICLOUD_SMTP_HOST: ${SMTP_HOST}
+      OXICLOUD_SMTP_PORT: ${SMTP_PORT}
+      OXICLOUD_SMTP_USER: ${SMTP_USER}
+      OXICLOUD_SMTP_PASS: ${SMTP_PASS}
+      OXICLOUD_SMTP_FROM: ${SMTP_USER}
       OXICLOUD_SMTP_TLS: tls
     volumes:
       - $DATA/oxicloud/data:/app/storage
+    healthcheck:
+      test: wget --spider -q http://0.0.0.0:8086
     depends_on:
       oxicloud_db:
         condition: service_healthy
@@ -54,7 +54,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Oxicloud
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/oxicloud-dark.png
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/oxicloud.png
       homepage.href: https://oxicloud.chenn.dev
       homepage.description: Rust File Server
 

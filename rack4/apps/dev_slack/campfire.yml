@@ -1,0 +1,53 @@
+# kinda ugly (anti-aliasing missing? crunchy lines and corners, ui elements are too big)
+# looks like they improved their slow startup and huge memory footprint, though! so that's cool
+---
+services:
+  campfire:
+    profiles: [campfire]
+    image: ${REGISTRY}/campfire:latest
+    build: https://github.com/basecamp/once-campfire.git
+    container_name: campfire
+    restart: unless-stopped
+    environment:
+      SECRET_KEY_BASE: ${CAMPFIRE_SECRET_KEY_BASE}
+      DISABLE_SSL: true
+      VAPID_PUBLIC_KEY: ${CAMPFIRE_VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${CAMPFIRE_VAPID_PRIVATE_KEY}
+    volumes:
+      - $DATA/campfire:/rails/storage
+    networks: [newt, traefik]
+    labels:
+      homepage.group: Slackalikes
+      homepage.name: Campfire
+      homepage.icon: firebase.png
+      homepage.href: https://campfire.chenn.dev
+      homepage.description: Slack Clone
+
+      traefik.enable: true
+      traefik.http.routers.campfire.rule: Host(`campfire.henn.dev`)
+      traefik.http.routers.campfire.entrypoints: websecure
+      traefik.http.routers.campfire.middlewares: hdrs@file
+      traefik.http.routers.campfire.tls.certresolver: cf
+      traefik.http.services.campfire.loadbalancer.server.port: 80
+
+      pangolin.public-resources.campfire.name: campfire
+      pangolin.public-resources.campfire.full-domain: campfire.chenn.dev
+      pangolin.public-resources.campfire.mode: http
+      pangolin.public-resources.campfire.targets[0].method: http
+      pangolin.public-resources.campfire.targets[0].port: 80
+      pangolin.public-resources.campfire.policy: member
+
+  campfire_perm:
+    profiles: [campfire]
+    image: alpine
+    container_name: campfire_perm
+    restart: no
+    volumes:
+      - $DATA/campfire:/data/app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -x
+        chown -R 1000:1000 /data/app
+        echo "set perms; exit: $?"

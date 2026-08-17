@@ -1,0 +1,21 @@
+---
+services:
+  mazanoke:
+    profiles: [mazanoke]
+    image: ghcr.io/civilblur/mazanoke:latest
+    container_name: mazanoke
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      homepage.group: File Converters
+      homepage.name: Mazanoke
+      homepage.icon: mazanoke.png
+      homepage.href: https://mazanoke.chenn.dev
+      homepage.description: Image Converter
+
+      pangolin.public-resources.mazanoke.name: mazanoke
+      pangolin.public-resources.mazanoke.full-domain: mazanoke.chenn.dev
+      pangolin.public-resources.mazanoke.mode: http
+      pangolin.public-resources.mazanoke.targets[0].method: http
+      pangolin.public-resources.mazanoke.targets[0].port: 80
+      pangolin.public-resources.mazanoke.policy: member

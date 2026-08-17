@@ -12,7 +12,7 @@ services:
       - $DATA/aurral/data:/app/backend/data
     networks: [arr, newt]
     labels:
-      homepage.group: Arr
+      homepage.group: Music
       homepage.name: Aurral
       homepage.icon: aurral.png
       homepage.href: https://aurral.chenn.dev

@@ -1,4 +1,7 @@
 ---
+# C# and shell - it's a bit old-school and crunchy
+# lancache manager stores application state outside of its dedicated directory. NO! BAD!
+# I managed to corrupt some internal state by clicking in the ui, and it fell over permanently
 x-lancache_env: &lancache_env
   USE_GENERIC_CACHE: true
   LANCACHE_IP: ${LANCACHE_IP}
@@ -8,8 +11,6 @@ x-lancache_env: &lancache_env
   CACHE_DISK_SIZE: 1000g
   CACHE_INDEX_SIZE: 500m
   TZ: ${TZ}
-
-  #  DISABLE_RIOT: true
 
 services:
   # nslookup lancache.steamcontent.com
@@ -68,10 +69,20 @@ services:
       TZ: $TZ
       LanCache__LogPath: /logs/access.log
       LanCache__CachePath: /cache/cache
+      Optimizations__EnableGarbageCollectionManagement: true
+
       Prefill__NetworkMode: host
       Prefill__LancacheIp: ${LANCACHE_IP}
       Prefill__LancacheDnsIp: ${LANCACHE_DNS}
-      Optimizations__EnableGarbageCollectionManagement: true
+
+      POSTGRES_MODE: embedded
+      POSTGRES_USER: lancache
+      POSTGRES_PASSWORD: ${LANCACHE_DB}
+
+      Security__EnableAuthentication: true
+      Security__RequireAuthForMetrics: false
+      Security__GuestSessionDurationHours: 6
+      Security__AllowedOrigins: https://lancache.chenn.dev
     networks: [newt]
     labels:
       homepage.group: Infra

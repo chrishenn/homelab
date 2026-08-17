@@ -35,13 +35,19 @@ ARCANE_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/arcane
 BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel/key" }
 BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel/token" }
 
+GENIUS_API_CLIENT = { provider = "onepass", value = "op://homelab/GENIUS/API_CLIENT" }
+GENIUS_API_SECRET = { provider = "onepass", value = "op://homelab/GENIUS/API_SECRET" }
+
+LASTFM_API_KEY = { provider = "onepass", value = "op://homelab/LASTFM/API_KEY" }
+LASTFM_API_SECRET = { provider = "onepass", value = "op://homelab/LASTFM/API_SECRET" }
+
 RADARR_URL = { provider = "onepass", value = "op://homelab/radarr/url" }
 RADARR_KEY = { provider = "onepass", value = "op://homelab/radarr/credential" }
 SONARR_URL = { provider = "onepass", value = "op://homelab/sonarr/url" }
 SONARR_KEY = { provider = "onepass", value = "op://homelab/sonarr/credential" }
 
 PAPERLESS_SECRET_KEY = { provider = "onepass", value = "op://homelab/paperless/secret_key" }
-PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/credential" }
+PAPERLESS_TOKEN = { provider = "onepass", value = "op://homelab/paperless/token" }
 
 DOCU_SECRET = { provider = "onepass", value = "op://homelab/Documenso/DOCU_SECRET" }
 DOCU_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/Documenso/DOCU_ENCRYPTION_KEY" }
@@ -106,6 +112,10 @@ MYDIA_GUARDIAN = { provider = "onepass", value = "op://homelab/mydia/guardian" }
 INFISICAL_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/infisical/encryption_key" }
 INFISICAL_AUTH_SECRET = { provider = "onepass", value = "op://homelab/infisical/auth_secret" }
 
+MEELO_JWT = { provider = "onepass", value = "op://homelab/meelo/JWT" }
+MEELO_MEILI = { provider = "onepass", value = "op://homelab/meelo/MEILI" }
+MEELO_API = { provider = "onepass", value = "op://homelab/meelo/API" }
+
 SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
 NEWSHOSTING_USER = { provider = "onepass", value = "op://homelab/newshosting/username" }
@@ -141,6 +151,30 @@ STOAT_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/stoat/vap
 STOAT_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/stoat/encryption_key" }
 STOAT_LIVEKIT_KEY = { provider = "onepass", value = "op://homelab/stoat/livekit_key" }
 STOAT_LIVEKIT_SECRET = { provider = "onepass", value = "op://homelab/stoat/livekit_secret" }
+STOAT_TENOR = { provider = "onepass", value = "op://homelab/stoat/TENOR" }
+
+CHATTO_LIVEKIT = { provider = "onepass", value = "op://homelab/CHATTO/livekit" }
+CHATTO_NATS = { provider = "onepass", value = "op://homelab/CHATTO/NATS" }
+CHATTO_SIGNING = { provider = "onepass", value = "op://homelab/CHATTO/SIGNING" }
+CHATTO_ENCRYPTION = { provider = "onepass", value = "op://homelab/CHATTO/ENCRYPTION" }
+CHATTO_CORE = { provider = "onepass", value = "op://homelab/CHATTO/CORE" }
+CHATTO_ASSETS = { provider = "onepass", value = "op://homelab/CHATTO/ASSETS" }
+CHATTO_VAPID_PUBLIC = { provider = "onepass", value = "op://homelab/CHATTO/vapid_public" }
+CHATTO_VAPID_PRIVATE = { provider = "onepass", value = "op://homelab/CHATTO/vapid_private" }
+
+FLUXER_LIVEKIT = { provider = "onepass", value = "op://homelab/FLUXER/livekit" }
+FLUXER_DB = { provider = "onepass", value = "op://homelab/FLUXER/DB" }
+FLUXER_MEILI = { provider = "onepass", value = "op://homelab/FLUXER/MEILI" }
+FLUXER_S3 = { provider = "onepass", value = "op://homelab/FLUXER/S3" }
+FLUXER_SUDO = { provider = "onepass", value = "op://homelab/FLUXER/SUDO" }
+FLUXER_CONNECTION = { provider = "onepass", value = "op://homelab/FLUXER/CONNECTION" }
+FLUXER_VAPID_PUBLIC = { provider = "onepass", value = "op://homelab/FLUXER/vapid_public" }
+FLUXER_VAPID_PRIVATE = { provider = "onepass", value = "op://homelab/FLUXER/vapid_private" }
+FLUXER_GATEWAY = { provider = "onepass", value = "op://homelab/FLUXER/GATEWAY" }
+FLUXER_MEDIA_SECRET = { provider = "onepass", value = "op://homelab/FLUXER/MEDIA" }
+FLUXER_MEDIA_UPLOAD = { provider = "onepass", value = "op://homelab/FLUXER/UPLOAD" }
+FLUXER_ADMIN_BASE = { provider = "onepass", value = "op://homelab/FLUXER/ADMIN_BASE" }
+FLUXER_ADMIN_OAUTH = { provider = "onepass", value = "op://homelab/FLUXER/ADMIN_OAUTH" }
 
 STALWART_USER = { provider = "onepass", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "onepass", value = "op://homelab/stalwart/password" }
@@ -191,6 +225,12 @@ DAGU_SECRET = { provider = "onepass", value = "op://homelab/dagu/secret" }
 KAN_SECRET = { provider = "onepass", value = "op://homelab/kan/secret" }
 HOODIK_SECRET = { provider = "onepass", value = "op://homelab/hoodik/secret" }
 MINUSPOD_SECRET = { provider = "onepass", value = "op://homelab/minuspod/secret" }
+KLIPY_KEY = { provider = "onepass", value = "op://homelab/klipy/key" }
+YOUTUBE_KEY = { provider = "onepass", value = "op://homelab/youtube_data_api_v3/credential" }
+DISCOGS_PAT = { provider = "onepass", value = "op://homelab/discogs/pat" }
+OVERLEAF_INVITE = { provider = "onepass", value = "op://homelab/OVERLEAF/INVITE" }
+LANCACHE_DB = { provider = "onepass", value = "op://homelab/lancache/db" }
+GHSTAT_INTERNAL = { provider = "onepass", value = "op://homelab/GHSTAT/INTERNAL" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }
@@ -284,3 +324,7 @@ REITTI_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/reitti/oidc_c
 REITTI_OIDC_SECRET = { provider = "onepass", value = "op://homelab/reitti/oidc_secret" }
 KAN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kan/oidc_client" }
 KAN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kan/oidc_secret" }
+CHATTO_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/CHATTO/oidc_client" }
+CHATTO_OIDC_SECRET = { provider = "onepass", value = "op://homelab/CHATTO/oidc_secret" }
+HOMELABLE_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/HOMELABLE/oidc_client" }
+HOMELABLE_OIDC_SECRET = { provider = "onepass", value = "op://homelab/HOMELABLE/oidc_secret" }

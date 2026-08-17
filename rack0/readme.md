@@ -1,4 +1,4 @@
-# Rack0 Docker Compose Stack
+# Rack0 Docker Compose
 
 - Redundant blocky and blocky_keepalived with Rack4
 - Redundant traefik and traefik_keepalived with Rack4

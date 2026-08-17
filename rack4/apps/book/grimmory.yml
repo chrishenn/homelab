@@ -1,0 +1,60 @@
+---
+x-grimmory_common: &grimmory_common
+  profiles: [grimmory]
+  restart: unless-stopped
+  networks: [grimmory]
+  environment:
+    USER_ID: ${PGID}
+    GROUP_ID: ${PUID}
+    TZ: $TZ
+
+services:
+  grimmory:
+    image: ghcr.io/grimmory-tools/grimmory:latest
+    container_name: grimmory
+    <<: *grimmory_common
+    environment:
+      DATABASE_URL: jdbc:mariadb://grimmory_db:3306/grimmory
+      DATABASE_USERNAME: grimmory
+      DATABASE_PASSWORD: grimmory
+      SWAGGER_ENABLED: false
+      FORCE_DISABLE_OIDC: false
+    volumes:
+      - $MEDIA/Books:/books
+      - $DATA/grimmory/data:/app/data
+      - $DATA/grimmory/bookdrop:/bookdrop
+    networks: [grimmory, newt]
+    labels:
+      homepage.group: Books
+      homepage.name: Grimmory
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/grimmory.svg
+      homepage.href: https://grimmory.chenn.dev
+      homepage.description: Book Server
+
+      pangolin.public-resources.grimmory.name: grimmory
+      pangolin.public-resources.grimmory.full-domain: grimmory.chenn.dev
+      pangolin.public-resources.grimmory.mode: http
+      pangolin.public-resources.grimmory.targets[0].method: http
+      pangolin.public-resources.grimmory.targets[0].port: 6060
+      pangolin.public-resources.grimmory.policy: member
+
+  grimmory_db:
+    image: lscr.io/linuxserver/mariadb:11.4.8
+    container_name: grimmory_db
+    <<: *grimmory_common
+    environment:
+      MYSQL_ROOT_PASSWORD: grimmory
+      MYSQL_DATABASE: grimmory
+      MYSQL_USER: grimmory
+      MYSQL_PASSWORD: grimmory
+    volumes:
+      - $DATA/grimmory/db:/config
+    restart: unless-stopped
+    healthcheck:
+      test: mariadb-admin ping -h localhost
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+networks:
+  grimmory:

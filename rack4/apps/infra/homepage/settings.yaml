@@ -29,7 +29,7 @@ layout:
     style: row
     columns: 5
     tab: Media
-  Arr:
+  Movies and TV:
     style: row
     columns: 5
     tab: Media
@@ -38,6 +38,10 @@ layout:
     columns: 5
     tab: Media
   Music:
+    style: row
+    columns: 5
+    tab: Media
+  Discordalikes:
     style: row
     columns: 5
     tab: Media
@@ -50,19 +54,23 @@ layout:
     columns: 5
     tab: Media
 
-  Converters:
-    style: row
-    columns: 5
-    tab: Documents
-  PDF:
-    style: row
-    columns: 5
-    tab: Documents
   File Servers:
     style: row
     columns: 5
     tab: Documents
+  File Converters:
+    style: row
+    columns: 5
+    tab: Documents
+  PDF Tools:
+    style: row
+    columns: 5
+    tab: Documents
   Job:
+    style: row
+    columns: 5
+    tab: Documents
+  Email:
     style: row
     columns: 5
     tab: Documents
@@ -72,6 +80,10 @@ layout:
     columns: 5
     tab: Dev
   General Tools:
+    style: row
+    columns: 5
+    tab: Dev
+  Slackalikes:
     style: row
     columns: 5
     tab: Dev

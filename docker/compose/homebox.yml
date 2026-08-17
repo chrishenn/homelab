@@ -1,4 +1,4 @@
-# no need for home inventory rn
+# home inventory
 ---
 services:
   homebox:

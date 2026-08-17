@@ -1,0 +1,65 @@
+# looks like this won't work for me:
+# - requires their smtp server that binds to port 25 on the host
+# - maybe I could finagle it to use my existing mail server?
+---
+x-aliasvault: &aliasvault
+  profiles: [aliasvault]
+  restart: unless-stopped
+  networks: [aliasvault]
+
+services:
+  aliasvault_client:
+    image: ghcr.io/aliasvault/client:latest
+    container_name: aliasvault_client
+    <<: *aliasvault
+    volumes:
+      - $DATA/aliasvault/client:/apps/server/msbuild-logs:rw
+    networks: [aliasvault, newt]
+    labels:
+      pangolin.public-resources.aliasvault.name: aliasvault
+      pangolin.public-resources.aliasvault.full-domain: aliasvault.chenn.dev
+      pangolin.public-resources.aliasvault.mode: http
+
+      pangolin.public-resources.aliasvault.targets[0].method: http
+      pangolin.public-resources.aliasvault.targets[0].path-match: prefix
+      pangolin.public-resources.aliasvault.targets[0].path: /
+      pangolin.public-resources.aliasvault.targets[0].port: 3000
+
+  aliasvault_api:
+    image: ghcr.io/aliasvault/api:latest
+    container_name: aliasvault_api
+    <<: *aliasvault
+    volumes:
+      - ./database:/database:rw
+      - ./logs:/logs:rw
+      - ./secrets:${SECRETS_PATH:-/secrets}:ro
+    networks: [aliasvault, newt]
+    labels:
+      pangolin.public-resources.aliasvault.targets[1].method: http
+      pangolin.public-resources.aliasvault.targets[1].path-match: prefix
+      pangolin.public-resources.aliasvault.targets[1].path: /api
+      pangolin.public-resources.aliasvault.targets[1].port: 3000
+
+  aliasvault_admin:
+    image: ghcr.io/aliasvault/admin:latest
+    container_name: aliasvault_admin
+    <<: *aliasvault
+    volumes:
+      - ./database:/database:rw
+      - ./logs:/logs:rw
+      - ./secrets:${SECRETS_PATH:-/secrets}:ro
+    networks: [aliasvault, newt]
+    labels:
+      pangolin.public-resources.aliasvault.targets[2].method: http
+      pangolin.public-resources.aliasvault.targets[2].path-match: prefix
+      pangolin.public-resources.aliasvault.targets[2].path: /admin
+      pangolin.public-resources.aliasvault.targets[2].port: 3000
+
+  aliasvault_task:
+    image: ghcr.io/aliasvault/task-runner:latest
+    container_name: aliasvault_task
+    <<: *aliasvault
+    volumes:
+      - ./database:/database:rw
+      - ./logs:/logs:rw
+      - ./secrets:${SECRETS_PATH:-/secrets}:ro

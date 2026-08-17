@@ -14,7 +14,7 @@ function replace_or_append_line {
 	# match on this string
 	declare match=${1}
 	shift
-	# replace with this string
+	# replace or append a matching line with this string
 	declare replace=${1}
 	shift
 	# target file
@@ -76,7 +76,7 @@ function homelab_clone {
 function installs {
 	sudo ujust update
 	sudo ujust toggle-user-motd
-	sudo ujust toggle-devmode
+	sudo ujust devmode
 	sudo ujust dx-group
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 	curl -fsSL https://pixi.sh/install.sh | sh
@@ -119,7 +119,6 @@ function disks {
 		/var/mnt/f \
 		/var/mnt/h \
 		/var/mnt/k \
-		/var/mnt/q \
 		/var/mnt/r
 
 	sudo tee -a /etc/fstab >/dev/null <<-END
@@ -143,10 +142,6 @@ function zpool_fix {
 }
 
 function nfs_server {
-	# not sure if necessary
-	# echo 'rpcrdma' | sudo tee /etc/modules-load.d/rdma.conf
-	# sudo modprobe rpcrdma svcrdma xprtrdma
-
 	sudo tee -a /etc/exports >/dev/null <<-END
 		/var/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
 		/var/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
@@ -164,7 +159,7 @@ function nfs_server {
 
 function samba_server {
 	# sudo nano /etc/samba/smb.conf
-	# copy smb.conf from linux/samba/smb.con
+	# copy smb.conf from linux/samba/smb.conf
 
 	sudo systemctl disable --now firewalld
 	sudo setsebool -P samba_export_all_rw 1

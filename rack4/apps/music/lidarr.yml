@@ -17,7 +17,7 @@ services:
       - $MEDIA:/media_library
     networks: [arr, newt]
     labels:
-      homepage.group: Arr
+      homepage.group: Music
       homepage.name: Lidarr
       homepage.icon: lidarr.png
       homepage.href: https://lidarr.chenn.dev

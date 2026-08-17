@@ -1,0 +1,240 @@
+---
+# I'm having trouble getting album art to extract correctly
+# Can't get playback to work on linux desktop
+configs:
+  meelo:
+    content: |
+      {
+      	"trackRegex": [
+      		"^([\\/\\\\]+.*)*[\\/\\\\]+(?P<AlbumArtist>.+)[\\/\\\\]+Unknown Album[\\/\\\\]+(?P<Track>.*)\\..*$",
+      		"^([\\/\\\\]+.*)*[\\/\\\\]+(?P<AlbumArtist>.+)[\\/\\\\]+(?P<Album>.+)(\\s+\\((?P<Year>\\d{4})\\))?[\\/\\\\]+((?P<Disc>[0-9]+)-)?(?P<Index>[0-9]+)\\s+(?P<Track>.*)\\..*$"
+      	],
+      	"metadata": {
+      		"source": "embedded",
+      		"order": "only",
+      		"useExternalProviderGenres": true
+      	},
+      	"providers": {
+      		"musicbrainz": {},
+      		"allmusic": {},
+            "metacritic": {},
+            "wikipedia": {},
+      		"discogs": {"apiKey": "${DISCOGS_PAT}"},
+            "lrclib": {}
+      	},
+      	"compilations": {
+      		"useID3CompTag": true,
+      		"artists": [
+      			"Various Artists"
+      		]
+      	},
+      	"useEmbeddedThumbnails": false
+      }
+  meelo_nginx:
+    content: |
+      server {
+        listen 5000;
+        server_name meelo.chenn.dev;
+
+        location = /api {
+          return 302 /api/;
+        }
+        location /api/ {
+          proxy_pass http://meelo_server:4000/;
+        }
+        location = /scanner {
+          return 302 /scanner/;
+        }
+        location /scanner/ {
+          proxy_pass http://meelo_scanner:8133/;
+        }
+        location = /matcher {
+          return 302 /matcher/;
+        }
+        location /matcher/ {
+          proxy_pass http://meelo_matcher:6789/;
+        }
+        location / {
+          proxy_pass http://meelo:3000;
+        }
+      }
+
+x-meelo_env: &meelo_env
+  PUBLIC_URL: https://meelo.chenn.dev
+  ALLOW_ANONYMOUS: 0
+  ENABLE_USER_REGISTRATION: 1
+  INTERNAL_DATA_DIR: /data
+  INTERNAL_CONFIG_DIR: /config
+
+  TRANSCODER_URL: http://meelo_transcoder:7666
+  MEILI_HOST: http://meelo_meili:7700
+  RABBITMQ_URL: amqp://meelo:meelo@meelo_mq:5672
+  DATABASE_URL: postgresql://meelo:meelo@meelo_db:5432/meelo?schema=public
+  API_URL: http://meelo_server:4000
+
+  PUBLIC_SERVER_URL: https://meelo.chenn.dev/api
+  SSR_SERVER_URL: http://meelo_server:4000
+  PUBLIC_SCANNER_URL: https://meelo.chenn.dev/scanner
+  SSR_SCANNER_URL: http://meelo_scanner:8133
+  PUBLIC_MATCHER_URL: https://meelo.chenn.dev/matcher
+  SSR_MATCHER_URL: http://meelo_matcher:6789
+
+  LASTFM_API_KEY: ${LASTFM_API_KEY}
+  LASTFM_API_SECRET: ${LASTFM_API_SECRET}
+  JWT_SIGNATURE: ${MEELO_JWT}
+  MEILI_MASTER_KEY: ${MEELO_MEILI}
+  API_KEYS: ${MEELO_API}
+
+  POSTGRES_USER: meelo
+  POSTGRES_PASSWORD: meelo
+  POSTGRES_DB: meelo
+
+  RABBITMQ_USER: meelo
+  RABBITMQ_PASSWORD: meelo
+  RABBITMQ_DEFAULT_USER: meelo
+  RABBITMQ_DEFAULT_PASS: meelo
+
+  MEILI_ENV: production
+  MEILI_LOG_LEVEL: WARN
+
+  GOCODER_SAFE_PATH: /data
+  GOCODER_HWACCEL: nvidia
+  PGHOST: meelo_db
+  PGPORT: 5432
+  PGUSER: meelo
+  PGPASSWORD: meelo
+  PGDATABASE: meelo
+
+x-meelo_common: &meelo_common
+  profiles: [meelo]
+  restart: unless-stopped
+  networks: [meelo]
+  environment:
+    <<: *meelo_env
+
+x-healthy: &healthy
+  condition: service_healthy
+
+services:
+  meelo_nginx:
+    image: nginx:alpine
+    container_name: meelo_nginx
+    <<: *meelo_common
+    configs:
+      - source: meelo_nginx
+        target: /etc/nginx/templates/meelo.conf.template
+    networks: [meelo, newt]
+    labels:
+      homepage.group: Music
+      homepage.name: Meelo
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/meelo.png
+      homepage.href: https://meelo.chenn.dev
+      homepage.description: Music Server
+
+      pangolin.public-resources.meelo.name: meelo
+      pangolin.public-resources.meelo.full-domain: meelo.chenn.dev
+      pangolin.public-resources.meelo.mode: http
+      pangolin.public-resources.meelo.targets[0].method: http
+      pangolin.public-resources.meelo.targets[0].port: 5000
+      pangolin.public-resources.meelo.policy: member
+
+  meelo:
+    image: arthichaud/meelo-front:latest
+    container_name: meelo
+    <<: *meelo_common
+
+  meelo_server:
+    image: arthichaud/meelo-server:latest
+    container_name: meelo_server
+    <<: *meelo_common
+    init: true
+    configs:
+      - source: meelo
+        target: /config/settings.json
+    volumes:
+      - $MUSIC:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- localhost:4000']
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      meelo_db: *healthy
+      meelo_meili: *healthy
+
+  meelo_scanner:
+    image: arthichaud/meelo-scanner:latest
+    container_name: meelo_scanner
+    <<: *meelo_common
+    configs:
+      - source: meelo
+        target: /config/settings.json
+    volumes:
+      - $MUSIC:/data:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- localhost:8133']
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      meelo_server: *healthy
+
+  meelo_matcher:
+    image: arthichaud/meelo-matcher:latest
+    container_name: meelo_matcher
+    <<: *meelo_common
+    configs:
+      - source: meelo
+        target: /config/settings.json
+
+  meelo_transcoder:
+    # later versions are not reachable from meelo_server
+    image: ghcr.io/zoriya/kyoo_transcoder:4.7
+    container_name: meelo_transcoder
+    <<: *meelo_common
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - $MUSIC:/data:ro
+      - $DATA/meelo/transcoder:/cache
+    depends_on:
+      meelo_db: *healthy
+
+  meelo_db:
+    image: postgres:18-alpine
+    container_name: meelo_db
+    <<: *meelo_common
+    volumes:
+      - $DATA/meelo/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  meelo_meili:
+    image: getmeili/meilisearch:v1
+    container_name: meelo_meili
+    <<: *meelo_common
+    volumes:
+      - $DATA/meelo/meili:/meili_data
+    healthcheck:
+      test: wget --no-verbose --spider http://0.0.0.0:7700/health
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  meelo_mq:
+    image: rabbitmq:4.3-alpine
+    container_name: meelo_mq
+    <<: *meelo_common
+    volumes:
+      - $DATA/meelo/mq:/var/lib/rabbitmq
+
+networks:
+  meelo:

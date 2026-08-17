@@ -19,8 +19,8 @@ services:
       homepage.group: Music
       homepage.name: Feishin
       homepage.icon: feishin.png
-      homepage.href: https://navidrome.chenn.dev/feishin
-      homepage.description: Navidrome Music Server Frontend
+      homepage.href: https://feishin.chenn.dev
+      homepage.description: Navidrome Frontend
 
       pangolin.public-resources.feishin.name: feishin
       pangolin.public-resources.feishin.full-domain: feishin.chenn.dev

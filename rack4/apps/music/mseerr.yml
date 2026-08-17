@@ -22,7 +22,7 @@ services:
       retries: 3
     networks: [arr, newt]
     labels:
-      homepage.group: Arr
+      homepage.group: Music
       homepage.name: Music Seerr
       homepage.icon: https://github.com/HabiRabbu/Musicseerr/blob/main/Images/logo_icon.png?raw=true
       homepage.href: https://mseerr.chenn.dev

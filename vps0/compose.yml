@@ -1,5 +1,7 @@
 ---
 include:
   - apps/beszel.yml
+  - apps/geoipupdate.yml
+  - apps/rustdesk.yml
   - apps/wg.yml
   - pangolin/pangolin.yml

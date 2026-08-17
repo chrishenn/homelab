@@ -16,6 +16,8 @@ prettier = "latest"
 ty = "latest"
 hk = "latest"
 trufflehog = "latest"
+uv = "latest"
+"pipx:mypy" = "latest"
 
 [hooks.enter]
 shell = "bash"

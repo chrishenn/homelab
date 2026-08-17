@@ -23,7 +23,6 @@ experimental:
   plugins:
     badger:
       # https://github.com/fosrl/badger/releases/latest
-
       moduleName: 'github.com/fosrl/badger'
       version: 'v1.5.0'
 
@@ -71,6 +70,13 @@ entryPoints:
     address: ':2525/tcp'
   tcp-2626:
     address: ':2626/tcp'
+
+  udp-3478:
+    address: ':3478/udp'
+  tcp-7881:
+    address: ':7881/tcp'
+  udp-7882:
+    address: ':7882/udp'
 
   udp-10000:
     address: ':10000/udp'
@@ -120,9 +126,6 @@ entryPoints:
     address: ':40009/udp'
   udp-40010:
     address: ':40010/udp'
-
-  tcp-7881:
-    address: ':7881/tcp'
 
   udp-50000:
     address: ':50000/udp'

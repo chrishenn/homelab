@@ -1,8 +1,12 @@
 # note: nested mounts (like $DATA/pangolin/db) will appear as empty folders under $DIR_HOST/pangolin
 #   but the data is safely stored under $DATA/pangolin
 ---
+x-healthy: &healthy
+  condition: service_healthy
+
 services:
   pangolin:
+    profiles: [pangolin]
     image: fosrl/pangolin:ee-latest
     container_name: pangolin
     restart: unless-stopped
@@ -22,12 +26,11 @@ services:
       retries: 15
 
   gerbil:
+    profiles: [pangolin]
     image: fosrl/gerbil:latest
     container_name: gerbil
     restart: unless-stopped
-    depends_on:
-      pangolin:
-        condition: service_healthy
+    depends_on: {pangolin: *healthy}
     command:
       - --reachableAt=http://gerbil:3004
       - --generateAndSaveKeyTo=/var/config/key
@@ -55,19 +58,20 @@ services:
       - '40000-40010:40000-40010/tcp'
       - '40000-40010:40000-40010/udp'
 
+      - '3478:3478/udp'
       - '7881:7881'
+      - '7882:7882/udp'
       - '50000-50040:50000-50040/udp'
 
   traefik:
+    profiles: [pangolin]
     image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     network_mode: service:gerbil
     environment:
       CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
-    depends_on:
-      pangolin:
-        condition: service_healthy
+    depends_on: {pangolin: *healthy}
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
@@ -75,6 +79,7 @@ services:
       - $DATA/pangolin/letsencrypt:/letsencrypt
 
   traefik_cert:
+    profiles: [pangolin]
     image: ghcr.io/kereis/traefik-certs-dumper:alpine
     container_name: traefik_cert
     restart: unless-stopped
@@ -82,18 +87,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/pangolin/letsencrypt:/traefik:ro
       - $DATA/pangolin/ssl_dump:/output
-
-  geoipupdate:
-    image: ghcr.io/maxmind/geoipupdate
-    container_name: geoipupdate
-    restart: unless-stopped
-    environment:
-      GEOIPUPDATE_ACCOUNT_ID: ${MAXMIND_ACCOUNT}
-      GEOIPUPDATE_LICENSE_KEY: ${MAXMIND_KEY}
-      GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
-      GEOIPUPDATE_FREQUENCY: 72
-    volumes:
-      - $DATA/pangolin/GeoLite2:/usr/share/GeoIP
 
 networks:
   default:

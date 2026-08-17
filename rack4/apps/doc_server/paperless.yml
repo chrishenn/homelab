@@ -1,5 +1,11 @@
-# mkdir -p $DATA/paperless/data $DATA/paperless/media $DATA/paperless/export $DATA/paperless/consume \
-# $DATA/paperless/paperless_ai $DATA/paperless/paperless_gpt $DATA/paperless/paperless_db $DATA/paperless/paperless_redis
+# mkdir -p \
+# $DATA/paperless/data \
+# $DATA/paperless/media  \
+# $DATA/paperless/export \
+# $DATA/paperless/consume \
+# $DATA/paperless/gpt \
+# $DATA/paperless/db \
+# $DATA/paperless/redis
 ---
 services:
   paperless:
@@ -44,43 +50,6 @@ services:
       pangolin.public-resources.paperless.targets[0].port: 8000
       pangolin.public-resources.paperless.policy: member
 
-  paperless_ai:
-    profiles: [paperless]
-    image: clusterzx/paperless-ai
-    container_name: paperless_ai
-    restart: unless-stopped
-    environment:
-      TZ: ${TZ}
-
-      AI_PROVIDER: ollama
-      OLLAMA_API_URL: http://ollama:11434
-      OLLAMA_MODEL: deepseek-r1:14b
-
-      PAPERLESS_URL: http://paperless:8000
-      PAPERLESS_API_TOKEN: ${PAPERLESS_TOKEN}
-      PAPERLESS_USERNAME: ${USER}
-
-      RAG_SERVICE_URL: http://localhost:8000
-      RAG_SERVICE_ENABLED: true
-      SCAN_INTERVAL: '*/30 * * * *'
-
-    volumes:
-      - $DATA/paperless/paperless_ai:/app/data
-    networks: [paperless, newt, ollama]
-    labels:
-      homepage.group: File Servers
-      homepage.name: Paperless AI
-      homepage.icon: paperless.png
-      homepage.href: https://paperless_ai.chenn.dev
-      homepage.description: AI Document Processing
-
-      pangolin.public-resources.paperless-ai.name: paperless-ai
-      pangolin.public-resources.paperless-ai.full-domain: paperless-ai.chenn.dev
-      pangolin.public-resources.paperless-ai.mode: http
-      pangolin.public-resources.paperless-ai.targets[0].method: http
-      pangolin.public-resources.paperless-ai.targets[0].port: 3000
-      pangolin.public-resources.paperless-ai.policy: member
-
   paperless_gpt:
     profiles: [paperless]
     image: icereed/paperless-gpt:latest
@@ -117,7 +86,7 @@ services:
       homepage.group: File Servers
       homepage.name: Paperless GPT
       homepage.icon: paperless.png
-      homepage.href: https://paperless_gpt.chenn.dev
+      homepage.href: https://paperless-gpt.chenn.dev
       homepage.description: AI Document Processing
 
       pangolin.public-resources.paperless-gpt.name: paperless-gpt
@@ -149,7 +118,7 @@ services:
     volumes:
       - $DATA/paperless/redis:/data
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 5s
       timeout: 5s
       retries: 5
@@ -171,10 +140,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
-    command:
-      - 'gotenberg'
-      - '--chromium-disable-javascript=true'
-      - '--chromium-allow-list=file:///tmp/.*'
+    command: 'gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*'
     networks: [paperless]
 
 networks:

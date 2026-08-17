@@ -34,15 +34,25 @@ K8s talos pulumi stacks for:
 # dev
 
 ```bash
-# mypy is not available from mise registry
-# this may be on its way out; probably replace with astra/ty soon (https://docs.astral.sh/ty)
-uv tool install mypy
-
-# run `hk fix --all`: lint/format
+# fix: run `hk fix --all`: lint/format
 just f
 
-# run `hk check --all`: lint
+# check: run `hk check --all`: lint
 just c
+
+# make sure the env is synced with the lockfile
+uv lock --upgrade
+uv sync
+
+# type-check with ty, using the repo ty.toml for now. Override by adding one in a subfolder, or from cli
+mise x -C vps0 -c 'ty check . --config-file ../ty.toml'
+mise x -C traefik -c 'ty check . --config-file ../ty.toml'
+mise x -C dns -c 'ty check . --config-file ../ty.toml'
+mise x -C k3s -c 'ty check . --config-file ../ty.toml'
+mise x -C protonmail -c 'ty check . --config-file ../ty.toml'
+
+# todo
+mise x -C rack3 -c 'ty check . --config-file ../ty.toml'
 ```
 
 ---
@@ -58,15 +68,32 @@ when moving, your public home ip will need to change in the following places:
 
 # todo
 
-- [ ] application {dev, test, deploy}: {gpu compute, gpu gui, cli, tui, web server, web client}: {linux, windows, macos}
-    - [ ] general compute
-        - [x] k8s linux nodes: talos + pulumi
-        - [ ] k8s windows nodes
-    - [ ] gui desktop
-        - [ ] kubevirt
-    - rejected for now
-        - proxmox
-        - canonical maas
-        - ansible
-        - terraform (kinda. pulumi can use terraform providers)
-    - [ ] gitops solution
+- application
+    - x {dev, test, deploy, monitor}
+    - x {gpu compute, gpu gui, cli, tui, web server, web client}
+    - x {bare metal, docker container, k8s container}
+    - x {linux, windows, macos, ios, android}
+
+- [ ] general compute
+    - [x] k8s linux nodes: talos + pulumi
+    - [ ] k8s windows nodes
+- [ ] gui desktop
+    - [ ] kubevirt?
+- [ ] gitops
+    - flux
+    - argo
+- rejected for now
+    - proxmox
+    - canonical maas
+    - ansible
+    - terraform (kinda. pulumi can use terraform providers)
+
+- [x] netbootxyz
+- [x] stoat chat
+- [x] fluxer
+- [x] zot
+    - [ ] enable mTLS
+- [ ] PXE boot windows
+    - [ ] iventoy?
+    - [ ] netbootxyz?
+- [ ] grafana + loki

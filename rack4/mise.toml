@@ -30,6 +30,7 @@ DOCKER_HOST = "tcp://192.168.1.142:2375"
 DATA = "/mnt/k/docker"
 BACKUP = "/mnt/h/backup"
 MEDIA = "/mnt/r/media_library"
+MUSIC = "/mnt/r/media_library/Music"
 
 # This is to ensure the auto-generated range does not conflict with any existing subnets
 HOME_GATEWAY = "192.168.0.1"

@@ -1,0 +1,72 @@
+---
+x-ghstat_env: &ghstat_env
+  GITHUB_PAT: ${GH_PAT_PUBLIC}
+  FETCHER_INTERNAL_TOKEN: ${GHSTAT_INTERNAL}
+  GENERATOR_URL: http://ghstat_generator:5002
+  FETCHER_URL: http://ghstat_fetcher:5001
+
+x-ghstat: &ghstat
+  profiles: [ghstat]
+  restart: unless-stopped
+  environment: *ghstat_env
+  networks: [ghstat]
+
+services:
+  ghstat_edge:
+    <<: *ghstat
+    build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:edge
+    image: ${REGISTRY}/ghstats-edge:latest
+    container_name: ghstat_edge
+    networks: [ghstat, newt]
+    labels:
+      pangolin.public-resources.ghstat.name: ghstat
+      pangolin.public-resources.ghstat.full-domain: ghstat.chenn.dev
+      pangolin.public-resources.ghstat.mode: http
+
+      pangolin.public-resources.ghstat.targets[0].method: http
+      pangolin.public-resources.ghstat.targets[0].path-match: prefix
+      pangolin.public-resources.ghstat.targets[0].path: /
+      pangolin.public-resources.ghstat.targets[0].port: 5003
+
+  ghstat_generator:
+    <<: *ghstat
+    build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:generator
+    image: ${REGISTRY}/ghstats-generator:latest
+    container_name: ghstat_generator
+    volumes:
+      - $DATA/ghstat/generator:/app/data
+    networks: [ghstat, newt]
+    labels:
+      pangolin.public-resources.ghstat.targets[1].method: http
+      pangolin.public-resources.ghstat.targets[1].path-match: prefix
+      pangolin.public-resources.ghstat.targets[1].path: /api
+      pangolin.public-resources.ghstat.targets[1].port: 5002
+
+  ghstat_generator-worker:
+    <<: *ghstat
+    build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:generator
+    image: ${REGISTRY}/ghstats-generator:latest
+    container_name: ghstat_generator-worker
+    command: ['python', '-m', 'src.worker']
+    volumes:
+      - $DATA/ghstat/generator:/app/data
+
+  ghstat_fetcher:
+    <<: *ghstat
+    build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:fetcher
+    image: ${REGISTRY}/ghstats-fetcher:latest
+    container_name: ghstat_fetcher
+    volumes:
+      - $DATA/ghstat/fetcher:/app/data
+
+  ghstat_fetcher-cron:
+    <<: *ghstat
+    build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:fetcher
+    image: ${REGISTRY}/ghstats-fetcher:latest
+    container_name: ghstat_fetcher-cron
+    command: ['python', '-m', 'src.cron']
+    volumes:
+      - $DATA/ghstat/fetcher:/app/data
+
+networks:
+  ghstat:

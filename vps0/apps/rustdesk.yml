@@ -1,0 +1,28 @@
+---
+# the documentation is a little sloptastic ...
+# web client requires a reverse proxy serving wss on 443, and wss is behind paywall
+# requires: TCP 21115,21116,21117
+# requires: UDP 21116
+# do not open TCP 21118,21119
+# for headless options, see: https://github.com/rustdesk/rustdesk/wiki/Headless-Linux
+# login screen for wayland is not supported
+services:
+  rustdesk_hbbs:
+    profiles: [rustdesk]
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk_hbbs
+    restart: unless-stopped
+    command: hbbs
+    volumes:
+      - $DATA/rustdesk:/root
+    network_mode: host
+
+  rustdesk_hbbr:
+    profiles: [rustdesk]
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk_hbbr
+    restart: unless-stopped
+    command: hbbr
+    volumes:
+      - $DATA/rustdesk:/root
+    network_mode: host

@@ -1,0 +1,57 @@
+# what a slopfest. Yuck!
+# They built a hardcoded backend service name in frontend nginx :/
+# They have an AIO image, but: it doesn't store config, or do network scanning (defeats the purpose),
+#   and also includes some AI garbage ...
+---
+x-homelable: &homelable
+  profiles: [homelable]
+  restart: unless-stopped
+  networks: [homelable]
+
+services:
+  homelable:
+    image: ghcr.io/pouzor/homelable-frontend:latest
+    container_name: homelable
+    <<: *homelable
+    networks: [homelable, newt]
+    labels:
+      pangolin.public-resources.homelable.name: homelable
+      pangolin.public-resources.homelable.full-domain: homelable.chenn.dev
+      pangolin.public-resources.homelable.mode: http
+      pangolin.public-resources.homelable.targets[0].method: http
+      pangolin.public-resources.homelable.targets[0].port: 80
+      pangolin.public-resources.homelable.policy: member
+
+  homelable_api:
+    image: ghcr.io/pouzor/homelable-backend:latest
+    container_name: homelable_api
+    <<: *homelable
+    cap_add: [NET_RAW]
+    environment:
+      SQLITE_PATH: /app/data/homelab.db
+      CORS_ORIGINS: '["https://homelable.chenn.dev"]'
+      SECRET_KEY: 4e4d1cd2766827df3bdfe9947f64bd546fe3cc006b00f750e4cc6b04d9591729
+      LIVEVIEW_KEY: 57ad7d7f4c6cc179e48d35350787d802f0ef790f5f7f20b35657442d8f75538b
+      AUTH_MODE: oidc
+      AUTH_USERNAME: ${USER}
+      AUTH_PASSWORD_HASH: '${PASS_BCRYPT}'
+
+      OIDC_DISCOVERY_URL: ${OIDC_DISCOVERY}
+      OIDC_CLIENT_ID: ${HOMELABLE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${HOMELABLE_OIDC_SECRET}
+      OIDC_REDIRECT_URI: https://homelable.chenn.dev/api/v1/auth/oidc/callback
+      OIDC_SCOPES: 'openid profile email groups'
+      OIDC_COOKIE_SECURE: true
+      OIDC_SESSION_EXPIRE_MINUTES: 480
+      OIDC_TRANSACTION_EXPIRE_SECONDS: 600
+
+      SCANNER_RANGES: '["192.168.1.0/24", "${VPS0_IP}"]'
+      SCANNER_HTTP_RANGES: '[]'
+      SCANNER_HTTP_PROBE_ENABLED: false
+      SCANNER_HTTP_VERIFY_TLS: false
+      STATUS_CHECKER_INTERVAL: 60
+    volumes:
+      - $DATA/homelable/api:/app/data
+
+networks:
+  homelable:

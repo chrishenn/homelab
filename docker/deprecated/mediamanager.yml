@@ -1,0 +1,155 @@
+# not recommended for use
+
+# amateurish. qbittorrent client can't create category successfully - unhandled exceptions
+# importing media requires manual button-clicking a thousand times
+# 'importing' media renames the folders used
+---
+configs:
+  mediamanager:
+    content: |
+      [auth]
+      email_password_resets = false
+      session_lifetime = 86400
+
+      # Title-based scoring rules
+      [[indexers.title_scoring_rules]]
+      name = "prefer_h265"
+      keywords = ["h265", "hevc", "x265", "h.265", "x.265"]
+      score_modifier = 100
+      negate = false
+
+      [[indexers.title_scoring_rules]]
+      name = "prefer_hdr"
+      keywords = ["hdr", "10bit"]
+      score_modifier = 100
+      negate = false
+
+      [[indexers.title_scoring_rules]]
+      name = "avoid_cam"
+      keywords = ["cam", "camrip", "bdscr", "ddc", "dvdscreener","dvdscr", "hdcam", "hdtc", "hdts", "scr", "screener","telesync", "ts", "webscreener", "tc", "telecine", "tvrip"]
+      score_modifier = -10000
+      negate = false
+
+      # Indexer flag-based scoring rules
+      [[indexers.indexer_flag_scoring_rules]]
+      name = "prefer_freeleech"
+      flags = ["freeleech", "freeleech75"]
+      score_modifier = 100
+      negate = false
+
+      [[indexers.indexer_flag_scoring_rules]]
+      name = "reject_nuked"
+      flags = ["nuked"]
+      score_modifier = -10000
+      negate = false
+
+      # Scoring rulesets
+      [[indexers.scoring_rule_sets]]
+      name = "default"
+      libraries = ["ALL_TV", "ALL_MOVIES"]
+      rule_names = ["prefer_h265", "prefer_hdr", "avoid_cam", "reject_nuked", "prefer_freeleech"]
+
+      # its very unlikely that you need to change this
+      [metadata.tmdb]
+      tmdb_relay_url = "https://metadata-relay.dorninger.co/tmdb"
+      primary_languages = [""]
+      default_language = "en"
+
+      [metadata.tvdb]
+      tvdb_relay_url = "https://metadata-relay.dorninger.co/tvdb"
+
+x-mediamanager_env: &mediamanager_env
+  CONFIG_DIR: /app/config
+
+  MEDIAMANAGER_DATABASE__HOST: mediamanager_db
+  MEDIAMANAGER_DATABASE__PORT: 5432
+  MEDIAMANAGER_DATABASE__USER: 'MediaManager'
+  MEDIAMANAGER_DATABASE__PASSWORD: 'MediaManager'
+  MEDIAMANAGER_DATABASE__DBNAME: 'MediaManager'
+
+  MEDIAMANAGER_MISC__FRONTEND_URL: https://mm.chenn.dev
+  MEDIAMANAGER_MISC__CORS_URLS: '["https://mm.chenn.dev"]'
+  MEDIAMANAGER_MISC__DEVELOPMENT: false
+
+  MEDIAMANAGER_MISC__TV_DIRECTORY: /data/TV
+  MEDIAMANAGER_MISC__MOVIE_DIRECTORY: /data/Movies
+  MEDIAMANAGER_MISC__IMAGE_DIRECTORY: /data/images
+  MEDIAMANAGER_MISC__TORRENT_DIRECTORY: /data/torrents
+
+  MEDIAMANAGER_AUTH__ADMIN_EMAILS: '["$EMAIL"]'
+  MEDIAMANAGER_AUTH__TOKEN_SECRET: ${MM_SECRET}
+
+  MEDIAMANAGER_AUTH__OPENID_CONNECT__ENABLED: true
+  MEDIAMANAGER_AUTH__OPENID_CONNECT__CLIENT_ID: ${MM_OIDC_CLIENT}
+  MEDIAMANAGER_AUTH__OPENID_CONNECT__CLIENT_SECRET: ${MM_OIDC_SECRET}
+  MEDIAMANAGER_AUTH__OPENID_CONNECT__CONFIGURATION_ENDPOINT: ${OIDC_DISCOVERY}
+  MEDIAMANAGER_AUTH__OPENID_CONNECT__NAME: Pocket ID
+
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_HOST: $SMTP_HOST
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_PORT: $SMTP_PORT
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_USER: $SMTP_USER
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__SMTP_PASSWORD: $SMTP_PASS
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__FROM_EMAIL: $SMTP_USER
+  MEDIAMANAGER_NOTIFICATIONS__SMTP_CONFIG__USE_TLS: true
+
+  MEDIAMANAGER_TORRENTS__QBITTORRENT__ENABLED: true
+  MEDIAMANAGER_TORRENTS__QBITTORRENT__HOST: http://gluetun
+  MEDIAMANAGER_TORRENTS__QBITTORRENT__PORT: 8080
+  MEDIAMANAGER_TORRENTS__QBITTORRENT__USERNAME: ${USER}
+  MEDIAMANAGER_TORRENTS__QBITTORRENT__PASSWORD: ${PASS}
+
+  MEDIAMANAGER_TORRENTS__SABNZBD__ENABLED: true
+  MEDIAMANAGER_TORRENTS__SABNZBD__HOST: http://sab
+  MEDIAMANAGER_TORRENTS__SABNZBD__PORT: 8080
+  MEDIAMANAGER_TORRENTS__SABNZBD__API_KEY: ${SAB_API_KEY}
+  MEDIAMANAGER_TORRENTS__SABNZBD__BASE_PATH: /api
+
+  MEDIAMANAGER_INDEXERS__PROWLARR__ENABLED: true
+  MEDIAMANAGER_INDEXERS__PROWLARR__URL: http://prowlarr:9696
+  MEDIAMANAGER_INDEXERS__PROWLARR__API_KEY: ${PROWLARR_API_KEY}
+  MEDIAMANAGER_INDEXERS__PROWLARR__TIMEOUT_SECONDS: 60
+
+services:
+  mediamanager:
+    profiles: [mediamanager]
+    container_name: mediamanager
+    image: quay.io/maxdorninger/mediamanager:latest
+    environment:
+      <<: *mediamanager_env
+    configs:
+      - source: mediamanager
+        target: /app/config/config.toml
+    volumes:
+      - $MEDIA/TV:/data/TV
+      - $MEDIA/Movies:/data/Movies
+      - $DATA/mediamanager/images:/data/images
+      - $DATA/qbit/downloads:/data/torrents
+    networks: [mediamanager, arr, newt]
+    labels:
+      pangolin.public-resources.mediamanager.name: mediamanager
+      pangolin.public-resources.mediamanager.mode: http
+      pangolin.public-resources.mediamanager.full-domain: mm.chenn.dev
+      pangolin.public-resources.mediamanager.policy: member
+      pangolin.public-resources.mediamanager.targets[0].method: http
+      pangolin.public-resources.mediamanager.targets[0].port: 8000
+
+  mediamanager_db:
+    profiles: [mediamanager]
+    container_name: mediamanager_db
+    image: postgres:18-alpine
+    restart: unless-stopped
+    volumes:
+      - $DATA/mediamanager/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: MediaManager
+      POSTGRES_DB: MediaManager
+      POSTGRES_PASSWORD: MediaManager
+    networks: [mediamanager]
+
+networks:
+  mediamanager:

@@ -117,9 +117,3 @@ services I tried but didn't need:
     - i don't need it right now
 - webcord
     - unneeded
-
-services that were broken when I looked at them, but may have improved:
-
-- 13 foot ladder
-    - nonworking when I tried it (medium nor nyt)
-    - https://github.com/wasi-master/13ft

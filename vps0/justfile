@@ -6,6 +6,7 @@ alias s := sync
 alias p := ps
 alias u := up
 alias d := down
+profile := "'*'"
 
 # 'repo' is the repo location on the remote host
 repo := "/home/chris/Projects/homelab"
@@ -31,18 +32,19 @@ sync message="sync":
 ssync:
     fnox sync --provider age --config fnox.local.toml -f
 
-up *svcs:
-    docker compose up -d --remove-orphans {{ svcs }}
+up profile=profile *svcs:
+    docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
-down *svcs:
-    docker compose down {{ svcs }}
+down profile=profile *svcs:
+    docker compose --profile {{ profile }} down {{ svcs }}
 
-bounce *svcs:
-    just down {{ svcs }}
-    just up {{ svcs }}
+bounce profile=profile *svcs:
+    #!/bin/bash
+    docker compose --profile {{ profile }} down {{ svcs }} && \
+    docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
-pullup *svcs:
-    docker compose up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+pullup profile=profile *svcs:
+    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}

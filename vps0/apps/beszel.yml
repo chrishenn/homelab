@@ -1,6 +1,7 @@
 ---
 services:
   beszel_agent:
+    profiles: [beszel]
     image: henrygd/beszel-agent
     container_name: beszel_agent
     restart: unless-stopped

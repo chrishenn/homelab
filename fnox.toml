@@ -6,6 +6,7 @@ account = "my.1password.com"
 [secrets]
 USER = { provider = "onepass", value = "op://homelab/chris/username" }
 PASS = { provider = "onepass", value = "op://homelab/chris/password" }
+PASS_BCRYPT = { provider = "onepass", value = "op://homelab/chris/password_bcrypt" }
 BASICAUTH = { provider = "onepass", value = "op://homelab/chris/basic_auth" }
 HTPASSWD = { provider = "onepass", value = "op://homelab/chris/htpasswd" }
 EMAIL = { provider = "onepass", value = "op://homelab/chris/email" }
@@ -17,6 +18,7 @@ CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/toke
 OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
 GH_USER= { provider = "onepass", value = "op://homelab/github/username" }
 GH_PAT = { provider = "onepass", value = "op://homelab/github/credential" }
+GH_PAT_PUBLIC = { provider = "onepass", value = "op://homelab/github/pat_public" }
 
 SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_host" }
 SMTP_PORT = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_port" }

@@ -1,0 +1,295 @@
+---
+# long story short: this project is a disaster. the doc is fragmented and the guides/repos are out-of-date. You'd have
+# to put in some real time to get this thing going - and then it's kind of an ugly slop-looking thing among a sea of
+# linear-alikes. not for me. why do the buttons move around when you mouse over? just bizarre
+# also: it's slow af
+# Is it slop? Or is it open-source fatigue? Changing of company values? Corpo slop? Who's to say.
+
+# NOTE: (pangolin bug) pangolin automatically adds stripprefix to all targets on bounce
+# NOTE: only one admin and one member allowed for nonlicensed use
+
+# I'm apeing the config from https://github.com/wnstify/AppFlowy/blob/main/docker-compose.yml
+# I'm noticing that these env vars are a dumpster fire. I am forced to ask again: Is it slop? Funding failure?
+# If you call a var by the one name APPFLOWY_GOTRUE_BASE_URL and it needs to mean multiple different things depending
+# on where it's being used, you will be condemned directly to the gulag imho
+# watch out for:
+# - APPFLOWY_GOTRUE_BASE_URL
+# - DATABASE_URL
+
+configs:
+  appflowy_s3:
+    content: |
+      metadata_dir = "/var/lib/garage/meta"
+      data_dir = "/var/lib/garage/data"
+      db_engine = "sqlite"
+      replication_factor = 1
+
+      rpc_bind_addr = "[::]:3901"
+      rpc_public_addr = "127.0.0.1:3901"
+      rpc_secret = "0c2c00161a0cc2e2c01092b0f1ee00cba0182a944b065a600079100f473b0644"
+
+      [s3_api]
+      s3_region = "${APPFLOWY_S3_REGION}"
+      api_bind_addr = "[::]:9000"
+      root_domain = ".s3.garage.localhost"
+
+x-appflowy_s3: &appflowy_s3
+  GARAGE_DEFAULT_ACCESS_KEY: ${APPFLOWY_S3_ACCESS}
+  GARAGE_DEFAULT_SECRET_KEY: ${APPFLOWY_S3_SECRET}
+  GARAGE_DEFAULT_BUCKET: ${APPFLOWY_S3_BUCKET}
+
+x-appflowy_db: &appflowy_db
+  POSTGRES_DB: appflowy
+  POSTGRES_USER: appflowy
+  POSTGRES_PASSWORD: appflowy
+  POSTGRES_HOST: appflowy_db
+  PGPORT: 5432
+
+x-appflowy_env: &appflowy_env
+  RUST_LOG: info
+  APPFLOWY_ENVIRONMENT: production
+  APPFLOWY_DATABASE_URL: postgres://appflowy:appflowy@appflowy_db:5432/appflowy
+  APPFLOWY_DATABASE_MAX_CONNECTIONS: 40
+  APPFLOWY_REDIS_URI: redis://appflowy_redis:6379
+  APPFLOWY_GOTRUE_JWT_SECRET: ${APPFLOWY_GOTRUE_JWT}
+
+  APPFLOWY_S3_USE_MINIO: true
+  APPFLOWY_S3_MINIO_URL: http://appflowy-s3:9000
+  APPFLOWY_S3_CREATE_BUCKET: false
+  APPFLOWY_S3_ACCESS_KEY: ${APPFLOWY_S3_ACCESS}
+  APPFLOWY_S3_SECRET_KEY: ${APPFLOWY_S3_SECRET}
+  APPFLOWY_S3_BUCKET: ${APPFLOWY_S3_BUCKET}
+  APPFLOWY_S3_REGION: ${APPFLOWY_S3_REGION}
+  APPFLOWY_S3_PRESIGNED_URL_ENDPOINT: https://appflowy.chenn.dev/s3
+
+  APPFLOWY_MAILER_SMTP_HOST: ${SMTP_HOST}
+  APPFLOWY_MAILER_SMTP_PORT: ${SMTP_PORT}
+  APPFLOWY_MAILER_SMTP_USERNAME: ${SMTP_USER}
+  APPFLOWY_MAILER_SMTP_PASSWORD: ${SMTP_PASS}
+  APPFLOWY_MAILER_SMTP_EMAIL: ${SMTP_USER}
+  APPFLOWY_MAILER_SMTP_TLS_KIND: wrapper
+
+  APPFLOWY_ACCESS_CONTROL: true
+  APPFLOWY_WEBSOCKET_MAILBOX_SIZE: 6000
+
+  APPFLOWY_WEB_URL: https://appflowy.chenn.dev
+  APPFLOWY_BASE_URL: https://appflowy.chenn.dev
+  APPFLOWY_WS_BASE_URL: wss://appflowy.chenn.dev/ws/v2
+
+  GOTRUE_SITE_URL: appflowy-flutter://
+  GOTRUE_URI_ALLOW_LIST: '**'
+  API_EXTERNAL_URL: https://appflowy.chenn.dev/gotrue
+
+  GOTRUE_JWT_SECRET: ${APPFLOWY_GOTRUE_JWT}
+  GOTRUE_JWT_EXP: 604800
+  GOTRUE_JWT_ADMIN_GROUP_NAME: supabase_admin
+
+  GOTRUE_DISABLE_SIGNUP: false
+  GOTRUE_ADMIN_EMAIL: ${EMAIL}
+  GOTRUE_ADMIN_PASSWORD: ${PASS}
+
+  GOTRUE_RATE_LIMIT_EMAIL_SENT: 100
+  GOTRUE_MAILER_URLPATHS_CONFIRMATION: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_INVITE: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_RECOVERY: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /gotrue/verify
+  GOTRUE_MAILER_AUTOCONFIRM: false
+
+  GOTRUE_SMTP_HOST: ${SMTP_HOST}
+  GOTRUE_SMTP_PORT: ${SMTP_PORT}
+  GOTRUE_SMTP_USER: ${SMTP_USER}
+  GOTRUE_SMTP_PASS: ${SMTP_PASS}
+  GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_USER}
+  GOTRUE_SMTP_MAX_FREQUENCY: 1ns
+
+  GOTRUE_EXTERNAL_GOOGLE_ENABLED: false
+  GOTRUE_EXTERNAL_GITHUB_ENABLED: false
+  GOTRUE_EXTERNAL_DISCORD_ENABLED: false
+
+  APPFLOWY_WORKER_ENVIRONMENT: production
+  APPFLOWY_WORKER_REDIS_URL: redis://appflowy_redis:6379
+  APPFLOWY_WORKER_DATABASE_URL: postgres://appflowy:appflowy@appflowy_db:5432/appflowy
+  APPFLOWY_WORKER_DATABASE_NAME: appflowy
+  APPFLOWY_WORKER_IMPORT_TICK_INTERVAL: 30
+
+x-healthy: &healthy
+  condition: service_healthy
+
+services:
+  appflowy_gotrue:
+    profiles: [appflowy]
+    image: appflowyinc/gotrue:latest
+    container_name: appflowy_gotrue
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_env
+      GOTRUE_DB_DRIVER: postgres
+      DATABASE_URL: postgres://appflowy:appflowy@appflowy_db:5432/appflowy?search_path=auth
+      PORT: 9999
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --fail http://127.0.0.1:9999/health || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    depends_on:
+      appflowy_db: *healthy
+    networks: [appflowy, newt]
+    labels:
+      pangolin.public-resources.appflowy.name: appflowy
+      pangolin.public-resources.appflowy.full-domain: appflowy.chenn.dev
+      pangolin.public-resources.appflowy.mode: http
+
+      homepage.group: Project Management
+      homepage.name: Appflowy
+      homepage.icon: appflowy.png
+      homepage.href: https://appflowy.chenn.dev
+      homepage.description: Linear Clone
+
+      pangolin.public-resources.appflowy.targets[0].method: http
+      pangolin.public-resources.appflowy.targets[0].path-match: prefix
+      pangolin.public-resources.appflowy.targets[0].rewrite-match: stripPrefix
+      pangolin.public-resources.appflowy.targets[0].path: '/gotrue/'
+      pangolin.public-resources.appflowy.targets[0].port: 9999
+      pangolin.public-resources.appflowy.targets[0].priority: 100
+
+  appflowy_cloud:
+    profiles: [appflowy]
+    image: appflowyinc/appflowy_cloud:latest
+    container_name: appflowy_cloud
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_env
+      APPFLOWY_GOTRUE_BASE_URL: http://appflowy_gotrue:9999
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --fail http://127.0.0.1:8000/api/health || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    depends_on:
+      appflowy_gotrue: *healthy
+      appflowy_redis: *healthy
+      appflowy-s3: *healthy
+    networks: [appflowy, newt]
+    labels:
+      pangolin.public-resources.appflowy.targets[1].method: http
+      pangolin.public-resources.appflowy.targets[1].path-match: prefix
+      pangolin.public-resources.appflowy.targets[1].path: /ws
+      pangolin.public-resources.appflowy.targets[1].port: 8000
+      pangolin.public-resources.appflowy.targets[1].priority: 90
+
+      pangolin.public-resources.appflowy.targets[2].method: http
+      pangolin.public-resources.appflowy.targets[2].path-match: prefix
+      pangolin.public-resources.appflowy.targets[2].path: /api
+      pangolin.public-resources.appflowy.targets[2].port: 8000
+      pangolin.public-resources.appflowy.targets[2].priority: 80
+
+  appflowy_admin:
+    profiles: [appflowy]
+    image: appflowyinc/admin_frontend:latest
+    container_name: appflowy_admin
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_env
+      APPFLOWY_GOTRUE_BASE_URL: https://appflowy.chenn.dev/gotrue
+    depends_on:
+      appflowy_cloud: *healthy
+      appflowy_gotrue: *healthy
+    networks: [appflowy, newt]
+    labels:
+      pangolin.public-resources.appflowy.targets[3].method: http
+      pangolin.public-resources.appflowy.targets[3].path-match: prefix
+      pangolin.public-resources.appflowy.targets[3].path: /console
+      pangolin.public-resources.appflowy.targets[3].port: 3000
+      pangolin.public-resources.appflowy.targets[3].priority: 70
+
+  appflowy_web:
+    profiles: [appflowy]
+    image: appflowyinc/appflowy_web:latest
+    container_name: appflowy_web
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_env
+      APPFLOWY_GOTRUE_BASE_URL: https://appflowy.chenn.dev/gotrue
+    depends_on:
+      appflowy_cloud: *healthy
+    networks: [appflowy, newt]
+    labels:
+      pangolin.public-resources.appflowy.targets[5].method: http
+      pangolin.public-resources.appflowy.targets[5].path-match: prefix
+      pangolin.public-resources.appflowy.targets[5].path: /
+      pangolin.public-resources.appflowy.targets[5].port: 80
+      pangolin.public-resources.appflowy.targets[5].priority: 1
+
+  appflowy_worker:
+    profiles: [appflowy]
+    image: appflowyinc/appflowy_worker:latest
+    container_name: appflowy_worker
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_env
+    depends_on:
+      appflowy_cloud: *healthy
+    networks: [appflowy]
+
+  appflowy_db:
+    profiles: [appflowy]
+    image: pgvector/pgvector:pg18
+    container_name: appflowy_db
+    restart: unless-stopped
+    environment:
+      <<: *appflowy_db
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - $DATA/appflowy/db:/var/lib/postgresql
+    networks: [appflowy]
+
+  appflowy_redis:
+    profiles: [appflowy]
+    image: valkey/valkey:alpine
+    container_name: appflowy_redis
+    restart: unless-stopped
+    healthcheck:
+      test: valkey-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    networks: [appflowy]
+
+  appflowy-s3:
+    profiles: [appflowy]
+    image: dxflrs/garage:v2.3.0
+    container_name: appflowy_s3
+    restart: unless-stopped
+    command: /garage server --single-node --default-bucket
+    configs:
+      - source: appflowy_s3
+        target: /etc/garage.toml
+    environment:
+      <<: *appflowy_s3
+    volumes:
+      - $DATA/appflowy/s3/data:/var/lib/garage/data
+      - $DATA/appflowy/s3/meta:/var/lib/garage/meta
+    healthcheck:
+      test: ['CMD', '/garage', 'stats', '-a']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks: [appflowy, newt]
+    labels:
+      pangolin.public-resources.appflowy.targets[4].method: http
+      pangolin.public-resources.appflowy.targets[4].path-match: prefix
+      pangolin.public-resources.appflowy.targets[4].rewrite-match: stripPrefix
+      pangolin.public-resources.appflowy.targets[4].path: /s3
+      pangolin.public-resources.appflowy.targets[4].port: 9000
+      pangolin.public-resources.appflowy.targets[4].priority: 60
+
+networks:
+  appflowy:

@@ -1,0 +1,21 @@
+---
+services:
+  moocup:
+    profiles: [moocup]
+    image: jellydeck/moocup:latest
+    container_name: moocup
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      homepage.group: Photos
+      homepage.name: Moocup
+      homepage.icon: https://github.com/jellydeck/moocup/raw/refs/heads/main/static/favicon.svg
+      homepage.href: https://moocup.chenn.dev
+      homepage.description: Screenshot Beautifier
+
+      pangolin.public-resources.moocup.name: moocup
+      pangolin.public-resources.moocup.full-domain: moocup.chenn.dev
+      pangolin.public-resources.moocup.mode: http
+      pangolin.public-resources.moocup.targets[0].method: http
+      pangolin.public-resources.moocup.targets[0].port: 80
+      pangolin.public-resources.moocup.policy: member

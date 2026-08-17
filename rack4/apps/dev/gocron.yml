@@ -40,7 +40,7 @@ services:
       homepage.group: Development Tools
       homepage.name: Go Cron
       homepage.icon: chronograf.png
-      homepage.href: https://cron.henn.dev
+      homepage.href: https://gocron.chenn.dev
       homepage.description: Cron UI
 
       pangolin.public-resources.gocron.name: gocron
