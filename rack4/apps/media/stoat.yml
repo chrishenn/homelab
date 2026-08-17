@@ -241,10 +241,10 @@ services:
     image: ghcr.io/stoatchat/livekit-server:v1.9.13
     container_name: stoat_livekit
     restart: unless-stopped
+    command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
     configs:
       - source: stoat_livekit
         target: /etc/livekit.yml
-    command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
     networks: [stoat, newt]
     labels:
       pangolin.public-resources.tcp-7881.name: tcp-7881

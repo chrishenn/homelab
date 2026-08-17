@@ -1,0 +1,532 @@
+---
+# https://fluxer.chenn.dev/admin
+configs:
+  fluxer_caddy:
+    content: |
+      {
+      	servers {
+      		trusted_proxies static private_ranges
+      	}
+      }
+      :80 {
+      	encode zstd gzip
+
+      	handle_path /api/* {
+      		reverse_proxy fluxer_api:8080
+      	}
+
+      	handle /gateway {
+      		rewrite * /
+      		reverse_proxy fluxer_gateway:8080
+      	}
+
+      	handle_path /gateway/* {
+      		reverse_proxy fluxer_gateway:8080
+      	}
+
+      	handle_path /media/* {
+      		reverse_proxy fluxer_media-proxy:8080
+      	}
+
+      	handle_path /livekit/* {
+      		reverse_proxy fluxer_livekit:7880
+      	}
+
+      	handle /admin {
+      		rewrite * /
+      		reverse_proxy fluxer_admin:8080
+      	}
+
+      	handle_path /admin/* {
+      		reverse_proxy fluxer_admin:8080
+      	}
+
+      	@staticAssets path /web/* /emoji/* /libs/* /avatars/* /badges/* /desktop/* /embeds/*
+      	handle @staticAssets {
+      		reverse_proxy fluxer_static-proxy:8080
+      	}
+
+      	handle /.well-known/fluxer {
+      		reverse_proxy fluxer_api:8080
+      	}
+
+      	handle {
+      		reverse_proxy fluxer_app-proxy:8080
+      	}
+      }
+
+      :8088 {
+      	handle_path /api/* {
+      		reverse_proxy fluxer_api:8080
+      	}
+      }
+
+  fluxer_livekit:
+    #    content: |
+    #      port: 7880
+    #      log_level: info
+    #      rtc:
+    #        tcp_port: 7881
+    #        udp_port: 7882
+    #        use_external_ip: true
+    #        stun_servers:
+    #          - stun.l.google.com:19302
+    #          - stun1.l.google.com:19302
+    #      keys:
+    #        fluxer: 08a992abf8ecd2b5a12b95bd868a0fb1cba6328dd3d5fbea4bf5dbef9de8f5a2
+    #      webhook:
+    #        api_key: fluxer
+    #        urls:
+    #          - http://fluxer_api:8080/webhooks/livekit
+
+    content: |
+      port: 7880
+      log_level: info
+      rtc:
+        use_external_ip: false
+        tcp_port: 7881
+        udp_port: 7882
+        stun_servers:
+          - stun.l.google.com:19302
+          - stun1.l.google.com:19302
+      keys:
+        fluxer: 08a992abf8ecd2b5a12b95bd868a0fb1cba6328dd3d5fbea4bf5dbef9de8f5a2
+      webhook:
+        api_key: fluxer
+        urls:
+          - http://fluxer_api:8080/webhooks/livekit
+
+x-fluxer_env: &fluxer_env
+  FLUXER_ENV: production
+  NODE_ENV: production
+  FLUXER_SELF_HOSTED: true
+  FLUXER_BASE_DOMAIN: fluxer.chenn.dev
+  FLUXER_PUBLIC_SCHEME: https
+  FLUXER_PUBLIC_PORT: 80
+  FLUXER_TRUST_CLIENT_IP_HEADER: true
+  FLUXER_CLIENT_IP_HEADER_NAME: x-forwarded-for
+
+  FLUXER_DATABASE_BACKEND: postgres
+  FLUXER_POSTGRES_HOST: fluxer_db
+  FLUXER_POSTGRES_PORT: 5432
+  FLUXER_POSTGRES_DATABASE: fluxer
+  FLUXER_POSTGRES_USERNAME: fluxer
+  FLUXER_POSTGRES_PASSWORD: fluxer
+  FLUXER_POSTGRES_SSL: false
+
+  FLUXER_KV_URL: redis://fluxer_redis:6379/0
+  FLUXER_NATS_URL: nats://fluxer_nats:4222
+  FLUXER_NATS_JETSTREAM_URL: nats://fluxer_nats:4222
+  FLUXER_SVC_NATS_URL: nats://fluxer_nats:4222
+  FLUXER_SVC_SHARD_COUNT: 1
+
+  FLUXER_SEARCH_ENGINE: meilisearch
+  FLUXER_SEARCH_URL: http://fluxer_meili:7700
+  FLUXER_SEARCH_API_KEY: fluxer
+
+  FLUXER_S3_ENDPOINT: http://fluxer-s3:8333
+  FLUXER_S3_PUBLIC_ENDPOINT: http://fluxer-s3:8333
+  FLUXER_S3_REGION: us-east-1
+  FLUXER_S3_ACCESS_KEY_ID: fluxer
+  FLUXER_S3_SECRET_ACCESS_KEY: 4a2f88e6904bc32d22b8e0a276a54517a2cddddfdf0aa8b59da3babf9c3ba185
+  FLUXER_S3_FORCE_PATH_STYLE: true
+  FLUXER_S3_BUCKET_CDN: fluxer
+  FLUXER_S3_BUCKET_UPLOADS: fluxer-uploads
+  FLUXER_S3_BUCKET_DOWNLOADS: fluxer-downloads
+  FLUXER_S3_BUCKET_REPORTS: fluxer-reports
+  FLUXER_S3_BUCKET_HARVESTS: fluxer-harvests
+  AWS_ACCESS_KEY_ID: fluxer
+  AWS_SECRET_ACCESS_KEY: 4a2f88e6904bc32d22b8e0a276a54517a2cddddfdf0aa8b59da3babf9c3ba185
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_EC2_METADATA_DISABLED: true
+
+  FLUXER_LIVEKIT_ENABLED: true
+  FLUXER_LIVEKIT_API_KEY: fluxer
+  FLUXER_LIVEKIT_API_SECRET: 08a992abf8ecd2b5a12b95bd868a0fb1cba6328dd3d5fbea4bf5dbef9de8f5a2
+  FLUXER_LIVEKIT_WEBHOOK_URL: http://fluxer_api:8080/webhooks/livekit
+  FLUXER_LIVEKIT_DEFAULT_REGION: '{"id":"default","name":"Default","emoji":"🌍","latitude":0,"longitude":0}'
+
+  FLUXER_EMAIL_ENABLED: true
+  FLUXER_EMAIL_PROVIDER: smtp
+  FLUXER_EMAIL_FROM_EMAIL: ${SMTP_USER}
+  FLUXER_EMAIL_FROM_NAME: Chicken Fluxer
+  FLUXER_EMAIL_SMTP_HOST: ${SMTP_HOST}
+  FLUXER_EMAIL_SMTP_PORT: ${SMTP_PORT}
+  FLUXER_EMAIL_SMTP_USERNAME: ${SMTP_USER}
+  FLUXER_EMAIL_SMTP_PASSWORD: ${SMTP_PASS}
+  FLUXER_EMAIL_SMTP_SECURE: true
+
+  FLUXER_SMS_ENABLED: false
+  FLUXER_CAPTCHA_ENABLED: false
+  FLUXER_CAPTCHA_PROVIDER: none
+  FLUXER_STRIPE_ENABLED: false
+  FLUXER_NCMEC_ENABLED: false
+  FLUXER_CLAMAV_ENABLED: false
+  FLUXER_DISCOVERY_ENABLED: false
+
+  FLUXER_SUDO_MODE_SECRET: 0369c8db000cdf9385f509b8b1cdec70b23bbdd58e27de15e3f6cc7d11dd1a24
+  FLUXER_CONNECTION_INITIATION_SECRET: 9fa102002d1aed1968a5402efd5be620d0782bceb916796e2cc7bbd387bf50ab
+  FLUXER_SSO_ALLOW_PRIVATE_ADDRESSES: false
+  FLUXER_VAPID_PUBLIC_KEY: BBaOo20uRqRD-H3blnyTRZ_1xuOS-AxDnkGfxL8g6Pl9BeQXzmBB_repZCQ1s6o_Cz8fulZenL-p9sHcmJqM9Ms
+  FLUXER_VAPID_PRIVATE_KEY: kFXWwNEx0olJZHwOWYd3T0RKSh3w03_MdMg2R3D8kQw
+  FLUXER_VAPID_EMAIL: $SMTP_USER
+  FLUXER_PASSKEY_RP_ID: fluxer.chenn.dev
+  FLUXER_PASSKEY_RP_NAME: Fluxer
+  FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: https://fluxer.chenn.dev
+  FLUXER_GATEWAY_RPC_AUTH_TOKEN: 8c7a6fc2033a785462427f124e0a64fd3c1f2f23093f951e8da9c5500fc50fe0
+  FLUXER_MEDIA_PROXY_SECRET_KEY: 677715aa08241a14c2272f2d8a0e0dbc64f72ef6a96574ffaa623328aec7375f
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: Njc3NzE1YWEwODI0MWExNGMyMjcyZjJkOGEwZTBkYmM2NGY3MmVmNmE5NjU3NGZmYWE2MjMzMjhhZWM3Mzc1Zgo=
+  FLUXER_ADMIN_SECRET_KEY_BASE: d9ee92a894eba829df9e26b78436e301d336c17ca530aadfd67a1394ee7b6dff
+  FLUXER_ADMIN_OAUTH_CLIENT_SECRET: e3a6c3859943228f37d6d3f58cbbe9b87262fc67cd3f854d1dcb95aeeb6c422d
+
+  FLUXER_INTERNAL_API_ENDPOINT: http://fluxer_api:8080
+  FLUXER_INTERNAL_GATEWAY_ENDPOINT: http://fluxer_gateway:8080
+  FLUXER_INTERNAL_MEDIA_PROXY_ENDPOINT: http://fluxer_media-proxy:8080
+  FLUXER_MARKETING_ENDPOINT: https://fluxer.chenn.dev
+  FLUXER_MEDIA_PROXY_ENDPOINT: http://fluxer_media:8080
+  FLUXER_MEDIA_ENDPOINT: https://fluxer.chenn.dev/media
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: https://fluxer.chenn.dev/media
+
+x-fluxer_common: &fluxer_common
+  profiles: [fluxer]
+  restart: unless-stopped
+  networks: [fluxer]
+
+x-fluxer_common_once: &fluxer_common_once
+  profiles: [fluxer]
+  restart: no
+  networks: [fluxer]
+
+x-fluxer_common_newt: &fluxer_common_newt
+  profiles: [fluxer]
+  restart: unless-stopped
+  networks: [fluxer, newt]
+
+services:
+  fluxer_caddy:
+    image: caddy:2.10-alpine
+    <<: *fluxer_common_newt
+    configs:
+      - source: fluxer_caddy
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - $DATA/fluxer/caddy/data:/data
+      - $DATA/fluxer/caddy/config:/config
+    labels:
+      pangolin.public-resources.fluxer.name: fluxer
+      pangolin.public-resources.fluxer.full-domain: fluxer.chenn.dev
+      pangolin.public-resources.fluxer.mode: http
+      pangolin.public-resources.fluxer.targets[0].method: http
+      pangolin.public-resources.fluxer.targets[0].port: 80
+
+  fluxer_db:
+    image: postgres:18-alpine
+    <<: *fluxer_common
+    environment:
+      POSTGRES_DB: fluxer
+      POSTGRES_USER: fluxer
+      POSTGRES_PASSWORD: fluxer
+    volumes:
+      - $DATA/fluxer/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  fluxer_redis:
+    image: valkey/valkey:alpine
+    <<: *fluxer_common
+    command: ['valkey-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  fluxer_nats:
+    image: nats:2.14-alpine
+    <<: *fluxer_common
+    command: ['-js', '-sd', '/data', '-m', '8222']
+    volumes:
+      - $DATA/fluxer/nats:/data
+
+  fluxer_meili:
+    image: getmeili/meilisearch:v1.12
+    <<: *fluxer_common
+    environment:
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: true
+      MEILI_MASTER_KEY: dcb85f42ae4494b66366f00d238c1563fd42dd8d5c19c18e3e97cf6d51ee4c27
+    volumes:
+      - $DATA/fluxer/meili:/meili_data
+
+  fluxer-s3:
+    image: chrislusf/seaweedfs:4.34
+    <<: *fluxer_common
+    command: ['server', '-s3', '-dir=/data']
+    volumes:
+      - $DATA/fluxer/s3:/data
+
+  fluxer-s3-init:
+    image: chrislusf/seaweedfs:4.34
+    <<: *fluxer_common_once
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >
+        buckets="fluxer fluxer-uploads fluxer-downloads fluxer-reports fluxer-harvests";
+        missing="$$buckets";
+        for attempt in $$(seq 1 60); do
+          if ! nc -z fluxer-s3 9333 2>/dev/null; then
+            sleep 2;
+            continue;
+          fi;
+          listed=$$(echo "s3.bucket.list" | timeout 10 weed shell -master=fluxer-s3:9333 2>&1);
+          missing="";
+          for b in $$buckets; do
+            echo "$$listed" | grep -q "^[[:space:]]*$$b[[:space:]]" || missing="$${missing:+$$missing }$$b";
+          done;
+          if [ -z "$$missing" ]; then
+            echo "buckets ready";
+            exit 0;
+          fi;
+          for b in $$missing; do
+            echo "s3.bucket.create -name $$b" | timeout 10 weed shell -master=fluxer-s3:9333 >/dev/null 2>&1;
+          done;
+          sleep 2;
+        done;
+        echo "fluxer-s3-init could not verify buckets: $$missing" >&2;
+        exit 1;
+
+  fluxer_livekit:
+    image: livekit/livekit-server:v1.12.0
+    <<: *fluxer_common_newt
+    command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
+    configs:
+      - source: fluxer_livekit
+        target: /etc/livekit.yaml
+    labels:
+      pangolin.public-resources.tcp-7881.name: tcp-7881
+      pangolin.public-resources.tcp-7881.mode: tcp
+      pangolin.public-resources.tcp-7881.proxy-port: 7881
+      pangolin.public-resources.tcp-7881.targets[0].port: 7881
+
+      pangolin.public-resources.udp-7882.name: udp-7882
+      pangolin.public-resources.udp-7882.mode: udp
+      pangolin.public-resources.udp-7882.proxy-port: 7882
+      pangolin.public-resources.udp-7882.targets[0].port: 7882
+
+  fluxer_api:
+    image: ghcr.io/fluxerapp/fluxer-api:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_API_PORT: 8080
+      FLUXER_API_PRESIGNED_ATTACHMENT_UPLOADS_ENABLED: true
+    healthcheck:
+      test: ['CMD-SHELL', 'node -e "fetch(''http://127.0.0.1:8080/_health'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+    depends_on:
+      fluxer_db: {condition: service_healthy}
+      fluxer_redis: {condition: service_healthy}
+      fluxer_nats: {condition: service_started}
+      fluxer_meili: {condition: service_started}
+      fluxer-s3-init: {condition: service_completed_successfully}
+      fluxer_gifs: {condition: service_started}
+      fluxer_gifs-shard: {condition: service_started}
+      fluxer_snowflakes: {condition: service_started}
+      fluxer_snowflakes-shard: {condition: service_started}
+      fluxer_messages: {condition: service_started}
+      fluxer_messages-shard: {condition: service_started}
+      fluxer_users: {condition: service_started}
+      fluxer_users-shard: {condition: service_started}
+
+  fluxer_worker:
+    image: ghcr.io/fluxerapp/fluxer-api:v1
+    <<: *fluxer_common
+    working_dir: /usr/src/app/fluxer_api
+    command: ['./node_modules/.bin/tsx', 'src/WorkerEntrypoint.ts']
+    environment:
+      <<: *fluxer_env
+      FLUXER_API_WORKER_MODE: all_lanes
+      FLUXER_API_WORKER_ENABLE_CRON_SCHEDULER: true
+      FLUXER_API_WORKER_ENABLE_VOICE_RECONCILIATION: true
+    depends_on:
+      fluxer_db: {condition: service_healthy}
+      fluxer_redis: {condition: service_healthy}
+      fluxer_nats: {condition: service_started}
+      fluxer-s3-init: {condition: service_completed_successfully}
+      fluxer_snowflakes-shard: {condition: service_started}
+      fluxer_messages-shard: {condition: service_started}
+      fluxer_users-shard: {condition: service_started}
+
+  fluxer_gateway:
+    image: ghcr.io/fluxerapp/fluxer-gateway:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_GATEWAY_PORT: 8080
+      FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: https://fluxer.chenn.dev/media
+      FLUXER_GATEWAY_STATIC_CDN_ENDPOINT: https://fluxer.chenn.dev
+      FLUXER_GATEWAY_LOGGER_LEVEL: info
+    depends_on:
+      fluxer_nats: {condition: service_started}
+      fluxer_redis: {condition: service_healthy}
+
+  fluxer_media:
+    <<: *fluxer_common
+    image: ghcr.io/fluxerapp/fluxer-media-proxy:v1
+    environment:
+      <<: *fluxer_env
+      FLUXER_MEDIA_PROXY_HOST: 0.0.0.0
+      FLUXER_MEDIA_PROXY_PORT: 8080
+      FLUXER_MEDIA_PROXY_MODE: upload
+      FLUXER_MEDIA_PROXY_STORAGE_BACKEND: s3
+    healthcheck:
+      disable: true
+    depends_on:
+      fluxer-s3-init: {condition: service_completed_successfully}
+      fluxer_nats: {condition: service_started}
+
+  fluxer_static-proxy:
+    image: ghcr.io/fluxerapp/fluxer-static:v1
+    <<: *fluxer_common
+
+  fluxer_app-proxy:
+    image: ghcr.io/fluxerapp/fluxer-app-proxy-self-hosted:v1
+    <<: *fluxer_common
+    environment:
+      FLUXER_APP_PROXY_HOST: 0.0.0.0
+      FLUXER_APP_PROXY_PORT: 8080
+      DISCOVERY_UPSTREAM_URL: http://fluxer_caddy:8088/api/.well-known/fluxer
+      PUBLIC_BOOTSTRAP_API_ENDPOINT: /api
+      PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/api
+    depends_on:
+      fluxer_api: {condition: service_healthy}
+      fluxer_caddy: {condition: service_started}
+      fluxer_db: {condition: service_healthy}
+
+  fluxer_snowflakes:
+    image: ghcr.io/fluxerapp/fluxer-snowflakes:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_snowflakes-shard:
+    image: ghcr.io/fluxerapp/fluxer-snowflakes:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: '0'
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_users:
+    image: ghcr.io/fluxerapp/fluxer-users:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_users-shard:
+    image: ghcr.io/fluxerapp/fluxer-users:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: '0'
+    depends_on:
+      fluxer_nats: {condition: service_started}
+      fluxer_db: {condition: service_healthy}
+
+  fluxer_gifs:
+    image: ghcr.io/fluxerapp/fluxer-gifs:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_NAME: gifs
+      FLUXER_SVC_MODE: router
+      FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/media
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_gifs-shard:
+    image: ghcr.io/fluxerapp/fluxer-gifs:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_NAME: gifs
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: '0'
+      FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/media
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_messages:
+    image: ghcr.io/fluxerapp/fluxer-messages:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_messages-shard:
+    image: ghcr.io/fluxerapp/fluxer-messages:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: '0'
+    depends_on:
+      fluxer_nats: {condition: service_started}
+      fluxer_db: {condition: service_healthy}
+
+  fluxer_unfurl:
+    image: ghcr.io/fluxerapp/fluxer-unfurl:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_unfurl-shard:
+    image: ghcr.io/fluxerapp/fluxer-unfurl:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: '0'
+    depends_on:
+      fluxer_nats: {condition: service_started}
+
+  fluxer_admin:
+    image: ghcr.io/fluxerapp/fluxer-admin:v1
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_ADMIN_HOST: 0.0.0.0
+      FLUXER_ADMIN_PORT: 8080
+      FLUXER_ADMIN_BASE_PATH: /admin
+      FLUXER_API_ENDPOINT: http://fluxer_api:8080
+      FLUXER_ADMIN_ENDPOINT: https://fluxer.chenn.dev/admin
+      FLUXER_APP_ENDPOINT: https://fluxer.chenn.dev
+      FLUXER_MEDIA_ENDPOINT: https://fluxer.chenn.dev/media
+      FLUXER_STATIC_CDN_ENDPOINT: https://fluxer.chenn.dev
+      FLUXER_ADMIN_OAUTH_REDIRECT_URI: https://fluxer.chenn.dev/admin/oauth2_callback
+    depends_on:
+      fluxer_api: {condition: service_healthy}
+
+networks:
+  fluxer:

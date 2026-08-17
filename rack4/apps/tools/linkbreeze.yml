@@ -1,5 +1,6 @@
 ---
 # sudo chown -R 1000:1000 $DATA/linkbreeze
+# https://linkbreeze.chenn.dev/dashboard
 services:
   linkbreeze:
     profiles: [linkbreeze]

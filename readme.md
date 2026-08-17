@@ -58,15 +58,31 @@ when moving, your public home ip will need to change in the following places:
 
 # todo
 
-- [ ] application {dev, test, deploy}: {gpu compute, gpu gui, cli, tui, web server, web client}: {linux, windows, macos}
-    - [ ] general compute
-        - [x] k8s linux nodes: talos + pulumi
-        - [ ] k8s windows nodes
-    - [ ] gui desktop
-        - [ ] kubevirt
-    - rejected for now
-        - proxmox
-        - canonical maas
-        - ansible
-        - terraform (kinda. pulumi can use terraform providers)
-    - [ ] gitops solution
+- application
+    - x {dev, test, deploy, monitor}
+    - x {gpu compute, gpu gui, cli, tui, web server, web client}
+    - x {linux, windows, macos, ios, android}
+
+- [ ] general compute
+    - [x] k8s linux nodes: talos + pulumi
+    - [ ] k8s windows nodes
+- [ ] gui desktop
+    - [ ] kubevirt?
+- [ ] gitops
+    - flux
+    - argo
+- rejected for now
+    - proxmox
+    - canonical maas
+    - ansible
+    - terraform (kinda. pulumi can use terraform providers)
+
+- [x] stoat chat
+- [x] netbootxyz
+- [x] zot
+    - [ ] enable mTLS
+- [ ] PXE boot windows
+    - [ ] iventoy?
+    - [ ] netbootxyz?
+- [ ] grafana + loki
+- [ ] fluxer

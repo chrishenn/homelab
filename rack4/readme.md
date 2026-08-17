@@ -1,25 +1,9 @@
-# Rack4 Docker Compose Stack
+# Rack4 Docker Compose
 
 Deploys to machine: rack4
 
 You have to clone+pull the repo to the remote machine, to sync config files via github. Is it great? No. Do I want to
 deal with a more complicated setup? Also no.
-
----
-
-# todo
-
-- [x] netbootxyz
-- [x] use a docker registry that requires no manual config (zot. done!)
-    - [ ] enable mTLS
-- [ ] a way to PXE boot windows
-    - [ ] iventoy?
-    - [ ] netbootxyz?
-- [ ] grafana + loki
-- [ ] fluxer server (not quite ready yet)
-    - https://fluxer.app/
-- [ ] stoat chat server (not quite ready yet)
-    - https://stoat.chat/
 
 ---
 
@@ -57,13 +41,7 @@ j pullup
 
 ---
 
-# ref
-
-- https://github.com/Haxxnet/Compose-Examples/blob/main/examples/traefik/docker-compose.yml
-- https://github.com/juftin/homelab/blob/main/docker-compose.yaml
-- https://github.com/bluepuma77/traefik-best-practice
-- https://github.com/easyselfhost/self-host/blob/main/apps/webtop/docker-compose.yml
-- https://devhints.io/docker-compose
+# dev
 
 generate secrets
 
