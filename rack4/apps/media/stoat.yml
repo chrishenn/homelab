@@ -1,4 +1,7 @@
 ---
+# j stoat_invite
+# considering polish, stoat doesn't have it. Nor do I expect device clients anytime soon.
+# however, the video playback does work flawlessly - as long as videos are under 20 MB (should probably change that limit)
 configs:
   stoat_toml:
     content: |
@@ -144,17 +147,39 @@ x-stoat_mq: &stoat_mq
   RABBITMQ_DEFAULT_PASS: rabbitpass
   SERVER_ADDITIONAL_ERL_ARGS: '+S 1:1'
 
-x-stoat_s3: &stoat_s3
+x-stoat_s3_env: &stoat_s3_env
   RUSTFS_ACCESS_KEY: minioautumn
   RUSTFS_SECRET_KEY: minioautumn
   RUSTFS_SERVER_DOMAINS: stoat-s3
 
+x-stoat_common: &stoat_common
+  profiles: [stoat]
+  restart: unless-stopped
+  networks: [stoat]
+
+x-stoat_once: &stoat_once
+  profiles: [stoat]
+  restart: no
+  networks: [stoat]
+
+x-stoat_newt: &stoat_newt
+  profiles: [stoat]
+  restart: unless-stopped
+  networks: [stoat, newt]
+
+x-stoat_s3: &stoat_s3
+  profiles: [stoat]
+  restart: unless-stopped
+  networks:
+    stoat:
+      aliases:
+        - revolt-uploads.stoat-s3
+
 services:
   stoat_caddy:
-    profiles: [stoat]
     image: caddy
     container_name: stoat_caddy
-    restart: unless-stopped
+    <<: *stoat_newt
     environment:
       <<: *stoat_web
     configs:
@@ -163,7 +188,6 @@ services:
     volumes:
       - $DATA/stoat/caddy-data:/data
       - $DATA/stoat/caddy-config:/config
-    networks: [stoat, newt]
     labels:
       homepage.group: General Media
       homepage.name: Stoat
@@ -178,74 +202,62 @@ services:
       pangolin.public-resources.stoat.targets[0].port: 80
 
   stoat_web:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/for-web:c4a9ac2
     container_name: stoat_web
-    restart: unless-stopped
+    <<: *stoat_common
     environment:
       <<: *stoat_web
-    networks: [stoat]
 
   stoat_api:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/api:v0.13.7
     container_name: stoat_api
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_events:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/events:v0.13.7
     container_name: stoat_events
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_autumn:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/file-server:v0.13.7
     container_name: stoat_autumn
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_january:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/proxy:v0.13.7
-    container_name: stoat_january
     restart: unless-stopped
+    container_name: stoat_january
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_gifbox:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/gifbox:v0.13.7
     container_name: stoat_gifbox
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
+  # todo: steal fluxer's livekit setup?
   stoat_livekit:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/livekit-server:v1.9.13
     container_name: stoat_livekit
-    restart: unless-stopped
+    <<: *stoat_newt
     command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
     configs:
       - source: stoat_livekit
         target: /etc/livekit.yml
-    networks: [stoat, newt]
     labels:
       pangolin.public-resources.tcp-7881.name: tcp-7881
       pangolin.public-resources.tcp-7881.mode: tcp
@@ -417,40 +429,33 @@ services:
       pangolin.public-resources.udp-50039.targets[0].port: 50039
 
   stoat_voice:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/voice-ingress:v0.13.7
     container_name: stoat_voice
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_crond:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/crond:v0.13.7
     container_name: stoat_crond
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_pushd:
-    profiles: [stoat]
     image: ghcr.io/stoatchat/pushd:v0.13.7
     container_name: stoat_pushd
-    restart: unless-stopped
+    <<: *stoat_common
     configs:
       - source: stoat_toml
         target: /Revolt.toml
-    networks: [stoat]
 
   stoat_db:
-    profiles: [stoat]
     image: mongo:8
     container_name: stoat_db
-    restart: unless-stopped
+    <<: *stoat_common
     environment:
       GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
     volumes:
@@ -461,34 +466,28 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
-    networks: [stoat]
 
   stoat_redis:
-    profiles: [stoat]
     image: valkey/valkey:alpine
     container_name: stoat_redis
-    restart: unless-stopped
-    networks: [stoat]
+    <<: *stoat_common
 
   stoat_mq:
-    profiles: [stoat]
     image: rabbitmq:4
     container_name: stoat_mq
-    restart: unless-stopped
+    <<: *stoat_common
     environment:
       <<: *stoat_mq
     volumes:
       - $DATA/stoat/rabbit:/var/lib/rabbitmq
-    networks: [stoat]
 
   stoat-s3:
-    profiles: [stoat]
     image: rustfs/rustfs:latest
     container_name: stoat-s3
-    restart: unless-stopped
+    <<: *stoat_s3
     command: /data
     environment:
-      <<: *stoat_s3
+      <<: *stoat_s3_env
     volumes:
       - $DATA/stoat/s3:/data
     healthcheck:
@@ -498,42 +497,37 @@ services:
       start_period: 15s
       interval: 5s
     depends_on:
-      stoat-s3_perm:
-        condition: service_completed_successfully
-    networks:
-      stoat:
-        aliases:
-          - revolt-uploads.stoat-s3
+      stoat-s3-perm: {condition: service_completed_successfully}
 
-  stoat-s3_perm:
-    profiles: [stoat]
+  stoat-s3-perm:
     image: alpine
-    container_name: stoat-s3_perm
-    restart: no
+    container_name: stoat-s3-perm
+    <<: *stoat_once
     user: root
     volumes:
       - $DATA/stoat/s3:/data
     command: chown -R 10001:10001 /data
 
-  stoat-s3_bucket:
-    profiles: [stoat]
+  stoat-s3-init:
     image: minio/mc
-    container_name: stoat-s3_bucket
-    restart: no
+    container_name: stoat-s3-init
+    <<: *stoat_once
+    environment:
+      S3_ENDPOINT: http://stoat-s3:9000
+      S3_ACCESS_KEY: minioautumn
+      S3_SECRET_KEY: minioautumn
     entrypoint:
       - /bin/sh
       - -c
       - |
         set -e
-        until mc alias set rustfs http://stoat-s3:9000 minioautumn minioautumn; do
-          echo 'waiting to connect to stoat-s3'
+        until mc alias set fs $$S3_ENDPOINT $$S3_ACCESS_KEY $$S3_SECRET_KEY; do
+          echo 'waiting to connect to s3 host'
           sleep 2
         done
-        mc mb rustfs/revolt-uploads --ignore-existing
+        mc mb fs/revolt-uploads --ignore-existing
     depends_on:
-      stoat-s3:
-        condition: service_healthy
-    networks: [stoat]
+      stoat-s3: {condition: service_healthy}
 
 networks:
   stoat:
