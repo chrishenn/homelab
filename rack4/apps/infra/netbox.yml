@@ -129,12 +129,9 @@ services:
     profiles: [netbox]
     image: valkey/valkey:alpine
     container_name: netbox_redis
-    command:
-      - sh
-      - -c
-      - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
+    command: valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
     healthcheck: &redis-healthcheck
-      test: '[ $$(valkey-cli --pass "$${REDIS_PASSWORD}" ping) = ''PONG'' ]'
+      test: valkey-cli --pass "$${REDIS_PASSWORD}" ping
       start_period: 5s
       timeout: 3s
       interval: 1s
@@ -149,10 +146,7 @@ services:
     profiles: [netbox]
     image: valkey/valkey:alpine
     container_name: netbox_redis_cache
-    command:
-      - sh
-      - -c
-      - valkey-server --requirepass $$REDIS_PASSWORD
+    command: valkey-server --requirepass $$REDIS_PASSWORD
     healthcheck: *redis-healthcheck
     environment:
       <<: *netbox_env

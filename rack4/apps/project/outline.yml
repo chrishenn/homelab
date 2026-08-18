@@ -95,7 +95,7 @@ services:
     environment:
       <<: *outline_env
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: valkey-cli ping
       interval: 10s
       timeout: 30s
       retries: 3

@@ -103,7 +103,7 @@ services:
     container_name: immich_redis
     restart: unless-stopped
     healthcheck:
-      test: redis-cli ping || exit 1
+      test: valkey-cli ping
     networks: [immich]
 
 networks:

@@ -112,6 +112,9 @@ x-appflowy_env: &appflowy_env
   APPFLOWY_WORKER_DATABASE_NAME: appflowy
   APPFLOWY_WORKER_IMPORT_TICK_INTERVAL: 30
 
+x-healthy: &healthy
+  condition: service_healthy
+
 services:
   appflowy_gotrue:
     profiles: [appflowy]
@@ -130,8 +133,7 @@ services:
       retries: 12
       start_period: 40s
     depends_on:
-      appflowy_db:
-        condition: service_healthy
+      appflowy_db: *healthy
     networks: [appflowy, newt]
     labels:
       pangolin.public-resources.appflowy.name: appflowy
@@ -166,12 +168,9 @@ services:
       retries: 12
       start_period: 30s
     depends_on:
-      appflowy_gotrue:
-        condition: service_healthy
-      appflowy_redis:
-        condition: service_healthy
-      appflowy-s3:
-        condition: service_healthy
+      appflowy_gotrue: *healthy
+      appflowy_redis: *healthy
+      appflowy-s3: *healthy
     networks: [appflowy, newt]
     labels:
       pangolin.public-resources.appflowy.targets[1].method: http
@@ -195,10 +194,8 @@ services:
       <<: *appflowy_env
       APPFLOWY_GOTRUE_BASE_URL: https://appflowy.chenn.dev/gotrue
     depends_on:
-      appflowy_cloud:
-        condition: service_healthy
-      appflowy_gotrue:
-        condition: service_healthy
+      appflowy_cloud: *healthy
+      appflowy_gotrue: *healthy
     networks: [appflowy, newt]
     labels:
       pangolin.public-resources.appflowy.targets[3].method: http
@@ -216,8 +213,7 @@ services:
       <<: *appflowy_env
       APPFLOWY_GOTRUE_BASE_URL: https://appflowy.chenn.dev/gotrue
     depends_on:
-      appflowy_cloud:
-        condition: service_healthy
+      appflowy_cloud: *healthy
     networks: [appflowy, newt]
     labels:
       pangolin.public-resources.appflowy.targets[5].method: http
@@ -234,8 +230,7 @@ services:
     environment:
       <<: *appflowy_env
     depends_on:
-      appflowy_cloud:
-        condition: service_healthy
+      appflowy_cloud: *healthy
     networks: [appflowy]
 
   appflowy_db:
@@ -260,7 +255,7 @@ services:
     container_name: appflowy_redis
     restart: unless-stopped
     healthcheck:
-      test: ['CMD-SHELL', 'valkey-cli ping | grep PONG']
+      test: valkey-cli ping
       interval: 1s
       timeout: 3s
       retries: 5

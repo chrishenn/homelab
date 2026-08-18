@@ -37,6 +37,9 @@ x-sure_env: &sure_env
   OIDC_BUTTON_LABEL: Pocket ID
   OIDC_BUTTON_ICON: key
 
+x-healthy: &healthy
+  condition: service_healthy
+
 services:
   sure:
     profiles: [sure]
@@ -48,10 +51,8 @@ services:
     environment:
       <<: *sure_env
     depends_on:
-      sure_db:
-        condition: service_healthy
-      sure_redis:
-        condition: service_healthy
+      sure_db: *healthy
+      sure_redis: *healthy
     networks: [sure, newt]
     labels:
       homepage.group: General Tools
@@ -78,10 +79,8 @@ services:
     volumes:
       - $DATA/sure/data:/rails/storage
     depends_on:
-      sure_db:
-        condition: service_healthy
-      sure_redis:
-        condition: service_healthy
+      sure_db: *healthy
+      sure_redis: *healthy
     networks: [sure]
 
   sure_db:
@@ -108,7 +107,7 @@ services:
     volumes:
       - $DATA/sure/redis:/data
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

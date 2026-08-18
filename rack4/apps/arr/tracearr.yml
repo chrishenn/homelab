@@ -63,11 +63,11 @@ services:
     image: valkey/valkey:alpine
     container_name: tracearr_redis
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    command: valkey-server --appendonly yes
     volumes:
       - $DATA/tracearr/redis:/data
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

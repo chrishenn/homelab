@@ -111,7 +111,7 @@ _RdService: {
 	volumes: ["\(_store)/redis:/data"]
 }
 #RdHealth: {
-	"test":     "redis-cli ping"
+	"test":     "valkey-cli ping"
 	"interval": "5s"
 	"timeout":  "5s"
 	"retries":  10

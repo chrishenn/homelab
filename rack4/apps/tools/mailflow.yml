@@ -81,11 +81,11 @@ services:
     image: valkey/valkey:alpine
     container_name: mailflow_redis
     restart: unless-stopped
-    command: redis-server --save 60 1 --loglevel warning
+    command: valkey-server --save 60 1 --loglevel warning
     volumes:
       - $DATA/mailflow/redis:/data
     healthcheck:
-      test: ['CMD', 'valkey-cli', 'ping']
+      test: valkey-cli ping
       interval: 10s
       timeout: 3s
       retries: 5

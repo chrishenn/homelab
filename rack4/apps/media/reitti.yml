@@ -68,7 +68,7 @@ services:
     volumes:
       - $DATA/reitti/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: valkey-cli ping
       interval: 10s
       timeout: 5s
       retries: 5

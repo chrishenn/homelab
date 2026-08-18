@@ -109,15 +109,11 @@ services:
     image: valkey/valkey:alpine
     container_name: dawarich_redis
     restart: unless-stopped
-    command: >
-      redis-server
-      --save 900 1
-      --save 300 10
-      --appendonly no
+    command: valkey-server --save 900 1 --save 300 10 --appendonly no
     volumes:
       - $DATA/dawarich/shared:/data
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 5s
       timeout: 5s
       retries: 5

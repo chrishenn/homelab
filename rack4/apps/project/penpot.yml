@@ -107,7 +107,7 @@ services:
     container_name: penpot_redis
     restart: unless-stopped
     healthcheck:
-      test: ['CMD-SHELL', 'valkey-cli ping | grep PONG']
+      test: valkey-cli ping
       interval: 1s
       timeout: 3s
       retries: 5

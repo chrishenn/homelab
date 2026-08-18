@@ -103,6 +103,7 @@ include:
   - apps/media/reitti.yml
   - apps/media/ghost.yml
   - apps/media/jellyglance.yml
+  - apps/media/fluxer.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml

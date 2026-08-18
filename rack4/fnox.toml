@@ -142,6 +142,20 @@ STOAT_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/stoat/encry
 STOAT_LIVEKIT_KEY = { provider = "onepass", value = "op://homelab/stoat/livekit_key" }
 STOAT_LIVEKIT_SECRET = { provider = "onepass", value = "op://homelab/stoat/livekit_secret" }
 
+FLUXER_LIVEKIT = { provider = "onepass", value = "op://homelab/FLUXER/livekit" }
+FLUXER_DB = { provider = "onepass", value = "op://homelab/FLUXER/DB" }
+FLUXER_MEILI = { provider = "onepass", value = "op://homelab/FLUXER/MEILI" }
+FLUXER_S3 = { provider = "onepass", value = "op://homelab/FLUXER/S3" }
+FLUXER_SUDO = { provider = "onepass", value = "op://homelab/FLUXER/SUDO" }
+FLUXER_CONNECTION = { provider = "onepass", value = "op://homelab/FLUXER/CONNECTION" }
+FLUXER_VAPID_PUBLIC = { provider = "onepass", value = "op://homelab/FLUXER/vapid_public" }
+FLUXER_VAPID_PRIVATE = { provider = "onepass", value = "op://homelab/FLUXER/vapid_private" }
+FLUXER_GATEWAY = { provider = "onepass", value = "op://homelab/FLUXER/GATEWAY" }
+FLUXER_MEDIA_SECRET = { provider = "onepass", value = "op://homelab/FLUXER/MEDIA" }
+FLUXER_MEDIA_UPLOAD = { provider = "onepass", value = "op://homelab/FLUXER/UPLOAD" }
+FLUXER_ADMIN_BASE = { provider = "onepass", value = "op://homelab/FLUXER/ADMIN_BASE" }
+FLUXER_ADMIN_OAUTH = { provider = "onepass", value = "op://homelab/FLUXER/ADMIN_OAUTH" }
+
 STALWART_USER = { provider = "onepass", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "onepass", value = "op://homelab/stalwart/password" }
 STALWART_RECOVERY_PASS = { provider = "onepass", value = "op://homelab/stalwart/recovery_password" }
@@ -191,6 +205,8 @@ DAGU_SECRET = { provider = "onepass", value = "op://homelab/dagu/secret" }
 KAN_SECRET = { provider = "onepass", value = "op://homelab/kan/secret" }
 HOODIK_SECRET = { provider = "onepass", value = "op://homelab/hoodik/secret" }
 MINUSPOD_SECRET = { provider = "onepass", value = "op://homelab/minuspod/secret" }
+KLIPY_KEY = { provider = "onepass", value = "op://homelab/klipy/key" }
+YOUTUBE_KEY = { provider = "onepass", value = "op://homelab/youtube_data_api_v3/credential" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

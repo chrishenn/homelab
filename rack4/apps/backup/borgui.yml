@@ -43,14 +43,9 @@ services:
     image: valkey/valkey:alpine
     container_name: borgui_redis
     restart: unless-stopped
-    command: >
-      redis-server
-      --maxmemory 2gb
-      --maxmemory-policy allkeys-lru
-      --save ""
-      --appendonly no
+    command: valkey-server --maxmemory 2gb --maxmemory-policy allkeys-lru --save "" --appendonly no
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: valkey-cli ping
       interval: 10s
       timeout: 3s
       retries: 3

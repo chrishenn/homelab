@@ -245,7 +245,7 @@ services:
     container_name: stalwart_redis
     restart: unless-stopped
     healthcheck:
-      test: redis-cli ping
+      test: valkey-cli ping
       interval: 30s
       timeout: 10s
       retries: 5

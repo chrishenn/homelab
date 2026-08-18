@@ -1,6 +1,9 @@
 # note: nested mounts (like $DATA/pangolin/db) will appear as empty folders under $DIR_HOST/pangolin
 #   but the data is safely stored under $DATA/pangolin
 ---
+x-healthy: &healthy
+  condition: service_healthy
+
 services:
   pangolin:
     image: fosrl/pangolin:ee-latest
@@ -25,9 +28,7 @@ services:
     image: fosrl/gerbil:latest
     container_name: gerbil
     restart: unless-stopped
-    depends_on:
-      pangolin:
-        condition: service_healthy
+    depends_on: {pangolin: *healthy}
     command:
       - --reachableAt=http://gerbil:3004
       - --generateAndSaveKeyTo=/var/config/key
@@ -66,9 +67,7 @@ services:
     network_mode: service:gerbil
     environment:
       CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
-    depends_on:
-      pangolin:
-        condition: service_healthy
+    depends_on: {pangolin: *healthy}
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
