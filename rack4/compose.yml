@@ -146,7 +146,7 @@ include:
   - apps/project/vikunja.yml
   - apps/project/wikigo.yml
   - apps/project/wikijs.yml
-  - apps/project/penpot.yml
+  #  - apps/project/penpot.yml
   - apps/project/plane.yml
   - apps/project/mattermost.yml
   - apps/project/campfire.yml

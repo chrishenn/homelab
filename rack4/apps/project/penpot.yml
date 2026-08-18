@@ -1,4 +1,5 @@
 ---
+# backend memory usage idles at 4GB for no reason
 x-penpot_env: &penpot_env
   PENPOT_PUBLIC_URI: https://penpot.chenn.dev
   PENPOT_BACKEND_URI: http://penpot_backend:6060

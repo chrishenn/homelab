@@ -1,5 +1,5 @@
 ---
-# video playback is mega busted on firefox, and I think all linux. Your only chance is chrome on windows.
+# video playback works on chrome-windows only
 # https://github.com/fluxerapp/fluxer/issues/1366
 
 # chrome on linux will playback with blank screen - ok it stopped doing that. now no response

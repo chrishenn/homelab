@@ -141,6 +141,7 @@ STOAT_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/stoat/vap
 STOAT_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/stoat/encryption_key" }
 STOAT_LIVEKIT_KEY = { provider = "onepass", value = "op://homelab/stoat/livekit_key" }
 STOAT_LIVEKIT_SECRET = { provider = "onepass", value = "op://homelab/stoat/livekit_secret" }
+STOAT_TENOR = { provider = "onepass", value = "op://homelab/stoat/TENOR" }
 
 FLUXER_LIVEKIT = { provider = "onepass", value = "op://homelab/FLUXER/livekit" }
 FLUXER_DB = { provider = "onepass", value = "op://homelab/FLUXER/DB" }
