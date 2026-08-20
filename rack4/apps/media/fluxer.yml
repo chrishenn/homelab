@@ -61,11 +61,6 @@ configs:
       :80 {
       	encode zstd gzip
 
-        read_timeout 30m
-        read_header_timeout 10s
-        write_timeout 30m
-        idle_timeout 30m
-
       	handle_path /api/* {
       		reverse_proxy fluxer_api:8080
       	}
@@ -144,18 +139,13 @@ x-fluxer_common: &fluxer_common
   restart: unless-stopped
   networks: [fluxer]
 
-x-fluxer_common_once: &fluxer_common_once
-  profiles: [fluxer]
+x-fluxer_once: &fluxer_once
+  <<: *fluxer_common
   restart: no
-  networks: [fluxer]
 
-x-fluxer_common_newt: &fluxer_common_newt
-  profiles: [fluxer]
-  restart: unless-stopped
+x-fluxer_newt: &fluxer_newt
+  <<: *fluxer_common
   networks: [fluxer, newt]
-
-x-started: &started
-  condition: service_started
 
 x-healthy: &healthy
   condition: service_healthy
@@ -264,9 +254,9 @@ x-fluxer_env: &fluxer_env
 
 services:
   fluxer_caddy:
-    image: caddy:2.10-alpine
+    image: caddy:alpine
     container_name: fluxer_caddy
-    <<: *fluxer_common_newt
+    <<: *fluxer_newt
     configs:
       - source: fluxer_caddy
         target: /etc/caddy/Caddyfile
@@ -314,7 +304,7 @@ services:
       retries: 10
 
   fluxer_nats:
-    image: nats:2.14-alpine
+    image: nats:alpine
     container_name: fluxer_nats
     <<: *fluxer_common
     command: ['-js', '-sd', '/data', '-m', '8222']
@@ -369,19 +359,16 @@ services:
   fluxer-s3-perm:
     image: alpine
     container_name: fluxer-s3-perm
-    <<: *fluxer_common_once
+    <<: *fluxer_once
     user: root
     volumes:
       - $DATA/fluxer/s3:/data
     command: chown -R 10001:10001 /data
 
-  # dc run --rm -it --entrypoint /bin/bash fluxer-s3-init
-  # mc alias set fs $S3_ENDPOINT $S3_ACCESS_KEY $S3_SECRET_KEY
-  # mc ls fs
   fluxer-s3-init:
     image: minio/mc
     container_name: fluxer-s3-init
-    <<: *fluxer_common_once
+    <<: *fluxer_once
     environment:
       S3_ACCESS_KEY: fluxer
       S3_SECRET_KEY: ${FLUXER_S3}
@@ -404,9 +391,9 @@ services:
       fluxer-s3: *healthy
 
   fluxer_livekit:
-    image: livekit/livekit-server:v1.13
+    image: livekit/livekit-server:latest
     container_name: fluxer_livekit
-    <<: *fluxer_common_newt
+    <<: *fluxer_newt
     command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
     configs:
       - source: fluxer_livekit
@@ -421,6 +408,24 @@ services:
       pangolin.public-resources.udp-7882.mode: udp
       pangolin.public-resources.udp-7882.proxy-port: 7882
       pangolin.public-resources.udp-7882.targets[0].port: 7882
+
+  fluxer_admin:
+    image: ghcr.io/fluxerapp/fluxer-admin:v1
+    container_name: fluxer_admin
+    <<: *fluxer_common
+    environment:
+      <<: *fluxer_env
+      FLUXER_ADMIN_HOST: 0.0.0.0
+      FLUXER_ADMIN_PORT: 8080
+      FLUXER_ADMIN_BASE_PATH: /admin
+      FLUXER_API_ENDPOINT: http://fluxer_api:8080
+      FLUXER_ADMIN_ENDPOINT: https://fluxer.chenn.dev/admin
+      FLUXER_APP_ENDPOINT: https://fluxer.chenn.dev
+      FLUXER_MEDIA_ENDPOINT: https://fluxer.chenn.dev/media
+      FLUXER_STATIC_CDN_ENDPOINT: https://fluxer.chenn.dev
+      FLUXER_ADMIN_OAUTH_REDIRECT_URI: https://fluxer.chenn.dev/admin/oauth2_callback
+    depends_on:
+      fluxer_api: *healthy
 
   fluxer_api:
     image: ghcr.io/fluxerapp/fluxer-api:v1
@@ -439,17 +444,7 @@ services:
     depends_on:
       fluxer_db: *healthy
       fluxer_redis: *healthy
-      fluxer_nats: *started
-      fluxer_meili: *started
       fluxer-s3-init: *completed
-      fluxer_gifs: *started
-      fluxer_gifs-shard: *started
-      fluxer_snowflakes: *started
-      fluxer_snowflakes-shard: *started
-      fluxer_messages: *started
-      fluxer_messages-shard: *started
-      fluxer_users: *started
-      fluxer_users-shard: *started
 
   fluxer_worker:
     image: ghcr.io/fluxerapp/fluxer-api:v1
@@ -465,11 +460,7 @@ services:
     depends_on:
       fluxer_db: *healthy
       fluxer_redis: *healthy
-      fluxer_nats: *started
       fluxer-s3-init: *completed
-      fluxer_snowflakes-shard: *started
-      fluxer_messages-shard: *started
-      fluxer_users-shard: *started
 
   fluxer_gateway:
     image: ghcr.io/fluxerapp/fluxer-gateway:v1
@@ -482,7 +473,6 @@ services:
       FLUXER_GATEWAY_STATIC_CDN_ENDPOINT: https://fluxer.chenn.dev
       FLUXER_GATEWAY_LOGGER_LEVEL: info
     depends_on:
-      fluxer_nats: *started
       fluxer_redis: *healthy
 
   fluxer_media:
@@ -499,7 +489,6 @@ services:
       disable: true
     depends_on:
       fluxer-s3-init: *completed
-      fluxer_nats: *started
 
   fluxer_static:
     image: ghcr.io/fluxerapp/fluxer-static:v1
@@ -519,7 +508,6 @@ services:
       PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/api
     depends_on:
       fluxer_api: *healthy
-      fluxer_caddy: *started
       fluxer_db: *healthy
 
   fluxer_snowflakes:
@@ -529,8 +517,6 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_MODE: router
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_snowflakes-shard:
     image: ghcr.io/fluxerapp/fluxer-snowflakes:v1
@@ -540,8 +526,6 @@ services:
       <<: *fluxer_env
       FLUXER_SVC_MODE: shard
       FLUXER_SVC_SHARD_ID: 0
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_users:
     image: ghcr.io/fluxerapp/fluxer-users:v1
@@ -550,8 +534,6 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_MODE: router
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_users-shard:
     image: ghcr.io/fluxerapp/fluxer-users:v1
@@ -562,7 +544,6 @@ services:
       FLUXER_SVC_MODE: shard
       FLUXER_SVC_SHARD_ID: 0
     depends_on:
-      fluxer_nats: *started
       fluxer_db: *healthy
 
   fluxer_gifs:
@@ -574,8 +555,6 @@ services:
       FLUXER_SVC_NAME: gifs
       FLUXER_SVC_MODE: router
       FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/media
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_gifs-shard:
     image: ghcr.io/fluxerapp/fluxer-gifs:v1
@@ -587,8 +566,6 @@ services:
       FLUXER_SVC_MODE: shard
       FLUXER_SVC_SHARD_ID: 0
       FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/media
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_messages:
     image: ghcr.io/fluxerapp/fluxer-messages:v1
@@ -597,8 +574,6 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_MODE: router
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_messages-shard:
     image: ghcr.io/fluxerapp/fluxer-messages:v1
@@ -609,7 +584,6 @@ services:
       FLUXER_SVC_MODE: shard
       FLUXER_SVC_SHARD_ID: 0
     depends_on:
-      fluxer_nats: *started
       fluxer_db: *healthy
 
   fluxer_unfurl:
@@ -619,8 +593,6 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_MODE: router
-    depends_on:
-      fluxer_nats: *started
 
   fluxer_unfurl-shard:
     image: ghcr.io/fluxerapp/fluxer-unfurl:v1
@@ -630,26 +602,6 @@ services:
       <<: *fluxer_env
       FLUXER_SVC_MODE: shard
       FLUXER_SVC_SHARD_ID: 0
-    depends_on:
-      fluxer_nats: *started
-
-  fluxer_admin:
-    image: ghcr.io/fluxerapp/fluxer-admin:v1
-    container_name: fluxer_admin
-    <<: *fluxer_common
-    environment:
-      <<: *fluxer_env
-      FLUXER_ADMIN_HOST: 0.0.0.0
-      FLUXER_ADMIN_PORT: 8080
-      FLUXER_ADMIN_BASE_PATH: /admin
-      FLUXER_API_ENDPOINT: http://fluxer_api:8080
-      FLUXER_ADMIN_ENDPOINT: https://fluxer.chenn.dev/admin
-      FLUXER_APP_ENDPOINT: https://fluxer.chenn.dev
-      FLUXER_MEDIA_ENDPOINT: https://fluxer.chenn.dev/media
-      FLUXER_STATIC_CDN_ENDPOINT: https://fluxer.chenn.dev
-      FLUXER_ADMIN_OAUTH_REDIRECT_URI: https://fluxer.chenn.dev/admin/oauth2_callback
-    depends_on:
-      fluxer_api: *healthy
 
 networks:
   fluxer:
