@@ -11,8 +11,8 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              capabilities: [gpu]
               count: all
+              capabilities: [gpu]
     environment:
       OLLAMA_CONTEXT_LENGTH: 32000
       OLLAMA_FLASH_ATTENTION: 1

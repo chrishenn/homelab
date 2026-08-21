@@ -35,6 +35,12 @@ ARCANE_PANGOLIN_AUTH_PASS = { provider = "onepass", value = "op://homelab/arcane
 BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel/key" }
 BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel/token" }
 
+GENIUS_API_CLIENT = { provider = "onepass", value = "op://homelab/GENIUS/API_CLIENT" }
+GENIUS_API_SECRET = { provider = "onepass", value = "op://homelab/GENIUS/API_SECRET" }
+
+LASTFM_API_KEY = { provider = "onepass", value = "op://homelab/LASTFM/API_KEY" }
+LASTFM_API_SECRET = { provider = "onepass", value = "op://homelab/LASTFM/API_SECRET" }
+
 RADARR_URL = { provider = "onepass", value = "op://homelab/radarr/url" }
 RADARR_KEY = { provider = "onepass", value = "op://homelab/radarr/credential" }
 SONARR_URL = { provider = "onepass", value = "op://homelab/sonarr/url" }
@@ -105,6 +111,10 @@ MYDIA_GUARDIAN = { provider = "onepass", value = "op://homelab/mydia/guardian" }
 
 INFISICAL_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/infisical/encryption_key" }
 INFISICAL_AUTH_SECRET = { provider = "onepass", value = "op://homelab/infisical/auth_secret" }
+
+MEELO_JWT = { provider = "onepass", value = "op://homelab/meelo/JWT" }
+MEELO_MEILI = { provider = "onepass", value = "op://homelab/meelo/MEILI" }
+MEELO_API = { provider = "onepass", value = "op://homelab/meelo/API" }
 
 SAB_API_KEY = { provider = "onepass", value = "op://homelab/sab/credential" }
 SAB_NZB_KEY = { provider = "onepass", value = "op://homelab/sab/nzb_key" }
@@ -208,6 +218,7 @@ HOODIK_SECRET = { provider = "onepass", value = "op://homelab/hoodik/secret" }
 MINUSPOD_SECRET = { provider = "onepass", value = "op://homelab/minuspod/secret" }
 KLIPY_KEY = { provider = "onepass", value = "op://homelab/klipy/key" }
 YOUTUBE_KEY = { provider = "onepass", value = "op://homelab/youtube_data_api_v3/credential" }
+DISCOGS_PAT = { provider = "onepass", value = "op://homelab/discogs/pat" }
 
 GIST_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "onepass", value = "op://homelab/gist/oidc_secret" }

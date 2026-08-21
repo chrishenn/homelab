@@ -98,12 +98,12 @@ include:
   - apps/media/ytp.yml
   - apps/media/opencut.yml
   - apps/media/ties.yml
-  - apps/media/stoat.yml
   - apps/media/minuspod.yml
   - apps/media/reitti.yml
   - apps/media/ghost.yml
   - apps/media/jellyglance.yml
   - apps/media/fluxer.yml
+  #  - apps/media/stoat.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml
@@ -119,6 +119,7 @@ include:
   - apps/music/mseerr.yml
   - apps/music/navidrome.yml
   - apps/music/feishin.yml
+  - apps/music/meelo.yml
 
   - apps/notify/apprise.yml
   - apps/notify/gotify.yml

@@ -37,8 +37,8 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              capabilities: [gpu, video, compute]
               count: all
+              capabilities: [gpu, video, compute]
     healthcheck:
       test: ['CMD', 'curl', 'http://localhost:24153/api/version']
     networks: [newt]

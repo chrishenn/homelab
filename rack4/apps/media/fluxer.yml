@@ -1,30 +1,26 @@
 ---
-# video playback works on chrome-windows only
+# video playback problems. Smaller videos will generally playback, but there are buffering/chunking issues that are
+#   made evident with larger vids
+# it looks like either the web client or fluxer media proxy is timing out at 30s
+# low-bitrate+shorter videos playback with no problems
+# low-bitrate+longer videos take forever to buffer and begin playback initially due to errored-out chunks
+# high-bitrate+shorter videos start playback quicker but don't buffer quickly enough, so only a few seconds play at a time
 # https://github.com/fluxerapp/fluxer/issues/1366
 
-# chrome on linux will playback with blank screen - ok it stopped doing that. now no response
+# firefox: play failed: the media resource ... was not suitable. NS_ERROR_NET_PARTIAL_TRANSFER
+# firefox: media resource https://fluxer.chenn.dev/media/attachmetns/id/id/name.mkv could not be dcoded, NS_ERROR_DOM_MEDIA_METADATA_ERR
 # fluxer_media: status 206, no errors
 # fluxer_api  | {
 #  "type":"Error", "message": "Command failed: ffmpeg ..."
 #             "Unable to find a suitable output format for /tmp/id"
 #             "/tmp/id: Invalid argument"
 
-# firefox on windows: player does not respond
-# firefox: play failed: the media resource ... was not suitable
-# firefox: media resource https://fluxer.chenn.dev/media/attachmetns/id/id/name.mkv could not be dcoded, NS_ERROR_DOM_MEDIA_METADATA_ERR
-
-# firefox on linux will play back smaller videos, but only on first login/fresh cookies
-# larger files load nearly 100 MB in the background, then error with NS_ERROR_NET_PARTIAL_TRANSFER
-# If I manually restart the aborted 206 request chunks, the video will magically start playing! It buffers correctly
-# there's just something in the chain that's dropped these downloads after 28 seconds or so...
-
 # I can curl about the same 100 MB
+# Hey, uh ... guys? Why are my uploaded files available on a public url without a login session?
 # curl https://fluxer.chenn.dev/media/attachments/1539129081084248067/1539131161991708672/file.mp4 -o dl.mp4
 #  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current Dload  Upload  Total   Spent   Left   Speed
 # 31 380.7M  31 118.8M   0      0  3.56M      0   01:46   00:33   01:13  3.08M
 # curl: (92) HTTP/2 stream 1 reset by server (error 0x2 INTERNAL_ERROR)
-
-# Hey, uh ... guys? Why are my uploaded files available on a public url without a login session?
 
 # I'm seeing very close to a 30-second timeout in a couple places here
 # fluxer-s3:
@@ -40,9 +36,6 @@
 # "emitted": 78643200,
 # "elapsed_ms": "30000",
 # "state": "dropped_incomplete",
-
-# it looks like either the web client or fluxer_media is timing out at 30s -
-#  fluxer-s3 and fluxer_caddy both report an interruption and I don't think they're responsible
 configs:
   fluxer_caddy:
     content: |

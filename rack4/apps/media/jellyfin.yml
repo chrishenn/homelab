@@ -14,8 +14,8 @@ services:
         reservations:
           devices:
             - driver: nvidia
+              count: all
               capabilities: [gpu, video, compute]
-              count: 1
     environment:
       TZ: $TZ
       PUID: $PUID
