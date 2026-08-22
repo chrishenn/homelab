@@ -184,31 +184,18 @@ x-stoat_common: &stoat_common
   restart: unless-stopped
   networks: [stoat]
 
-x-stoat_once: &stoat_once
-  <<: *stoat_common
-  restart: no
-
-x-stoat_newt: &stoat_newt
-  <<: *stoat_common
-  networks: [stoat, newt]
-
-# presumably, this is necessary for S3 "virtual-hosted style" access (rather than path-style access)
-x-stoat_s3: &stoat_s3
-  <<: *stoat_common
-  networks:
-    stoat: {aliases: [revolt-uploads.stoat-s3]}
-
 services:
   stoat_caddy:
     image: caddy
     container_name: stoat_caddy
-    <<: *stoat_newt
+    <<: *stoat_common
     configs:
       - source: stoat_caddy
         target: /etc/caddy/Caddyfile
     volumes:
       - $DATA/stoat/caddy-data:/data
       - $DATA/stoat/caddy-config:/config
+    networks: [stoat, newt]
     labels:
       homepage.group: General Media
       homepage.name: Stoat
@@ -222,14 +209,21 @@ services:
       pangolin.public-resources.stoat.targets[0].method: http
       pangolin.public-resources.stoat.targets[0].port: 80
 
+      pangolin.public-resources.stoat.policy: member
+
+      pangolin.public-resources.stoat.rules[0].action: allow
+      pangolin.public-resources.stoat.rules[0].match: path
+      pangolin.public-resources.stoat.rules[0].value: /livekit/*
+
   stoat_livekit:
     image: ghcr.io/stoatchat/livekit-server:latest
     container_name: stoat_livekit
-    <<: *stoat_newt
+    <<: *stoat_common
     command: --config /etc/livekit.yml --node-ip ${VPS0_IP}
     configs:
       - source: stoat_livekit
         target: /etc/livekit.yml
+    networks: [stoat, newt]
     labels:
       pangolin.public-resources.tcp-7881.name: tcp-7881
       pangolin.public-resources.tcp-7881.mode: tcp
@@ -341,7 +335,7 @@ services:
   stoat-s3:
     image: rustfs/rustfs:latest
     container_name: stoat-s3
-    <<: *stoat_s3
+    <<: *stoat_common
     command: /data
     environment:
       <<: *stoat_s3_env
@@ -355,11 +349,15 @@ services:
       interval: 5s
     depends_on:
       stoat-s3-perm: {condition: service_completed_successfully}
+    # presumably, this is necessary for S3 "virtual-hosted style" access (rather than path-style access)
+    networks:
+      stoat: {aliases: [revolt-uploads.stoat-s3]}
 
   stoat-s3-perm:
     image: alpine
     container_name: stoat-s3-perm
-    <<: *stoat_once
+    <<: *stoat_common
+    restart: no
     user: root
     volumes:
       - $DATA/stoat/s3:/data
@@ -368,7 +366,8 @@ services:
   stoat-s3-init:
     image: minio/mc
     container_name: stoat-s3-init
-    <<: *stoat_once
+    <<: *stoat_common
+    restart: no
     environment:
       S3_ENDPOINT: http://stoat-s3:9000
       S3_ACCESS_KEY: minioautumn

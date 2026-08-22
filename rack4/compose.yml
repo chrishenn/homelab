@@ -102,7 +102,7 @@ include:
   - apps/media/reitti.yml
   - apps/media/ghost.yml
   - apps/media/jellyglance.yml
-#  - apps/media/fluxer.yml
+  #  - apps/media/fluxer.yml
   #  - apps/media/stoat.yml
   - apps/media/chatto.yml
 

@@ -42,67 +42,45 @@ configs:
       {
       	servers {
           trusted_proxies static private_ranges
-          timeouts {
-              read_body   30m
-              read_header 10s
-              write       30m
-              idle        30m
-          }
         }
       }
-
       :80 {
       	encode zstd gzip
 
       	handle_path /api/* {
       		reverse_proxy fluxer_api:8080
       	}
-
       	handle /gateway {
       		rewrite * /
       		reverse_proxy fluxer_gateway:8080
       	}
-
       	handle_path /gateway/* {
       		reverse_proxy fluxer_gateway:8080
       	}
-
       	handle_path /media/* {
-      		reverse_proxy fluxer_media:8080 {
-                flush_interval -1
-                transport http {
-                    keepalive 20m
-                }
-            }
+      		reverse_proxy fluxer_media:8080
       	}
-
       	handle_path /livekit/* {
       		reverse_proxy fluxer_livekit:7880
       	}
-
       	handle /admin {
       		rewrite * /
       		reverse_proxy fluxer_admin:8080
       	}
-
       	handle_path /admin/* {
       		reverse_proxy fluxer_admin:8080
       	}
-
       	@staticAssets path /web/* /emoji/* /libs/* /avatars/* /badges/* /desktop/* /embeds/*
       	handle @staticAssets {
       		reverse_proxy fluxer_static:8080
       	}
-
       	handle /.well-known/fluxer {
       		reverse_proxy fluxer_api:8080
       	}
-
       	handle {
       		reverse_proxy fluxer_app:8080
       	}
       }
-
       :8088 {
       	handle_path /api/* {
       		reverse_proxy fluxer_api:8080
@@ -117,9 +95,6 @@ configs:
         use_external_ip: false
         tcp_port: 7881
         udp_port: 7882
-        stun_servers:
-          - stun.l.google.com:19302
-          - stun1.l.google.com:19302
       keys:
         fluxer: ${FLUXER_LIVEKIT}
       webhook:

@@ -1,7 +1,9 @@
 ---
 # very impressive for ~4 months work! Documentation is also stellar.
-# video player ui has a bunch of issues - still very early - but playback is flawless!
-# video call ui can't rearrange or maximize streams - but all the pieces work!
+# video player ui has some issues in chrome - but playback is flawless, and playback+ui work perfectly on firefox!
+# video call ui can't rearrange streams - but all the pieces work! Once this is fixed, it'll be stellar
+# HA: Livekit supports redis for coordinating multiple instances. Nats also supports clustering. Chatto already supports
+#   S3-based storage, and a zero-migration changeover from nats to S3
 x-chatto_common: &chatto_common
   profiles: [chatto]
   restart: unless-stopped
@@ -10,8 +12,9 @@ x-chatto_common: &chatto_common
 configs:
   chatto_caddy:
     content: |
-      http://chatto.chenn.dev {
-        encode gzip zstd      
+      :80 {
+        encode gzip zstd
+
         reverse_proxy {
           dynamic a chatto 4000 {
             refresh 5s
@@ -22,24 +25,13 @@ configs:
           fail_duration 30s
           header_up X-Real-IP {remote_host}
         }
-      }        
-      http://livekit.chatto.chenn.dev {
-        reverse_proxy chatto_livekit:7880
       }
   chatto_livekit:
-#    turn:
-#      enabled: true
-#      udp_port: 3478
-
     content: |
-      port: 7880
       rtc:
         use_external_ip: false
         tcp_port: 7881
         udp_port: 7882
-        stun_servers:
-          - stun.l.google.com:19302
-          - stun1.l.google.com:19302
       keys:
         chatto: ${CHATTO_LIVEKIT}
       webhook:
@@ -50,15 +42,6 @@ configs:
         level: info
 
 x-chatto_env: &chatto_env
-  PUBLIC_URL: chatto.chenn.dev
-  CHATTO_OWNERS_EMAILS: ${EMAIL}
-  PUID: ${PUID}
-  PGID: ${PGID}
-
-  CHATTO_NATS_EMBEDDED_ENABLED: false
-  CHATTO_NATS_CLIENT_URL: nats://chatto_nats:4222
-  CHATTO_NATS_CLIENT_AUTH_METHOD: token
-  CHATTO_NATS_CLIENT_TOKEN: ${CHATT_NATS]
   CHATTO_WEBSERVER_URL: https://chatto.chenn.dev
   CHATTO_WEBSERVER_PORT: 4000
   CHATTO_WEBSERVER_COOKIE_SIGNING_SECRET: ${CHATTO_SIGNING}
@@ -69,13 +52,22 @@ x-chatto_env: &chatto_env
   CHATTO_LOG_FORMAT: json
   CHATTO_OPERATOR_API_ENABLED: true
   CHATTO_OPERATOR_API_SOCKET_PATH: /tmp/chatto/operator.sock
+  PUBLIC_URL: chatto.chenn.dev
+  CHATTO_OWNERS_EMAILS: ${EMAIL}
+  PUID: ${PUID}
+  PGID: ${PGID}
+
+  CHATTO_NATS_EMBEDDED_ENABLED: false
+  CHATTO_NATS_CLIENT_URL: nats://chatto_nats:4222
+  CHATTO_NATS_CLIENT_AUTH_METHOD: token
+  CHATTO_NATS_CLIENT_TOKEN: ${CHATTO_NATS}
 
   CHATTO_VIDEO_ENABLED: true
   CHATTO_VIDEO_MAX_CONCURRENT: 128
   CHATTO_VIDEO_MAX_UPLOAD_SIZE: 1000 MB
 
   CHATTO_LIVEKIT_ENABLED: true
-  CHATTO_LIVEKIT_URL: wss://livekit.chatto.chenn.dev
+  CHATTO_LIVEKIT_URL: wss://chatto.chenn.dev/livekit
   CHATTO_LIVEKIT_API_KEY: chatto
   CHATTO_LIVEKIT_API_SECRET: ${CHATTO_LIVEKIT}
 
@@ -123,23 +115,31 @@ services:
       - $DATA/chatto/caddy/config:/config
     networks: [chatto, newt]
     labels:
+      homepage.group: General Media
+      homepage.name: Chatto
+      homepage.icon: chatto.png
+      homepage.href: https://chatto.chenn.dev
+      homepage.description: Video Chat
+
       pangolin.public-resources.chatto.name: chatto
       pangolin.public-resources.chatto.full-domain: chatto.chenn.dev
       pangolin.public-resources.chatto.mode: http
-      pangolin.public-resources.chatto.targets[0].method: http
-      pangolin.public-resources.chatto.targets[0].port: 80
+      pangolin.public-resources.chatto.policy: member
 
-      pangolin.public-resources.chatto-livekit.name: chatto-livekit
-      pangolin.public-resources.chatto-livekit.full-domain: livekit.chatto.chenn.dev
-      pangolin.public-resources.chatto-livekit.mode: http
-      pangolin.public-resources.chatto-livekit.targets[0].method: http
-      pangolin.public-resources.chatto-livekit.targets[0].port: 80
+      pangolin.public-resources.chatto.rules[0].action: allow
+      pangolin.public-resources.chatto.rules[0].match: path
+      pangolin.public-resources.chatto.rules[0].value: /livekit/*
+
+      pangolin.public-resources.chatto.targets[0].method: http
+      pangolin.public-resources.chatto.targets[0].path-match: prefix
+      pangolin.public-resources.chatto.targets[0].path: /
+      pangolin.public-resources.chatto.targets[0].port: 80
 
   chatto_nats:
     image: nats:latest
     container_name: chatto_nats
     <<: *chatto_common
-    command: ["--jetstream", "--store_dir=/data", "--auth=${CHATTO_NATS}"]
+    command: ['--jetstream', '--store_dir=/data', '--auth=${CHATTO_NATS}']
     volumes:
       - $DATA/chatto/nats:/data
 
@@ -153,6 +153,12 @@ services:
         target: /etc/livekit.yml
     networks: [chatto, newt]
     labels:
+      pangolin.public-resources.chatto.targets[1].method: http
+      pangolin.public-resources.chatto.targets[1].path-match: prefix
+      pangolin.public-resources.chatto.targets[1].path: /livekit
+      pangolin.public-resources.chatto.targets[1].rewrite-match: stripPrefix
+      pangolin.public-resources.chatto.targets[1].port: 7880
+
       pangolin.public-resources.tcp-7881.name: tcp-7881
       pangolin.public-resources.tcp-7881.mode: tcp
       pangolin.public-resources.tcp-7881.proxy-port: 7881
@@ -162,11 +168,6 @@ services:
       pangolin.public-resources.udp-7882.mode: udp
       pangolin.public-resources.udp-7882.proxy-port: 7882
       pangolin.public-resources.udp-7882.targets[0].port: 7882
-
-      pangolin.public-resources.udp-3478.name: udp-3478
-      pangolin.public-resources.udp-3478.mode: udp
-      pangolin.public-resources.udp-3478.proxy-port: 3478
-      pangolin.public-resources.udp-3478.targets[0].port: 3478
 
 networks:
   chatto:
