@@ -55,7 +55,7 @@ configs:
           proxy_pass http://meelo_matcher:6789/;
         }
         location / {
-          proxy_pass http://meelo_frontend:3000;
+          proxy_pass http://meelo:3000;
         }
       }
 
@@ -125,6 +125,12 @@ services:
         target: /etc/nginx/templates/meelo.conf.template
     networks: [meelo, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Meelo
+      homepage.icon: meelo.png
+      homepage.href: https://meelo.chenn.dev
+      homepage.description: Music Server
+
       pangolin.public-resources.meelo.name: meelo
       pangolin.public-resources.meelo.full-domain: meelo.chenn.dev
       pangolin.public-resources.meelo.mode: http
@@ -132,9 +138,9 @@ services:
       pangolin.public-resources.meelo.targets[0].port: 5000
       pangolin.public-resources.meelo.policy: member
 
-  meelo_frontend:
+  meelo:
     image: arthichaud/meelo-front:latest
-    container_name: meelo_frontend
+    container_name: meelo
     <<: *meelo_common
 
   meelo_server:
@@ -155,7 +161,6 @@ services:
     depends_on:
       meelo_db: *healthy
       meelo_meili: *healthy
-      meelo_mq: *healthy
 
   meelo_scanner:
     image: arthichaud/meelo-scanner:latest
@@ -228,14 +233,8 @@ services:
     image: rabbitmq:4.3-alpine
     container_name: meelo_mq
     <<: *meelo_common
-    hostname: meelo_mq
     volumes:
       - $DATA/meelo/mq:/var/lib/rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 5s
-      timeout: 5s
-      retries: 20
 
 networks:
   meelo:

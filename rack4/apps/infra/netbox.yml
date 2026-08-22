@@ -50,14 +50,17 @@ x-netbox_env: &netbox_env
   SOCIAL_AUTH_OIDC_KEY: ${NETBOX_OIDC_CLIENT}
   SOCIAL_AUTH_OIDC_SECRET: ${NETBOX_OIDC_SECRET}
   SOCIAL_AUTH_OIDC_SCOPE: openid profile email groups
-#  LOGOUT_REDIRECT_URL: https://p
-#  SOCIAL_AUTH_OIDC_JWT_ALGORITHMS: RS256
+
+x-netbox_common: &netbox_common
+  profiles: [netbox]
+  restart: unless-stopped
+  networks: [netbox]
 
 services:
   netbox:
-    profiles: [netbox]
     image: netboxcommunity/netbox:v4.6-5.0.2
     container_name: netbox
+    <<: *netbox_common
     environment:
       <<: *netbox_env
     user: 'netbox:root'
@@ -87,9 +90,9 @@ services:
       pangolin.public-resources.netbox.policy: member
 
   netbox_worker:
-    profiles: [netbox]
     image: netboxcommunity/netbox:v4.6-5.0.2
     container_name: netbox_worker
+    <<: *netbox_common
     user: 'netbox:root'
     command:
       - /opt/netbox/venv/bin/python
@@ -107,12 +110,11 @@ services:
       - $DATA/netbox/media:/opt/netbox/netbox/media
       - $DATA/netbox/reports:/opt/netbox/netbox/reports
       - $DATA/netbox/scripts:/opt/netbox/netbox/scripts
-    networks: [netbox]
 
   netbox_db:
-    profiles: [netbox]
     image: postgres:18-alpine
     container_name: netbox_db
+    <<: *netbox_common
     healthcheck:
       test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       start_period: 20s
@@ -123,12 +125,11 @@ services:
       <<: *netbox_env
     volumes:
       - $DATA/netbox/db:/var/lib/postgresql
-    networks: [netbox]
 
   netbox_redis:
-    profiles: [netbox]
     image: valkey/valkey:alpine
     container_name: netbox_redis
+    <<: *netbox_common
     command: valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
     healthcheck: &redis-healthcheck
       test: valkey-cli --pass "$${REDIS_PASSWORD}" ping
@@ -140,19 +141,17 @@ services:
       <<: *netbox_env
     volumes:
       - $DATA/netbox/redis:/data
-    networks: [netbox]
 
   netbox_redis_cache:
-    profiles: [netbox]
     image: valkey/valkey:alpine
     container_name: netbox_redis_cache
+    <<: *netbox_common
     command: valkey-server --requirepass $$REDIS_PASSWORD
     healthcheck: *redis-healthcheck
     environment:
       <<: *netbox_env
     volumes:
       - $DATA/netbox/redis_cache:/data
-    networks: [netbox]
 
 networks:
   netbox:

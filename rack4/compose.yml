@@ -19,12 +19,12 @@ include:
   - apps/backup/databasus.yml
   - apps/backup/pluton.yml
   - apps/backup/portabase.yml
-  #  - apps/backup/repliqate.yml
   - apps/backup/rsync.yml
   - apps/backup/zerobyte.yml
   - apps/backup/duplicati.yml
   - apps/backup/borg.yml
   - apps/backup/borgui.yml
+  #  - apps/backup/repliqate.yml
 
   - apps/books/audiobookshelf.yml
   - apps/books/calibre.yml
@@ -69,9 +69,9 @@ include:
   - apps/download/byparr.yml
   - apps/download/solverr.yml
 
+  - apps/games/wordle.yml
   #  - apps/games/cs2.yml
   #  - apps/games/csgo.yml
-  - apps/games/wordle.yml
 
   - apps/infra/blocky.yml
   - apps/infra/blocky_k.yml
@@ -82,9 +82,9 @@ include:
   - apps/infra/pocketid.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
-  #  - apps/infra/watchtower.yml
   - apps/infra/stalwart.yml
   - apps/infra/netbox.yml
+  #  - apps/infra/watchtower.yml
 
   - apps/job/openresume.yml
   - apps/job/resume.yml
@@ -102,9 +102,9 @@ include:
   - apps/media/reitti.yml
   - apps/media/ghost.yml
   - apps/media/jellyglance.yml
+  - apps/media/chatto.yml
   #  - apps/media/fluxer.yml
   #  - apps/media/stoat.yml
-  - apps/media/chatto.yml
 
   - apps/monitoring/arcane.yml
   - apps/monitoring/beszel.yml
@@ -148,21 +148,21 @@ include:
   - apps/project/vikunja.yml
   - apps/project/wikigo.yml
   - apps/project/wikijs.yml
-  #  - apps/project/penpot.yml
   - apps/project/plane.yml
   - apps/project/mattermost.yml
-  - apps/project/campfire.yml
   - apps/project/outline.yml
   - apps/project/appflowy.yml
   - apps/project/kan.yml
   - apps/project/colanode.yml
+  #  - apps/project/penpot.yml
+  #  - apps/project/campfire.yml
 
   - apps/registry/aptcache.yml
-  #  - apps/registry/gitlab.yml
   - apps/registry/forgejo.yml
   - apps/registry/mirrors.yml
-  #  - apps/registry/onedev.yml
   - apps/registry/zot.yml
+  #  - apps/registry/gitlab.yml
+  #  - apps/registry/onedev.yml
 
   - apps/search/omnisearch.yml
   - apps/search/searx.yml
