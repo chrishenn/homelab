@@ -1,4 +1,4 @@
-# replaced with localsend
+# works fine. replaced with localsend
 ---
 services:
   pairdrop:
@@ -24,15 +24,7 @@ services:
 
       pangolin.public-resources.pairdrop.name: pairdrop
       pangolin.public-resources.pairdrop.full-domain: pairdrop.chenn.dev
-      pangolin.public-resources.pairdrop.protocol: http
-      pangolin.public-resources.pairdrop.ssl: true
+      pangolin.public-resources.pairdrop.mode: http
       pangolin.public-resources.pairdrop.targets[0].method: http
       pangolin.public-resources.pairdrop.targets[0].port: 3000
-      pangolin.public-resources.pairdrop.auth.sso-enabled: true
-      pangolin.public-resources.pairdrop.auth.sso-roles[0]: Member
-      pangolin.public-resources.pairdrop.rules[0].action: pass
-      pangolin.public-resources.pairdrop.rules[0].match: country
-      pangolin.public-resources.pairdrop.rules[0].value: US
-      pangolin.public-resources.pairdrop.rules[1].action: deny
-      pangolin.public-resources.pairdrop.rules[1].match: country
-      pangolin.public-resources.pairdrop.rules[1].value: ALL
+      pangolin.public-resources.pairdrop.policy: member

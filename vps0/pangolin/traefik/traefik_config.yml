@@ -71,6 +71,8 @@ entryPoints:
   tcp-2626:
     address: ':2626/tcp'
 
+  udp-3478:
+    address: ':3478/udp'
   tcp-7881:
     address: ':7881/tcp'
   udp-7882:

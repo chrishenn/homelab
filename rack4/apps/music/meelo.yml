@@ -1,4 +1,6 @@
 ---
+# I'm having trouble getting album art to extract correctly
+# Can't get playback to work on linux desktop
 configs:
   meelo:
     content: |

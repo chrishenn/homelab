@@ -153,6 +153,15 @@ STOAT_LIVEKIT_KEY = { provider = "onepass", value = "op://homelab/stoat/livekit_
 STOAT_LIVEKIT_SECRET = { provider = "onepass", value = "op://homelab/stoat/livekit_secret" }
 STOAT_TENOR = { provider = "onepass", value = "op://homelab/stoat/TENOR" }
 
+CHATTO_LIVEKIT = { provider = "onepass", value = "op://homelab/CHATTO/livekit" }
+CHATTO_NATS = { provider = "onepass", value = "op://homelab/CHATTO/NATS" }
+CHATTO_SIGNING = { provider = "onepass", value = "op://homelab/CHATTO/SIGNING" }
+CHATTO_ENCRYPTION = { provider = "onepass", value = "op://homelab/CHATTO/ENCRYPTION" }
+CHATTO_CORE = { provider = "onepass", value = "op://homelab/CHATTO/CORE" }
+CHATTO_ASSETS = { provider = "onepass", value = "op://homelab/CHATTO/ASSETS" }
+CHATTO_VAPID_PUBLIC = { provider = "onepass", value = "op://homelab/CHATTO/vapid_public" }
+CHATTO_VAPID_PRIVATE = { provider = "onepass", value = "op://homelab/CHATTO/vapid_private" }
+
 FLUXER_LIVEKIT = { provider = "onepass", value = "op://homelab/FLUXER/livekit" }
 FLUXER_DB = { provider = "onepass", value = "op://homelab/FLUXER/DB" }
 FLUXER_MEILI = { provider = "onepass", value = "op://homelab/FLUXER/MEILI" }
@@ -312,3 +321,5 @@ REITTI_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/reitti/oidc_c
 REITTI_OIDC_SECRET = { provider = "onepass", value = "op://homelab/reitti/oidc_secret" }
 KAN_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/kan/oidc_client" }
 KAN_OIDC_SECRET = { provider = "onepass", value = "op://homelab/kan/oidc_secret" }
+CHATTO_OIDC_CLIENT = { provider = "onepass", value = "op://homelab/CHATTO/oidc_client" }
+CHATTO_OIDC_SECRET = { provider = "onepass", value = "op://homelab/CHATTO/oidc_secret" }
