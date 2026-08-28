@@ -275,15 +275,16 @@ services:
     image: nats:alpine
     container_name: fluxer_nats
     <<: *fluxer_common
-    command: ['-js', '-sd', '/data', '-m', '8222']
+    command: [-js, -sd, /data, -m, '8222']
     volumes:
       - $DATA/fluxer/nats:/data
 
   fluxer_meili:
-    image: getmeili/meilisearch:v1
+    image: getmeili/meilisearch:latest
     container_name: fluxer_meili
     <<: *fluxer_common
     environment:
+      MEILI_UPGRADE_DB: true
       MEILI_ENV: production
       MEILI_NO_ANALYTICS: true
       MEILI_MASTER_KEY: ${FLUXER_MEILI}
@@ -419,7 +420,7 @@ services:
     container_name: fluxer_worker
     <<: *fluxer_common
     working_dir: /usr/src/app/fluxer_api
-    command: ['./node_modules/.bin/tsx', 'src/WorkerEntrypoint.ts']
+    command: [./node_modules/.bin/tsx, src/WorkerEntrypoint.ts]
     environment:
       <<: *fluxer_env
       FLUXER_API_WORKER_MODE: all_lanes

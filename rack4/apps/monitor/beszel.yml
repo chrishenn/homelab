@@ -11,7 +11,7 @@ services:
     volumes:
       - $DATA/beszel/beszel_server/data:/beszel_data
     healthcheck:
-      test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
+      test: [CMD, /beszel, health, --url, http://localhost:8090]
     networks: [newt]
     labels:
       homepage.group: Monitoring
@@ -54,4 +54,4 @@ services:
       - $DATA/beszel/beszel_rack4:/var/lib/beszel-agent
     network_mode: host
     healthcheck:
-      test: ['CMD', '/agent', 'health']
+      test: [CMD, /agent, health]

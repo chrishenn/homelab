@@ -70,7 +70,7 @@ ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock -H fd://
 
 ### fix for "permission denied" when doing file operations in a container. untested
 
-```yml
+```yaml
 x-configs:
     volumes:
         my-named-volume: &volume-my-named-volume 'my-named-volume:/whatever/path/i/need'
@@ -81,17 +81,17 @@ services:
         image: myappimage
         # user: my-non-root-user
         volumes:
-            - *volume-my-named-volume
-            - *volume-my-other-named-volume
+          - *volume-my-named-volume
+          - *volume-my-other-named-volume
 
-fix-named-volumes-permissions:
-    # the image doesn't matter; easiest to use the same as the target docker service
-    image: myappimage
-    user: root
-    command: chmod 777 /whatever/path/i/need /whatever/other/path/i/need
-    volumes:
-        - *volume-my-named-volume
-        - *volume-my-other-named-volume
+    fix:
+        # the image doesn't matter; easiest to use the same as the target docker service
+        image: myappimage
+        user: root
+        command: chmod 777 /whatever/path/i/need /whatever/other/path/i/need
+        volumes:
+          - *volume-my-named-volume
+          - *volume-my-other-named-volume
 
 volumes:
     my-named-volume:

@@ -11,10 +11,10 @@ cleanup() {
 
 	killall tun2socks 2>/dev/null
 	ip route del default via 192.168.1.1 dev tun0 metric 1 2>/dev/null
-	ip route del default via 192.168.49.1 dev $if_default metric 10 2>/dev/null
+	ip route del default via 192.168.49.1 dev "$if_default" metric 10 2>/dev/null
 
 	# 3. Restore your original default route dynamically
-	ip route add $rt_default
+	ip route add "$rt_default"
 
 	# 4. Disable (and remove) the tunnel interface
 	ip link set dev tun0 down 2>/dev/null
@@ -33,10 +33,10 @@ ip addr add 192.168.1.1/24 dev tun0
 ip link set dev tun0 up
 ip route del default
 ip route add default via 192.168.1.1 dev tun0 metric 1
-ip route add default via 192.168.49.1 dev $if_default metric 10
+ip route add default via 192.168.49.1 dev "$if_default" metric 10
 
 # Disable rp_filter to receive packets from other interfaces
 sysctl -w net.ipv4.conf.all.rp_filter=0
 
 # Run tun2socks
-tun2socks -device tun://tun0 -interface $if_default -proxy socks5://192.168.49.1:8000
+tun2socks -device tun://tun0 -interface "$if_default" -proxy socks5://192.168.49.1:8000

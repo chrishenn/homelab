@@ -3,6 +3,10 @@
 - control planes: {rack3}
 - workers: {rack2}
 
+## note
+
+ty cannot handle the types imported and used by pulumi in this pulumi project. So it's turned off.
+
 ---
 
 # todo

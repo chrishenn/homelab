@@ -5,9 +5,9 @@ services:
     image: ghcr.io/dagucloud/dagu:latest
     container_name: dagu
     restart: unless-stopped
-    user: '0:0'
-    entrypoint: ['/usr/local/bin/tini', '-g', '--']
-    command: ['dagu', 'start-all']
+    user: root:root
+    entrypoint: [/usr/local/bin/tini, -g, --]
+    command: [dagu, start-all]
     environment:
       PUID: $PUID
       PGID: $PGID

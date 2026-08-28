@@ -82,7 +82,7 @@ to_gb() {
 	echo "PostgreSQL Configuration Detection"
 	echo "=========================================="
 	echo "System Resources:"
-	echo "  Total Memory: $(to_mb $TOTAL_MEMORY_KB) MB ($(to_gb $TOTAL_MEMORY_KB) GB)"
+	echo "  Total Memory: $(to_mb "$TOTAL_MEMORY_KB") MB ($(to_gb "$TOTAL_MEMORY_KB") GB)"
 	echo "  CPU Cores: ${CPU_COUNT}"
 	echo ""
 	echo "Configuration:"

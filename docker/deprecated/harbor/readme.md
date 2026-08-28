@@ -64,17 +64,17 @@ docker login reg.henn.dev
 
 # create project using the api
 curl -u admin:YourPassword -X POST \
-    "https://reg.henn.dev/api/v2.0/projects" \
-    -H "Content-Type: application/json" \
-    -d '{
-        "project_name": "testproject",
-        "public": false,
-        "storage_limit": -1,
-        "metadata": {
-            "auto_scan": "true",
-            "severity": "high"
-            }
-        }'
+"https://reg.henn.dev/api/v2.0/projects" \
+-H "Content-Type: application/json" \
+-d '{
+    "project_name": "testproject",
+    "public": false,
+    "storage_limit": -1,
+    "metadata": {
+        "auto_scan": "true",
+        "severity": "high"
+        }
+    }'
 
 # add instance as http (insecure) registry for testing
 "insecure-registries" : [ "192.168.1.142:9001" ],
@@ -90,14 +90,14 @@ proxy:
     restart: unless-stopped
     cap_add: [CHOWN, SETGID, SETUID, NET_BIND_SERVICE]
     volumes:
-        - $HOME/harbor/cert:/harbor_cust_cert
-        - ./config/proxy.conf:/etc/nginx/nginx.conf
+      - $HOME/harbor/cert:/harbor_cust_cert
+      - ./config/proxy.conf:/etc/nginx/nginx.conf
     networks: [harbor, traefik]
     labels:
-        traefik.enable: true
-        traefik.http.routers.reg.rule: Host(`reg.henn.dev`)
-        traefik.http.routers.reg.entrypoints: websecure
-        traefik.http.routers.reg.middlewares: hdrs@file
-        traefik.http.routers.reg.tls.certresolver: cf
-        traefik.http.services.reg.loadbalancer.server.port: 8080
+    traefik.enable: true
+    traefik.http.routers.reg.rule: Host(`reg.henn.dev`)
+    traefik.http.routers.reg.entrypoints: websecure
+    traefik.http.routers.reg.middlewares: hdrs@file
+    traefik.http.routers.reg.tls.certresolver: cf
+    traefik.http.services.reg.loadbalancer.server.port: 8080
 ```

@@ -34,5 +34,5 @@ podman run --rm --device nvidia.com/gpu=0 --security-opt=label=disable ubuntu nv
 verify
 
 ```bash
-sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
+docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi -L
 ```

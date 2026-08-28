@@ -24,9 +24,9 @@ services:
       AUTH_OIDC_POCKET_SECRET: ${PORTABASE_OIDC_SECRET}
       AUTH_OIDC_POCKET_ISSUER_URL: ${OIDC}
       AUTH_OIDC_POCKET_HOST: pocketid.chenn.dev
-      AUTH_OIDC_POCKET_SCOPES: 'openid profile email groups'
+      AUTH_OIDC_POCKET_SCOPES: openid profile email groups
       AUTH_OIDC_POCKET_PKCE: true
-      AUTH_OIDC_POCKET_ROLE_MAP: 'admin:admin,default:user'
+      AUTH_OIDC_POCKET_ROLE_MAP: admin:admin,default:user
       AUTH_OIDC_POCKET_DISCOVERY_ENDPOINT: https://pocketid.chenn.dev/.well-known/openid-configuration
       AUTH_OIDC_POCKET_JWKS_ENDPOINT: https://pocketid.chenn.dev/.well-known/jwks.json
 

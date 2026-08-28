@@ -34,9 +34,9 @@ kube_vip_arp: true
 # enable kube-vip BGP peering
 kube_vip_bgp: false
 # bgp parameters for kube-vip
-kube_vip_bgp_routerid: '127.0.0.1' # Defines the router ID for the BGP server
+kube_vip_bgp_routerid: 127.0.0.1 # Defines the router ID for the BGP server
 kube_vip_bgp_as: '64513' # Defines the AS for the BGP server
-kube_vip_bgp_peeraddress: '192.168.30.1' # Defines the address for the BGP peer
+kube_vip_bgp_peeraddress: 192.168.30.1 # Defines the address for the BGP peer
 kube_vip_bgp_peeras: '64512' # Defines the AS for the BGP peer
 
 # k3s_token is required  masters can talk together securely. This token should be alpha numeric only

@@ -28,7 +28,7 @@ services:
       - /mnt/k:/mnt/k
       - /mnt/h:/mnt/h
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9898/']
+      test: [CMD, curl, -ILfSs, http://localhost:9898/]
     networks: [newt]
     labels:
       homepage.group: Backup

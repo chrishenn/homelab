@@ -4,21 +4,21 @@ http:
     hdrs:
       headers:
         customResponseHeaders:
-          X-Robots-Tag: 'noindex,nofollow'
-          X-Forwarded-Proto: 'https'
+          X-Robots-Tag: noindex,nofollow
+          X-Forwarded-Proto: https
           server: ''
           X-Powered-By: ''
         customRequestHeaders:
-          X-Forwarded-Proto: 'https'
+          X-Forwarded-Proto: https
           Strict-Transport-Security: 'max-age: 63072000'
         sslProxyHeaders:
-          X-Forwarded-Proto: 'https'
+          X-Forwarded-Proto: https
         hostsProxyHeaders:
-          - 'X-Forwarded-Host'
-        referrerPolicy: 'same-origin'
+          - X-Forwarded-Host
+        referrerPolicy: same-origin
         contentTypeNosniff: true
         browserXssFilter: true
-        customFrameOptionsValue: 'SAMEORIGIN'
+        customFrameOptionsValue: SAMEORIGIN
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsSeconds: 63072000

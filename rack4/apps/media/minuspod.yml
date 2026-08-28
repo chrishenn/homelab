@@ -32,7 +32,7 @@ services:
     volumes:
       - $DATA/minuspod/data:/app/data
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:$${MINUSPOD_PORT:-8000}/api/v1/health || exit 1']
+      test: [CMD-SHELL, 'curl -f http://localhost:$${MINUSPOD_PORT:-8000}/api/v1/health || exit 1']
       interval: 30s
       timeout: 5s
       retries: 3

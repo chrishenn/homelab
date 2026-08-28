@@ -35,7 +35,7 @@ x-affine_env: &affine_env
   POSTGRES_USER: affine
   POSTGRES_PASSWORD: affine
   POSTGRES_DB: affine
-  POSTGRES_INITDB_ARGS: '--data-checksums'
+  POSTGRES_INITDB_ARGS: --data-checksums
   POSTGRES_HOST_AUTH_METHOD: trust
 
   MAILER_HOST: ${SMTP_HOST}
@@ -112,7 +112,7 @@ services:
     volumes:
       - $DATA/affine/storage:/root/.affine/storage
       - $DATA/affine/config:/root/.affine/config
-    command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
+    command: [sh, -c, node ./scripts/self-host-predeploy.js]
     networks: [affine]
 
 networks:

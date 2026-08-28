@@ -96,21 +96,21 @@ function main {
 	check_or "parallel" || exit 1
 
 	# git and ssh setup
-	mkdir -p $HOME/.ssh
+	mkdir -p "$HOME"/.ssh
 	git config --global --add safe.directory '*'
 	git config --global pull.rebase true
 
 	# add github keys to known_hosts to prevent interactive prompt. note: out of date keys will not be updated
-	if ! grep -q "github.com" $HOME/.ssh/known_hosts &>/dev/null; then
-		ssh-keyscan github.com >>$HOME/.ssh/known_hosts
+	if ! grep -q "github.com" "$HOME"/.ssh/known_hosts &>/dev/null; then
+		ssh-keyscan github.com >>"$HOME"/.ssh/known_hosts
 	fi
 
 	# gh login if not logged in
 	if ! gh auth status &>/dev/null; then
-		if [ -z "${OP_SERVICE_ACCOUNT_TOKEN}" ]; then
-			$(op read op://homelab/svc/bash)
+		if [ "$OP_SERVICE_ACCOUNT_TOKEN" = "" ]; then
+			"$(op read op://homelab/svc/bash)"
 		fi
-		if [ -z "${OP_SERVICE_ACCOUNT_TOKEN}" ]; then
+		if [ "$OP_SERVICE_ACCOUNT_TOKEN" = "" ]; then
 			echo 'error: OP_SERVICE_ACCOUNT_TOKEN is empty or unset'
 			return 1
 		fi
@@ -129,7 +129,7 @@ function main {
 	fi
 
 	# bump this limit -L if you have over 1000 repos
-	repos=($(gh repo list -L 1000 --json name | jq '.[].name' | tr -d '"' | sort))
+	repos=("$(gh repo list -L 1000 --json name | jq '.[].name' | tr -d '"' | sort)")
 
 	# todo: would be nice if this tagstring could print output in columns - the obvious fmt strings didnt work
 

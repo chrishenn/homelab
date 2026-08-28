@@ -1,61 +1,91 @@
-amends "package://github.com/jdx/hk/releases/download/v1.55.0/hk@1.55.0#/Config.pkl"
-import "package://github.com/jdx/hk/releases/download/v1.55.0/hk@1.55.0#/Builtins.pkl"
+amends "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Config.pkl"
 
-local formatters = new Mapping<String, Step> {
-    ["ruff"] = Builtins.ruff
-    ["ruff_format"] = (Builtins.ruff_format) {
-        output_summary = "hide"
-    }
-    ["prettier"] = Builtins.prettier
-    ["pkl"] = Builtins.pkl
-    ["newlines"] = Builtins.newlines
-    ["mixed_line_ending"] = Builtins.mixed_line_ending
-    ["trailing_whitespace"] = Builtins.trailing_whitespace
-    ["shfmt"] = Builtins.shfmt
-    ["just"] {
-        workspace_indicator = "hk.pkl"
-        fix = "just --fmt --unstable {{workspace}}"
-    }
-    ["mise"] {
-        workspace_indicator = "hk.pkl"
-        fix = "mise fmt -a"
-    }
-}
+import "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
-    ["detect_private_key"] = Builtins.detect_private_key
-    ["gitleaks"] {
-        workspace_indicator = "hk.pkl"
-        check = "gitleaks git {{workspace}} --no-banner --pre-commit --log-level=fatal"
+  ["oxfmt"] = Builtins.oxfmt
+
+  ["ruff"] = Builtins.ruff
+  ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide" }
+  ["dclint"] = Builtins.dclint
+
+  ["shfmt"] = Builtins.shfmt
+  ["shellharden"] = Builtins.shellharden
+
+  ["pkl"] = (Builtins.pkl) { stomp = true }
+  ["pkl_format"] = Builtins.pkl_format
+  ["just"] = Builtins.just_format
+  ["mise"] = Builtins.mise
+  ["ryl"] = Builtins.ryl
+  ["ryl_markdown"] = Builtins.ryl_markdown
+
+  ["check_case_conflict"] = (Builtins.check_case_conflict) { stomp = true }
+  ["check_merge_conflict"] = (Builtins.check_merge_conflict) { stomp = true }
+  ["check_symlinks"] = (Builtins.check_symlinks) { stomp = true }
+  ["fix_smart_quotes"] = Builtins.fix_smart_quotes
+  ["mixed_line_ending"] = Builtins.mixed_line_ending
+  ["newlines"] = Builtins.newlines
+  ["trailing_whitespace"] = Builtins.trailing_whitespace
+
+  ["gitleaks_staged"] = (Builtins.gitleaks_staged) { stomp = true; output_summary = "hide" }
+  ["detect_private_key"] = (Builtins.detect_private_key) { stomp = true }
+
+  //   todo: enable
+  //   ["shellcheck"] = (Builtins.shellcheck) {stomp = true}
+  //   ["gitleaks"] = (Builtins.gitleaks) {stomp = true}
+  //   ["betterleaks"] = (Builtins.betterleaks) { stomp = true }
+  //   ["kingfisher"] = (Builtins.kingfisher) { stomp = true }
+
+  // maybe don't enable - quite slow
+  //   ["trufflehog"] {
+  //     glob = List("*")
+  //     workspace_indicator = "hk.pkl"
+  //     check =
+  //       """
+  //       trufflehog filesystem --fail --no-update --no-verification \
+  //         --exclude-detectors=Postgres,RabbitMQ,JDBC,Box {{files}}
+  //       """
+  //     output_summary = "hide"
+  //   }
+  //   ["detect-secrets"] {
+  //     glob = List("*")
+  //     exclude = List("docker/*", "*deprecated*")
+  //     check =
+  //       """
+  //       detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString \
+  //         --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}
+  //       """
+  //   }
+}
+
+local slow = new Mapping<String, Step> {
+  ["ty"] = (Builtins.ty) {
+    workspace_indicator = "pyproject.toml"
+    exclude = "rack3/*"
+    check = new CommandSpec {
+      command = new Command {
+        argv = List("mise", "x", "-C", "{{workspace}}", "-c", "ty check {{workspace_files}}")
+      }
+      effect = "read"
     }
-    ["shellcheck"] = (Builtins.shellcheck) {
-        check = "shellcheck --severity=error {{files}}"
+    fix = new CommandSpec {
+      command = new Command {
+        argv = List("mise", "x", "-C", "{{workspace}}", "-c", "ty check --fix {{workspace_files}}")
+      }
+      effect = "write"
     }
-    ["trufflehog"] {
-        glob = List("*")
-        workspace_indicator = "hk.pkl"
-        check = "trufflehog filesystem --fail --no-update --no-verification --exclude-detectors=Postgres,RabbitMQ,JDBC {{files}}"
-        output_summary = "hide"
-    }
-    ["detect-secrets"] {
-        glob = List("*")
-        exclude = List("docker/*", "*deprecated*")
-        check = "detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}"
-    }
+  }
 }
 
 hooks {
-    ["pre-commit"] {
-        fix = true
-        stash = "git"
-        steps = new Mapping<String, Step> { ...formatters ...linters }
-    }
-    ["check"] {
-        fix = false
-        steps = new Mapping<String, Step> { ...formatters ...linters }
-    }
-    ["fix"] {
-        fix = true
-        steps = formatters
-    }
+  ["check"] {
+    steps = linters
+  }
+  ["fix"] {
+    fix = true
+    steps = linters
+  }
+  ["slow"] {
+    steps = slow
+  }
 }

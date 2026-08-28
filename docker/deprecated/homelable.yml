@@ -34,13 +34,13 @@ services:
       LIVEVIEW_KEY: 57ad7d7f4c6cc179e48d35350787d802f0ef790f5f7f20b35657442d8f75538b
       AUTH_MODE: oidc
       AUTH_USERNAME: ${USER}
-      AUTH_PASSWORD_HASH: '${PASS_BCRYPT}'
+      AUTH_PASSWORD_HASH: ${PASS_BCRYPT}
 
       OIDC_DISCOVERY_URL: ${OIDC_DISCOVERY}
       OIDC_CLIENT_ID: ${HOMELABLE_OIDC_CLIENT}
       OIDC_CLIENT_SECRET: ${HOMELABLE_OIDC_SECRET}
       OIDC_REDIRECT_URI: https://homelable.chenn.dev/api/v1/auth/oidc/callback
-      OIDC_SCOPES: 'openid profile email groups'
+      OIDC_SCOPES: openid profile email groups
       OIDC_COOKIE_SECURE: true
       OIDC_SESSION_EXPIRE_MINUTES: 480
       OIDC_TRANSACTION_EXPIRE_SECONDS: 600

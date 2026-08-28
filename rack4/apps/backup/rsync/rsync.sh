@@ -15,4 +15,4 @@ rsync -a --progress --stats /mnt/h/windows /mnt/f/backup/ || true
 
 rsync -a --progress --stats /mnt/k/images /mnt/f/backup/ || true
 
-rsync -a --progress --stats $MEDIA /mnt/f/backup/ || true
+rsync -a --progress --stats "$MEDIA" /mnt/f/backup/ || true

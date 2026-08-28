@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DATA/gitlab/runner:/etc/gitlab-runner
 
-    # to register, either run this manually, or launch `just run glrunner_shell_register` below
+  # to register, either run this manually, or launch `just run glrunner_shell_register` below
   # just attach glrunner_shell \
   #   "gitlab-runner register --non-interactive --request-concurrency 8 --url https://gitlab.henn.dev \
   #   --token $(op read op://homelab/Gitlab/runner_token) --executor shell"
@@ -58,7 +58,7 @@ services:
     volumes:
       - $DATA/gitlab/gitlab_runner_dind/docker:/var/lib/docker
 
-  # just run glrunner_dind_register
+      # just run glrunner_dind_register
 #  glrunner_dind_register:
 #    profiles: [gitlab_runner]
 #    image: gitlab/gitlab-runner:alpine

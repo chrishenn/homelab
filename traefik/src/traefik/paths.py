@@ -3,7 +3,7 @@ import shutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Never
+from typing import Any, Never
 
 import yaml
 from yaml import SafeLoader
@@ -30,22 +30,22 @@ class YamlPath(Enum):
     def invalid_ext(self) -> Never:
         raise ValueError(f"File {self.path=} has an invalid extension: must be in .yml, .yaml")
 
-    def dump_yaml(self, content: dict) -> None:
+    def dump_yaml(self, content: dict[Any, Any]) -> None:
         with self.path.open("w") as f:
             yaml.dump(content, f, default_flow_style=False)
 
-    def dump(self, content: dict) -> None:
+    def dump(self, content: dict[Any, Any]) -> None:
         match self.path.suffix:
             case ".yml" | ".yaml":
                 self.dump_yaml(content)
             case _:
                 self.invalid_ext()
 
-    def load_yaml(self) -> dict:
+    def load_yaml(self) -> dict[str, Any]:
         with self.path.open() as f:
             return yaml.load(f, SafeLoader)
 
-    def load(self) -> dict:
+    def load(self) -> dict[str, Any]:
         match self.path.suffix:
             case ".yml" | ".yaml":
                 return self.load_yaml()

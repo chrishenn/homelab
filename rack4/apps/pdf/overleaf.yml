@@ -14,7 +14,7 @@ services:
     environment:
       OVERLEAF_SITE_URL: https://overleaf.chenn.dev
       OVERLEAF_APP_NAME: Chicken Overleaf
-      ENABLED_LINKED_FILE_TYPES: 'project_file,project_output_file'
+      ENABLED_LINKED_FILE_TYPES: project_file,project_output_file
       ENABLE_CONVERSIONS: 'true'
       EMAIL_CONFIRMATION_DISABLED: 'true'
       OVERLEAF_NAV_TITLE: Chicken Overleaf
@@ -32,7 +32,7 @@ services:
 
       OVERLEAF_LEFT_FOOTER: '[{"text": "Left Footer"} ]'
       OVERLEAF_RIGHT_FOOTER: '[{"text": "Right Footer"} ]'
-      OVERLEAF_CUSTOM_EMAIL_FOOTER: 'Overleaf Email Footer'
+      OVERLEAF_CUSTOM_EMAIL_FOOTER: Overleaf Email Footer
       OVERLEAF_EMAIL_FROM_ADDRESS: $SMTP_USER
       OVERLEAF_EMAIL_AWS_SES_ACCESS_KEY_ID:
       OVERLEAF_EMAIL_AWS_SES_SECRET_KEY:
@@ -44,7 +44,7 @@ services:
       OVERLEAF_EMAIL_SMTP_PASS: $SMTP_PASS
       OVERLEAF_EMAIL_SMTP_TLS_REJECT_UNAUTH: true
       OVERLEAF_EMAIL_SMTP_IGNORE_TLS: false
-      OVERLEAF_EMAIL_SMTP_NAME: '127.0.0.1'
+      OVERLEAF_EMAIL_SMTP_NAME: 127.0.0.1
       OVERLEAF_EMAIL_SMTP_LOGGER: true
     volumes:
       - $DATA/overleaf/data:/var/lib/overleaf

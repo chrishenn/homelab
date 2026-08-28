@@ -22,7 +22,7 @@ services:
       - $DATA/cronmaster/scripts:/app/scripts
       - $DATA/cronmaster/snippets:/app/snippets
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      test: [CMD, curl, -f, http://localhost:3000/api/health]
       interval: 30s
       timeout: 10s
       start_period: 30s

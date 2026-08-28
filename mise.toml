@@ -18,6 +18,12 @@ hk = "latest"
 trufflehog = "latest"
 uv = "latest"
 "pipx:mypy" = "latest"
+"npm:dclint" = "latest"
+oxfmt = "latest"
+"aqua:owenlamont/ryl" = "latest"
+"aqua:anordal/shellharden" = "latest"
+"github:mongodb/kingfisher" = "latest"
+betterleaks = "latest"
 
 [hooks.enter]
 shell = "bash"
@@ -28,15 +34,16 @@ alias = "pc"
 run = "hk run pre-commit"
 
 [env]
-# note this is the local repo path; clones of repo may have diff locations on remotes
 REPO = "{{ config_root | absolute }}"
 REPO_NAME = "{{ config_root | basename }}"
 HK_MISE = 1
-HK_LIBGIT2 = 0
-MISE_NPM_BUN = 1
+
+# This env will be inherited into subprojects when hk runs ty in each one, setting this shared ty config
+TY_CONFIG_FILE = "$REPO/.ty.toml"
 
 # registries
 REGISTRY = "zot.henn.dev"
+REGISTRY_URL = "https://zot.henn.dev"
 BERG_USR = "chris"
 BERG_BASE_URL = "forgejo.henn.dev"
 BERG_SSH_PORT = 2424

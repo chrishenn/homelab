@@ -24,4 +24,4 @@ pending_containers=$(comm -23 <(echo "$all_containers") <(echo "$ignore_containe
 
 echo "Stopping docker containers..."
 
-docker stop $pending_containers
+docker stop "$pending_containers"

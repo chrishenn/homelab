@@ -11,7 +11,7 @@ services:
     profiles: [archive]
     image: archivebox/archivebox:stable
     container_name: archive
-    shm_size: '1gb'
+    shm_size: 1gb
     environment:
       ADMIN_USERNAME: ${USER}
       ADMIN_PASSWORD: ${PASS}
@@ -28,7 +28,7 @@ services:
       MODALCLOSER_ENABLED: true
       STATICFILE_ENABLED: true
       PAPERSDL_ENABLED: true
-      URL_ALLOWLIST: '^https:\/\/tory110191\.wordpress\.com.*$'
+      URL_ALLOWLIST: ^https:\/\/tory110191\.wordpress\.com.*$
     volumes:
       - $DATA/archive/data:/data
       - /var/home/chris/.config/google-chrome:/profiles

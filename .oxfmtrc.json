@@ -1,0 +1,23 @@
+{
+  "ignorePatterns": ["*.toml", "*.md"],
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 4,
+  "printWidth": 120,
+  "bracketSpacing": false,
+  "overrides": [
+    {
+      "files": ["*.yml", "*.yaml", "*.json", "*.jsonl", "*.jsonc", "*.prettierrc"],
+      "options": {
+        "tabWidth": 2,
+        "printWidth": 240
+      }
+    },
+    {
+      "files": ["*.conf"],
+      "options": {
+        "printWidth": 240
+      }
+    }
+  ]
+}

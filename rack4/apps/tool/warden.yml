@@ -31,7 +31,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - $DATA/warden/data:/data/
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
+      test: [CMD, curl, -ILfSs, http://localhost:80]
     networks: [newt]
     labels:
       homepage.group: General Tools

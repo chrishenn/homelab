@@ -9,9 +9,9 @@ newtInstances:
     #        secretKey: NEWT_SECRET
     dockerSocket:
       enabled: true
-      path: '/var/run/containerd/containerd.sock'
+      path: /var/run/containerd/containerd.sock
     configPersistence:
       enabled: true
-      mountPath: '/var/lib/newt'
-      fileName: 'config.json'
+      mountPath: /var/lib/newt
+      fileName: config.json
       type: persistentVolumeClaim

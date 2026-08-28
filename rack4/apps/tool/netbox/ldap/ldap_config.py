@@ -38,7 +38,7 @@ if not AUTH_LDAP_BIND_AS_AUTHENTICATING_USER:
     AUTH_LDAP_BIND_DN = environ.get("AUTH_LDAP_BIND_DN", "")
     AUTH_LDAP_BIND_PASSWORD = _read_secret("auth_ldap_bind_password", environ.get("AUTH_LDAP_BIND_PASSWORD", ""))
 
-# Set a string template that describes any user’s distinguished name based on the username.
+# Set a string template that describes any user's distinguished name based on the username.
 AUTH_LDAP_USER_DN_TEMPLATE = environ.get("AUTH_LDAP_USER_DN_TEMPLATE", None)
 
 # Enable STARTTLS for ldap authentication.

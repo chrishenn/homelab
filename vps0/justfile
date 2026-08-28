@@ -13,7 +13,7 @@ repo := "/home/chris/Projects/homelab"
 
 [arg("pty", long="pty", short="p")]
 ssh cmd='' pty='true':
-    just vps0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+    just vps0 {{ if cmd != '' { f'"{{ cmd }}"' } else { '' } }} -p={{ pty }}
 
 backup_cmd := """
 sudo rm -rf $DIR_HOST/pangolin_backup && sudo cp -r $DIR_HOST/pangolin $DIR_HOST/pangolin_backup \
@@ -21,16 +21,13 @@ sudo rm -rf $DIR_HOST/pangolin_backup && sudo cp -r $DIR_HOST/pangolin $DIR_HOST
 """
 
 backup:
-    just ssh '{{backup_cmd}}'
+    just ssh '{{ backup_cmd }}'
 
 # generic
 
 sync message="sync":
     git commit -a -m '{{ message }}' || true && git pull && git push
     just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
-
-ssync:
-    fnox sync --provider age --config fnox.local.toml -f
 
 up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
@@ -44,7 +41,7 @@ bounce profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
 pullup profile=profile *svcs:
-    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+    docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}
@@ -57,3 +54,7 @@ log *args:
 
 follow *args:
     just log -f {{ args }}
+
+# secret sync
+ss:
+    fnox sync --provider age --local-file -f

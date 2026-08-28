@@ -2,10 +2,10 @@
 ---
 services:
   healthchecks:
-    profiles: [healthchecks]
     image: lscr.io/linuxserver/healthchecks:latest
     container_name: healthchecks
-    restart: unless-stopped
+    volumes:
+      - $DATA/healthchecks/config:/config
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -27,12 +27,12 @@ services:
       INTEGRATIONS_ALLOW_PRIVATE_IPS: False
       PING_EMAIL_DOMAIN: henn.dev
       SITE_LOGO_URL:
-    volumes:
-      - $DATA/healthchecks/config:/config
     networks: [traefik]
+    restart: unless-stopped
     labels:
       traefik.enable: true
       traefik.http.routers.healthchecks.rule: Host(`healthchecks.henn.dev`)
       traefik.http.routers.healthchecks.entrypoints: websecure
       traefik.http.routers.healthchecks.tls.certresolver: cf
       traefik.http.services.healthchecks.loadbalancer.server.port: 8000
+    profiles: [healthchecks]

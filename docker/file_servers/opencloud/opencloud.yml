@@ -10,7 +10,7 @@ services:
     user: $PUID:$PGID
     entrypoint:
       - /bin/sh
-    command: ['-c', 'opencloud init || true; opencloud server']
+    command: [-c, opencloud init || true; opencloud server]
     environment:
       OC_URL: https://oc.chenn.dev
       OC_DOMAIN: oc.chenn.dev
@@ -105,8 +105,8 @@ services:
     container_name: opencloud_collabora
     restart: unless-stopped
 
-    entrypoint: ['/bin/bash', '-c']
-    command: ['coolconfig generate-proof-key && /start-collabora-online.sh']
+    entrypoint: [/bin/bash, -c]
+    command: [coolconfig generate-proof-key && /start-collabora-online.sh]
     cap_drop: [ALL]
     cap_add: [SYS_CHROOT, SYS_ADMIN, FOWNER, CHOWN]
 
@@ -125,7 +125,7 @@ services:
         --o:net.frame_ancestors=oc.chenn.dev
         --o:net.lok_allow.host[14]=oc.chenn.dev
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+      test: [CMD, curl, -f, http://localhost:9980/hosting/discovery]
       interval: 15s
       timeout: 10s
       retries: 5

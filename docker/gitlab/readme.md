@@ -25,7 +25,7 @@ gitlab_pg:
     container_name: gitlab_pg
     restart: unless-stopped
     volumes:
-        - $DATA/gitlab/gitlab_pg:/var/lib/postgresql
+      - $DATA/gitlab/gitlab_pg:/var/lib/postgresql
     environment:
         POSTGRES_DB: gitlab
         POSTGRES_USER: gitlab
@@ -40,7 +40,7 @@ gitlab_redis:
     container_name: gitlab_redis
     restart: unless-stopped
     volumes:
-        - $DATA/gitlab/gitlab_redis:/data
+      - $DATA/gitlab/gitlab_redis:/data
     networks: [traefik]
 ```
 
@@ -82,9 +82,9 @@ ghrunner:
         RUNNER_SCOPE: org
         ORG_NAME: chrishenn-org
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - $DATA/runner:/runner/data
-        - /tmp/runner:/tmp/runner
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DATA/runner:/runner/data
+      - /tmp/runner:/tmp/runner
 ```
 
 permissions fixup
@@ -98,9 +98,9 @@ gitlab_perm:
     restart: no
     command: /bin/sh -c "update-permissions"
     volumes:
-        - $DATA/gitlab/config:/etc/gitlab
-        - $DATA/gitlab/logs:/var/log/gitlab
-        - $DATA/gitlab/data:/var/opt/gitlab
+      - $DATA/gitlab/config:/etc/gitlab
+      - $DATA/gitlab/logs:/var/log/gitlab
+      - $DATA/gitlab/data:/var/opt/gitlab
 ```
 
 read the initial root password
@@ -114,7 +114,7 @@ gitlab_pass:
     restart: no
     command: /bin/sh -c "grep 'Password:' /etc/gitlab/initial_root_password"
     volumes:
-        - $DATA/gitlab/config:/etc/gitlab
+      - $DATA/gitlab/config:/etc/gitlab
 ```
 
 standalone backup container
@@ -126,12 +126,12 @@ gitlab_backup:
     container_name: gitlab_backup
     restart: unless-stopped
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock:ro
-        - /etc/localtime:/etc/localtime:ro
-        # source data to backup
-        - $DATA/gitlab:/backup/gitlab:ro
-        # backup destination
-        - $BACKUP/gitlab:/archive
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      # source data to backup
+      - $DATA/gitlab:/backup/gitlab:ro
+      # backup destination
+      - $BACKUP/gitlab:/archive
     environment:
         BACKUP_STOP_DURING_BACKUP_LABEL: gitlab
         BACKUP_CRON_EXPRESSION: '@daily'

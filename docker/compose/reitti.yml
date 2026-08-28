@@ -1,4 +1,5 @@
 ---
+# works ok, then failed a bounce and java is throwing some cryptic (long!) error - java doing java things
 services:
   reitti:
     profiles: [reitti]

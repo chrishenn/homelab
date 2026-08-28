@@ -1,6 +1,6 @@
 # Protonmail DNS Config (Cloudflare DNS, Pulumi IAC)
 
-Add DNS records to cloudflare dns in order to add those domains to my protonmail account.
+Add DNS records to cloudflare dns in order to add domains to my protonmail account.
 
 supporting:
 
@@ -10,7 +10,6 @@ supporting:
 active domains:
 
 - henn.dev
-- chenn.dev
 
 using:
 

@@ -33,7 +33,7 @@ exclude = [
     "dist",
     "node_modules",
     "deprecated",
-    "rack4/apps/tool/netbox/*"
+    "netbox"
 ]
 
 [lint]

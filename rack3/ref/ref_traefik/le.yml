@@ -7,13 +7,13 @@ env:
         key: token
 
 additionalArguments:
-  - '--accesslog=true'
-  - '--log.level=INFO'
+  - --accesslog=true
+  - --log.level=INFO
 
-  - '--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json'
-  - '--certificatesresolvers.letsencrypt.acme.dnschallenge=true'
-  - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare'
-  - '--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53'
+  - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
+  - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+  - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+  - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
 
 persistence:
   enabled: true
@@ -52,6 +52,6 @@ ports:
       options:
       certResolver: letsencrypt
       domains:
-        - main: 'chenn.io'
+        - main: chenn.io
           sans:
             - '*.chenn.io'

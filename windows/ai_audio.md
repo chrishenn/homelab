@@ -19,7 +19,7 @@
   apps folder.
 
 - install reaper. Point reaper to SAR for default audio interface. SAR needs an ASIO interface to run on top of -
-  ASIO4ALL will work if you don’t have an ASIO driver-device.
+  ASIO4ALL will work if you don't have an ASIO driver-device.
 
 - Create a recording device in SAR config. Create a track in reaper. Hit the record button on the track to arm it.
   Right-click the record button and choose mic input. Add fx to track as needed. Hit routing button on the track and
@@ -32,5 +32,5 @@
 
 - Per-application routing rules in SAR seem to not work well (or at all). However, the default SAR devices set in
   windows sounds seem to stick. If many SAR devices are made and removed, they seem to stick around with the wrong name
-  when they shouldn’t. At this point, remove all SAR devices from SAR config. Close reaper. Uninstall SAR. Reboot.
+  when they shouldn't. At this point, remove all SAR devices from SAR config. Close reaper. Uninstall SAR. Reboot.
   Reinstall SAR. Reboot. Reconfigure in reaper.

@@ -20,12 +20,12 @@ services:
       POSTGRES_PASSWORD: pdfding
 
       OIDC_ENABLE: 'TRUE'
-      OIDC_PROVIDER_NAME: 'Pocket ID'
-      OIDC_CLIENT_ID: '${PDFDING_OIDC_CLIENT}'
-      OIDC_CLIENT_SECRET: '${PDFDING_OIDC_SECRET}'
-      OIDC_AUTH_URL: 'https://pocketid.chenn.dev/.well-known/openid-configuration'
-      OIDC_ADMIN_GROUP: 'admin'
-      OIDC_EXTRA_SCOPE: 'groups'
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_CLIENT_ID: ${PDFDING_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${PDFDING_OIDC_SECRET}
+      OIDC_AUTH_URL: https://pocketid.chenn.dev/.well-known/openid-configuration
+      OIDC_ADMIN_GROUP: admin
+      OIDC_EXTRA_SCOPE: groups
       OIDC_ONLY: 'TRUE'
       DISABLE_USER_SIGNUP: 'FALSE'
 

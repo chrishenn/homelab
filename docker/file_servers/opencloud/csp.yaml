@@ -4,7 +4,7 @@ directives:
   connect-src:
     - "'self'"
     - 'blob:'
-    - 'https://update.opencloud.eu/'
+    - https://update.opencloud.eu/
   default-src:
     - "'none'"
   font-src:
@@ -14,14 +14,14 @@ directives:
   frame-src:
     - "'self'"
     - 'blob:'
-    - 'https://collabora.chenn.dev/'
-    - 'https://embed.diagrams.net/'
-    - 'https://docs.opencloud.eu'
+    - https://collabora.chenn.dev/
+    - https://embed.diagrams.net/
+    - https://docs.opencloud.eu
   img-src:
     - "'self'"
     - 'data:'
     - 'blob:'
-    - 'https://collabora.chenn.dev/'
+    - https://collabora.chenn.dev/
   manifest-src:
     - "'self'"
   media-src:

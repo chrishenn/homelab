@@ -20,9 +20,9 @@ services:
       - $DATA/pangolin/db:/app/config/db
       - $DATA/pangolin/key:/app/config/key
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/']
-      interval: '10s'
-      timeout: '10s'
+      test: [CMD, curl, -f, http://localhost:3001/api/v1/]
+      interval: 10s
+      timeout: 10s
       retries: 15
 
   gerbil:
@@ -77,6 +77,11 @@ services:
     volumes:
       - $DIR_HOST/pangolin/traefik:/etc/traefik:ro
       - $DATA/pangolin/letsencrypt:/letsencrypt
+    healthcheck:
+      test: wget -q --tries=1 --spider http://localhost/ping
+      interval: 10s
+      timeout: 10s
+      retries: 15
 
   traefik_cert:
     profiles: [pangolin]
@@ -87,6 +92,19 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/pangolin/letsencrypt:/traefik:ro
       - $DATA/pangolin/ssl_dump:/output
+
+  geoipupdate:
+    profiles: [pangolin]
+    image: ghcr.io/maxmind/geoipupdate
+    container_name: geoipupdate
+    restart: unless-stopped
+    environment:
+      GEOIPUPDATE_ACCOUNT_ID: ${MAXMIND_ACCOUNT}
+      GEOIPUPDATE_LICENSE_KEY: ${MAXMIND_KEY}
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
+      GEOIPUPDATE_FREQUENCY: 72
+    volumes:
+      - $DATA/pangolin/GeoLite2:/usr/share/GeoIP
 
 networks:
   default:

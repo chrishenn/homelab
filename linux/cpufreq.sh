@@ -20,7 +20,7 @@ NCORE="$(nproc)"
 echo "Setting all ($NCORE) cores to use governor: $GOVERNOR"
 
 for ((i = 0; i < "$NCORE"; i++)); do
-	cpufreq-set -c $i -r -g "$GOVERNOR" --min "$MIN" --max "$MAX"
+	cpufreq-set -c "$i" -r -g "$GOVERNOR" --min "$MIN" --max "$MAX"
 done
 
 echo "set governor $GOVERNOR on $NCORE cores"

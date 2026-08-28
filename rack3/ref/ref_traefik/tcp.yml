@@ -19,7 +19,7 @@ spec:
     passthrough: true
 
 # traefik values entrypoint
-#ports:
+# ports:
 #  postgres:
 #    port: 5432
 #    exposedPort: 5432

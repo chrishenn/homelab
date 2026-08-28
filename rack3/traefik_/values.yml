@@ -1,6 +1,6 @@
 additionalArguments:
-  - '--log.level=INFO'
-  - '--serversTransport.insecureSkipVerify=true'
+  - --log.level=INFO
+  - --serversTransport.insecureSkipVerify=true
 
 deployment:
   replicas: 2
@@ -15,7 +15,7 @@ affinity:
               app.kubernetes.io/name: traefik
           topologyKey: kubernetes.io/hostname
 
-#podDisruptionBudget:
+# podDisruptionBudget:
 #  enabled: true
 #  minAvailable: 1
 
@@ -84,11 +84,11 @@ ports:
         enabled: true
     transport:
       respondingTimeouts:
-        readTimeout: '30m'
-        writeTimeout: '30m'
-        idleTimeout: '30m'
+        readTimeout: 30m
+        writeTimeout: 30m
+        idleTimeout: 30m
 
-#metrics:
+# metrics:
 #  prometheus:
 #  prometheus:
 #    entryPoint: traefik

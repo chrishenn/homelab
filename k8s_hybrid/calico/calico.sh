@@ -54,7 +54,7 @@ function calico_install_windows {
 	kubectl patch installation default --type='json' -p='[{"op": "replace", "path": "/spec/calicoNetwork/ipPools/0/disableBGPExport", "value": false}]'
 
 	url="https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools/master/hostprocess/calico/kube-proxy/kube-proxy.yml"
-	curl -L $url | sd -n 1 'KUBE_PROXY_VERSION' "v$kube_ver" | kubectl create -f -
+	curl -L "$url" | sd -n 1 'KUBE_PROXY_VERSION' "v$kube_ver" | kubectl create -f -
 }
 
 function calico_log {
@@ -87,21 +87,21 @@ function calico_fix_bird {
 	# https://unix.stackexchange.com/questions/773708/calico-node-is-not-ready-bird-is-not-ready-error-querying-bird-unable-to-conn
 	kubectl -n calico-system edit daemonset calico-node
 
-	Add it in this block:
-	- name: CLUSTER_TYPE
-	value: k8s,bgp
-	- name: IP
-	value: autodetect
-	- name: CALICO_IPV4POOL_IPIP
-	value: Always
-	- name: CALICO_IPV4POOL_VXLAN
-	value: Never
-	- name: CALICO_IPV6POOL_VXLAN
-	value: Never
-	- name: IP_AUTODETECTION_METHOD
-	value: can-reach=192.168.1.65 add this <---
-	# default
-	value: first-found
+	#	Add it in this block:
+	#	- name: CLUSTER_TYPE
+	#	value: k8s,bgp
+	#	- name: IP
+	#	value: autodetect
+	#	- name: CALICO_IPV4POOL_IPIP
+	#	value: Always
+	#	- name: CALICO_IPV4POOL_VXLAN
+	#	value: Never
+	#	- name: CALICO_IPV6POOL_VXLAN
+	#	value: Never
+	#	- name: IP_AUTODETECTION_METHOD
+	#	value: can-reach=192.168.1.65 add this <---
+	#	# default
+	#	value: first-found
 }
 
 function calico_uninstall {

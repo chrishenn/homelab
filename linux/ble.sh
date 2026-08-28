@@ -3,7 +3,7 @@
 sudo apt install gmake gawk
 
 git clone --recursive https://github.com/akinomyoga/ble.sh.git
-cd ble.sh
+cd ble.sh || exit
 gmake
 
 # INSTALL to ~/.local/share/blesh and ~/.local/share/doc/blesh

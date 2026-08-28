@@ -11,7 +11,7 @@ function containerd_install() {
 	# download and install the latest containerd binary
 	url="https://github.com/containerd/containerd/releases/download"
 	release="${url}/v${ver}/containerd-${ver}-linux-${arch}.tar.gz"
-	curl -L "${release}" | sudo tar -C "$dst" -xz
+	curl -L "$release" | sudo tar -C "$dst" -xz
 
 	# install containerd unit files
 	url_unit="https://raw.githubusercontent.com/containerd/containerd/main/containerd.service"

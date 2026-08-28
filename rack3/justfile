@@ -1,0 +1,6 @@
+set fallback
+
+# sync secrets
+ss:
+    fnox sync --provider age --local-file -P default -f
+    fnox sync --provider age --local-file -P newt -f

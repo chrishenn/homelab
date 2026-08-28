@@ -27,7 +27,7 @@ services:
     ports:
       - '1900:1900/udp'
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8096']
+      test: [CMD, curl, -ILfSs, http://localhost:8096]
     networks: [arr, traefik, newt]
     labels:
       homepage.group: Movies and TV

@@ -1,5 +1,5 @@
 ---
-protocol: 'http'
+protocol: http
 port: 8080
 log_level: info
-registry_config: '/etc/registry/config.yml'
+registry_config: /etc/registry/config.yml

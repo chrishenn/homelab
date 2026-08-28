@@ -64,7 +64,7 @@ filen:
         FILEN_PASSWORD: ${FILEN_PASSWORD}
         FILEN_2FA_CODE: ${FILEN_2FA_CODE}
     volumes:
-        - $DATA/filen/mnt:/root/filen
+      - $DATA/filen/mnt:/root/filen
     command: mount /root/filen
 ```
 
@@ -154,15 +154,15 @@ services:
         privileged: true
         cap_add: [SYS_ADMIN]
         devices:
-            - /dev/fuse:/dev/fuse
+          - /dev/fuse:/dev/fuse
         security_opt:
-            - apparmor:unconfined
+          - apparmor:unconfined
         environment:
             RCLONE_FILEN_EMAIL: ${RCLONE_FILEN_EMAIL}
             RCLONE_FILEN_PASSWORD: ${RCLONE_FILEN_PASSWORD}
             RCLONE_FILEN_API_KEY: ${RCLONE_FILEN_API_KEY}
         volumes:
-            - $DATA/filen:/home/appuser:shared
+          - $DATA/filen:/home/appuser:shared
         entrypoint: ['/bin/sh']
         command: -c 'rclone mount :filen:/ /home/appuser/mnt --allow-non-empty --allow-other --allow-root'
         networks: [traefik]

@@ -313,7 +313,7 @@ services:
     container_name: stoat_db
     <<: *stoat_common
     environment:
-      GLIBC_TUNABLES: 'glibc.cpu.hwcaps=-SHSTK'
+      GLIBC_TUNABLES: glibc.cpu.hwcaps=-SHSTK
     volumes:
       - $DATA/stoat/db:/data/db
 

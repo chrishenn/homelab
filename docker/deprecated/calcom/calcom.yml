@@ -35,7 +35,7 @@ x-calcom_env: &calcom_env
   RESERVED_SUBDOMAINS: '"app","auth","docs","design","console","go","status","api","saml","www","matrix","developer","cal","my","team","support","security","blog","learn","admin"'
 
   NEXT_PUBLIC_APP_NAME: Chicken Calcom
-  NEXT_PUBLIC_COMPANY_NAME: 'Chicken Inc'
+  NEXT_PUBLIC_COMPANY_NAME: Chicken Inc
   NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS: ${SMTP_USER}
   NEXT_PUBLIC_DISABLE_SIGNUP: 0
   CALCOM_TELEMETRY_DISABLED: 1

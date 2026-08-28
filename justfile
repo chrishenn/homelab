@@ -3,6 +3,7 @@ set fallback
 alias f := fix
 alias c := check
 alias l := lint
+alias s := sync
 
 check:
     hk check --all
@@ -10,13 +11,20 @@ check:
 fix:
     hk fix --all
 
+slow:
+    hk run slow --all --fix
+
 lint:
-    ruff format
-    ruff check --fix
+    hk run slow --all
+    just fix
+    just check
 
 unsafe:
     ruff check --fix --unsafe-fixes
 
 # sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
-ssync:
-    fnox sync --provider age --config fnox.local.toml -f
+ss:
+    fnox sync --provider age --local-file -f
+
+sync message="sync":
+    git commit -a -m '{{ message }}' || true && git pull && git push

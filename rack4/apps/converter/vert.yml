@@ -6,7 +6,7 @@ services:
     container_name: vert
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:80']
+      test: [CMD, curl, -ILfSs, http://localhost:80]
     networks: [newt]
     labels:
       homepage.group: File Converters
@@ -40,7 +40,7 @@ services:
               count: all
               capabilities: [gpu, video, compute]
     healthcheck:
-      test: ['CMD', 'curl', 'http://localhost:24153/api/version']
+      test: [CMD, curl, http://localhost:24153/api/version]
     networks: [newt]
     labels:
       pangolin.public-resources.vertd.name: vertd

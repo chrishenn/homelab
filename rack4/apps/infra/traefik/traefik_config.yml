@@ -26,7 +26,7 @@ providers:
   docker:
     watch: true
     network: traefik
-    endpoint: 'unix:///var/run/docker.sock'
+    endpoint: unix:///var/run/docker.sock
     exposedByDefault: false
 
 tls:
@@ -34,9 +34,9 @@ tls:
     default:
       minVersion: VersionTLS13
       curvePreferences:
-        - 'X25519'
-        - 'CurveP256'
-        - 'CurveP384'
+        - X25519
+        - CurveP256
+        - CurveP384
 
 http:
   encodedCharacters:
@@ -90,9 +90,9 @@ entryPoints:
     http3: {}
     transport:
       respondingTimeouts:
-        readTimeout: '30m'
-        writeTimeout: '30m'
-        idleTimeout: '30m'
+        readTimeout: 30m
+        writeTimeout: 30m
+        idleTimeout: 30m
     forwardedHeaders:
       trustedIPs: *trustedIps
     http:
@@ -112,18 +112,18 @@ entryPoints:
               - '*.henn.dev'
 
   tcp-2222:
-    address: ':2222'
+    address: :2222
   tcp-2424:
-    address: ':2424'
+    address: :2424
   udp-10000:
-    address: ':10000/udp'
+    address: :10000/udp
 
   rtmp:
-    address: ':1935'
+    address: :1935
   spice:
-    address: ':3128'
+    address: :3128
   spice-tls:
-    address: ':61001'
+    address: :61001
 
 certificatesResolvers:
   cf:
@@ -131,10 +131,10 @@ certificatesResolvers:
       dnsChallenge:
         provider: cloudflare
         resolvers:
-          - '1.1.1.1:53'
-          - '1.0.0.1:53'
+          - 1.1.1.1:53
+          - 1.0.0.1:53
       storage: /ssl/acme.json
-      caServer: 'https://acme-v02.api.letsencrypt.org/directory'
+      caServer: https://acme-v02.api.letsencrypt.org/directory
 
 log:
   level: DEBUG

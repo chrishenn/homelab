@@ -1,9 +1,3 @@
-[providers.onepass]
-type = "1password"
-vault = "homelab"
-account = "my.1password.com"
-
 [secrets]
-
-BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel/key" }
-BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel/token" }
+BESZEL_KEY = { provider = "op", value = "op://homelab/beszel/key" }
+BESZEL_TOKEN = { provider = "op", value = "op://homelab/beszel/token" }

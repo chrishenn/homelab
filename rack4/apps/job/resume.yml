@@ -14,7 +14,7 @@ services:
 
       DATABASE_URL: postgresql://postgres:postgres@resume_db:5432/postgres
       REDIS_URL: redis://resume_redis:6379
-      ENCRYPTION_SECRET: 'change-me-to-a-secure-agent-secret-in-production'
+      ENCRYPTION_SECRET: change-me-to-a-secure-agent-secret-in-production
 
       S3_ACCESS_KEY_ID: seaweedfs
       S3_SECRET_ACCESS_KEY: seaweedfs
@@ -38,7 +38,7 @@ services:
     volumes:
       - $DATA/resume/data:/app/data
     healthcheck:
-      test: ['CMD', 'node', '-e', "fetch('http://0.0.0.0:3000/api/health').then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
+      test: [CMD, node, -e, "fetch('http://0.0.0.0:3000/api/health').then((r) => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1));"]
     networks: [resume, newt, ollama]
     labels:
       homepage.group: Job
@@ -97,7 +97,7 @@ services:
     volumes:
       - $DATA/resume/seaweedfs:/data
     healthcheck:
-      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8888']
+      test: [CMD, wget, -q, -O, /dev/null, http://localhost:8888]
       start_period: 10s
       interval: 30s
       timeout: 10s

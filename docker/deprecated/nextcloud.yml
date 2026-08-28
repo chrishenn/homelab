@@ -40,7 +40,7 @@ services:
       PUID: $PUID
       PGID: $PGID
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
+      test: [CMD, curl, -f, http://localhost:80/]
     networks: [nextcloud, traefik]
     labels:
       homepage.group: File Editors
@@ -85,7 +85,7 @@ services:
         --o:ssl.termination=true \
         --o:welcome.enable=false
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9980/hosting/discovery']
+      test: [CMD, curl, -f, http://localhost:9980/hosting/discovery]
     networks: [nextcloud, traefik]
     labels:
       traefik.enable: true
@@ -107,7 +107,7 @@ services:
     volumes:
       - $DATA/nextcloud/nextcloud_db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD', 'pg_isready', '-q', '-d', 'nextcloud', '-U', 'nextcloud']
+      test: [CMD, pg_isready, -q, -d, nextcloud, -U, nextcloud]
     networks: [nextcloud]
 
   nextcloud_redis:
@@ -116,7 +116,7 @@ services:
     restart: unless-stopped
     container_name: nextcloud_redis
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: [CMD, redis-cli, ping]
     networks: [nextcloud]
 
 networks:

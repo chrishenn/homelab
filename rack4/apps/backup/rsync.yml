@@ -10,7 +10,7 @@ services:
     environment:
       TZ: $TZ
       CRON_SCHEDULE: '0 5 * * *'
-      CRON_CMD: '/run.sh'
+      CRON_CMD: /run.sh
       #      RUN_NOW: 1
       MEDIA: $MEDIA
     volumes:

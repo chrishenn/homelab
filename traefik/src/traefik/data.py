@@ -5,7 +5,7 @@ class LocalPaths(YamlPath):
     dyncfg = PATHS.repo / "rack4/apps/infra/traefik/cfg/dyncfg.yml"
 
 
-def svc_map() -> dict:
+def svc_map() -> dict[str, str]:
     """Return the map from service domain prefix to service hardware ip."""
     return {
         "kvm0": "http://192.168.1.22:80",

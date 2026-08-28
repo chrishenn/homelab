@@ -4,7 +4,7 @@ instanceName: public
 title: 'Dancing Chicken: Public'
 theme: dark
 color: slate
-statusStyle: 'dot'
+statusStyle: dot
 fullWidth: true
 headerStyle: clean
 useEqualHeights: true

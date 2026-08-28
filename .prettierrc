@@ -7,17 +7,17 @@ useTabs: false
 bracketSpacing: false
 
 overrides:
-- files: ['*.yml', '*.yaml', '*.json', '*.jsonl']
-  options:
-    tabWidth: 2
-    printWidth: 240
-- files: ['*.conf']
-  options:
-    tabWidth: 4
-    printWidth: 240
+  - files: ['*.yml', '*.yaml', '*.json', '*.jsonl', '*.prettierrc']
+    options:
+      tabWidth: 2
+      printWidth: 240
+  - files: ['*.conf']
+    options:
+      tabWidth: 4
+      printWidth: 240
 
-# individual files
-- files: ['Pulumi*yaml']
-  options:
-    tabWidth: 2
-    printWidth: 120
+  # individual files
+  - files: ['Pulumi*yaml']
+    options:
+      tabWidth: 2
+      printWidth: 120

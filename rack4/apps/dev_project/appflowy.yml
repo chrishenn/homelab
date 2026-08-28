@@ -127,7 +127,7 @@ services:
       DATABASE_URL: postgres://appflowy:appflowy@appflowy_db:5432/appflowy?search_path=auth
       PORT: 9999
     healthcheck:
-      test: ['CMD-SHELL', 'curl --fail http://127.0.0.1:9999/health || exit 1']
+      test: [CMD-SHELL, curl --fail http://127.0.0.1:9999/health || exit 1]
       interval: 5s
       timeout: 5s
       retries: 12
@@ -149,7 +149,7 @@ services:
       pangolin.public-resources.appflowy.targets[0].method: http
       pangolin.public-resources.appflowy.targets[0].path-match: prefix
       pangolin.public-resources.appflowy.targets[0].rewrite-match: stripPrefix
-      pangolin.public-resources.appflowy.targets[0].path: '/gotrue/'
+      pangolin.public-resources.appflowy.targets[0].path: /gotrue/
       pangolin.public-resources.appflowy.targets[0].port: 9999
       pangolin.public-resources.appflowy.targets[0].priority: 100
 
@@ -162,7 +162,7 @@ services:
       <<: *appflowy_env
       APPFLOWY_GOTRUE_BASE_URL: http://appflowy_gotrue:9999
     healthcheck:
-      test: ['CMD-SHELL', 'curl --fail http://127.0.0.1:8000/api/health || exit 1']
+      test: [CMD-SHELL, curl --fail http://127.0.0.1:8000/api/health || exit 1]
       interval: 5s
       timeout: 5s
       retries: 12
@@ -277,7 +277,7 @@ services:
       - $DATA/appflowy/s3/data:/var/lib/garage/data
       - $DATA/appflowy/s3/meta:/var/lib/garage/meta
     healthcheck:
-      test: ['CMD', '/garage', 'stats', '-a']
+      test: [CMD, /garage, stats, -a]
       interval: 5s
       timeout: 3s
       retries: 10

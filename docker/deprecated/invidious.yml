@@ -54,7 +54,7 @@ services:
     container_name: invidious_helper
     restart: unless-stopped
     init: true
-    command: ['--tcp', '0.0.0.0:12999']
+    command: [--tcp, 0.0.0.0:12999]
     environment:
       RUST_LOG: info
     cap_drop:
@@ -78,7 +78,7 @@ services:
       - ./invidious/sql:/config/sql
       - ./invidious/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      test: [CMD-SHELL, pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB]
     networks: [invidious]
 
 networks:

@@ -41,7 +41,7 @@ services:
       - $DATA/jitsi/transcripts:/usr/share/jitsi-meet/transcripts
     networks: [meet.jitsi, traefik]
     labels:
-      service: 'jitsi-web'
+      service: jitsi-web
 
       #      homepage.group: Tools
       #      homepage.name: Jitsi
@@ -96,7 +96,7 @@ services:
         aliases:
           - xmpp.meet.jitsi
     labels:
-      service: 'jitsi-prosody'
+      service: jitsi-prosody
 
   jicofo:
     profiles: [jitsi]
@@ -109,7 +109,7 @@ services:
       - $DATA/jitsi/jicofo:/config
     networks: [meet.jitsi, traefik]
     labels:
-      service: 'jitsi-jicofo'
+      service: jitsi-jicofo
 
   jvb:
     profiles: [jitsi]
@@ -122,7 +122,7 @@ services:
       - $DATA/jitsi/jvb:/config
     networks: [meet.jitsi, traefik]
     labels:
-      service: 'jitsi-jvb'
+      service: jitsi-jvb
 
       #      pangolin.public-resources.jvb.name: jvb
       #      pangolin.public-resources.jvb.protocol: udp

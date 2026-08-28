@@ -1,7 +1,7 @@
 #!/bin/bash
 
 session="new"
-tmux new-session -d -s ${session}
+tmux new-session -d -s "$session"
 window=${session}:0
 pane=${window}.0
 tmux send-keys -t "$pane" 'conda activate env39' Enter

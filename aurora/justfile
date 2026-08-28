@@ -1,0 +1,7 @@
+alias b := boot
+
+boot:
+    mise bootstrap --skip-dirty -y
+
+ss:
+    fnox sync --provider age --config fnox.local.toml -f

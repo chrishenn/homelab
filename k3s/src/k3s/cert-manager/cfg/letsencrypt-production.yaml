@@ -16,4 +16,4 @@ spec:
               key: cloudflare-token
         selector:
           dnsZones:
-            - 'henn.dev'
+            - henn.dev

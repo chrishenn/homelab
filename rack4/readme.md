@@ -34,6 +34,7 @@ j pullup core "$imgs"
 # pocketid or else it crashes; pocketid is routed by pangolin via rack4 newt.
 j pullup core zot traefik traefik_k pocketid newt
 j pullup
+docker system prune -a
 ```
 
 ---

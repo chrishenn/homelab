@@ -13,7 +13,7 @@ function k_dev {
 	ctx_tgt=''
 	url=''
 
-	kubectl config use-context $url
+	kubectl config use-context "$url"
 	ctx=$(kubectl config current-context)
 	echo "current context: $ctx"
 

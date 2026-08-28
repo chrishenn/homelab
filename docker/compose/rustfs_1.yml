@@ -1,0 +1,60 @@
+---
+x-stoat_s3: &stoat_s3
+  RUSTFS_ACCESS_KEY: minioautumn
+  RUSTFS_SECRET_KEY: minioautumn
+  RUSTFS_SERVER_DOMAINS: stoat-s3
+
+services:
+  stoat-s3:
+    image: rustfs/rustfs:latest
+    container_name: stoat-s3
+    depends_on:
+      stoat-s3_perm:
+        condition: service_completed_successfully
+    volumes:
+      - $DATA/stoat/s3:/data
+    environment:
+      <<: *stoat_s3
+    networks:
+      stoat:
+        aliases:
+          - revolt-uploads.stoat-s3
+    command: /data
+    restart: unless-stopped
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+      interval: 5s
+    profiles: [stoat]
+
+  stoat-s3_bucket:
+    image: minio/mc
+    container_name: stoat-s3_bucket
+    depends_on:
+      stoat-s3:
+        condition: service_healthy
+    networks: [stoat]
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        until mc alias set rustfs http://stoat-s3:9000 minioautumn minioautumn; do
+          echo 'waiting to connect to stoat-s3'
+          sleep 2
+        done
+        mc mb rustfs/revolt-uploads --ignore-existing
+    restart: no
+    profiles: [stoat]
+
+  stoat-s3_perm:
+    image: alpine
+    container_name: stoat-s3_perm
+    volumes:
+      - $DATA/stoat/s3:/data
+    command: chown -R 10001:10001 /data
+    restart: no
+    user: root
+    profiles: [stoat]

@@ -60,7 +60,7 @@ services:
     volumes:
       - $DATA/hoodik/db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 5s
       retries: 5

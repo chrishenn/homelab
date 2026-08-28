@@ -11,5 +11,5 @@ spec:
     kind: ClusterIssuer
   commonName: '*.henn.dev'
   dnsNames:
-    - 'henn.dev'
+    - henn.dev
     - '*.henn.dev'

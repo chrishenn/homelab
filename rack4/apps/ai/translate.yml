@@ -24,7 +24,7 @@ services:
       - $DATA/translate/db:/app/db
       - $DATA/translate/data:/root/.local
     healthcheck:
-      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+      test: [CMD-SHELL, ./venv/bin/python scripts/healthcheck.py]
       interval: 10s
       timeout: 4s
       retries: 4

@@ -73,24 +73,24 @@ config
 
 ```yml
 upstreams:
-    init:
-        # startup behavior: {blocking, failOnError, fast}
-        strategy: fast
-    groups:
-        default:
-            - https://1.1.1.1/dns-query
-    #      - tcp-tls:one.one.one.one:853
-    #      - https://dns.nextdns.io/74c891
-    #      - tcp-tls:74c891.dns.nextdns.io:853
+  init:
+    # startup behavior: {blocking, failOnError, fast}
+    strategy: fast
+  groups:
+    default:
+      - https://1.1.1.1/dns-query
+      #      - tcp-tls:one.one.one.one:853
+      #      - https://dns.nextdns.io/74c891
+      #      - tcp-tls:74c891.dns.nextdns.io:853
 
 customDNS:
-    customTTL: 1h
-    filterUnmappedTypes: false
-    # this is not working - I assume because our primary upstream is now https, this mapping does not happen
-    # to use the lancache, manually set an individual machine to use $LANCACHE_IP as the sole dns server
-    # according to https://github.com/uklans/cache-domains, {lancache.steamcontent.com} is the only domain we need to rewrite
-    #  mapping:
-    #    lancache.steamcontent.com: 192.168.1.143
+  customTTL: 1h
+  filterUnmappedTypes: false
+  # this is not working - I assume because our primary upstream is now https, this mapping does not happen
+  # to use the lancache, manually set an individual machine to use $LANCACHE_IP as the sole dns server
+  # according to https://github.com/uklans/cache-domains, {lancache.steamcontent.com} is the only domain we need to rewrite
+  #  mapping:
+  #    lancache.steamcontent.com: 192.168.1.143
 ```
 
 https doh (downstreams)
@@ -102,15 +102,15 @@ https doh (downstreams)
 
 ```yml
 spec:
-    entryPoints:
-        - dot
-    routes:
-        - match: HostSNI(`*`)
-          services:
-              - name: blocky
-                port: 53
-                terminationDelay: 400
-                weight: 10
-    tls:
-        passthrough: false
+  entryPoints:
+    - dot
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: blocky
+          port: 53
+          terminationDelay: 400
+          weight: 10
+  tls:
+    passthrough: false
 ```

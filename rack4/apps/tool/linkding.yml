@@ -23,7 +23,7 @@ services:
     volumes:
       - $DATA/linkding/data:/etc/linkding/data
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:9090']
+      test: [CMD, curl, -ILfSs, http://localhost:9090]
     networks: [newt]
     labels:
       homepage.group: General Tools

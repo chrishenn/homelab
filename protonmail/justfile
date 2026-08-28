@@ -1,0 +1,3 @@
+# sync secrets
+ss:
+    fnox sync --provider age --local-file -f

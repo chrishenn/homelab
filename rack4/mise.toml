@@ -6,13 +6,13 @@ pnpm = "latest"
 fnox = "latest"
 rclone = "latest"
 mc = "latest"
-glab = { version = "latest", exe = "glab" }
 cargo-binstall = "latest"
-"cargo:forgejo-cli" = "latest"
 age = "latest"
 regctl = "latest"
 crane = "latest"
 cue = "latest"
+glab = { version = "latest", exe = "glab" }
+"cargo:forgejo-cli" = "latest"
 
 [env]
 OP_RUN_NO_MASKING = true
@@ -56,3 +56,126 @@ OIDC = "https://pocketid.chenn.dev"
 OIDC_DISCOVERY = "https://pocketid.chenn.dev/.well-known/openid-configuration"
 
 STALWART_URL = "https://mail.chenn.dev"
+
+# fedora server (rack4)
+[bootstrap.remote.hosts.rack4]
+host = "henn.dev"
+user = "chris"
+port = 2200
+tags = ["production"]
+
+[bootstrap.user]
+login_shell = "/bin/bash"
+
+# user: chris
+[bootstrap.groups.chris]
+system = true
+gid = 1000
+
+[bootstrap.users.chris]
+system = true
+group = "chris"
+groups = ["wheel", "docker", "incus-admin", "libvirt"]
+uid = 1000
+
+# sysctl
+[bootstrap.files."/etc/sysctl.d/99-custom.conf"]
+content = """
+net.ipv4.ip_nonlocal_bind=1
+vm.overcommit_memory=1
+fs.inotify.max_user_watches=1014796
+fs.inotify.max_user_instances=1014796
+fs.inotify.max_queued_events=1014796
+net.ipv6.conf.all.disable_ipv6=1
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# docker
+[bootstrap.files."/etc/docker/daemon.json"]
+content = """
+{
+    "registry-mirrors": ["https://zot.henn.dev"],
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    },
+    "log-level": "warn",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "5"
+    },
+    "default-address-pools": [
+        {
+            "base": "172.16.0.0/12",
+            "size": 24
+        }
+    ]
+}
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["docker"]
+
+# sshd (fedora-based)
+[bootstrap.files."/etc/ssh/sshd_config"]
+content = """
+AuthorizedKeysFile      .ssh/authorized_keys
+Include /etc/ssh/sshd_config.d/*.conf
+PasswordAuthentication no
+PermitRootLogin no
+Port 2200
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["sshd"]
+
+# nfs shares
+[bootstrap.files."/etc/exports"]
+content = """
+/var/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/k 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/r 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# samba shares
+[bootstrap.files."/etc/samba/smb.conf"]
+source = "smb.conf"
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["smb"]
+
+[bootstrap.services]
+"sleep.target" = { state = "stopped", enabled = false, masked = true }
+"suspend.target" = { state = "stopped", enabled = false, masked = true }
+"hibernate.target" = { state = "stopped", enabled = false, masked = true }
+"hybrid-sleep.target" = { state = "stopped", enabled = false, masked = true }
+sshd = { state = "running", enabled = true, on_change = "none" }
+docker = { state = "running", enabled = true, on_change = "reload_or_restart" }
+smb = { state = "running", enabled = true, on_change = "reload_or_restart" }
+
+[bootstrap.repos]
+"/var/home/chris/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }
+
+[bootstrap.hooks.final]
+run = """
+sudo sysctl -q --system
+sudo systemctl restart sshd
+echo '${PASS}' > sudo smbpasswd -a chris -s
+sudo smbpasswd -e chris
+sudo systemctl restart smb
+sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml --quiet
+"""

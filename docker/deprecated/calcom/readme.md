@@ -38,12 +38,12 @@ STRIPE_WEBHOOK_SECRET: 1234
 
 ```toml
 [secrets]
-CALCOM_NEXTAUTH_SECRET = { provider = "onepass", value = "op://homelab/calcom/NEXTAUTH_SECRET" }
-CALCOM_CALENDSO_ENCRYPTION_KEY = { provider = "onepass", value = "op://homelab/calcom/CALENDSO_ENCRYPTION_KEY" }
-CALCOM_JWT_SECRET = { provider = "onepass", value = "op://homelab/calcom/JWT_SECRET" }
-CALCOM_CRON_API_KEY = { provider = "onepass", value = "op://homelab/calcom/CRON_API_KEY" }
-CALCOM_VAPID_PUBLIC_KEY = { provider = "onepass", value = "op://homelab/calcom/VAPID_PUBLIC_KEY" }
-CALCOM_VAPID_PRIVATE_KEY = { provider = "onepass", value = "op://homelab/calcom/VAPID_PRIVATE_KEY" }
+CALCOM_NEXTAUTH_SECRET = { provider = "op", value = "op://homelab/calcom/NEXTAUTH_SECRET" }
+CALCOM_CALENDSO_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/calcom/CALENDSO_ENCRYPTION_KEY" }
+CALCOM_JWT_SECRET = { provider = "op", value = "op://homelab/calcom/JWT_SECRET" }
+CALCOM_CRON_API_KEY = { provider = "op", value = "op://homelab/calcom/CRON_API_KEY" }
+CALCOM_VAPID_PUBLIC_KEY = { provider = "op", value = "op://homelab/calcom/VAPID_PUBLIC_KEY" }
+CALCOM_VAPID_PRIVATE_KEY = { provider = "op", value = "op://homelab/calcom/VAPID_PRIVATE_KEY" }
 ```
 
 Unneeded vars for local use. Because the codebase and documentation is such a mess, it's impossible to tell what vars
