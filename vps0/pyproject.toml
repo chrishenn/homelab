@@ -6,6 +6,8 @@ requires-python = ">=3.14"
 dependencies = [
     "pulumi>=3.217.0",
     "pulumi-cloudflare>=6.13.0",
+    "pulumi-hostinger",
+    "pydantic>=2.13.4",
     "python-dotenv>=1.2.1",
 ]
 
@@ -13,3 +15,6 @@ dependencies = [
 dev = [
     "types-pyyaml>=6.0.12.20250915",
 ]
+
+[tool.uv.sources]
+pulumi-hostinger = { path = "sdks/hostinger" }

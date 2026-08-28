@@ -32,6 +32,12 @@ just pullup
 # docker compose up -d --remove-orphans --force-recreate --pull always
 ```
 
+add a terraform plugin
+
+```bash
+pulumi package add terraform-provider registry.terraform.io/comradesharf/hostinger
+```
+
 ---
 
 ## todo

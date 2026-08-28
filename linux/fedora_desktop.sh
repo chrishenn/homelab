@@ -85,6 +85,8 @@ function chrome {
 }
 
 function zen {
+	# does the install need to be under /opt/1password?
+	# this package does not integrate with 1password
 	sudo tee /etc/yum.repos.d/zen-browser.repo >/dev/null <<-'END'
 		[zen-browser]
 		name=Zen Browser

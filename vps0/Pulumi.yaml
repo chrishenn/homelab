@@ -4,3 +4,9 @@ runtime:
   name: python
   options:
     toolchain: uv
+packages:
+  hostinger:
+    source: terraform-provider
+    version: 1.3.0
+    parameters:
+      - registry.terraform.io/comradesharf/hostinger
