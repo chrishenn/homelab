@@ -155,9 +155,10 @@ def hostinger_firewall() -> None:
             source_detail=rule.source_detail,
         )
 
-    # Unfortunately, the terraform provider only inclues an "action" to sync or activate a firewall
-    # (aka group of firewall rules). The data source to check the firewall's state (fw.is_synced) does not appear to
-    # work.
+    # Unfortunately, the terraform provider only inclues an "action" to sync or activate a firewall (aka group of
+    # firewall rules), which do not appear to translate into pulumi's state-management model - or at least, the auto-gen
+    # that ports the terraform module into pulumi doesn't. Also, the data source to check the firewall's state
+    # (fw.is_synced) does not appear to work.
     pulumi.log.warn("If firewall rules changed you will need to manually activate and/or sync them")
 
 
