@@ -84,20 +84,6 @@ function chrome {
 	sudo rpm-ostree install google-chrome-stable
 }
 
-function zen {
-	# does the install need to be under /opt/1password?
-	# this package does not integrate with 1password
-	sudo tee /etc/yum.repos.d/zen-browser.repo >/dev/null <<-'END'
-		[zen-browser]
-		name=Zen Browser
-		baseurl=https://xins3c.github.io/zen-browser-rpm
-		enabled=1
-		gpgcheck=1
-		gpgkey=https://xins3c.github.io/zen-browser-rpm/RPM-GPG-KEY-zen-browser
-	END
-	sudo rpm-ostree install zen-browser
-}
-
 function nfs {
 	# mounting to /mnt/* works, but displays as /var/mnt/* in dolphin, and shows up twice
 	sudo mkdir -p /var/mnt/h /var/mnt/k /var/mnt/f /var/mnt/q /var/mnt/r
@@ -112,6 +98,19 @@ function nfs {
 }
 
 # --- deprecated ---
+
+function deprecated_zen {
+	# this package does not integrate with 1password
+	sudo tee /etc/yum.repos.d/zen-browser.repo >/dev/null <<-'END'
+		[zen-browser]
+		name=Zen Browser
+		baseurl=https://xins3c.github.io/zen-browser-rpm
+		enabled=1
+		gpgcheck=1
+		gpgkey=https://xins3c.github.io/zen-browser-rpm/RPM-GPG-KEY-zen-browser
+	END
+	sudo rpm-ostree install zen-browser
+}
 
 function deprecated_chrome {
 	url="https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-148.0.7778.167-1.x86_64.rpm"
