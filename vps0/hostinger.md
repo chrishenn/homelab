@@ -46,9 +46,7 @@ function replace_or_append_line {
 server setup
 
 ```bash
-# add the hostinger ssh public key into server /home/chris/.ssh/authorized_keys
-echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
-    $SSH_ROOT "mkdir -p /home/chris/.ssh && cat >> /home/chris/.ssh/authorized_keys"
+# login as root
 
 # adduser chris (untested)
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
@@ -56,24 +54,14 @@ $SSH_ROOT "sudo usermod -aG docker chris"
 echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | \
     $SSH_ROOT "chpasswd"
 
-# login as root
-$SSH_ROOT
+# add the hostinger ssh public key into server /home/chris/.ssh/authorized_keys
+echo "$(op read 'op://homelab/nlptoaczq3qtw2fqs6nb2d6r5y/public key')" | \
+    $SSH_ROOT "mkdir -p /home/chris/.ssh && cat >> /home/chris/.ssh/authorized_keys"
 
-# update
 sudo apt update && sudo apt upgrade -y
+sudo ufw disable
 
-# ufw
-sudo ufw allow 22/tcp
-sudo ufw allow 2200/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 51820/udp
-sudo ufw allow 21820/udp
-sudo ufw allow 10000/udp
-sudo ufw enable -y
-# sudo ufw status verbose
-
-# sshd config
+# sshd
 sshd_cfg_clean
 replace_or_append_line 'Port' 'Port 2200'
 replace_or_append_line 'PermitRootLogin' 'PermitRootLogin no'
@@ -82,11 +70,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart ssh
 exit
 
-# In the web console, allow port 2200 for protocol ssh
-# accept TCP custom (my ip from `curl ip.me`)
-
 # login as chris
-$SSH_CHRIS
 
 # fail2ban
 sudo apt install -y fail2ban
@@ -99,7 +83,6 @@ net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
 END
 sudo sysctl -p /etc/sysctl.d/99-sysctl.conf
-# cat /proc/sys/net/ipv6/conf/all/disable_ipv6
 
 # enable ipv6
 sudo tee /etc/sysctl.d/99-sysctl.conf >/dev/null <<-'END'
@@ -144,5 +127,4 @@ $(op read op://homelab/svc/bash) \
     ; chezmoi update -a --force
 
 mise i
-sudo rm /usr/local/bin/chezmoi
 ```
