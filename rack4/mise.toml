@@ -56,3 +56,107 @@ OIDC = "https://pocketid.chenn.dev"
 OIDC_DISCOVERY = "https://pocketid.chenn.dev/.well-known/openid-configuration"
 
 STALWART_URL = "https://mail.chenn.dev"
+
+## fedora server (rack4)
+##
+[bootstrap.remote.hosts.rack4]
+host = "henn.dev"
+user = "chris"
+port = 2200
+tags = ["production"]
+
+[bootstrap.user]
+login_shell = "/bin/bash"
+
+[bootstrap.groups.chris]
+system = true
+gid = 1000
+
+[bootstrap.users.chris]
+system = true
+group = "chris"
+groups = ["wheel", "docker", "incus-admin", "libvirt"]
+uid = 1000
+
+[bootstrap.groups.chris1]
+system = true
+gid = 1002
+
+[bootstrap.users.chris1]
+system = true
+group = "chris1"
+groups = ["wheel", "docker", "incus-admin", "libvirt"]
+uid = 1002
+create_home = false
+
+# sysctl
+[bootstrap.files."/etc/sysctl.d/99-custom.conf"]
+content = """
+net.ipv4.ip_nonlocal_bind=1
+vm.overcommit_memory=1
+fs.inotify.max_user_watches=1014796
+fs.inotify.max_user_instances=1014796
+fs.inotify.max_queued_events=1014796
+net.ipv6.conf.all.disable_ipv6=1
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# docker
+[bootstrap.files."/etc/docker/daemon.json"]
+content = """
+{
+    "registry-mirrors": ["https://zot.henn.dev"],
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    },
+    "log-level": "warn",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "5"
+    },
+    "default-address-pools": [
+        {
+            "base": "172.16.0.0/12",
+            "size": 24
+        }
+    ]
+}
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["docker"]
+
+# sshd
+[bootstrap.files."/etc/ssh/sshd_config"]
+content = """
+AuthorizedKeysFile      .ssh/authorized_keys
+Include /etc/ssh/sshd_config.d/*.conf
+PasswordAuthentication no
+PermitRootLogin no
+Port 2200
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+[bootstrap.hooks.final]
+run = """
+sudo sysctl -q --system
+"""
+
+[bootstrap.services.docker]
+state = "running"
+enabled = true
+on_change = "reload_or_restart"
+
+[bootstrap.repos]
+"/var/home/chris/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }

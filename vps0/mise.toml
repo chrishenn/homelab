@@ -7,33 +7,50 @@ pulumi = "latest"
 uv = "latest"
 
 [env]
-DOCKER_HOST = "ssh://chris@${VPS0_IP}:2200"
+DOCKER_HOST = "ssh://chris@chenn.dev:2200"
 DIR_HOST = "/home/chris/Projects/homelab/vps0"
 DATA = "/home/chris/data"
 BACKUP = "/home/chris/backup"
 
-##
 ## ubuntu server (vps0)
 ##
+# todo: initial bootstrap should connect as root
+# todo: this bootstrap will not work unless we set a password for the 'chris' user
+# echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | $SSH_ROOT "chpasswd"
 [bootstrap.remote.hosts.vps0]
 host = "chenn.dev"
-user = "chris"
-port = 2200
-identity_file = "~/.ssh/known_hosts"
+user = "root"
+port = 22
+# user = "chris"
+# port = 2200
 tags = ["production"]
 
 [bootstrap.user]
 login_shell = "/bin/bash"
 
-[bootstrap.groups.chris]
+[bootstrap.groups.ubuntu]
 system = true
 gid = 1000
+
+[bootstrap.users.ubuntu]
+system = true
+group = "ubuntu"
+groups = ["adm", "cdrom", "sudo", "dip", "lxd"]
+uid = 1000
+
+[bootstrap.groups.chris]
+system = true
+gid = 1001
 
 [bootstrap.users.chris]
 system = true
 group = "chris"
-groups = ["docker", "incus-admin", "libvirt"]
-uid = 1000
+groups = ["sudo", "users", "docker"]
+uid = 1001
+
+[bootstrap.linux.firewall]
+backend = "ufw"
+state = "disabled"
 
 # sysctl
 [bootstrap.files."/etc/sysctl.d/99-custom.conf"]
@@ -43,7 +60,9 @@ vm.overcommit_memory=1
 fs.inotify.max_user_watches=1014796
 fs.inotify.max_user_instances=1014796
 fs.inotify.max_queued_events=1014796
-net.ipv6.conf.all.disable_ipv6=1
+net.ipv6.conf.all.disable_ipv6 = 0
+net.ipv6.conf.default.disable_ipv6 = 0
+net.ipv6.conf.lo.disable_ipv6 = 0
 """
 owner = "root"
 group = "root"
@@ -53,26 +72,12 @@ mode = "0644"
 [bootstrap.files."/etc/docker/daemon.json"]
 content = """
 {
-    "registry-mirrors": ["https://zot.henn.dev"],
-    "default-runtime": "nvidia",
-    "runtimes": {
-        "nvidia": {
-            "args": [],
-            "path": "nvidia-container-runtime"
-        }
-    },
     "log-level": "warn",
     "log-driver": "json-file",
     "log-opts": {
         "max-size": "10m",
         "max-file": "5"
-    },
-    "default-address-pools": [
-        {
-            "base": "172.16.0.0/12",
-            "size": 24
-        }
-    ]
+    }
 }
 """
 owner = "root"
@@ -83,25 +88,26 @@ notify = ["docker"]
 # sshd
 [bootstrap.files."/etc/ssh/sshd_config"]
 content = """
+AcceptEnv LANG LC_* COLORTERM NO_COLOR
 Include /etc/ssh/sshd_config.d/*.conf
-PasswordAuthentication no
 KbdInteractiveAuthentication no
+PasswordAuthentication no
+PermitRootLogin no
+Port 2200
+PrintMotd no
+Subsystem       sftp    /usr/lib/openssh/sftp-server
 UsePAM yes
 X11Forwarding yes
-PrintMotd no
-AcceptEnv LANG LC_* COLORTERM NO_COLOR
-Subsystem       sftp    /usr/lib/openssh/sftp-server
-Port 2200
-PermitRootLogin no
 """
 owner = "root"
 group = "root"
 mode = "0644"
 
+# todo: verify that this env is evaluated locally, then piped into the remote bootstrap
 [bootstrap.hooks.final]
 run = """
-# sysctl settings apply
-sudo sysctl --system -q
+sysctl -q --system
+# echo "{{env.VPS0_CHRIS_PASS}}" | chpasswd
 """
 
 [bootstrap.services.docker]
@@ -110,4 +116,4 @@ enabled = true
 on_change = "reload_or_restart"
 
 [bootstrap.repos]
-"~/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }
+"/home/chris/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }

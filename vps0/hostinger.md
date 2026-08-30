@@ -49,8 +49,9 @@ server setup
 # login as root
 
 # adduser chris (untested)
+export SSH_ROOT="ssh root@chenn.dev"
 $SSH_ROOT "adduser --quiet --disabled-password --comment '' --ingroup sudo chris"
-$SSH_ROOT "sudo usermod -aG docker chris"
+$SSH_ROOT "usermod -aG docker chris"
 echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | \
     $SSH_ROOT "chpasswd"
 
