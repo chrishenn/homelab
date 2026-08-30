@@ -15,7 +15,7 @@ BACKUP = "/home/chris/backup"
 ## ubuntu server (vps0)
 ##
 # todo: initial bootstrap should connect as root
-# todo: this bootstrap will not work unless we set a password for the 'chris' user
+# todo: bootstrap creates the 'chris' user with no password - need to set after
 # echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | $SSH_ROOT "chpasswd"
 [bootstrap.remote.hosts.vps0]
 host = "chenn.dev"

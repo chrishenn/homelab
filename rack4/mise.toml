@@ -6,13 +6,13 @@ pnpm = "latest"
 fnox = "latest"
 rclone = "latest"
 mc = "latest"
-glab = { version = "latest", exe = "glab" }
 cargo-binstall = "latest"
-"cargo:forgejo-cli" = "latest"
 age = "latest"
 regctl = "latest"
 crane = "latest"
 cue = "latest"
+glab = { version = "latest", exe = "glab" }
+"cargo:forgejo-cli" = "latest"
 
 [env]
 OP_RUN_NO_MASKING = true
@@ -78,17 +78,6 @@ group = "chris"
 groups = ["wheel", "docker", "incus-admin", "libvirt"]
 uid = 1000
 
-[bootstrap.groups.chris1]
-system = true
-gid = 1002
-
-[bootstrap.users.chris1]
-system = true
-group = "chris1"
-groups = ["wheel", "docker", "incus-admin", "libvirt"]
-uid = 1002
-create_home = false
-
 # sysctl
 [bootstrap.files."/etc/sysctl.d/99-custom.conf"]
 content = """
@@ -148,15 +137,42 @@ owner = "root"
 group = "root"
 mode = "0644"
 
-[bootstrap.hooks.final]
-run = """
-sudo sysctl -q --system
+# nfs shares
+[bootstrap.files."/etc/exports"]
+content = """
+/var/mnt/f 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/h 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/k 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
+/var/mnt/r 192.168.1.0/24(rw,async,insecure,no_subtree_check,no_root_squash)
 """
+owner = "root"
+group = "root"
+mode = "0644"
 
-[bootstrap.services.docker]
-state = "running"
-enabled = true
-on_change = "reload_or_restart"
+# samba shares
+[bootstrap.files."/etc/samba/smb.conf"]
+source = "smb.conf"
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["smb"]
+
+[bootstrap.services]
+"sleep.target" = { state = "stopped", enabled = false, masked = true}
+"suspend.target" = { state = "stopped", enabled = false, masked = true}
+"hibernate.target" = { state = "stopped", enabled = false, masked = true}
+"hybrid-sleep.target" = { state = "stopped", enabled = false, masked = true}
+sshd = {state = "running", enabled = true, on_change = "none"}
+docker = {state = "running", enabled = true, on_change = "reload_or_restart"}
+smb = {state = "running", enabled = true, on_change = "reload_or_restart"}
 
 [bootstrap.repos]
 "/var/home/chris/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }
+
+[bootstrap.hooks.final]
+run = """
+sudo sysctl -q --system
+sudo systemctl restart sshd
+echo '${PASS}' > sudo smbpasswd -a chris -s
+sudo smbpasswd -e chris
+"""

@@ -9,7 +9,8 @@ sudo smbpasswd -a chris
 sudo smbpasswd -e chris
 sudo ufw allow samba
 
+# configure samba shares in smb.conf
 sudo cp $sdir/smb.conf /etc/samba/smb.conf
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now smbd
+sudo systemctl enable --now smb

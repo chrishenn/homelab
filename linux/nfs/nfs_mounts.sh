@@ -27,7 +27,7 @@ sudo mkdir -p \
 	/var/mnt/f \
 	/var/mnt/h \
 	/var/mnt/k \
-	/var/mnt/q
+	/var/mnt/r
 
 # minimal
 192.168.1.142:/var/mnt/f /var/mnt/f nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
@@ -37,7 +37,7 @@ sudo tee -a /etc/fstab >/dev/null <<-END
 	192.168.1.142:/var/mnt/f /var/mnt/f nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
 	192.168.1.142:/var/mnt/h /var/mnt/h nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
 	192.168.1.142:/var/mnt/k /var/mnt/k nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
-	192.168.1.142:/var/mnt/q /var/mnt/q nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
+	192.168.1.142:/var/mnt/r /var/mnt/r nfs x-systemd.automount,x-systemd.mount-timeout=20,_netdev,x-systemd.after=network-online.target,defaults,proto=rdma,async,noatime,nodiratime 0 0
 END
 
 sudo systemctl daemon-reload
