@@ -3,3 +3,4 @@ set fallback
 # sync secrets
 ss:
     fnox sync --provider age --local-file -f
+    fnox sync --provider age --local-file -f -P newt
