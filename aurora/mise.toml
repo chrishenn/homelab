@@ -12,40 +12,45 @@ uid = 1000
 [bootstrap.brew]
 adopt = true
 
-[bootstrap.brew.taps]
-"stalwartlabs/tap" = "https://github.com/stalwartlabs/homebrew-tap.git"
-"valkyrie00/bbrew" = "https://github.com/valkyrie00/homebrew-bbrew.git"
-"ublue-os/tap" = "https://github.com/ublue-os/homebrew-tap.git"
-
 [bootstrap.packages]
 "brew:atuin" = "latest"
-"brew:valkyrie00/bbrew/bbrew" = "latest"
 "brew:detect-secrets" = "latest"
 "brew:feroxbuster" = "latest"
 "brew:media-info" = "latest"
 "brew:parallel" = "latest"
 "brew:sevenzip" = "latest"
-"brew:stalwartlabs/tap/stalwart-cli" = "latest"
 "brew:trash-cli" = "latest"
-"brew:mingw-w64" = "latest"
+"brew:stalwartlabs/tap/stalwart-cli" = "latest"
 
 # only font "tapped casks" are supported by mise right now
 # "brew-cask:ublue-os/tap/zed-linux" = "latest"
 # "brew-cask:ublue-os/tap/1password-gui-linux" = "latest"
 # "brew-cask:ublue-os/tap/jetbrains-toolbox-linux" = "latest"
+# "brew-cask:suzuki-shunsuke/ghtkn/ghtkn" = "latest"
 "brew-cask:font-fira-code-nerd-font" = "latest"
 "brew-cask:font-jetbrains-mono-nerd-font" = "latest"
+
+"flatpak:io.mpv.Mpv" = "latest"
+"flatpak:org.kde.haruna" = "latest"
+"flatpak:org.kde.kdenlive" = "latest"
+"flatpak:com.belmoussaoui.Obfuscate" = "latest"
+"flatpak:io.gitlab.adhami3310.Converter" = "latest"
+"flatpak:org.darktable.Darktable" = "latest"
+"flatpak:com.github.wwmm.easyeffects" = "latest"
+"flatpak:org.audacityteam.Audacity" = "latest"
 
 "flatpak:md.obsidian.Obsidian" = "latest"
 "flatpak:io.github.cboxdoerfer.FSearch" = "latest"
 "flatpak:com.prusa3d.PrusaSlicer" = "latest"
-"flatpak:com.github.wwmm.easyeffects" = "latest"
 "flatpak:org.onlyoffice.desktopeditors" = "latest"
-"flatpak:org.kde.kdenlive" = "latest"
-"flatpak:com.belmoussaoui.Obfuscate" = "latest"
-"flatpak:io.gitlab.adhami3310.Converter" = "latest"
-"flatpak:org.audacityteam.Audacity" = "latest"
-"flatpak:org.darktable.Darktable" = "latest"
+"flatpak:io.missioncenter.MissionCenter" = "latest"
+"flatpak:me.iepure.devtoolbox" = "latest"
+
+"flatpak:com.github.tchx84.Flatseal" = "latest"
+"flatpak:io.github.flattool.Warehouse" = "latest"
+
+"flatpak:com.vysp3r.ProtonPlus" = "latest"
+# "flatpak:org.deskflow.deskflow" = "latest"
 
 [bootstrap.hooks.post-packages]
 run = """
