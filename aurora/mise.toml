@@ -27,6 +27,7 @@ adopt = true
 "brew:sevenzip" = "latest"
 "brew:stalwartlabs/tap/stalwart-cli" = "latest"
 "brew:trash-cli" = "latest"
+"brew:mingw-w64" = "latest"
 
 # only font "tapped casks" are supported by mise right now
 # "brew-cask:ublue-os/tap/zed-linux" = "latest"

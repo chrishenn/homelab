@@ -68,7 +68,8 @@ function gclone {
 function mise_boot {
 	mise bootstrap -y
 
-	# proton and chrome depend on mise-bootstrapped repo files
+	# proton and chrome depend on mise-bootstrapped repo files.
+	# musl pkgs are needed to compile musl target with rust.
 	sudo rpm-ostree install \
 		proton-vpn-gnome-desktop \
 		google-chrome-stable \
