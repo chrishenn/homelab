@@ -5,14 +5,12 @@
 # todo: write a vfox package or a homebrew cask for firefox
 # todo: write a vfox package or a homebrew cask for chrome
 # todo: write a vfox package or a homebrew cask for zen-browser
-# for now, use zentool to install zen
 
 sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
 
-# todo: using mise to bootstrap secrets and dotfiles would simplify this
 function installs {
+	# todo: read this and see what else I've not handled manually
 	sudo ujust devmode
-	sudo rpm-ostree install kvantum firefox
 
 	# mise, uv, pixi, proto, soar
 	curl https://mise.run | sh
@@ -45,6 +43,7 @@ function chezmoi_init {
 		return 1
 	fi
 	chezmoi init --apply chrishenn
+	. ~/.bashrc
 }
 
 function mise_init {
@@ -53,7 +52,7 @@ function mise_init {
 
 	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
 	if [ -z $GITHUB_TOKEN ]; then
-		echo "mise boot error: GITHUB_TOKEN not set"
+		echo "mise_init error: GITHUB_TOKEN not set"
 		return 1
 	fi
 	mise i
@@ -61,6 +60,7 @@ function mise_init {
 
 function gclone {
 	# depends on chezmoi, mise tools, and other tools (def brew/gnu-parallel) being installed
+	# mise bootstrap could do this, but for initial (unsafe) clones this is much faster
 	sudo chmod +x ~/gclone.sh
 	~/gclone.sh
 }
@@ -68,10 +68,14 @@ function gclone {
 function mise_boot {
 	mise bootstrap -y
 
-	# these depend on mise-bootstrapped files
+	# proton and chrome depend on mise-bootstrapped repo files
 	sudo rpm-ostree install \
 		proton-vpn-gnome-desktop \
-		google-chrome-stable
+		google-chrome-stable \
+		kvantum \
+		firefox \
+		musl-gcc musl-libc-static musl-devel
+	# soar packages.toml is installed by chezmoi init
 	soar apply -y
 }
 
@@ -86,6 +90,11 @@ function nfs {
 	END
 	sudo systemctl daemon-reload
 	sudo mount -a
+}
+
+function zentool_init {
+	just -f ~/Projects/zentool/justfile build
+	just -f ~/Projects/zentool/justfile run install
 }
 
 # --- deprecated ---
@@ -191,7 +200,6 @@ function deprecated_protonvpn {
 
 function deprecated_power_shortcuts {
 	# replaced with mise bootstrap files
-	sudo chmod +x $REPO/linux/power_shortcuts/power_shortcuts.sh
 	$REPO/linux/power_shortcuts/power_shortcuts.sh
 }
 
@@ -213,6 +221,7 @@ function deprecated_settings_grub {
 	sudo rpm-ostree kargs --delete-if-present=ostree.prepare-root.composefs=0
 	reboot
 }
+
 function deprecated_settings_sysctl {
 	# replaced with mise bootstrap files
 	# redis, inotify fixes
@@ -285,7 +294,8 @@ function deprecated_flatpak {
 }
 
 function deprecated_1password {
-	# add the repo, install. this was buggy and nonworking last I tried it
+	# note: use the brew cask from ublue-os/tap
+
 	# they broke the installer script bundled into the rpm
 	# sudo sh -c 'echo -e "[1password]\nname=1Password Stable Channel\nbaseurl=https://downloads.1password.com/linux/rpm/stable/\$basearch\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=\"https://downloads.1password.com/linux/keys/1password.asc\"" > /etc/yum.repos.d/1password.repo'
 	# sudo rpm-ostree install 1password 1password-cli
@@ -319,9 +329,6 @@ function deprecated_1password {
 	# name=1Password Edge Channel
 	# baseurl=https://downloads.1password.com/linux/rpm/edge/$basearch
 	# enabled=1
-
-	# this is the most recent working install method on fedora atomic.
-	# The brew cask ublue-os/tap/1password-gui-linux also works, and is probably a better option
 
 	# manual script
 	curl -Lo 1password.tar.gz https://downloads.1password.com/linux/tar/stable/x86_64/1password-latest.tar.gz

@@ -1,3 +1,4 @@
+alias b := boot
 alias s := sync
 
 boot:

@@ -1,23 +1,4 @@
-[settings]
-dotfiles.root = "~/Projects/mdotfiles/home"
-dotfiles.default_mode = "symlink"
-
-[dotfiles]
-"~/.config/mise/config.toml" = "~/Projects/mdotfiles/home/.config/mise/config.toml"
-"~/.config/fnox/age.txt" = {source = "~/Projects/mdotfiles/home/.config/fnox/age.txt", mode = "template"}
-
 # bootstrap: aurora (desktop)
-[bootstrap.secrets]
-ssh_authorized_keys = "SSH_AUTHORIZED_KEYS"
-dkey_private = "DKEY_PRIVATE"
-
-[bootstrap.files."~/.ssh/authorized_keys"]
-content = """
-{{secret(name="ssh_authorized_keys")}}
-"""
-template = true
-mode = "0644"
-
 [bootstrap.groups.chris]
 system = true
 gid = 1000
@@ -167,7 +148,6 @@ content = """
 owner = "root"
 group = "root"
 mode = "0644"
-notify = ["docker"]
 
 # protonvpn repo
 [bootstrap.files."/etc/yum.repos.d/protonvpn-stable.repo"]
@@ -199,13 +179,7 @@ owner = "root"
 group = "root"
 mode = "0644"
 
-# nfs mounts
-[bootstrap.directories]
-"/var/mnt/f" = {owner = "chris", group = "chris", mode = "0777"}
-"/var/mnt/h" = {owner = "chris", group = "chris", mode = "0777"}
-"/var/mnt/k" = {owner = "chris", group = "chris", mode = "0777"}
-"/var/mnt/r" = {owner = "chris", group = "chris", mode = "0777"}
-
+# services
 [bootstrap.services.docker]
 state = "running"
 enabled = true
