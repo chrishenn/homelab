@@ -1,0 +1,260 @@
+[settings]
+dotfiles.root = "~/Projects/mdotfiles/home"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+"~/.config/mise/config.toml" = "~/Projects/mdotfiles/home/.config/mise/config.toml"
+"~/.config/fnox/age.txt" = {source = "~/Projects/mdotfiles/home/.config/fnox/age.txt", mode = "template"}
+
+# bootstrap: aurora (desktop)
+[bootstrap.secrets]
+ssh_authorized_keys = "SSH_AUTHORIZED_KEYS"
+dkey_private = "DKEY_PRIVATE"
+
+[bootstrap.files."~/.ssh/authorized_keys"]
+content = """
+{{secret(name="ssh_authorized_keys")}}
+"""
+template = true
+mode = "0644"
+
+[bootstrap.groups.chris]
+system = true
+gid = 1000
+
+[bootstrap.users.chris]
+system = true
+group = "chris"
+groups = ["docker", "incus-admin", "libvirt"]
+uid = 1000
+
+[bootstrap.brew]
+adopt = true
+
+[bootstrap.brew.taps]
+"stalwartlabs/tap" = "https://github.com/stalwartlabs/homebrew-tap.git"
+"valkyrie00/bbrew" = "https://github.com/valkyrie00/homebrew-bbrew.git"
+"ublue-os/tap" = "https://github.com/ublue-os/homebrew-tap.git"
+
+[bootstrap.packages]
+"brew:atuin" = "latest"
+"brew:valkyrie00/bbrew/bbrew" = "latest"
+"brew:detect-secrets" = "latest"
+"brew:feroxbuster" = "latest"
+"brew:media-info" = "latest"
+"brew:parallel" = "latest"
+"brew:sevenzip" = "latest"
+"brew:stalwartlabs/tap/stalwart-cli" = "latest"
+"brew:trash-cli" = "latest"
+
+# only font "tapped casks" are supported by mise right now
+# "brew-cask:ublue-os/tap/zed-linux" = "latest"
+# "brew-cask:ublue-os/tap/1password-gui-linux" = "latest"
+# "brew-cask:ublue-os/tap/jetbrains-toolbox-linux" = "latest"
+"brew-cask:font-fira-code-nerd-font" = "latest"
+"brew-cask:font-jetbrains-mono-nerd-font" = "latest"
+
+"flatpak:md.obsidian.Obsidian" = "latest"
+"flatpak:io.github.cboxdoerfer.FSearch" = "latest"
+"flatpak:com.prusa3d.PrusaSlicer" = "latest"
+"flatpak:com.github.wwmm.easyeffects" = "latest"
+"flatpak:org.onlyoffice.desktopeditors" = "latest"
+"flatpak:org.kde.kdenlive" = "latest"
+"flatpak:com.belmoussaoui.Obfuscate" = "latest"
+"flatpak:io.gitlab.adhami3310.Converter" = "latest"
+"flatpak:org.audacityteam.Audacity" = "latest"
+"flatpak:org.darktable.Darktable" = "latest"
+
+[bootstrap.hooks.post-packages]
+run = """
+# flatpak fix: a bunch didn't launch ootb due to file perm issue
+systemctl --user restart xdg-document-portal.service
+# allow obs droidcam to access media devices?
+flatpak override --user --device=all com.obsproject.Studio
+"""
+
+# sudo timeout
+[bootstrap.files."/etc/sudoers.d/sudo_timeout"]
+content = "Defaults timestamp_timeout=180"
+owner = "root"
+group = "root"
+mode = "0440"
+
+# sysctl
+[bootstrap.files."/etc/sysctl.d/99-custom.conf"]
+content = """
+net.ipv4.ip_nonlocal_bind=1
+vm.overcommit_memory=1
+fs.inotify.max_user_watches=1014796
+fs.inotify.max_user_instances=1014796
+fs.inotify.max_queued_events=1014796
+net.ipv6.conf.all.disable_ipv6=1
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# power_shortcuts
+[bootstrap.files."~/.local/share/applications/restart.desktop"]
+template = true
+content = """
+[Desktop Entry]
+Name=Restart
+Exec=bash -c "sudo {{ env.HOME }}/.local/share/applications/restart.sh"
+Comment=Restart
+Terminal=true
+Type=Application
+Icon=system-reboot
+"""
+
+[bootstrap.files."~/.local/share/applications/shutdown.desktop"]
+template = true
+content = """
+[Desktop Entry]
+Name=Shutdown
+Exec=bash -c "sudo {{ env.HOME }}/.local/share/applications/shutdown.sh"
+Comment=Shutdown
+Terminal=true
+Type=Application
+Icon=system-shutdown
+"""
+
+[bootstrap.files."~/.local/share/applications/restart.sh"]
+content = "reboot now"
+mode = "0755"
+
+[bootstrap.files."~/.local/share/applications/shutdown.sh"]
+content = "shutdown now"
+mode = "0755"
+
+[bootstrap.files."/etc/sudoers.d/pwr"]
+content = """
+{{ env.USER }} ALL=(root) NOPASSWD:{{ env.HOME }}/.local/share/applications/shutdown.sh
+{{ env.USER }} ALL=(root) NOPASSWD:{{ env.HOME }}/.local/share/applications/restart.sh
+"""
+template = true
+owner = "root"
+group = "root"
+mode = "0440"
+
+# docker config
+# equivalent to: sudo nvidia-ctk runtime configure --runtime=docker --set-as-default --quiet
+[bootstrap.files."/etc/docker/daemon.json"]
+content = """
+{
+    "registry-mirrors": ["https://zot.henn.dev"],
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    },
+    "log-level": "warn",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "5"
+    },
+    "default-address-pools": [
+        {
+            "base": "172.16.0.0/12",
+            "size": 24
+        }
+    ]
+}
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+notify = ["docker"]
+
+# protonvpn repo
+[bootstrap.files."/etc/yum.repos.d/protonvpn-stable.repo"]
+content = """
+[protonvpn-fedora-stable]
+name = ProtonVPN Fedora Stable repository
+baseurl = https://repo.protonvpn.com/fedora-$releasever-stable
+enabled = 1
+gpgcheck = 1
+repo_gpgcheck = 0
+skip_if_unavailable = true
+gpgkey = https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# chrome repo
+[bootstrap.files."/etc/yum.repos.d/google-chrome.repo"]
+content = """
+[google-chrome]
+name=google-chrome
+baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+"""
+owner = "root"
+group = "root"
+mode = "0644"
+
+# nfs mounts
+[bootstrap.directories]
+"/var/mnt/f" = {owner = "chris", group = "chris", mode = "0777"}
+"/var/mnt/h" = {owner = "chris", group = "chris", mode = "0777"}
+"/var/mnt/k" = {owner = "chris", group = "chris", mode = "0777"}
+"/var/mnt/r" = {owner = "chris", group = "chris", mode = "0777"}
+
+[bootstrap.services.docker]
+state = "running"
+enabled = true
+on_change = "reload_or_restart"
+
+[bootstrap.hooks.final]
+run = """
+sudo sysctl -q --system
+"""
+
+[bootstrap.repos]
+# My parallel gclone.sh is much faster for initial clones, since mise here fetches serially.
+#   However, this mise update is safe for dirty worktrees, where gclone.sh
+#   is destructive because it was designed for backing up github repos to a restic target.
+"~/Projects/a4dj" = { url = "https://github.com/chrishenn/a4dj" }
+"~/Projects/agent_interface" = { url = "https://github.com/chrishenn/agent_interface" }
+"~/Projects/better_power" = { url = "https://github.com/chrishenn/better_power" }
+"~/Projects/canny" = { url = "https://github.com/chrishenn/canny" }
+"~/Projects/ccpt" = { url = "https://github.com/chrishenn/ccpt" }
+"~/Projects/chplib" = { url = "https://github.com/chrishenn/chplib" }
+"~/Projects/chrishenn" = { url = "https://github.com/chrishenn/chrishenn" }
+"~/Projects/configs" = { url = "https://github.com/chrishenn/configs" }
+"~/Projects/const_fonts" = { url = "https://github.com/chrishenn/const_fonts" }
+"~/Projects/cuda_libraries" = { url = "https://github.com/chrishenn/cuda_libraries" }
+"~/Projects/deep_mem" = { url = "https://github.com/chrishenn/deep_mem" }
+"~/Projects/dotfiles" = { url = "https://github.com/chrishenn/dotfiles" }
+"~/Projects/drivers" = { url = "https://github.com/chrishenn/drivers" }
+"~/Projects/find_strings" = { url = "https://github.com/chrishenn/find_strings" }
+"~/Projects/hardware" = { url = "https://github.com/chrishenn/hardware" }
+"~/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }
+"~/Projects/hotkey" = { url = "https://github.com/chrishenn/hotkey" }
+"~/Projects/leetcode" = { url = "https://github.com/chrishenn/leetcode" }
+"~/Projects/lnks" = { url = "https://github.com/chrishenn/lnks" }
+"~/Projects/oodl" = { url = "https://github.com/chrishenn/oodl" }
+"~/Projects/patch_sample" = { url = "https://github.com/chrishenn/patch_sample" }
+"~/Projects/pixelate" = { url = "https://github.com/chrishenn/pixelate" }
+"~/Projects/portable" = { url = "https://github.com/chrishenn/portable" }
+"~/Projects/private" = { url = "https://github.com/chrishenn/private" }
+"~/Projects/private_archive" = { url = "https://github.com/chrishenn/private_archive" }
+"~/Projects/project_stubs" = { url = "https://github.com/chrishenn/project_stubs" }
+"~/Projects/py_ref" = { url = "https://github.com/chrishenn/py_ref" }
+"~/Projects/realtek" = { url = "https://github.com/chrishenn/realtek" }
+"~/Projects/rtoolz" = { url = "https://github.com/chrishenn/rtoolz" }
+"~/Projects/scoops" = { url = "https://github.com/chrishenn/scoops" }
+"~/Projects/tr_agent" = { url = "https://github.com/chrishenn/tr_agent" }
+"~/Projects/tr_backend" = { url = "https://github.com/chrishenn/tr_backend" }
+"~/Projects/type-stubs" = { url = "https://github.com/chrishenn/type-stubs" }
+"~/Projects/uavolt" = { url = "https://github.com/chrishenn/uavolt" }
+"~/Projects/unattend" = { url = "https://github.com/chrishenn/unattend" }
+"~/Projects/vscode" = { url = "https://github.com/chrishenn/vscode" }
+"~/Projects/zenprof" = { url = "https://github.com/chrishenn/zenprof" }
+"~/Projects/zentool" = { url = "https://github.com/chrishenn/zentool" }

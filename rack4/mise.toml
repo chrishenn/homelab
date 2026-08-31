@@ -57,8 +57,7 @@ OIDC_DISCOVERY = "https://pocketid.chenn.dev/.well-known/openid-configuration"
 
 STALWART_URL = "https://mail.chenn.dev"
 
-## fedora server (rack4)
-##
+# fedora server (rack4)
 [bootstrap.remote.hosts.rack4]
 host = "henn.dev"
 user = "chris"
@@ -68,6 +67,7 @@ tags = ["production"]
 [bootstrap.user]
 login_shell = "/bin/bash"
 
+# user: chris
 [bootstrap.groups.chris]
 system = true
 gid = 1000
@@ -123,7 +123,7 @@ group = "root"
 mode = "0644"
 notify = ["docker"]
 
-# sshd
+# sshd (fedora-based)
 [bootstrap.files."/etc/ssh/sshd_config"]
 content = """
 AuthorizedKeysFile      .ssh/authorized_keys
@@ -136,6 +136,7 @@ Subsystem       sftp    /usr/libexec/openssh/sftp-server
 owner = "root"
 group = "root"
 mode = "0644"
+notify = ["sshd"]
 
 # nfs shares
 [bootstrap.files."/etc/exports"]
@@ -175,4 +176,6 @@ sudo sysctl -q --system
 sudo systemctl restart sshd
 echo '${PASS}' > sudo smbpasswd -a chris -s
 sudo smbpasswd -e chris
+sudo systemctl restart smb
+sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml --quiet
 """

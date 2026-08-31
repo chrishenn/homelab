@@ -174,14 +174,14 @@ sudo zfs set mountpoint=$mnt pool0
 
 # samba server
 sudo apt install samba -y
-sudo smbpasswd -a $USER
+echo "$PASS" > sudo smbpasswd -a $USER -s
 sudo smbpasswd -e $USER
 sudo ufw allow samba
 sudo systemctl enable --now smbd
 
 # configure samba shares
 > sudo nano /etc/samba/smb.conf
-> see samba/smb.con
+> see samba/smb.conf
 sudo systemctl restart smbd
 ```
 
@@ -229,7 +229,7 @@ ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock -H fd://
 
 ## ssh agent autostart
 
-autostart the default ssh agent (not sure why I needed this on rack4?)
+autostart the default ssh agent (not sure why I needed this on rack4/ubuntu?)
 
 ```bash
 sudo tee /etc/systemd/system/ssh-agent.service > /dev/null <<- 'END'

@@ -29,7 +29,7 @@ sudo mkdir -p \
 	/var/mnt/k \
 	/var/mnt/r
 
-# minimal
+# minimal options
 192.168.1.142:/var/mnt/f /var/mnt/f nfs defaults,proto=rdma,async,noatime,nodiratime 0 0
 
 # only some nfs mounts aren't mounting at boot (kubuntu 26.04, 7.0.0-14-generic)

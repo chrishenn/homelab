@@ -9,30 +9,18 @@
 
 sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
 
-function chezmoi_mise {
-	# using mise to bootstrap secrets and dotfiles would simplify this dependency graph
-	curl https://mise.run | sh
-	mise use -g chezmoi
-	eval $(mise activate bash)
-
-	export OP_SERVICE_ACCOUNT_TOKEN=$(op read op://homelab/svc/credential)
-	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
-	chezmoi init --apply chrishenn
-	mise i
-	mise bootstrap -y
-}
-
+# todo: using mise to bootstrap secrets and dotfiles would simplify this
 function installs {
 	sudo ujust devmode
 	sudo rpm-ostree install kvantum firefox
 
-	# uv, pixi, proto, soar
+	# mise, uv, pixi, proto, soar
+	curl https://mise.run | sh
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 	curl -fsSL https://pixi.sh/install.sh | sh
 	bash <(curl -fsSL https://moonrepo.dev/install/proto.sh)
 	curl -fsSL "https://raw.githubusercontent.com/pkgforge/soar/main/install.sh" | sh
 
-	# packages
 	flatpak uninstall -y \
 		org.mozilla.Thunderbird \
 		org.mozilla.firefox \
@@ -40,16 +28,35 @@ function installs {
 		org.kde.okular \
 		org.kde.kontact \
 		org.kde.kclock
-	soar apply -y
 	brew tap ublue-os/tap
 	brew install --cask \
 		zed-linux \
-		jetbrains-toolbox-linux
+		jetbrains-toolbox-linux \
+		1password-gui-linux
+}
 
-	# this permission change is probably unnecessary, except that I've used a custom tool to install this file
-	sudo chmod 777 /etc/1password/custom_allowed_browsers
-	brew install --cask 1password-gui-linux
-	sudo chmod 644 /etc/1password/custom_allowed_browsers
+function chezmoi_init {
+	mise use -g op chezmoi
+	eval $(mise activate bash)
+
+	$(op read "op://homelab/svc/bash")
+	if [ -z $OP_SERVICE_ACCOUNT_TOKEN ]; then
+		echo "chezmoi boot error: OP_SERVICE_ACCOUNT_TOKEN not set"
+		return 1
+	fi
+	chezmoi init --apply chrishenn
+}
+
+function mise_init {
+	mise use -g op
+	eval $(mise activate bash)
+
+	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
+	if [ -z $GITHUB_TOKEN ]; then
+		echo "mise boot error: GITHUB_TOKEN not set"
+		return 1
+	fi
+	mise i
 }
 
 function gclone {
@@ -58,30 +65,14 @@ function gclone {
 	~/gclone.sh
 }
 
-function protonvpn {
-	sudo tee /etc/yum.repos.d/protonvpn-stable.repo >/dev/null <<-'END'
-		[protonvpn-fedora-stable]
-		name = ProtonVPN Fedora Stable repository
-		baseurl = https://repo.protonvpn.com/fedora-$releasever-stable
-		enabled = 1
-		gpgcheck = 1
-		repo_gpgcheck = 0
-		skip_if_unavailable = true
-		gpgkey = https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
-	END
-	sudo rpm-ostree install proton-vpn-gnome-desktop
-}
+function mise_boot {
+	mise bootstrap -y
 
-function chrome {
-	sudo tee /etc/yum.repos.d/google-chrome.repo >/dev/null <<-'END'
-		[google-chrome]
-		name=google-chrome
-		baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
-		enabled=1
-		gpgcheck=1
-		gpgkey=https://dl.google.com/linux/linux_signing_key.pub
-	END
-	sudo rpm-ostree install google-chrome-stable
+	# these depend on mise-bootstrapped files
+	sudo rpm-ostree install \
+		proton-vpn-gnome-desktop \
+		google-chrome-stable
+	soar apply -y
 }
 
 function nfs {
@@ -99,8 +90,27 @@ function nfs {
 
 # --- deprecated ---
 
+function deprecated_chrome {
+	# repo. replaced with mise bootstrap files
+	sudo tee /etc/yum.repos.d/google-chrome.repo >/dev/null <<-'END'
+		[google-chrome]
+		name=google-chrome
+		baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
+		enabled=1
+		gpgcheck=1
+		gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+	END
+	sudo rpm-ostree install google-chrome-stable
+
+	# manual rpm
+	url="https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-148.0.7778.167-1.x86_64.rpm"
+	curl -Lo chrome.rpm $url
+	sudo rpm-ostree install chrome.rpm
+	rm chrome.rpm
+}
+
 function deprecated_zen {
-	# this package does not integrate with 1password
+	# note: this installation method DOES NOT integrate with 1password. use zentool
 	sudo tee /etc/yum.repos.d/zen-browser.repo >/dev/null <<-'END'
 		[zen-browser]
 		name=Zen Browser
@@ -112,36 +122,46 @@ function deprecated_zen {
 	sudo rpm-ostree install zen-browser
 }
 
-function deprecated_chrome {
-	url="https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-148.0.7778.167-1.x86_64.rpm"
-	curl -Lo chrome.rpm $url
-	sudo rpm-ostree install chrome.rpm
-	rm chrome.rpm
+function deprecated_chezmoi_mise {
+	curl https://mise.run | sh
+	mise use -g chezmoi
+	eval $(mise activate bash)
+
+	export OP_SERVICE_ACCOUNT_TOKEN=$(op read op://homelab/svc/credential)
+	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
+	chezmoi init --apply chrishenn
+	mise i
 }
 
 function deprecated_protonvpn {
-	# this did work - no guarantees about these breaking updates though
+	# repo. replaced with mise bootstrap files
+	sudo tee /etc/yum.repos.d/protonvpn-stable.repo >/dev/null <<-'END'
+		[protonvpn-fedora-stable]
+		name = ProtonVPN Fedora Stable repository
+		baseurl = https://repo.protonvpn.com/fedora-$releasever-stable
+		enabled = 1
+		gpgcheck = 1
+		repo_gpgcheck = 0
+		skip_if_unavailable = true
+		gpgkey = https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
+	END
+	sudo rpm-ostree install proton-vpn-gnome-desktop
+
+	# manual rpm
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-vpn-local-agent/python3-proton-vpn-local-agent-1.6.2-1.fc44.x86_64.rpm"
 	curl -Lo python3-proton-vpn-local-agent.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-core/python3-proton-core-0.7.4-1.fc44.noarch.rpm"
 	curl -Lo python3-proton-core.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-keyring-linux/python3-proton-keyring-linux-0.2.1-1.fc44.noarch.rpm"
 	curl -Lo python3-proton-keyring-linux.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-vpn-api-core/python3-proton-vpn-api-core-5.1.2-1.fc44.noarch.rpm"
 	curl -Lo python3-proton-vpn-api-core.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-daemon/proton-vpn-daemon-0.13.7-1.fc44.noarch.rpm"
 	curl -Lo proton-vpn-daemon.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-gtk-app/proton-vpn-gtk-app-4.16.2-1.fc44.noarch.rpm"
 	curl -Lo proton-vpn-gtk-app.rpm $url
-
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-gnome-desktop/proton-vpn-gnome-desktop-0.10.1-1.fc44.noarch.rpm"
 	curl -Lo proton-vpn-gnome-desktop.rpm $url
-
 	sudo rpm-ostree install \
 		python3-proton-vpn-local-agent.rpm \
 		python3-proton-core.rpm \
@@ -152,21 +172,21 @@ function deprecated_protonvpn {
 		proton-vpn-gnome-desktop.rpm
 
 	# repository package - need to reboot after installing? not sure
-	#	rn=$(cat /etc/fedora-release | cut -d' ' -f 3)
-	#	curl -Lo proton.rpm "https://repo.protonvpn.com/fedora-$rn-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm"
-	#	sudo rpm-ostree install proton.rpm
-	#	rm proton.rpm
-	#	sudo rpm-ostree install proton-vpn-gnome-desktop
+	rn=$(cat /etc/fedora-release | cut -d' ' -f 3)
+	curl -Lo proton.rpm "https://repo.protonvpn.com/fedora-$rn-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.4-1.noarch.rpm"
+	sudo rpm-ostree install proton.rpm
+	rm proton.rpm
+	sudo rpm-ostree install proton-vpn-gnome-desktop
 
 	# uninstall
-	#	sudo rpm-ostree uninstall \
-	#		python3-proton-vpn-local-agent \
-	#		python3-proton-core \
-	#		python3-proton-keyring-linux \
-	#		python3-proton-vpn-api-core \
-	#		proton-vpn-daemon \
-	#		proton-vpn-gtk-app \
-	#		proton-vpn-gnome-desktop
+	sudo rpm-ostree uninstall \
+		python3-proton-vpn-local-agent \
+		python3-proton-core \
+		python3-proton-keyring-linux \
+		python3-proton-vpn-api-core \
+		proton-vpn-daemon \
+		proton-vpn-gtk-app \
+		proton-vpn-gnome-desktop
 }
 
 function deprecated_power_shortcuts {
@@ -303,7 +323,7 @@ function deprecated_1password {
 	# this is the most recent working install method on fedora atomic.
 	# The brew cask ublue-os/tap/1password-gui-linux also works, and is probably a better option
 
-	# manual install:
+	# manual script
 	curl -Lo 1password.tar.gz https://downloads.1password.com/linux/tar/stable/x86_64/1password-latest.tar.gz
 	sudo mkdir -p /opt/1Password
 	sudo tar -xf 1password.tar.gz --strip-components=1 -C /opt/1Password
@@ -319,4 +339,9 @@ function deprecated_1password {
 	BROWSER_SUPPORT_PATH="/opt/1Password/1Password-BrowserSupport"
 	sudo chgrp "${GROUP_NAME}" $BROWSER_SUPPORT_PATH
 	sudo chmod g+s $BROWSER_SUPPORT_PATH
+
+	# this permission change is probably unnecessary except when zentool creates this file
+	sudo chmod 777 /etc/1password/custom_allowed_browsers
+	brew install --cask 1password-gui-linux
+	sudo chmod 644 /etc/1password/custom_allowed_browsers
 }

@@ -1,0 +1,10 @@
+alias s := sync
+
+boot:
+    mise bootstrap --skip-dirty -y
+
+sync:
+    mise bootstrap dotfiles apply -f
+
+ssync:
+    fnox sync --provider age --config fnox.local.toml -f

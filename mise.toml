@@ -37,6 +37,7 @@ MISE_NPM_BUN = 1
 
 # registries
 REGISTRY = "zot.henn.dev"
+REGISTRY_URL = "https://zot.henn.dev"
 BERG_USR = "chris"
 BERG_BASE_URL = "forgejo.henn.dev"
 BERG_SSH_PORT = 2424
