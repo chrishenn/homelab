@@ -1,16 +1,11 @@
-[providers.onepass]
-type = "1password"
-vault = "homelab"
-account = "my.1password.com"
-
 [secrets]
-CLOUDFLARE_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
-NEWT_PROVISIONING_KEY = { provider = "onepass", value = "op://homelab/pangolin/newt_provisioning" }
+CLOUDFLARE_API_TOKEN = { provider = "op", value = "op://homelab/cloudflare/token" }
+NEWT_PROVISIONING_KEY = { provider = "op", value = "op://homelab/pangolin/newt_provisioning" }
 
-BESZEL_KEY = { provider = "onepass", value = "op://homelab/beszel_rack3/key" }
-BESZEL_TOKEN = { provider = "onepass", value = "op://homelab/beszel_rack3/token" }
+BESZEL_KEY = { provider = "op", value = "op://homelab/beszel_rack3/key" }
+BESZEL_TOKEN = { provider = "op", value = "op://homelab/beszel_rack3/token" }
 
 [profiles.newt.secrets]
-PANGOLIN_ENDPOINT = { provider = "onepass", value = "op://homelab/rack3/pangolin_endpoint" }
-NEWT_ID = { provider = "onepass", value = "op://homelab/rack3/newt_id" }
-NEWT_SECRET = { provider = "onepass", value = "op://homelab/rack3/newt_secret" }
+PANGOLIN_ENDPOINT = { provider = "op", value = "op://homelab/rack3/pangolin_endpoint" }
+NEWT_ID = { provider = "op", value = "op://homelab/rack3/newt_id" }
+NEWT_SECRET = { provider = "op", value = "op://homelab/rack3/newt_secret" }

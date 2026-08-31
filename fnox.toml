@@ -1,41 +1,40 @@
-[providers.onepass]
-type = "1password"
-vault = "homelab"
-account = "my.1password.com"
+[providers]
+op = { type = "1password", vault = "homelab", account = "my.1password.com" }
+age = {type = "age", recipients = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL"] }
 
 [secrets]
-USER = { provider = "onepass", value = "op://homelab/chris/username" }
-PASS = { provider = "onepass", value = "op://homelab/chris/password" }
-PASS_BCRYPT = { provider = "onepass", value = "op://homelab/chris/password_bcrypt" }
-BASICAUTH = { provider = "onepass", value = "op://homelab/chris/basic_auth" }
-HTPASSWD = { provider = "onepass", value = "op://homelab/chris/htpasswd" }
-EMAIL = { provider = "onepass", value = "op://homelab/chris/email" }
-USER1 = { provider = "onepass", value = "op://homelab/pangolin/user1" }
+USER = { provider = "op", value = "op://homelab/chris/username" }
+PASS = { provider = "op", value = "op://homelab/chris/password" }
+PASS_BCRYPT = { provider = "op", value = "op://homelab/chris/password_bcrypt" }
+BASICAUTH = { provider = "op", value = "op://homelab/chris/basic_auth" }
+HTPASSWD = { provider = "op", value = "op://homelab/chris/htpasswd" }
+EMAIL = { provider = "op", value = "op://homelab/chris/email" }
+USER1 = { provider = "op", value = "op://homelab/pangolin/user1" }
 
-VPS0_IP = { provider = "onepass", value = "op://homelab/vps0/ip" }
+VPS0_IP = { provider = "op", value = "op://homelab/vps0/ip" }
 
-CF_DNS_API_TOKEN = { provider = "onepass", value = "op://homelab/cloudflare/token" }
-OP_SERVICE_ACCOUNT_TOKEN = { provider = "onepass", value = "op://homelab/svc/credential" }
-GH_USER= { provider = "onepass", value = "op://homelab/github/username" }
-GH_PAT = { provider = "onepass", value = "op://homelab/github/credential" }
-GH_PAT_PUBLIC = { provider = "onepass", value = "op://homelab/github/pat_public" }
+CF_DNS_API_TOKEN = { provider = "op", value = "op://homelab/cloudflare/token" }
+OP_SERVICE_ACCOUNT_TOKEN = { provider = "op", value = "op://homelab/svc/credential" }
+GH_USER= { provider = "op", value = "op://homelab/github/username" }
+GH_PAT = { provider = "op", value = "op://homelab/github/credential" }
+GH_PAT_PUBLIC = { provider = "op", value = "op://homelab/github/pat_public" }
 
-SMTP_HOST = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_host" }
-SMTP_PORT = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_port" }
-SMTP_USER = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/smtp_user" }
-SMTP_PASS = { provider = "onepass", value = "op://homelab/proton/SMTP_HENNDEV/SMTP_PASS" }
+SMTP_HOST = { provider = "op", value = "op://homelab/proton/SMTP_HENNDEV/smtp_host" }
+SMTP_PORT = { provider = "op", value = "op://homelab/proton/SMTP_HENNDEV/smtp_port" }
+SMTP_USER = { provider = "op", value = "op://homelab/proton/SMTP_HENNDEV/smtp_user" }
+SMTP_PASS = { provider = "op", value = "op://homelab/proton/SMTP_HENNDEV/SMTP_PASS" }
 
-STALWART_WG_CLIENT_PRIVATE = { provider = "onepass", value = "op://homelab/stalwart/client_private" }
-STALWART_WG_CLIENT_PUBLIC = { provider = "onepass", value = "op://homelab/stalwart/client_public" }
-STALWART_WG_SERVER_PRIVATE = { provider = "onepass", value = "op://homelab/stalwart/server_private" }
-STALWART_WG_SERVER_PUBLIC = { provider = "onepass", value = "op://homelab/stalwart/server_public" }
+STALWART_WG_CLIENT_PRIVATE = { provider = "op", value = "op://homelab/stalwart/client_private" }
+STALWART_WG_CLIENT_PUBLIC = { provider = "op", value = "op://homelab/stalwart/client_public" }
+STALWART_WG_SERVER_PRIVATE = { provider = "op", value = "op://homelab/stalwart/server_private" }
+STALWART_WG_SERVER_PUBLIC = { provider = "op", value = "op://homelab/stalwart/server_public" }
 
-DOCKERHUB_USER = { provider = "onepass", value = "op://homelab/dockerhub/username" }
-DOCKERHUB_PASS = { provider = "onepass", value = "op://homelab/dockerhub/password" }
-DOCKERHUB_AUTH = { provider = "onepass", value = "op://homelab/dockerhub/basic_auth" }
+DOCKERHUB_USER = { provider = "op", value = "op://homelab/dockerhub/username" }
+DOCKERHUB_PASS = { provider = "op", value = "op://homelab/dockerhub/password" }
+DOCKERHUB_AUTH = { provider = "op", value = "op://homelab/dockerhub/basic_auth" }
 
-FORGEJO_USER = { provider = "onepass", value = "op://homelab/forgejo/username" }
-FORGEJO_PASS = { provider = "onepass", value = "op://homelab/forgejo/password" }
+FORGEJO_USER = { provider = "op", value = "op://homelab/forgejo/username" }
+FORGEJO_PASS = { provider = "op", value = "op://homelab/forgejo/password" }
 
-MAXMIND_KEY = { provider = "onepass", value = "op://homelab/maxmind/license" }
-MAXMIND_ACCOUNT = { provider = "onepass", value = "op://homelab/maxmind/account_id" }
+MAXMIND_KEY = { provider = "op", value = "op://homelab/maxmind/license" }
+MAXMIND_ACCOUNT = { provider = "op", value = "op://homelab/maxmind/account_id" }

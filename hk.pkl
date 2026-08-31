@@ -34,7 +34,7 @@ local linters = new Mapping<String, Step> {
     ["trufflehog"] {
         glob = List("*")
         workspace_indicator = "hk.pkl"
-        check = "trufflehog filesystem --fail --no-update --no-verification --exclude-detectors=Postgres,RabbitMQ,JDBC {{files}}"
+        check = "trufflehog filesystem --fail --no-update --no-verification --exclude-detectors=Postgres,RabbitMQ,JDBC,Box {{files}}"
         output_summary = "hide"
     }
     ["detect-secrets"] {

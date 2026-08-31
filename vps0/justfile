@@ -29,9 +29,6 @@ sync message="sync":
     git commit -a -m '{{ message }}' || true && git pull && git push
     just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
-ssync:
-    fnox sync --provider age --config fnox.local.toml -f
-
 up profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
@@ -57,3 +54,7 @@ log *args:
 
 follow *args:
     just log -f {{ args }}
+
+# secret sync
+ss:
+    fnox sync --provider age --local-file -f

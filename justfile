@@ -18,5 +18,5 @@ unsafe:
     ruff check --fix --unsafe-fixes
 
 # sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
-ssync:
-    fnox sync --provider age --config fnox.local.toml -f
+ss:
+    fnox sync --provider age --local-file -f

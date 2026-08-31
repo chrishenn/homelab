@@ -94,9 +94,9 @@ rsync message="sync":
     just ssh 'cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push'
     git commit -a -m "{{ message }}" || true && git pull && git push
 
-# sync secrets from fnox.toml (1password provider) to fnox.local.toml (age provider)
-ssync:
-    fnox sync --provider age --config fnox.local.toml -f
+# sync secrets
+ss:
+    fnox sync --provider age --local-file -f
 
 reset:
     just ssh 'cd {{repo}} && git fetch origin && git reset --hard origin/main'

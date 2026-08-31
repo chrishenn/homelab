@@ -106,9 +106,9 @@ mode = "0644"
 # todo: verify that this env is evaluated locally, then piped into the remote bootstrap
 [bootstrap.hooks.final]
 run = """
-sysctl -q --system
-echo "{{env.VPS0_CHRIS_PASS}}"
-# echo "${VPS0_CHRIS_PASS}" | chpasswd
+sudo sysctl -q --system
+echo "$VPS0_CHRIS_PASS"
+# echo "${VPS0_CHRIS_PASS}" | sudo chpasswd
 """
 
 [bootstrap.services.docker]

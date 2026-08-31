@@ -40,7 +40,7 @@ rclone sync \
 ```
 
 ```toml
-PDRIVE_USER = { provider = "onepass", value = "op://homelab/proton/username" }
-PDRIVE_PASS_OBSC = { provider = "onepass", value = "op://homelab/proton/PDRIVE/pdrive_pass_obsc" }
-PDRIVE_OTP_OBSC = { provider = "onepass", value = "op://homelab/proton/PDRIVE/otp_obsc" }
+PDRIVE_USER = { provider = "op", value = "op://homelab/proton/username" }
+PDRIVE_PASS_OBSC = { provider = "op", value = "op://homelab/proton/PDRIVE/pdrive_pass_obsc" }
+PDRIVE_OTP_OBSC = { provider = "op", value = "op://homelab/proton/PDRIVE/otp_obsc" }
 ```
