@@ -19,10 +19,10 @@ BACKUP = "/home/chris/backup"
 # echo "chris:$(op read 'op://homelab/vps0/chris_pass')" | $SSH_ROOT "chpasswd"
 [bootstrap.remote.hosts.vps0]
 host = "chenn.dev"
-user = "root"
-port = 22
-# user = "chris"
-# port = 2200
+# user = "root"
+# port = 22
+user = "chris"
+port = 2200
 tags = ["production"]
 
 [bootstrap.user]
@@ -107,7 +107,8 @@ mode = "0644"
 [bootstrap.hooks.final]
 run = """
 sysctl -q --system
-# echo "{{env.VPS0_CHRIS_PASS}}" | chpasswd
+echo "{{env.VPS0_CHRIS_PASS}}"
+# echo "${VPS0_CHRIS_PASS}" | chpasswd
 """
 
 [bootstrap.services.docker]
