@@ -20,7 +20,7 @@ tee crontab <<-END
 END
 
 # run then exit. The container will restart, keeping the "now" file, therefore ignoring RUN_NOW on second start
-if [ ${RUN_NOW:-0} = 1 -a ! -f now ]; then
+if [ "${RUN_NOW:-0}" = 1 ] && [ ! -f now ]; then
 	touch now
 
 	# CRON_CMD can be a binary, script file, or a single command

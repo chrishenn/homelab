@@ -15,7 +15,7 @@ repo := "/var/home/chris/Projects/homelab"
 
 [arg("pty", long="pty", short="p")]
 ssh cmd='' pty='true':
-    just rack4 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+    just rack4 {{ if cmd != '' { f'"{{ cmd }}"' } else { '' } }} -p={{ pty }}
 
 # compose operations over {profiles, svcs}
 
@@ -95,7 +95,7 @@ rsync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
 
 reset:
-    just ssh 'cd {{repo}} && git fetch origin && git reset --hard origin/main'
+    just ssh 'cd {{ repo }} && git fetch origin && git reset --hard origin/main'
 
 # secret sync
 ss:
@@ -142,7 +142,7 @@ stoat_invite:
     docker compose exec -it stoat_db mongosh revolt --eval "db.invites.insertOne({ _id: \"$invite\" })"
 
 ark *args:
-   docker compose exec -it -u archivebox archive archivebox {{args}}
+    docker compose exec -it -u archivebox archive archivebox {{ args }}
 
 zellij_serve:
     zellij web --start -d 2>/dev/null || true

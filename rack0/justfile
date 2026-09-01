@@ -11,11 +11,11 @@ profile := "'*'"
 # machine-specific
 
 repo := "/home/chris/Projects/homelab"
-dir := repo/"rack0"
+dir := repo / "rack0"
 
 [arg("pty", long="pty", short="p")]
 ssh cmd='' pty='true':
-    just rack0 {{ if cmd != '' {f'"{{cmd}}"'} else {''} }} -p={{pty}}
+    just rack0 {{ if cmd != '' { f'"{{ cmd }}"' } else { '' } }} -p={{ pty }}
 
 # compose operations over {profiles, svcs}
 
@@ -88,10 +88,10 @@ rlogin:
 
 sync message="sync":
     git commit -a -m "{{ message }}" || true && git pull && git push
-    just ssh 'cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push'
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
 
 rsync message="sync":
-    just ssh 'cd {{repo}} && git commit -a -m '{{ message }}' || true && git pull && git push'
+    just ssh 'cd {{ repo }} && git commit -a -m '{{ message }}' || true && git pull && git push'
     git commit -a -m "{{ message }}" || true && git pull && git push
 
 # sync secrets
@@ -99,4 +99,4 @@ ss:
     fnox sync --provider age --local-file -f
 
 reset:
-    just ssh 'cd {{repo}} && git fetch origin && git reset --hard origin/main'
+    just ssh 'cd {{ repo }} && git fetch origin && git reset --hard origin/main'
