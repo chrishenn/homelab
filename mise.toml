@@ -19,6 +19,7 @@ trufflehog = "latest"
 uv = "latest"
 "pipx:mypy" = "latest"
 "npm:dclint" = "latest"
+oxfmt = "latest"
 
 [hooks.enter]
 shell = "bash"

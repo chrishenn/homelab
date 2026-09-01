@@ -12,9 +12,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "types-pyyaml>=6.0.12.20250915",
-]
+dev = ["types-pyyaml>=6.0.12.20250915"]
 
 [tool.uv.sources]
 pulumi-hostinger = { path = "sdks/hostinger" }

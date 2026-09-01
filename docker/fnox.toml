@@ -8,8 +8,8 @@ TWINGATE_REFRESH_TOKEN = { provider = "op", value = "op://homelab/twingate/refre
 TWINGATE_LABEL_HOSTNAME = { provider = "op", value = "op://homelab/twingate/label_hostname" }
 TWINGATE_LABEL_DEPLOYED_BY = { provider = "op", value = "op://homelab/twingate/deployed_by" }
 
-OPENSIGN_PFX = { provider = "op", value = "op://homelab/Opensign/pfx"}
-OPENSIGN_PFX_PASS = { provider = "op", value = "op://homelab/Opensign/pfx_pass"}
+OPENSIGN_PFX = { provider = "op", value = "op://homelab/Opensign/pfx" }
+OPENSIGN_PFX_PASS = { provider = "op", value = "op://homelab/Opensign/pfx_pass" }
 
 SEAFILE_SECRET = { provider = "op", value = "op://homelab/seafile/secret" }
 SEAFILE_SECRET_KEY = { provider = "op", value = "op://homelab/seafile/secret_key" }

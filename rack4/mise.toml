@@ -159,13 +159,13 @@ mode = "0644"
 notify = ["smb"]
 
 [bootstrap.services]
-"sleep.target" = { state = "stopped", enabled = false, masked = true}
-"suspend.target" = { state = "stopped", enabled = false, masked = true}
-"hibernate.target" = { state = "stopped", enabled = false, masked = true}
-"hybrid-sleep.target" = { state = "stopped", enabled = false, masked = true}
-sshd = {state = "running", enabled = true, on_change = "none"}
-docker = {state = "running", enabled = true, on_change = "reload_or_restart"}
-smb = {state = "running", enabled = true, on_change = "reload_or_restart"}
+"sleep.target" = { state = "stopped", enabled = false, masked = true }
+"suspend.target" = { state = "stopped", enabled = false, masked = true }
+"hibernate.target" = { state = "stopped", enabled = false, masked = true }
+"hybrid-sleep.target" = { state = "stopped", enabled = false, masked = true }
+sshd = { state = "running", enabled = true, on_change = "none" }
+docker = { state = "running", enabled = true, on_change = "reload_or_restart" }
+smb = { state = "running", enabled = true, on_change = "reload_or_restart" }
 
 [bootstrap.repos]
 "/var/home/chris/Projects/homelab" = { url = "https://github.com/chrishenn/homelab" }

@@ -1,6 +1,8 @@
 [providers]
 op = { type = "1password", vault = "homelab", account = "my.1password.com" }
-age = {type = "age", recipients = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL"] }
+age = { type = "age", recipients = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL",
+] }
 
 [secrets]
 USER = { provider = "op", value = "op://homelab/chris/username" }
@@ -15,7 +17,7 @@ VPS0_IP = { provider = "op", value = "op://homelab/vps0/ip" }
 
 CF_DNS_API_TOKEN = { provider = "op", value = "op://homelab/cloudflare/token" }
 OP_SERVICE_ACCOUNT_TOKEN = { provider = "op", value = "op://homelab/svc/credential" }
-GH_USER= { provider = "op", value = "op://homelab/github/username" }
+GH_USER = { provider = "op", value = "op://homelab/github/username" }
 GH_PAT = { provider = "op", value = "op://homelab/github/credential" }
 GH_PAT_PUBLIC = { provider = "op", value = "op://homelab/github/pat_public" }
 
