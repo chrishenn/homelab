@@ -2,15 +2,15 @@
 ---
 services:
   autoheal:
-    profiles: [autoheal]
     image: willfarrell/autoheal:latest
     container_name: autoheal
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       AUTOHEAL_CONTAINER_LABEL: autoheal
       AUTOHEAL_INTERVAL: 10
       AUTOHEAL_ONLY_MONITOR_RUNNING: true
     network_mode: none
     restart: always
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+    profiles: [autoheal]

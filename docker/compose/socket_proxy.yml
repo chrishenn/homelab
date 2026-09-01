@@ -5,10 +5,10 @@
 ---
 services:
   socket:
-    profiles: [socket]
     image: linuxserver/socket-proxy:latest
     container_name: socket
-    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -38,8 +38,8 @@ services:
       TASKS: 1
       VERSION: 1
       VOLUMES: 1
+    restart: unless-stopped
     privileged: true
+    profiles: [socket]
     security_opt:
       - no-new-privileges=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock

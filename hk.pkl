@@ -20,6 +20,7 @@ local formatters = new Mapping<String, Step> {
         workspace_indicator = "hk.pkl"
         fix = "mise fmt -a"
     }
+    ["dclint"] = Builtins.dclint
 }
 
 local linters = new Mapping<String, Step> {

@@ -62,38 +62,21 @@ x-harbor_env: &harbor_env
   POSTGRESQL_CONN_MAX_IDLE_TIME: 0
 
 services:
-  harbor_portal:
-    profiles: [harbor]
-    image: goharbor/harbor-portal:v2.14.4
-    container_name: harbor_portal
-    restart: unless-stopped
-    volumes:
-      - ./harbor/portal.conf:/etc/nginx/nginx.conf
-    networks: [harbor, traefik]
-    labels:
-      traefik.enable: true
-      traefik.http.routers.reg.rule: Host(`reg.henn.dev`) && PathPrefix(`/`)
-      traefik.http.routers.reg.entrypoints: websecure
-      traefik.http.routers.reg.middlewares: hdrs@file
-      traefik.http.routers.reg.tls.certresolver: cf
-      traefik.http.services.reg.loadbalancer.server.port: 8080
-
   harbor_core:
-    profiles: [harbor]
     image: goharbor/harbor-core:v2.14.4
     container_name: harbor_core
-    restart: unless-stopped
-    environment:
-      <<: *harbor_env
-      # registryctl chokes on this one
-      REGISTRY_STORAGE_PROVIDER_NAME: filesystem
     volumes:
       - $DATA/harbor/cert:/harbor_cust_cert
       - $DATA/harbor/data/:/data
       - $DATA/harbor/core:/etc/core
       - ./harbor/private_key.pem:/etc/core/private_key.pem
       - ./harbor/core.conf:/etc/core/app.conf
+    environment:
+      <<: *harbor_env
+      # registryctl chokes on this one
+      REGISTRY_STORAGE_PROVIDER_NAME: filesystem
     networks: [harbor, traefik]
+    restart: unless-stopped
     labels:
       traefik.enable: true
       traefik.http.routers.reg_c.rule: Host(`reg.henn.dev`) && (PathPrefix(`/c`) || PathPrefix(`/api`) || PathPrefix(`/v2`) || PathPrefix(`/service`))
@@ -101,12 +84,60 @@ services:
       traefik.http.routers.reg_c.middlewares: hdrs@file
       traefik.http.routers.reg_c.tls.certresolver: cf
       traefik.http.services.reg_c.loadbalancer.server.port: 8080
+    profiles: [harbor]
+
+  harbor_db:
+    image: goharbor/harbor-db:v2.14.4
+    container_name: harbor_db
+    volumes:
+      - $DATA/harbor/db:/var/lib/postgresql/data
+    environment:
+      <<: *harbor_env
+    networks: [harbor]
+    restart: unless-stopped
+    profiles: [harbor]
+    shm_size: '1gb'
+
+  harbor_jobservice:
+    image: goharbor/harbor-jobservice:v2.14.4
+    container_name: harbor_jobservice
+    volumes:
+      - $DATA/harbor/cert:/harbor_cust_cert
+      - $DATA/harbor/jobservice:/var/log/jobs
+      - ./harbor/jobservice.yml:/etc/jobservice/config.yml
+    environment:
+      <<: *harbor_env
+    networks: [harbor]
+    restart: unless-stopped
+    profiles: [harbor]
+  harbor_portal:
+    image: goharbor/harbor-portal:v2.14.4
+    container_name: harbor_portal
+    volumes:
+      - ./harbor/portal.conf:/etc/nginx/nginx.conf
+    networks: [harbor, traefik]
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.http.routers.reg.rule: Host(`reg.henn.dev`) && PathPrefix(`/`)
+      traefik.http.routers.reg.entrypoints: websecure
+      traefik.http.routers.reg.middlewares: hdrs@file
+      traefik.http.routers.reg.tls.certresolver: cf
+      traefik.http.services.reg.loadbalancer.server.port: 8080
+    profiles: [harbor]
+
+  harbor_redis:
+    image: goharbor/redis-photon:v2.14.4
+    container_name: harbor_redis
+    volumes:
+      - $DATA/harbor/redis:/var/lib/redis
+    networks: [harbor]
+    restart: unless-stopped
+    profiles: [harbor]
 
   harbor_registry:
-    profiles: [harbor]
     image: goharbor/registry-photon:v2.14.4
     container_name: harbor_registry
-    restart: unless-stopped
     volumes:
       - $DATA/harbor/cert:/harbor_cust_cert
       - $DATA/harbor/storage:/storage
@@ -114,55 +145,23 @@ services:
       - ./harbor/passwd:/etc/registry/passwd
       - ./harbor/registry.yml/:/etc/registry/config.yml
     networks: [harbor]
+    restart: unless-stopped
+    profiles: [harbor]
 
   harbor_registryctl:
-    profiles: [harbor]
     image: goharbor/harbor-registryctl:v2.14.4
     container_name: harbor_registryctl
-    restart: unless-stopped
-    environment:
-      <<: *harbor_env
     volumes:
       - $DATA/harbor/cert:/harbor_cust_cert
       - $DATA/harbor/storage:/storage
       - ./harbor/passwd:/etc/registry/passwd
       - ./harbor/registry.yml/:/etc/registry/config.yml
       - ./harbor/registryctl.yml:/etc/registryctl/config.yml
-    networks: [harbor]
-
-  harbor_jobservice:
-    profiles: [harbor]
-    image: goharbor/harbor-jobservice:v2.14.4
-    container_name: harbor_jobservice
-    restart: unless-stopped
     environment:
       <<: *harbor_env
-    volumes:
-      - $DATA/harbor/cert:/harbor_cust_cert
-      - $DATA/harbor/jobservice:/var/log/jobs
-      - ./harbor/jobservice.yml:/etc/jobservice/config.yml
     networks: [harbor]
-
-  harbor_db:
-    profiles: [harbor]
-    image: goharbor/harbor-db:v2.14.4
-    container_name: harbor_db
     restart: unless-stopped
-    shm_size: '1gb'
-    environment:
-      <<: *harbor_env
-    volumes:
-      - $DATA/harbor/db:/var/lib/postgresql/data
-    networks: [harbor]
-
-  harbor_redis:
     profiles: [harbor]
-    image: goharbor/redis-photon:v2.14.4
-    container_name: harbor_redis
-    restart: unless-stopped
-    volumes:
-      - $DATA/harbor/redis:/var/lib/redis
-    networks: [harbor]
 
 networks:
   harbor:

@@ -2,10 +2,8 @@
 ---
 services:
   littlelink:
-    profiles: [littlelink]
     image: ghcr.io/timothystewart6/littlelink-server:latest
     container_name: littlelink
-    restart: unless-stopped
     environment:
       META_TITLE: Chris Henn
       META_DESCRIPTION: Software Engineer
@@ -51,6 +49,7 @@ services:
       PATREON: https://home.henn.dev
       FOOTER: Chris Henn © 2025
     networks: [traefik]
+    restart: unless-stopped
     labels:
       homepage.group: General Tools
       homepage.name: Littlelink
@@ -64,3 +63,4 @@ services:
       traefik.http.routers.littlelink.middlewares: hdrs@file
       traefik.http.routers.littlelink.tls.certresolver: cf
       traefik.http.services.littlelink.loadbalancer.server.port: 3000
+    profiles: [littlelink]

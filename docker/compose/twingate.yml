@@ -2,10 +2,8 @@
 ---
 services:
   twingate:
-    profiles: [twingate]
     image: twingate/connector:latest
     container_name: adamant-ringtail
-    restart: unless-stopped
     environment:
       TWINGATE_NETWORK: ${TWINGATE_NETWORK}
       TWINGATE_ACCESS_TOKEN: ${TWINGATE_ACCESS_TOKEN}
@@ -13,3 +11,5 @@ services:
       TWINGATE_LABEL_HOSTNAME: ${TWINGATE_LABEL_HOSTNAME}
       TWINGATE_LABEL_DEPLOYED_BY: ${TWINGATE_LABEL_DEPLOYED_BY}
     network_mode: host
+    restart: unless-stopped
+    profiles: [twingate]

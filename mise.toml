@@ -18,6 +18,7 @@ hk = "latest"
 trufflehog = "latest"
 uv = "latest"
 "pipx:mypy" = "latest"
+"npm:dclint" = "latest"
 
 [hooks.enter]
 shell = "bash"

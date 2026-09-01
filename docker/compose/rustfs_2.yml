@@ -1,0 +1,78 @@
+---
+x-plane_env: &plane_env
+  RUSTFS_ACCESS_KEY: ${PLANE_S3_ACCESS}
+  RUSTFS_SECRET_KEY: ${PLANE_S3_SECRET}
+  RUSTFS_VOLUMES: /data
+  RUSTFS_ADDRESS: :9000
+  RUSTFS_EXTERNAL_ADDRESS: :9000
+  RUSTFS_CONSOLE_ENABLE: true
+  RUSTFS_CONSOLE_ADDRESS: :9001
+  RUSTFS_CORS_ALLOWED_ORIGINS: '*'
+  RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: '*'
+
+services:
+  plane_perm:
+    image: alpine
+    container_name: plane_perm
+    volumes:
+      - $DATA/plane/s3:/data/s3
+      - $DATA/plane/search:/data/search
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -x
+        chown -R 10001:10001 /data/s3
+        echo "set perms; exit: $?"
+    restart: no
+    user: root
+    profiles: [plane]
+
+  plane_s3:
+    image: rustfs/rustfs:latest
+    container_name: plane_s3
+    depends_on:
+      plane_perm:
+        condition: service_completed_successfully
+    volumes:
+      - $DATA/plane/s3:/data
+    environment:
+      <<: *plane_env
+    networks: [plane, traefik]
+    command: /data
+    restart: unless-stopped
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+      interval: 5s
+    labels:
+      traefik.enable: true
+      traefik.http.routers.plane_s3.rule: Host(`s3.plane.henn.dev`)
+      traefik.http.routers.plane_s3.entrypoints: websecure
+      traefik.http.routers.plane_s3.middlewares: hdrs@file
+      traefik.http.routers.plane_s3.tls.certresolver: cf
+      traefik.http.services.plane_s3.loadbalancer.server.port: 9001
+    profiles: [plane]
+  plane_s3_setup:
+    image: minio/mc
+    container_name: plane_s3_setup
+    depends_on:
+      plane_s3:
+        condition: service_healthy
+    environment:
+      <<: *plane_env
+    networks: [plane]
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        until mc alias set rustfs $${AWS_S3_ENDPOINT_URL} $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY}; do
+          echo 'waiting to connect to plane_s3'
+          sleep 2
+        done
+        mc mb rustfs/$${AWS_S3_BUCKET_NAME} --ignore-existing
+    restart: no
+    profiles: [plane]

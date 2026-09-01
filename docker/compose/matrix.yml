@@ -2,14 +2,12 @@
 ---
 services:
   matrix:
-    profiles: [matrix]
     image: forgejo.ellis.link/continuwuation/continuwuity:latest
     container_name: matrix
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 1048567
-        hard: 1048567
+    volumes:
+      - /etc/resolv.conf:/etc/resolv.conf:ro
+      - $DATA/continuwuity:/var/lib/continuwuity
+      - $DATA/continuwuity/config.toml:/etc/continuwuity.toml
     environment:
       CONTINUWUITY_SERVER_NAME: matrix.henn.dev
       CONTINUWUITY_DATABASE_PATH: /var/lib/continuwuity
@@ -27,11 +25,8 @@ services:
         client=https://matrix.henn.dev,
         server=matrix.henn.dev:443
         }
-    volumes:
-      - /etc/resolv.conf:/etc/resolv.conf:ro
-      - $DATA/continuwuity:/var/lib/continuwuity
-      - $DATA/continuwuity/config.toml:/etc/continuwuity.toml
     networks: [traefik]
+    restart: unless-stopped
     labels:
       homepage.group: General Tools
       homepage.name: Matrix Chat
@@ -45,12 +40,17 @@ services:
       traefik.http.routers.matrix.middlewares: hdrs@file
       traefik.http.routers.matrix.tls.certresolver: cf
       traefik.http.services.matrix.loadbalancer.server.port: 6167
+    profiles: [matrix]
+    ulimits:
+      nofile:
+        soft: 1048567
+        hard: 1048567
 
   matrix_turn:
-    profiles: [matrix]
     image: coturn/coturn
     container_name: matrix_turn
-    restart: unless-stopped
-    network_mode: host
     volumes:
       - $DATA/coturn/coturn.conf:/etc/coturn/turnserver.conf
+    network_mode: host
+    restart: unless-stopped
+    profiles: [matrix]

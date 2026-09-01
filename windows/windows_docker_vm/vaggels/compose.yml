@@ -2,32 +2,28 @@
 services:
   server2022:
     image: chrishenn/vaggels:latest
-
-    container_name: server2022
-    hostname: server2022
-
-    env_file: .env
-    environment:
-      - VM_NAME=peru-server2022
-
-    privileged: true
-    cap_add:
-      - NET_ADMIN
-      - SYS_ADMIN
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-      - ${VAGRANTBOX_DIR}:/boxes
-    devices:
-      - /dev/kvm
-      - /dev/net/tun
-    ports:
-      - '3389:3389'
-      - '2022:2022'
-    entrypoint:
-      - /startup.sh
-    command:
-      - sleep infinity
-
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: server2022
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - ${VAGRANTBOX_DIR}:/boxes
+    environment:
+      - VM_NAME=peru-server2022
+    env_file: .env
+    ports:
+      - '0.0.0.0:2022:2022'
+      - '0.0.0.0:3389:3389'
+    command:
+      - sleep infinity
+    entrypoint:
+      - /startup.sh
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    hostname: server2022
+    privileged: true

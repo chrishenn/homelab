@@ -2,11 +2,10 @@
 ---
 services:
   linkstack:
-    profiles: [linkstack]
     image: linkstackorg/linkstack:latest
     container_name: linkstack
-    restart: unless-stopped
-    hostname: linkstack
+    volumes:
+      - $DATA/linkstack:/htdocs
     environment:
       TZ: $TZ
       SERVER_ADMIN: ${EMAIL}
@@ -14,9 +13,8 @@ services:
       HTTPS_SERVER_NAME: 'linkstack.henn.dev'
       PHP_MEMORY_LIMIT: '2000M'
       UPLOAD_MAX_FILESIZE: '2000M'
-    volumes:
-      - $DATA/linkstack:/htdocs
     networks: [traefik]
+    restart: unless-stopped
     labels:
       homepage.group: General Tools
       homepage.name: Linkstack
@@ -31,3 +29,5 @@ services:
       traefik.http.routers.linkstack.tls.certresolver: cf
       traefik.http.services.linkstack.loadbalancer.server.port: 443
       traefik.http.services.linkstack.loadbalancer.server.scheme: https
+    hostname: linkstack
+    profiles: [linkstack]

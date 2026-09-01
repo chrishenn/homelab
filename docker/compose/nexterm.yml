@@ -2,15 +2,14 @@
 ---
 services:
   nexterm:
-    profiles: [nexterm]
     image: germannewsmaker/nexterm
     container_name: nexterm
-    restart: unless-stopped
     volumes:
       - $DATA/nexterm:/app/data
     environment:
       ENCRYPTION_KEY: ${NEXTERM_ENCRYPTION_KEY}
     networks: [newt]
+    restart: unless-stopped
     labels:
       homepage.group: Monitoring
       homepage.name: Nexterm
@@ -32,3 +31,4 @@ services:
       pangolin.public-resources.nexterm.rules[1].action: deny
       pangolin.public-resources.nexterm.rules[1].match: country
       pangolin.public-resources.nexterm.rules[1].value: ALL
+    profiles: [nexterm]
