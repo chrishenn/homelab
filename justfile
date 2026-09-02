@@ -16,8 +16,8 @@ slow:
 
 lint:
     hk run slow --all
-    just check
     just fix
+    just check
 
 unsafe:
     ruff check --fix --unsafe-fixes

@@ -1,0 +1,16 @@
+[rules]
+blanket-ignore-comment = "error"
+dynamic-function-decorator-return = "error"
+missing-type-argument = "error"
+possibly-unresolved-reference = "warn"
+unsound-assignment = "error"
+unsound-return-statement = "error"
+unsound-yield = "error"
+unsupported-dynamic-base = "warn"
+
+[analysis]
+strict-literal-narrowing = true
+strict-generic-narrowing = true
+
+[src]
+exclude = ["ref"]
