@@ -5,7 +5,7 @@ function cilim_cli_install() {
 	ver=${1:-"v0.18.3"}
 	arch=amd64
 
-	printf "cilium ver: $ver"
+	echo "cilium ver: $ver"
 
 	if [ "$(uname -m)" = "aarch64" ]; then arch=arm64; fi
 	url="https://github.com/cilium/cilium-cli/releases/download/${ver}/cilium-linux-${arch}.tar.gz{,.sha256sum}"
