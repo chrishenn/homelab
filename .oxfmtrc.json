@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["*.toml"],
+  "ignorePatterns": ["*.toml", "*.md"],
   "semi": false,
   "singleQuote": true,
   "tabWidth": 4,
@@ -16,15 +16,7 @@
     {
       "files": ["*.conf"],
       "options": {
-        "tabWidth": 4,
         "printWidth": 240
-      }
-    },
-    {
-      "files": ["Pulumi*yaml"],
-      "options": {
-        "tabWidth": 2,
-        "printWidth": 120
       }
     }
   ]

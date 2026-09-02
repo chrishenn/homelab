@@ -79,19 +79,19 @@ the default network {name: "pangolin", reference: "default"} is defined by pango
 
 ```yml
 networks:
-    default:
-        ipv4_address: 172.18.0.2
+  default:
+    ipv4_address: 172.18.0.2
 ```
 
 sudo nano config/traefik/traefik_config.yml
 
 ```yml
 entryPoints:
-    websecure:
-        address: :443
-        forwardedHeaders:
-            trustedIPs:
-                - 172.18.0.2/16
+  websecure:
+    address: :443
+    forwardedHeaders:
+      trustedIPs:
+        - 172.18.0.2/16
 ```
 
 Any docker svcs managed by the same traefik instance as this tinyauth one just need to attach the tinyauth middleware

@@ -22,6 +22,8 @@ uv = "latest"
 oxfmt = "latest"
 "aqua:owenlamont/ryl" = "latest"
 "aqua:anordal/shellharden" = "latest"
+"github:mongodb/kingfisher" = "latest"
+betterleaks = "latest"
 
 [hooks.enter]
 shell = "bash"

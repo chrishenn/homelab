@@ -74,7 +74,8 @@ function mise_boot {
 		proton-vpn-gnome-desktop \
 		google-chrome-stable \
 		kvantum \
-		firefox
+		firefox \
+		musl-gcc musl-libc-static musl-devel
 
 	# soar packages.toml is installed by chezmoi init
 	soar apply -y
