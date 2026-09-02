@@ -20,9 +20,9 @@ services:
       - $DATA/pangolin/db:/app/config/db
       - $DATA/pangolin/key:/app/config/key
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/v1/']
-      interval: '10s'
-      timeout: '10s'
+      test: [CMD, curl, -f, http://localhost:3001/api/v1/]
+      interval: 10s
+      timeout: 10s
       retries: 15
 
   gerbil:

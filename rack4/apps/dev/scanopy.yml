@@ -55,7 +55,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - $DATA/scanopy/daemon:/root/.config/daemon
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:60073/api/health || exit 1']
+      test: [CMD-SHELL, curl -f http://localhost:60073/api/health || exit 1]
       interval: 5s
       timeout: 3s
       retries: 15

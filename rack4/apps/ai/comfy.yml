@@ -16,7 +16,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CLI_ARGS: '--fast --listen 0.0.0.0'
+      CLI_ARGS: --fast --listen 0.0.0.0
     volumes:
       - $DATA/comfy/root:/root
       - $DATA/comfy/custom_nodes:/root/ComfyUI/custom_nodes
@@ -27,7 +27,7 @@ services:
       - $DATA/comfy/output:/root/ComfyUI/output
       - $DATA/comfy/workflows:/root/ComfyUI/user/default/workflows
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8188']
+      test: [CMD, curl, -ILfSs, http://localhost:8188]
     networks: [newt]
     labels:
       homepage.group: AI

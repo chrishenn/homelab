@@ -29,7 +29,7 @@ services:
     volumes:
       - $DATA/kuma/data:/app/data
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3001']
+      test: [CMD, curl, -ILfSs, http://localhost:3001]
     networks: [kuma, newt]
     labels:
       homepage.group: Monitoring

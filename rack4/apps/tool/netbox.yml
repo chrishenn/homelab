@@ -45,7 +45,7 @@ x-netbox_env: &netbox_env
   SKIP_SUPERUSER: true
   WEBHOOKS_ENABLED: true
 
-  REMOTE_AUTH_BACKEND: 'social_core.backends.open_id_connect.OpenIdConnectAuth'
+  REMOTE_AUTH_BACKEND: social_core.backends.open_id_connect.OpenIdConnectAuth
   SOCIAL_AUTH_OIDC_OIDC_ENDPOINT: $OIDC
   SOCIAL_AUTH_OIDC_KEY: ${NETBOX_OIDC_CLIENT}
   SOCIAL_AUTH_OIDC_SECRET: ${NETBOX_OIDC_SECRET}
@@ -63,7 +63,7 @@ services:
     <<: *netbox_common
     environment:
       <<: *netbox_env
-    user: 'netbox:root'
+    user: netbox:root
     healthcheck:
       test: curl -f http://localhost:8080/login/ || exit 1
       start_period: 90s
@@ -93,7 +93,7 @@ services:
     image: netboxcommunity/netbox:v4.6-5.0.2
     container_name: netbox_worker
     <<: *netbox_common
-    user: 'netbox:root'
+    user: netbox:root
     command:
       - /opt/netbox/venv/bin/python
       - /opt/netbox/netbox/manage.py

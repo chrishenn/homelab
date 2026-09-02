@@ -10,7 +10,7 @@ services:
       discovery.type: single-node
       plugins.security.disabled: true
       OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${MATTERMOST_SEARCH_PASS}
-      OPENSEARCH_JAVA_OPTS: '-Xms128m -Xmx256m'
+      OPENSEARCH_JAVA_OPTS: -Xms128m -Xmx256m
     volumes:
       - $DATA/mattermost/search:/usr/share/opensearch/data
     networks: [mattermost]

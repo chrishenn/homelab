@@ -54,8 +54,8 @@ spec:
     stsPreload: true
     # Custom headers for backend identification
     customRequestHeaders:
-      X-Forwarded-Proto: 'https'
-      X-Custom-Header: 'traefik-processed'
+      X-Forwarded-Proto: https
+      X-Custom-Header: traefik-processed
     # Remove headers that expose server internals
     customResponseHeaders:
       X-Powered-By: ''
@@ -73,7 +73,7 @@ spec:
     # Secret containing htpasswd-formatted credentials
     secret: auth-secret
     # Realm shown in the authentication dialog
-    realm: 'Traefik Dashboard'
+    realm: Traefik Dashboard
     # Remove the Authorization header before forwarding
     removeHeader: true
 
@@ -120,9 +120,9 @@ spec:
   compress:
     # Exclude file types that are already compressed
     excludedContentTypes:
-      - 'image/png'
-      - 'image/jpeg'
-      - 'image/gif'
+      - image/png
+      - image/jpeg
+      - image/gif
 
 ---
 # IP allowlist middleware - restrict access to specific IPs
@@ -135,9 +135,9 @@ spec:
   ipAllowList:
     # Only allow requests from these IP ranges
     sourceRange:
-      - '10.0.0.0/8'
-      - '172.16.0.0/12'
-      - '192.168.0.0/16'
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
     # Strategy for determining client IP
     ipStrategy:
       depth: 0
@@ -153,7 +153,7 @@ spec:
   stripPrefix:
     # Prefixes to remove from the request path
     prefixes:
-      - '/v1'
+      - /v1
     # Force the slash if the resulting path is empty
     forceSlash: true
 
@@ -167,8 +167,8 @@ metadata:
 spec:
   redirectRegex:
     # Match the www subdomain
-    regex: "^https?://www\\.(.+)"
+    regex: ^https?://www\.(.+)
     # Redirect to the non-www version
-    replacement: 'https://${1}'
+    replacement: https://${1}
     # Use permanent redirect (301)
     permanent: true

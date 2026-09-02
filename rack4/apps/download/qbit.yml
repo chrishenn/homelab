@@ -41,7 +41,7 @@ services:
       VPN_SERVICE_PROVIDER: protonvpn
       VPN_TYPE: wireguard
       WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
-      SERVER_COUNTRIES: 'United States,Canada'
+      SERVER_COUNTRIES: United States,Canada
       WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL: 60s
     networks: [traefik, arr, newt]
     labels:
@@ -127,7 +127,7 @@ services:
       - $DATA/qbit/downloads:/qbit/downloads
       - $DATA/qbit_novpn/downloads:/qbit_novpn/downloads
     healthcheck:
-      test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:7476']
+      test: [CMD, wget, -qO, --no-verbose, http://localhost:7476]
     networks: [arr, newt]
     labels:
       homepage.group: Download

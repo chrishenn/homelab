@@ -154,7 +154,7 @@ services:
     volumes:
       - $MUSIC:/data
     healthcheck:
-      test: ['CMD-SHELL', 'wget -qO- localhost:4000']
+      test: [CMD-SHELL, wget -qO- localhost:4000]
       interval: 3s
       timeout: 5s
       retries: 20
@@ -172,7 +172,7 @@ services:
     volumes:
       - $MUSIC:/data:ro
     healthcheck:
-      test: ['CMD-SHELL', 'wget -qO- localhost:8133']
+      test: [CMD-SHELL, wget -qO- localhost:8133]
       interval: 3s
       timeout: 5s
       retries: 20

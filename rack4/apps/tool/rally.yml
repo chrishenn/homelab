@@ -30,7 +30,7 @@ services:
     environment:
       <<: *rally_env
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:3000']
+      test: [CMD, curl, -ILfSs, http://localhost:3000]
     networks: [rally, newt]
     labels:
       homepage.group: General Tools

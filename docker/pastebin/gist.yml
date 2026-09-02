@@ -14,7 +14,7 @@ services:
     volumes:
       - $DATA/gist:/opengist
     healthcheck:
-      test: ['CMD', 'curl', '-fs', 'http://localhost:6157/healthcheck']
+      test: [CMD, curl, -fs, http://localhost:6157/healthcheck]
     networks: [newt]
     labels:
       homepage.group: Development Tools

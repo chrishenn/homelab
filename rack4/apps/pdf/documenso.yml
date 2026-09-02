@@ -60,7 +60,7 @@ services:
     volumes:
       - $DATA/documenso/cert.p12:/opt/documenso/cert.p12:ro
     healthcheck:
-      test: ['CMD', 'wget', '-qO', '--no-verbose', 'http://localhost:3000/api/health']
+      test: [CMD, wget, -qO, --no-verbose, http://localhost:3000/api/health]
     networks: [documenso, newt]
     labels:
       homepage.group: PDF Tools

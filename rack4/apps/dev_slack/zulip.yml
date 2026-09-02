@@ -29,43 +29,43 @@ services:
           memory: 2G
     environment:
       TZ: $TZ
-      SETTING_EXTERNAL_HOST: 'zulip.chenn.dev'
+      SETTING_EXTERNAL_HOST: zulip.chenn.dev
       SETTING_ALLOWED_HOSTS: '["zulip.chenn.dev",]'
       SETTING_CSRF_TRUSTED_ORIGINS: '["https://zulip.chenn.dev",]'
 
-      LOADBALANCER_IPS: '$NEWT_SUBNET'
+      LOADBALANCER_IPS: $NEWT_SUBNET
       SETTING_APPLICATION_SERVER_HTTP_ONLY: 'True'
-      SSL_CERTIFICATE_GENERATION: 'self-signed'
-      SETTING_CERTIFICATES: 'self-signed'
+      SSL_CERTIFICATE_GENERATION: self-signed
+      SETTING_CERTIFICATES: self-signed
       DISABLE_HTTPS: 'True'
       SETTING_USE_X_FORWARDED_HOST: 'True'
 
       SETTING_ZULIP_ADMINISTRATOR: ${EMAIL}
-      SETTING_AUTHENTICATION_BACKENDS: "('zproject.backends.GenericOpenIdConnectBackend',)"
+      SETTING_AUTHENTICATION_BACKENDS: ('zproject.backends.GenericOpenIdConnectBackend',)
 
-      DB_HOST: 'zulip_pg'
+      DB_HOST: zulip_pg
       DB_HOST_PORT: '5432'
-      DB_USER: 'zulip'
+      DB_USER: zulip
 
-      SETTING_REMOTE_POSTGRES_HOST: 'zulip_pg'
-      SETTING_MEMCACHED_LOCATION: 'zulip_memcached:11211'
-      SETTING_RABBITMQ_HOST: 'zulip_rabbitmq'
-      SETTING_REDIS_HOST: 'zulip_redis'
-      SETTING_JITSI_SERVER_URL: 'miro.chenn.dev'
+      SETTING_REMOTE_POSTGRES_HOST: zulip_pg
+      SETTING_MEMCACHED_LOCATION: zulip_memcached:11211
+      SETTING_RABBITMQ_HOST: zulip_rabbitmq
+      SETTING_REDIS_HOST: zulip_redis
+      SETTING_JITSI_SERVER_URL: miro.chenn.dev
 
-      SECRETS_rabbitmq_password: 'REPLACE_WITH_SECURE_RABBITMQ_PASSWORD'
-      SECRETS_postgres_password: 'REPLACE_WITH_SECURE_POSTGRES_PASSWORD'
-      SECRETS_memcached_password: 'REPLACE_WITH_SECURE_MEMCACHED_PASSWORD'
-      SECRETS_redis_password: 'REPLACE_WITH_SECURE_REDIS_PASSWORD'
-      SECRETS_secret_key: 'REPLACE_WITH_SECURE_SECRET_KEY'
+      SECRETS_rabbitmq_password: REPLACE_WITH_SECURE_RABBITMQ_PASSWORD
+      SECRETS_postgres_password: REPLACE_WITH_SECURE_POSTGRES_PASSWORD
+      SECRETS_memcached_password: REPLACE_WITH_SECURE_MEMCACHED_PASSWORD
+      SECRETS_redis_password: REPLACE_WITH_SECURE_REDIS_PASSWORD
+      SECRETS_secret_key: REPLACE_WITH_SECURE_SECRET_KEY
 
-      SETTING_EMAIL_HOST: '$SMTP_HOST'
-      SETTING_EMAIL_HOST_USER: '$SMTP_USER'
+      SETTING_EMAIL_HOST: $SMTP_HOST
+      SETTING_EMAIL_HOST_USER: $SMTP_USER
       SETTING_EMAIL_PORT: 465
       SETTING_EMAIL_USE_SSL: 'True'
       SETTING_EMAIL_USE_TLS: 'False'
       SETTING_SEND_LOGIN_EMAILS: 'False'
-      SECRETS_email_password: '$SMTP_PASS'
+      SECRETS_email_password: $SMTP_PASS
 
       ZULIP_CUSTOM_SETTINGS: |
         SOCIAL_AUTH_OIDC_ENABLED_IDPS: dict[str, Any] = {
@@ -124,17 +124,17 @@ services:
     container_name: zulip_memcached
     restart: unless-stopped
     command:
-      - 'sh'
-      - '-euc'
+      - sh
+      - -euc
       - |
         echo 'mech_list: plain' > "$$SASL_CONF_PATH"
         echo "zulip@$$HOSTNAME:$$MEMCACHED_PASSWORD" > "$$MEMCACHED_SASL_PWDB"
         echo "zulip@localhost:$$MEMCACHED_PASSWORD" >> "$$MEMCACHED_SASL_PWDB"
         exec memcached -S
     environment:
-      SASL_CONF_PATH: '/home/memcache/memcached.conf'
-      MEMCACHED_SASL_PWDB: '/home/memcache/memcached-sasl-db'
-      MEMCACHED_PASSWORD: 'REPLACE_WITH_SECURE_MEMCACHED_PASSWORD'
+      SASL_CONF_PATH: /home/memcache/memcached.conf
+      MEMCACHED_SASL_PWDB: /home/memcache/memcached-sasl-db
+      MEMCACHED_PASSWORD: REPLACE_WITH_SECURE_MEMCACHED_PASSWORD
     networks: [zulip]
 
   zulip_rabbitmq:
@@ -155,8 +155,8 @@ services:
     container_name: zulip_redis
     restart: unless-stopped
     command:
-      - 'sh'
-      - '-euc'
+      - sh
+      - -euc
       - |
         echo "requirepass '$$REDIS_PASSWORD'" > /etc/redis.conf
         exec redis-server /etc/redis.conf

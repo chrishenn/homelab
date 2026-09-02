@@ -13,7 +13,7 @@ services:
     volumes:
       - $DATA/slskd/downloads:/app/downloads
     ports:
-      - '50300:50300'
+      - 50300:50300
     networks: [newt]
     labels:
       homepage.group: Media

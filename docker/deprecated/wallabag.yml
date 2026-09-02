@@ -61,7 +61,7 @@ services:
     container_name: wallabag_redis
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: [CMD, redis-cli, ping]
       interval: 20s
       timeout: 3s
     networks: [wallabag]

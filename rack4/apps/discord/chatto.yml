@@ -139,7 +139,7 @@ services:
     image: nats:latest
     container_name: chatto_nats
     <<: *chatto_common
-    command: ['--jetstream', '--store_dir=/data', '--auth=${CHATTO_NATS}']
+    command: [--jetstream, --store_dir=/data, '--auth=${CHATTO_NATS}']
     volumes:
       - $DATA/chatto/nats:/data
 

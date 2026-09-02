@@ -40,7 +40,7 @@ services:
       ENABLE_PASSWORD_AUTH: true
 
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:8080']
+      test: [CMD, curl, -ILfSs, http://localhost:8080]
     networks: [newt, ollama]
     labels:
       homepage.group: AI

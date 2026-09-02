@@ -47,7 +47,7 @@ services:
     build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:generator
     image: ${REGISTRY}/ghstats-generator:latest
     container_name: ghstat_generator-worker
-    command: ['python', '-m', 'src.worker']
+    command: [python, -m, src.worker]
     volumes:
       - $DATA/ghstat/generator:/app/data
 
@@ -64,7 +64,7 @@ services:
     build: https://github.com/ShayManor/github-readme-stats.git#v0.1.0:fetcher
     image: ${REGISTRY}/ghstats-fetcher:latest
     container_name: ghstat_fetcher-cron
-    command: ['python', '-m', 'src.cron']
+    command: [python, -m, src.cron]
     volumes:
       - $DATA/ghstat/fetcher:/app/data
 

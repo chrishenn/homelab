@@ -96,7 +96,7 @@ services:
     networks: [harbor]
     restart: unless-stopped
     profiles: [harbor]
-    shm_size: '1gb'
+    shm_size: 1gb
 
   harbor_jobservice:
     image: goharbor/harbor-jobservice:v2.14.4

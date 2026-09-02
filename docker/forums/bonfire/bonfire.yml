@@ -146,7 +146,7 @@ services:
     image: postgis/postgis:18-3.6-alpine
     container_name: bonfire_db
     restart: unless-stopped
-    entrypoint: ['/bin/bash', '/opt/bonfire/deploy/postgres-entrypoint.sh']
+    entrypoint: [/bin/bash, /opt/bonfire/deploy/postgres-entrypoint.sh]
     environment:
       <<: *bonfire_env
     volumes:

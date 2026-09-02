@@ -20,7 +20,7 @@ http:
   routers:
     # HTTP to HTTPS redirect router
     main-app-router-redirect:
-      rule: 'Host(`pangolin.chenn.dev`)'
+      rule: Host(`pangolin.chenn.dev`)
       service: next-service
       entryPoints:
         - web
@@ -30,7 +30,7 @@ http:
 
     # Next.js router (handles everything except API and WebSocket paths)
     next-router:
-      rule: 'Host(`pangolin.chenn.dev`) && !PathPrefix(`/api/v1`)'
+      rule: Host(`pangolin.chenn.dev`) && !PathPrefix(`/api/v1`)
       service: next-service
       entryPoints:
         - websecure
@@ -39,13 +39,13 @@ http:
       tls:
         certResolver: letsencrypt
         domains:
-          - main: 'chenn.dev'
+          - main: chenn.dev
             sans:
               - '*.chenn.dev'
 
     # API router (handles /api/v1 paths)
     api-router:
-      rule: 'Host(`pangolin.chenn.dev`) && PathPrefix(`/api/v1`)'
+      rule: Host(`pangolin.chenn.dev`) && PathPrefix(`/api/v1`)
       service: api-service
       entryPoints:
         - websecure
@@ -56,7 +56,7 @@ http:
 
     # WebSocket router
     ws-router:
-      rule: 'Host(`pangolin.chenn.dev`)'
+      rule: Host(`pangolin.chenn.dev`)
       service: api-service
       entryPoints:
         - websecure
@@ -69,9 +69,9 @@ http:
     next-service:
       loadBalancer:
         servers:
-          - url: 'http://pangolin:3002' # Next.js server
+          - url: http://pangolin:3002 # Next.js server
 
     api-service:
       loadBalancer:
         servers:
-          - url: 'http://pangolin:3000' # API/WebSocket server
+          - url: http://pangolin:3000 # API/WebSocket server

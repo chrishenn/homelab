@@ -40,7 +40,7 @@ services:
     volumes:
       - $DATA/pocketid/data:/app/data
     healthcheck:
-      test: ['CMD', '/app/pocket-id', 'healthcheck']
+      test: [CMD, /app/pocket-id, healthcheck]
     networks: [newt]
     labels:
       homepage.group: Infra

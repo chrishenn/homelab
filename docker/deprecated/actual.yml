@@ -13,7 +13,7 @@ services:
     volumes:
       - $DATA/actualbudget:/data
     healthcheck:
-      test: ['CMD-SHELL', 'node src/scripts/health-check.js']
+      test: [CMD-SHELL, node src/scripts/health-check.js]
     networks: [traefik]
     labels:
       homepage.instance.private.group: Tools

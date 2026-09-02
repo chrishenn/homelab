@@ -140,7 +140,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
-    command: 'gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*'
+    command: gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*
     networks: [paperless]
 
 networks:

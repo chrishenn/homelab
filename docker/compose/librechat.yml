@@ -59,7 +59,7 @@ x-librechat_env: &librechat_env
   EMAIL_FROM: noreply@librechat.ai
 
   APP_TITLE: Chicken Chat
-  CUSTOM_FOOTER: 'Chicky Chicky Chat Chat'
+  CUSTOM_FOOTER: Chicky Chicky Chat Chat
 
 services:
   # sudo chown -R 1000:1000 $DATA/librechat/logs
@@ -69,7 +69,7 @@ services:
     container_name: librechat
     restart: unless-stopped
     extra_hosts:
-      - 'host.docker.internal:host-gateway'
+      - host.docker.internal:host-gateway
     configs:
       - source: librechat
         target: /app/librechat.yaml

@@ -20,7 +20,7 @@ services:
       JWT_HEADER: Authorization
       JWT_IN_BODY: true
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8000/info/info.json']
+      test: [CMD, curl, -f, http://localhost:8000/info/info.json]
       interval: 30s
       retries: 5
       start_period: 60s

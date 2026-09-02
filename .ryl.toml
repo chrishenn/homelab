@@ -1,52 +1,31 @@
-[files]
-yaml = [
-    "*.yaml",
-    "*.yml",
-    ".yamllint",
-]
-
 [rules]
-anchors = "enable"
-comments = "disable"
-comments-indentation = "disable"
-document-end = "disable"
-document-start = "disable"
-empty-values = "disable"
-float-values = "disable"
-key-duplicates = "enable"
-key-ordering = "disable"
-new-line-at-end-of-file = "enable"
-new-lines = "enable"
-octal-values = "disable"
 quoted-strings = "disable"
+brackets = "enable"
+colons = "enable"
+commas = "enable"
+comments-indentation = "enable"
+hyphens = "enable"
+new-line-at-end-of-file = "enable"
 trailing-spaces = "enable"
-truthy = "disable"
-
-[rules.line-length]
-level = "warning"
-max = 240
-allow-non-breakable-inline-mappings = true
 
 [rules.braces]
-level = "warning"
+min-spaces-inside = 0
 max-spaces-inside = 1
+min-spaces-inside-empty = 0
+max-spaces-inside-empty = 0
 
-[rules.brackets]
-level = "warning"
-max-spaces-inside = 1
+[rules.comments]
+min-spaces-from-content = 1
 
-[rules.colons]
-level = "warning"
-
-[rules.commas]
-level = "warning"
+[rules.new-lines]
+type = "unix"
 
 [rules.empty-lines]
-level = "warning"
-
-[rules.hyphens]
-level = "warning"
+max = 2
 
 [rules.indentation]
-level = "warning"
-indent-sequences = "consistent"
+spaces = 2
+indent-sequences = true
+
+[rules.line-length]
+max = 240

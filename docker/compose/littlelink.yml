@@ -32,8 +32,8 @@ services:
       the: CUSTOM_BUTTON_* variables and by using a comma as a separator.
       CUSTOM_BUTTON_TEXT: Documentation,Recommended Gear
       CUSTOM_BUTTON_URL: https://home.henn.dev
-      CUSTOM_BUTTON_COLOR: #000000,#000000
-      CUSTOM_BUTTON_TEXT_COLOR: #ffffff,#ffffff
+      CUSTOM_BUTTON_COLOR: # 000000,#000000
+      CUSTOM_BUTTON_TEXT_COLOR: # ffffff,#ffffff
       CUSTOM_BUTTON_ALT_TEXT: Documentation
       CUSTOM_BUTTON_NAME: DOCUMENTATION,GEAR
       CUSTOM_BUTTON_ICON: fas file-alt,fas fa-cog

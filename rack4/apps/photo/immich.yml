@@ -13,7 +13,7 @@ x-immich_env: &immich_env
   POSTGRES_DB: immich
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: 1234
-  POSTGRES_INITDB_ARGS: '--data-checksums'
+  POSTGRES_INITDB_ARGS: --data-checksums
 
 services:
   immich:
@@ -35,7 +35,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/immich/library:/data
     healthcheck:
-      test: ['CMD', 'curl', '-ILfSs', 'http://localhost:2283']
+      test: [CMD, curl, -ILfSs, http://localhost:2283]
     networks: [immich, traefik, newt]
     labels:
       homepage.group: Photos

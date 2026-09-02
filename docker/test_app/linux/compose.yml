@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: al2023.docker
     container_name: test-al2023
-    restart: 'no'
+    restart: no
     hostname: test-al2023
     privileged: true
 
@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: alma.docker
     container_name: test-alma
-    restart: 'no'
+    restart: no
     hostname: test-alma
     privileged: true
 
@@ -28,7 +28,7 @@ services:
     container_name: test-debian
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
-    restart: 'no'
+    restart: no
 
     cgroup: host
     hostname: test-debian
@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: rhel.docker
     container_name: test-rhel
-    restart: 'no'
+    restart: no
     hostname: test-rhel
     privileged: true
   ubuntu:
@@ -54,7 +54,7 @@ services:
     container_name: test-ubuntu
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
-    restart: 'no'
+    restart: no
 
     cgroup: host
     hostname: test-ubuntu
