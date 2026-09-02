@@ -72,13 +72,13 @@ function install_cudatoolkit_alt {
 
 	# install cudatoolkit
 	wget -q "https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/$rfile"
-	sudo chmod +x $rfile
-	sudo ./$rfile --toolkit --silent
+	sudo chmod +x "$rfile"
+	sudo ./"$rfile" --toolkit --silent
 
 	# link to the correct gcc version
 	MAX_GCC_VERSION=13
-	sudo ln -s /usr/bin/gcc-$MAX_GCC_VERSION /usr/local/cuda/bin/gcc
-	sudo ln -s /usr/bin/g++-$MAX_GCC_VERSION /usr/local/cuda/bin/g++
+	sudo ln -s /usr/bin/gcc-"$MAX_GCC_VERSION" /usr/local/cuda/bin/gcc
+	sudo ln -s /usr/bin/g++-"$MAX_GCC_VERSION" /usr/local/cuda/bin/g++
 }
 
 function install_cudatoolkit_128 {
@@ -91,7 +91,7 @@ function install_cudatoolkit_128 {
 	. cudnn.sh
 	. nccl.sh
 
-	install_cudatoolkit $CU_VER $NV_DRIVER
-	install_cudnn $CUDNN_VER $CU_MAJOR
-	install_nccl $NCCL_VER
+	install_cudatoolkit "$CU_VER" "$NV_DRIVER"
+	install_cudnn "$CUDNN_VER" "$CU_MAJOR"
+	install_nccl "$NCCL_VER"
 }

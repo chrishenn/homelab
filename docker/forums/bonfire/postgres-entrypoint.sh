@@ -35,22 +35,22 @@ echo "  Max Workers: ${PG_MAX_WORKER_PROCESSES}"
 config=$(envsubst <"${SCRIPT_DIR}/postgres.conf.tmpl" | grep -v '^\s*#' | grep -v '^\s*$')
 
 # Get the directory for the config file
-CONF_DIR="$(dirname "${POSTGRES_CONF_PATH}")"
+CONF_DIR="$(dirname "$POSTGRES_CONF_PATH")"
 
 echo "=========================================="
 echo "$config"
 echo "=========================================="
 
 # Check if we can write to the config location
-if mkdir -p "${CONF_DIR}" 2>/dev/null; then
+if mkdir -p "$CONF_DIR" 2>/dev/null; then
 	# Write the processed config
-	echo "$config" >"${POSTGRES_CONF_PATH}"
+	echo "$config" >"$POSTGRES_CONF_PATH"
 	echo "PostgreSQL: Configuration generated at ${POSTGRES_CONF_PATH}"
 
 	# Check if we should start postgres
-	if [[ -n "${POSTGRES_START_CMD}" && "${POSTGRES_START_CMD}" != "none" ]]; then
+	if [[ -n "$POSTGRES_START_CMD" && "$POSTGRES_START_CMD" != "none" ]]; then
 		# Start PostgreSQL - postgresql.auto.conf is automatically loaded from data dir
-		exec ${POSTGRES_START_CMD}
+		exec "$POSTGRES_START_CMD"
 	else
 		echo "PostgreSQL: Skipping startup (POSTGRES_START_CMD is '${POSTGRES_START_CMD}')"
 		exit 0

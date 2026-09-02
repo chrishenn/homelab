@@ -54,7 +54,7 @@ function calico_install_windows {
 	kubectl patch installation default --type='json' -p='[{"op": "replace", "path": "/spec/calicoNetwork/ipPools/0/disableBGPExport", "value": false}]'
 
 	url="https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools/master/hostprocess/calico/kube-proxy/kube-proxy.yml"
-	curl -L $url | sd -n 1 'KUBE_PROXY_VERSION' "v$kube_ver" | kubectl create -f -
+	curl -L "$url" | sd -n 1 'KUBE_PROXY_VERSION' "v$kube_ver" | kubectl create -f -
 }
 
 function calico_log {

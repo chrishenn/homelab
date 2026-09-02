@@ -21,6 +21,7 @@ uv = "latest"
 "npm:dclint" = "latest"
 oxfmt = "latest"
 "aqua:owenlamont/ryl" = "latest"
+"aqua:anordal/shellharden" = "latest"
 
 [hooks.enter]
 shell = "bash"

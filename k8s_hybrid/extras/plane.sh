@@ -10,9 +10,9 @@ function plane_install() {
 	helm install plane-app plane/plane-enterprise \
 		--create-namespace \
 		--namespace plane \
-		--set license.licenseDomain=${DOMAIN_NAME} \
+		--set license.licenseDomain="$DOMAIN_NAME" \
 		--set license.licenseServer=https://prime.plane.so \
-		--set planeVersion=${PLANE_VERSION} \
+		--set planeVersion="$PLANE_VERSION" \
 		--set ingress.enabled=true \
 		--set ingress.ingressClass=traefik \
 		--set env.storageClass=longhorn \

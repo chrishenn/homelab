@@ -2,7 +2,7 @@
 
 function status() {
 	for name in "$@"; do
-		echo "${name}" "$(systemctl is-active "${name}")" "$(systemctl is-enabled "${name}")"
+		echo "$name" "$(systemctl is-active "$name")" "$(systemctl is-enabled "$name")"
 	done | column -t | grep --color=always '\(disabled\|inactive\|$\)'
 }
 

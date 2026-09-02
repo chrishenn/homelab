@@ -9,7 +9,7 @@ mkdir -p /root/.docker
 cp /config.json /root/.docker/config.json
 
 # validate CRON_CMD is supplied
-if [ -z ${CRON_CMD+x} ]; then
+if [ "${CRON_CMD+x}" = "" ]; then
 	echo "ERROR: CRON_CMD is unset"
 	exit 1
 fi

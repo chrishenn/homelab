@@ -86,25 +86,25 @@ function installs {
 }
 
 function power_shortcuts {
-	sudo chmod +x $REPO/linux/power_shortcuts/power_shortcuts.sh
-	$REPO/linux/power_shortcuts/power_shortcuts.sh
+	sudo chmod +x "$REPO"/linux/power_shortcuts/power_shortcuts.sh
+	"$REPO"/linux/power_shortcuts/power_shortcuts.sh
 }
 
 function sudo_timeout {
 	tmp=~/tmpfile
-	sudo rm -f $tmp
-	echo "Defaults timestamp_timeout=180" | tee -a $tmp
-	sudo chmod 0440 $tmp
+	sudo rm -f "$tmp"
+	echo "Defaults timestamp_timeout=180" | tee -a "$tmp"
+	sudo chmod 0440 "$tmp"
 
-	if ! sudo visudo -c -q $tmp; then
+	if ! sudo visudo -c -q "$tmp"; then
 		echo "ERROR: visudo syntax check failed on temporary file. Exiting without writing to permanent file"
 		exit 1
 	fi
 
 	dst=/etc/sudoers.d/sudo_timeout
 	echo "copying $tmp to $dst"
-	sudo cp $tmp $dst
-	sudo rm -f $tmp
+	sudo cp "$tmp" "$dst"
+	sudo rm -f "$tmp"
 }
 
 function disks {

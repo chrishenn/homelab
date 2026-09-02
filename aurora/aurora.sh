@@ -35,10 +35,10 @@ function installs {
 
 function chezmoi_init {
 	mise use -g op chezmoi
-	eval $(mise activate bash)
+	eval "$(mise activate bash)"
 
-	$(op read "op://homelab/svc/bash")
-	if [ -z $OP_SERVICE_ACCOUNT_TOKEN ]; then
+	"$(op read "op://homelab/svc/bash")"
+	if [ "$OP_SERVICE_ACCOUNT_TOKEN" = "" ]; then
 		echo "chezmoi boot error: OP_SERVICE_ACCOUNT_TOKEN not set"
 		return 1
 	fi
@@ -48,10 +48,10 @@ function chezmoi_init {
 
 function mise_init {
 	mise use -g op
-	eval $(mise activate bash)
+	eval "$(mise activate bash)"
 
 	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
-	if [ -z $GITHUB_TOKEN ]; then
+	if [ "$GITHUB_TOKEN" = "" ]; then
 		echo "mise_init error: GITHUB_TOKEN not set"
 		return 1
 	fi
@@ -114,7 +114,7 @@ function deprecated_chrome {
 
 	# manual rpm
 	url="https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-148.0.7778.167-1.x86_64.rpm"
-	curl -Lo chrome.rpm $url
+	curl -Lo chrome.rpm "$url"
 	sudo rpm-ostree install chrome.rpm
 	rm chrome.rpm
 }
@@ -135,7 +135,7 @@ function deprecated_zen {
 function deprecated_chezmoi_mise {
 	curl https://mise.run | sh
 	mise use -g chezmoi
-	eval $(mise activate bash)
+	eval "$(mise activate bash)"
 
 	export OP_SERVICE_ACCOUNT_TOKEN=$(op read op://homelab/svc/credential)
 	export GITHUB_TOKEN=$(op read op://homelab/github/credential)
@@ -159,19 +159,19 @@ function deprecated_protonvpn {
 
 	# manual rpm
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-vpn-local-agent/python3-proton-vpn-local-agent-1.6.2-1.fc44.x86_64.rpm"
-	curl -Lo python3-proton-vpn-local-agent.rpm $url
+	curl -Lo python3-proton-vpn-local-agent.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-core/python3-proton-core-0.7.4-1.fc44.noarch.rpm"
-	curl -Lo python3-proton-core.rpm $url
+	curl -Lo python3-proton-core.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-keyring-linux/python3-proton-keyring-linux-0.2.1-1.fc44.noarch.rpm"
-	curl -Lo python3-proton-keyring-linux.rpm $url
+	curl -Lo python3-proton-keyring-linux.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/python3-proton-vpn-api-core/python3-proton-vpn-api-core-5.1.2-1.fc44.noarch.rpm"
-	curl -Lo python3-proton-vpn-api-core.rpm $url
+	curl -Lo python3-proton-vpn-api-core.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-daemon/proton-vpn-daemon-0.13.7-1.fc44.noarch.rpm"
-	curl -Lo proton-vpn-daemon.rpm $url
+	curl -Lo proton-vpn-daemon.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-gtk-app/proton-vpn-gtk-app-4.16.2-1.fc44.noarch.rpm"
-	curl -Lo proton-vpn-gtk-app.rpm $url
+	curl -Lo proton-vpn-gtk-app.rpm "$url"
 	url="https://repo.protonvpn.com/fedora-44-stable/proton-vpn-gnome-desktop/proton-vpn-gnome-desktop-0.10.1-1.fc44.noarch.rpm"
-	curl -Lo proton-vpn-gnome-desktop.rpm $url
+	curl -Lo proton-vpn-gnome-desktop.rpm "$url"
 	sudo rpm-ostree install \
 		python3-proton-vpn-local-agent.rpm \
 		python3-proton-core.rpm \
@@ -201,7 +201,7 @@ function deprecated_protonvpn {
 
 function deprecated_power_shortcuts {
 	# replaced with mise bootstrap files
-	$REPO/linux/power_shortcuts/power_shortcuts.sh
+	"$REPO"/linux/power_shortcuts/power_shortcuts.sh
 }
 
 function deprecated_settings_grub {
@@ -240,19 +240,19 @@ function deprecated_settings_sysctl {
 function deprecated_sudo_timeout {
 	# replaced with mise bootstrap files
 	tmp=$sdir/tmp
-	sudo rm -f $tmp
-	echo "Defaults timestamp_timeout=180" | tee -a $tmp
-	sudo chmod 0440 $tmp
+	sudo rm -f "$tmp"
+	echo "Defaults timestamp_timeout=180" | tee -a "$tmp"
+	sudo chmod 0440 "$tmp"
 
-	if ! sudo visudo -c -q $tmp; then
+	if ! sudo visudo -c -q "$tmp"; then
 		echo "ERROR: visudo syntax check failed on temporary file. Exiting without writing to permanent file"
 		exit 1
 	fi
 
 	dst=/etc/sudoers.d/sudo_timeout
 	echo "copying $tmp to $dst"
-	sudo cp $tmp $dst
-	sudo rm -f $tmp
+	sudo cp "$tmp" "$dst"
+	sudo rm -f "$tmp"
 }
 
 function deprecated_soar {
@@ -341,12 +341,12 @@ function deprecated_1password {
 
 	sudo chmod 4755 /opt/1Password/chrome-sandbox
 	GROUP_NAME="onepassword"
-	if [ ! "$(getent group "${GROUP_NAME}")" ]; then
-		sudo groupadd "${GROUP_NAME}"
+	if [ ! "$(getent group "$GROUP_NAME")" ]; then
+		sudo groupadd "$GROUP_NAME"
 	fi
 	BROWSER_SUPPORT_PATH="/opt/1Password/1Password-BrowserSupport"
-	sudo chgrp "${GROUP_NAME}" $BROWSER_SUPPORT_PATH
-	sudo chmod g+s $BROWSER_SUPPORT_PATH
+	sudo chgrp "$GROUP_NAME" "$BROWSER_SUPPORT_PATH"
+	sudo chmod g+s "$BROWSER_SUPPORT_PATH"
 
 	# this permission change is probably unnecessary except when zentool creates this file
 	sudo chmod 777 /etc/1password/custom_allowed_browsers

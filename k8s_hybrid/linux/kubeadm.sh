@@ -31,7 +31,7 @@ function kubeadm_manual_install() {
 	sudo chmod 777 /var/lib/kubelet
 	sudo curl -L --remote-name-all "https://dl.k8s.io/release/v${ver}/bin/linux/${arch}/{kubeadm,kubelet}"
 	sudo chmod +x {kubeadm,kubelet}
-	sudo mv {kubeadm,kubelet} "${dst}"
+	sudo mv {kubeadm,kubelet} "$dst"
 
 	# install kubelet systemd unit service files.
 	# template version does not appear to change

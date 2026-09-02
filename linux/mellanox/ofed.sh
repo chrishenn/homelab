@@ -14,11 +14,11 @@ ubuntu_repo_file_name="mellanox_mlnx_ofed.list"
 ubuntu_repo_file_path="/etc/apt/sources.list.d/${ubuntu_repo_file_name}"
 
 echo "adding apt key"
-wget -qO - ${mofed_repo_gpg_url} | apt-key add -
+wget -qO - "$mofed_repo_gpg_url" | apt-key add -
 
 url="${mofed_repo_base_url}/${mofed_package_version}/${ubuntu_repo_dist_name}/${ubuntu_repo_file_name}"
-wget -qO ${ubuntu_repo_file_path} ${url}
-chmod 644 ${ubuntu_repo_file_path}
+wget -qO "$ubuntu_repo_file_path" "$url"
+chmod 644 "$ubuntu_repo_file_path"
 
 echo "update apt cache"
 apt update -y

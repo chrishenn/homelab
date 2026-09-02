@@ -15,7 +15,7 @@ function check_dependencies() {
 function clean_ssh_agent() {
 	# Clean up orphaned SSH agents
 	while read -r dir; do
-		sock="$(ls $dir/agent.*)"
+		sock="$(ls "$dir"/agent.*)"
 		pid=$(ps auxf | grep "^$USER.*ssh-agent -s$" | awk '{print $2}')
 		if [[ "$sock" != "$dir/agent.$((pid - 1))" ]]; then
 			echo "$sock is an orphan socket! Cleaning $dir..."
@@ -34,7 +34,7 @@ function setup_ssh_agent() {
 	local tmpsock
 	if [[ -n $pid ]]; then
 		while read -r dir; do
-			tmpsock="$(ls $dir/agent.*)"
+			tmpsock="$(ls "$dir"/agent.*)"
 			if [[ "$tmpsock" = "$dir/agent.$((pid - 1))" && -S $tmpsock ]]; then
 				sock=$tmpsock
 				break
@@ -47,7 +47,7 @@ function setup_ssh_agent() {
 			export SSH_AGENT_PID=$pid
 			export SSH_AUTH_SOCK=$sock
 		else
-			kill -9 $pid
+			kill -9 "$pid"
 			pid=0
 		fi
 	fi
@@ -62,10 +62,10 @@ function setup_ssh_agent() {
 	if [[ -n "${SSH_AGENT_PID+x}" && -n "${SSH_AUTH_SOCK+x}" ]]; then
 		local session_file="$HOME/.op-session"
 		if [[ -f $session_file ]]; then
-			if ! grep SSH_AGENT_PID $session_file >/dev/null; then
+			if ! grep SSH_AGENT_PID "$session_file" >/dev/null; then
 				echo "export SSH_AGENT_PID=\"$SSH_AGENT_PID\"" >>"$session_file"
 			fi
-			if ! grep SSH_AUTH_SOCK $session_file >/dev/null; then
+			if ! grep SSH_AUTH_SOCK "$session_file" >/dev/null; then
 				echo "export SSH_AUTH_SOCK=\"$SSH_AUTH_SOCK\"" >>"$session_file"
 			fi
 		fi
@@ -95,8 +95,8 @@ function connect_to_1password() {
 		if op vault list &>/dev/null; then
 			return
 		else
-			if [[ "$(env | grep ${session_token_var}=)" != "" ]]; then
-				unset $session_token_var
+			if [[ "$(env | grep "$session_token_var"=)" != "" ]]; then
+				unset "$session_token_var"
 			fi
 			if [[ "$(env | grep OP_SESSION=)" != "" ]]; then
 				unset OP_SESSION
@@ -111,7 +111,7 @@ function connect_to_1password() {
 	echo
 
 	# Sign in and capture the session token
-	eval $(echo "$master_password" | op signin --account "$shorthand")
+	eval "$(echo "$master_password" | op signin --account "$shorthand")"
 	session_token=${!session_token_var}
 	if [[ $? -ne 0 || -z "$session_token" ]]; then
 		echo "Error: Failed to sign in to 1Password. Please check your credentials." >/dev/stderr
@@ -138,7 +138,7 @@ function list_keys() {
 	fi
 
 	local keys_array=()
-	for key in $keys; do
+	for key in "${keys[@]}"; do
 		keys_array+=("$key")
 	done
 
@@ -206,7 +206,7 @@ function lock_and_logout() {
 	echo "Signing out from 1Password..."
 	op signout >/dev/null 2>&1 || echo "No active 1Password session found."
 
-	rm -f $HOME/.op-session
+	rm -f "$HOME"/.op-session
 
 	echo "All sessions closed and cleaned up."
 }

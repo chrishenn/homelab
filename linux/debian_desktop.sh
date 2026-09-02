@@ -128,8 +128,8 @@ function tools {
 }
 
 function chezmoi_init {
-	$(op read "op://homelab/svc/bash")
-	if [ -z $OP_SERVICE_ACCOUNT_TOKEN ]; then
+	"$(op read "op://homelab/svc/bash")"
+	if [ "$OP_SERVICE_ACCOUNT_TOKEN" = "" ]; then
 		echo "chezmoi boot error: op svc token not set"
 		return 1
 	fi

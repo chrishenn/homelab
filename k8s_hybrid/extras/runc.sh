@@ -7,7 +7,7 @@ function runc_install() {
 	dst="/usr/local/sbin/runc"
 
 	url="https://github.com/opencontainers/runc/releases/download/v${ver}/runc.${arch}"
-	curl -Lo "runc.$arch" "${url}"
+	curl -Lo "runc.$arch" "$url"
 
 	sudo install -m 755 "runc.$arch" "$dst"
 	rm "runc.$arch"

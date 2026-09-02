@@ -9,20 +9,20 @@ function cilim_cli_install() {
 
 	if [ "$(uname -m)" = "aarch64" ]; then arch=arm64; fi
 	url="https://github.com/cilium/cilium-cli/releases/download/${ver}/cilium-linux-${arch}.tar.gz{,.sha256sum}"
-	curl -L --fail --remote-name-all $url
-	sha256sum --check cilium-linux-${arch}.tar.gz.sha256sum
-	sudo tar xzvfC cilium-linux-${arch}.tar.gz /usr/local/bin
-	rm cilium-linux-${arch}.tar.gz{,.sha256sum}
+	curl -L --fail --remote-name-all "$url"
+	sha256sum --check cilium-linux-"$arch".tar.gz.sha256sum
+	sudo tar xzvfC cilium-linux-"$arch".tar.gz /usr/local/bin
+	rm cilium-linux-"$arch".tar.gz{,.sha256sum}
 }
 
 function hubble_install() {
 	HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
 	HUBBLE_ARCH=amd64
 	if [ "$(uname -m)" = "aarch64" ]; then HUBBLE_ARCH=arm64; fi
-	curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
-	sha256sum --check hubble-linux-${HUBBLE_ARCH}.tar.gz.sha256sum
-	sudo tar xzvfC hubble-linux-${HUBBLE_ARCH}.tar.gz /usr/local/bin
-	rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
+	curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/"$HUBBLE_VERSION/hubble-linux-$HUBBLE_ARCH".tar.gz{,.sha256sum}
+	sha256sum --check hubble-linux-"$HUBBLE_ARCH".tar.gz.sha256sum
+	sudo tar xzvfC hubble-linux-"$HUBBLE_ARCH".tar.gz /usr/local/bin
+	rm hubble-linux-"$HUBBLE_ARCH".tar.gz{,.sha256sum}
 }
 
 function cilim_install() {

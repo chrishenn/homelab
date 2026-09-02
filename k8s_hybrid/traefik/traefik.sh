@@ -17,7 +17,7 @@ function traefik_manual_install {
 
 	# deployments: this needs editing as it references the letsencrypt staging server, not the real server
 	dep="https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/user-guides/crd-acme/03-deployments.yml"
-	curl -L $dep | sd '(.*)caserver(.*)' '' | kubectl create -f -
+	curl -L "$dep" | sd '(.*)caserver(.*)' '' | kubectl create -f -
 
 	# we bind kube ports to the host so that acme challange can work
 	# don't forget to add the host's local IP to the cloudflare DNS setup so it can answer dns challenge
