@@ -15,6 +15,7 @@ local formatters = new Mapping<String, Step> {
     ["mise"] = Builtins.mise
     ["dclint"] = Builtins.dclint
     ["oxfmt"] = Builtins.oxfmt
+    ["ryl"] = Builtins.ryl
 }
 
 local linters = new Mapping<String, Step> {

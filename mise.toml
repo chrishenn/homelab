@@ -20,6 +20,7 @@ uv = "latest"
 "pipx:mypy" = "latest"
 "npm:dclint" = "latest"
 oxfmt = "latest"
+"aqua:owenlamont/ryl" = "latest"
 
 [hooks.enter]
 shell = "bash"
