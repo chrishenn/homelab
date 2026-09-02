@@ -25,6 +25,3 @@ build-backend = "uv_build"
 packages = ["k3s"]
 exclude = ["deprecated"]
 ignore_missing_imports = true
-
-[tool.ty.environment]
-root = ["./src"]

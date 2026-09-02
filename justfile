@@ -11,9 +11,13 @@ check:
 fix:
     hk fix --all
 
+slow:
+    hk run slow --all --fix
+
 lint:
-    ruff format
-    ruff check --fix
+    hk run slow --all
+    just check
+    just fix
 
 unsafe:
     ruff check --fix --unsafe-fixes

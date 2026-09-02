@@ -2,7 +2,16 @@ amends "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Config.
 
 import "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Builtins.pkl"
 
-local formatters = new Mapping<String, Step> {
+subprojects =
+  List(
+    "dns",
+    "k3s",
+    "protonmail",
+    "traefik",
+    "vps0",
+  )
+
+local linters = new Mapping<String, Step> {
   ["oxfmt"] = Builtins.oxfmt
 
   ["ruff"] = Builtins.ruff
@@ -12,54 +21,62 @@ local formatters = new Mapping<String, Step> {
   ["shfmt"] = Builtins.shfmt
   ["shellharden"] = Builtins.shellharden
 
-  ["pkl"] = Builtins.pkl
+  ["pkl"] = (Builtins.pkl) { stomp = true }
   ["pkl_format"] = Builtins.pkl_format
   ["just"] = Builtins.just_format
   ["mise"] = Builtins.mise
   ["ryl"] = Builtins.ryl
   ["ryl_markdown"] = Builtins.ryl_markdown
 
-  ["newlines"] = Builtins.newlines
+  ["check_case_conflict"] = (Builtins.check_case_conflict) { stomp = true }
+  ["check_merge_conflict"] = (Builtins.check_merge_conflict) { stomp = true }
+  ["check_symlinks"] = (Builtins.check_symlinks) { stomp = true }
+  ["fix_smart_quotes"] = Builtins.fix_smart_quotes
   ["mixed_line_ending"] = Builtins.mixed_line_ending
+  ["newlines"] = Builtins.newlines
   ["trailing_whitespace"] = Builtins.trailing_whitespace
-}
 
-local linters = new Mapping<String, Step> {
   ["gitleaks_staged"] = (Builtins.gitleaks_staged) { stomp = true; output_summary = "hide" }
   ["detect_private_key"] = (Builtins.detect_private_key) { stomp = true }
 
   //   todo: enable
-  //     ["shellcheck"] = (Builtins.shellcheck) {stomp = true}
-  //     ["gitleaks"] = (Builtins.gitleaks) {stomp = true}
+  //   ["shellcheck"] = (Builtins.shellcheck) {stomp = true}
+  //   ["gitleaks"] = (Builtins.gitleaks) {stomp = true}
   //   ["betterleaks"] = (Builtins.betterleaks) { stomp = true }
   //   ["kingfisher"] = (Builtins.kingfisher) { stomp = true }
 
-  //    maybe not
-  //     ["trufflehog"] {
-  //         glob = List("*")
-  //         workspace_indicator = "hk.pkl"
-  //         check = "trufflehog filesystem --fail --no-update --no-verification --exclude-detectors=Postgres,RabbitMQ,JDBC,Box {{files}}"
-  //         output_summary = "hide"
-  //     }
-  //     ["detect-secrets"] {
-  //         glob = List("*")
-  //         exclude = List("docker/*", "*deprecated*")
-  //         check = "detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}"
-  //     }
+  // maybe don't enable - quite slow
+  //   ["trufflehog"] {
+  //     glob = List("*")
+  //     workspace_indicator = "hk.pkl"
+  //     check =
+  //       """
+  //       trufflehog filesystem --fail --no-update --no-verification \
+  //         --exclude-detectors=Postgres,RabbitMQ,JDBC,Box {{files}}
+  //       """
+  //     output_summary = "hide"
+  //   }
+  //   ["detect-secrets"] {
+  //     glob = List("*")
+  //     exclude = List("docker/*", "*deprecated*")
+  //     check =
+  //       """
+  //       detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString \
+  //         --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}
+  //       """
+  //   }
 }
 
 hooks {
-  ["pre-commit"] {
-    fix = true
-    stash = "git"
-    steps = new Mapping<String, Step> { ...formatters; ...linters }
-  }
+  // subproject hooks merge by hook name - the ty fix is slow, so ty fixes in subprojects only run under the 'slow' hook
   ["check"] {
-    fix = false
-    steps = new Mapping<String, Step> { ...formatters; ...linters }
+    steps = linters
   }
   ["fix"] {
     fix = true
-    steps = formatters
+    steps = linters
+  }
+  ["slow"] {
+    fix = true
   }
 }

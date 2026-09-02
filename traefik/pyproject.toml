@@ -22,6 +22,3 @@ build-backend = "uv_build"
 gen = "traefik.gen:gen"
 clean = "traefik.gen:clean"
 genclean = "traefik.gen:genclean"
-
-[tool.ty.environment]
-root = ["./src"]

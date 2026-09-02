@@ -44,13 +44,6 @@ just c
 uv lock --upgrade
 uv sync
 
-# type-check with ty, using the repo ty.toml for now. Override by adding one in a subfolder, or from cli
-mise x -C vps0 -c 'ty check . --config-file ../ty.toml'
-mise x -C traefik -c 'ty check . --config-file ../ty.toml'
-mise x -C dns -c 'ty check . --config-file ../ty.toml'
-mise x -C k3s -c 'ty check . --config-file ../ty.toml'
-mise x -C protonmail -c 'ty check . --config-file ../ty.toml'
-
 # todo
 mise x -C rack3 -c 'ty check . --config-file ../ty.toml'
 ```

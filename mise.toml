@@ -1,3 +1,9 @@
+monorepo_root = true
+
+[monorepo]
+# only python subprojects require a local mise+uv env when running (eg) "ty check"
+config_roots = [".", "dns", "k3s", "protonmail", "traefik", "vps0"]
+
 [settings]
 env_shell_expand = true
 
@@ -34,12 +40,14 @@ alias = "pc"
 run = "hk run pre-commit"
 
 [env]
-# note this is the local repo path; clones of repo may have diff locations on remotes
 REPO = "{{ config_root | absolute }}"
 REPO_NAME = "{{ config_root | basename }}"
 HK_MISE = 1
 HK_LIBGIT2 = 0
 MISE_NPM_BUN = 1
+
+# This env will be inherited into subprojects when hk runs ty in each one, setting this shared ty config
+TY_CONFIG_FILE = "$REPO/.ty.toml"
 
 # registries
 REGISTRY = "zot.henn.dev"

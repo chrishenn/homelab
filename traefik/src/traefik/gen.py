@@ -6,7 +6,7 @@ from slugify import slugify
 from .data import LocalPaths, certresolver, https_entrypoint, root_domains, svc_map
 
 
-def render_dyncfg(domain_addr: dict[str, str]) -> dict:
+def render_dyncfg(domain_addr: dict[str, str]) -> dict[str, dict[str, str]]:
     resolver = certresolver()
     entryp = https_entrypoint()
 
