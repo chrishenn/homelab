@@ -2,15 +2,6 @@ amends "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Config.
 
 import "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Builtins.pkl"
 
-subprojects =
-  List(
-    "dns",
-    "k3s",
-    "protonmail",
-    "traefik",
-    "vps0",
-  )
-
 local linters = new Mapping<String, Step> {
   ["oxfmt"] = Builtins.oxfmt
 
@@ -67,8 +58,26 @@ local linters = new Mapping<String, Step> {
   //   }
 }
 
+local slow = new Mapping<String, Step> {
+  ["ty"] = (Builtins.ty) {
+    workspace_indicator = "pyproject.toml"
+    exclude = "rack3/*"
+    check = new CommandSpec {
+      command = new Command {
+        argv = List("mise", "x", "-C", "{{workspace}}", "-c", "ty check {{workspace_files}}")
+      }
+      effect = "read"
+    }
+    fix = new CommandSpec {
+      command = new Command {
+        argv = List("mise", "x", "-C", "{{workspace}}", "-c", "ty check --fix {{workspace_files}}")
+      }
+      effect = "write"
+    }
+  }
+}
+
 hooks {
-  // subproject hooks merge by hook name - the ty fix is slow, so ty fixes in subprojects only run under the 'slow' hook
   ["check"] {
     steps = linters
   }
@@ -77,6 +86,6 @@ hooks {
     steps = linters
   }
   ["slow"] {
-    fix = true
+    steps = slow
   }
 }
