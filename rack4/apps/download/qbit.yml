@@ -55,13 +55,20 @@ services:
       traefik.http.routers.qbit.tls.certresolver: cf
       traefik.http.services.qbit.loadbalancer.server.port: 8080
 
+      # using qbittorrent's api key appears to collide with (break) pangolin's header-based auth
+      # nzb360 appears to be negotiating with qbit only for part of the login exchange
+      # it looks like the "Authoriztion: Bearer..." and "Authorization: Basic ..." are confusing qbittorrent
       pangolin.public-resources.qbit.name: qbit
       pangolin.public-resources.qbit.full-domain: vpn.qbit.chenn.dev
       pangolin.public-resources.qbit.mode: http
       pangolin.public-resources.qbit.targets[0].method: http
       pangolin.public-resources.qbit.targets[0].port: 8080
-      pangolin.public-resources.qbit.policy: arr
+      pangolin.public-resources.qbit.policy: member
 
+      # {qbit, tracearr, prowlarr} it appears that api auth headers conflict with pangolin's basic auth header
+      pangolin.public-resources.qbit.rules[0].action: allow
+      pangolin.public-resources.qbit.rules[0].match: path
+      pangolin.public-resources.qbit.rules[0].value: /api/*
     ports:
       - '6888:6888/tcp'
       - '6888:6888/udp'

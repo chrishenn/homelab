@@ -25,7 +25,7 @@ rustscan -a pangolin.chenn.dev -b 10
 
 ## dev
 
-update 
+update
 
 ```bash
 # update pangolin profile containers

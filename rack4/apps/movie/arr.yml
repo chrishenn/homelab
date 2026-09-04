@@ -92,7 +92,12 @@ services:
       pangolin.public-resources.prowlarr.mode: http
       pangolin.public-resources.prowlarr.targets[0].method: http
       pangolin.public-resources.prowlarr.targets[0].port: 9696
-      pangolin.public-resources.prowlarr.policy: arr
+      pangolin.public-resources.prowlarr.policy: member
+
+      # {qbit, tracearr, prowlarr} it appears that api auth headers conflict with pangolin's basic auth header
+      pangolin.public-resources.prowlarr.rules[0].action: allow
+      pangolin.public-resources.prowlarr.rules[0].match: path
+      pangolin.public-resources.prowlarr.rules[0].value: /api/*
 
   bazarr:
     profiles: [arr]

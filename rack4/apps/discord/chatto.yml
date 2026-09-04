@@ -117,7 +117,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Chatto
-      homepage.icon: chatto.png
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/chatto.png
       homepage.href: https://chatto.chenn.dev
       homepage.description: Video Chat
 
