@@ -77,6 +77,11 @@ services:
     volumes:
       - $DIR_HOST/pangolin/traefik:/etc/traefik:ro
       - $DATA/pangolin/letsencrypt:/letsencrypt
+    healthcheck:
+      test: wget -q --tries=1 --spider http://localhost/ping
+      interval: 10s
+      timeout: 10s
+      retries: 15
 
   traefik_cert:
     profiles: [pangolin]
