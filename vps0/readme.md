@@ -25,11 +25,14 @@ rustscan -a pangolin.chenn.dev -b 10
 
 ## dev
 
-update containers
+update 
 
 ```bash
+# update pangolin profile containers
+just pullup pangolin
+
+# update all
 just pullup
-# docker compose up -d --remove-orphans --force-recreate --pull always
 ```
 
 add a terraform plugin

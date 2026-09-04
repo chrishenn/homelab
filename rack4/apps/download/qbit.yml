@@ -13,8 +13,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit/config:/config
       - $DATA/qbit/downloads:/qbit/downloads
-    depends_on:
-      - gluetun
     network_mode: service:gluetun
     labels:
       homepage.group: Download
