@@ -9,16 +9,6 @@ api:
   insecure: true
   dashboard: false
 
-http:
-  encodedcharacters:
-    allowEncodedSlash: true
-    allowEncodedQuestionMark: true
-    allowencodedbackslash: true
-    allowencodednullcharacter: true
-    allowencodedsemicolon: true
-    allowencodedpercent: true
-    allowencodedhash: true
-
 experimental:
   plugins:
     badger:
@@ -53,6 +43,11 @@ certificatesResolvers:
 entryPoints:
   web:
     address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: :443
     transport:
@@ -61,6 +56,15 @@ entryPoints:
         writeTimeout: 30m
         idleTimeout: 30m
     http:
+      aliasHeadersStrategy: keep
+      encodedcharacters:
+        allowEncodedSlash: true
+        allowEncodedQuestionMark: true
+        allowencodedbackslash: true
+        allowencodednullcharacter: true
+        allowencodedsemicolon: true
+        allowencodedpercent: true
+        allowencodedhash: true
       tls:
         certResolver: letsencrypt
 
