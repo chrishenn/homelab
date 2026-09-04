@@ -29,6 +29,16 @@ log:
   maxAge: 3
   compress: true
 
+http:
+  encodedcharacters:
+    allowEncodedSlash: true
+    allowEncodedQuestionMark: true
+    allowencodedbackslash: true
+    allowencodednullcharacter: true
+    allowencodedsemicolon: true
+    allowencodedpercent: true
+    allowencodedhash: true
+
 certificatesResolvers:
   letsencrypt:
     acme:
@@ -58,14 +68,6 @@ entryPoints:
         idleTimeout: 30m
     http:
       aliasHeadersStrategy: delete
-      encodedcharacters:
-        allowEncodedSlash: true
-        allowEncodedQuestionMark: true
-        allowencodedbackslash: true
-        allowencodednullcharacter: true
-        allowencodedsemicolon: true
-        allowencodedpercent: true
-        allowencodedhash: true
       tls:
         certResolver: letsencrypt
 
