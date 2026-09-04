@@ -44,6 +44,7 @@ entryPoints:
   web:
     address: :80
     http:
+      aliasHeadersStrategy: delete
       redirections:
         entryPoint:
           to: websecure
@@ -56,7 +57,7 @@ entryPoints:
         writeTimeout: 30m
         idleTimeout: 30m
     http:
-      aliasHeadersStrategy: keep
+      aliasHeadersStrategy: delete
       encodedcharacters:
         allowEncodedSlash: true
         allowEncodedQuestionMark: true
