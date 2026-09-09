@@ -14,3 +14,6 @@ services:
       KEY: ${VPS0_BESZEL_KEY}
       TOKEN: ${VPS0_BESZEL_TOKEN}
       HUB_URL: ${VPS0_BESZEL_HUB_URL}
+    healthcheck:
+      test: ['CMD', '/agent', 'health']
+      interval: 120s

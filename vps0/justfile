@@ -41,7 +41,7 @@ bounce profile=profile *svcs:
     docker compose --profile {{ profile }} up -d --remove-orphans {{ svcs }}
 
 pullup profile=profile *svcs:
-    docker compose --profile {{ profile }} up -d --remove-orphans --force-recreate --pull always {{ svcs }}
+    docker compose --profile {{ profile }} up -d --remove-orphans --pull always {{ svcs }}
 
 attach svc cmd="/bin/sh":
     docker compose exec -it {{ svc }} {{ cmd }}

@@ -53,3 +53,8 @@ services:
       - '25:25'
       - '465:465'
       - '993:993'
+    healthcheck:
+      test: wg show wg0 | grep -q peer
+      interval: 60s
+      timeout: 10s
+      retries: 3
