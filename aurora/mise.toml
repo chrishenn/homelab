@@ -23,7 +23,6 @@ adopt = true
 "brew:stalwartlabs/tap/stalwart-cli" = "latest"
 
 # only "tapped casks" with no preflight_ or postflight_steps are supported by mise
-"brew:chrishenn/tap/zed-linux" = "latest"
 # "brew-cask:ublue-os/tap/zed-linux" = "latest"
 # "brew-cask:ublue-os/tap/1password-gui-linux" = "latest"
 # "brew-cask:ublue-os/tap/jetbrains-toolbox-linux" = "latest"
