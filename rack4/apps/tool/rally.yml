@@ -57,7 +57,7 @@ services:
     volumes:
       - $DATA/rally/rally_db:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      test: pg_isready -q -d $$POSTGRES_DB
     networks: [rally]
 
 networks:

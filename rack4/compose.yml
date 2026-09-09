@@ -56,12 +56,13 @@ include:
   - apps/dev_project/memos.yml
   - apps/dev_project/notediscovery.yml
   - apps/dev_project/outline.yml
-  - apps/dev_project/plane.yml
   - apps/dev_project/planka.yml
   - apps/dev_project/tududi.yml
   - apps/dev_project/vikunja.yml
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
+
+#  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
 
   - apps/dev_slack/mattermost.yml
@@ -118,7 +119,6 @@ include:
   - apps/media/minuspod.yml
   - apps/media/nodebb.yml
   - apps/media/opencut.yml
-  - apps/media/reitti.yml
   - apps/media/ties.yml
   - apps/media/ytp.yml
 
@@ -184,10 +184,10 @@ include:
   - apps/tool/n8n.yml
   - apps/tool/openspeedtest.yml
   - apps/tool/13foot.yml
-  - apps/tool/netbox.yml
   - apps/tool/rally.yml
   - apps/tool/sure.yml
   - apps/tool/warden.yml
 
+#  - apps/tool/netbox.yml
 #  - apps/tool/kestra.yml
 #  - apps/tool/shlink.yml

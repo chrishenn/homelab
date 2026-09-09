@@ -280,10 +280,11 @@ services:
       - $DATA/fluxer/nats:/data
 
   fluxer_meili:
-    image: getmeili/meilisearch:v1
+    image: getmeili/meilisearch:latest
     container_name: fluxer_meili
     <<: *fluxer_common
     environment:
+      MEILI_UPGRADE_DB: true
       MEILI_ENV: production
       MEILI_NO_ANALYTICS: true
       MEILI_MASTER_KEY: ${FLUXER_MEILI}

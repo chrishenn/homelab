@@ -218,9 +218,11 @@ services:
       retries: 20
 
   meelo_meili:
-    image: getmeili/meilisearch:v1
+    image: getmeili/meilisearch:latest
     container_name: meelo_meili
     <<: *meelo_common
+    environment:
+      MEILI_UPGRADE_DB: true
     volumes:
       - $DATA/meelo/meili:/meili_data
     healthcheck:

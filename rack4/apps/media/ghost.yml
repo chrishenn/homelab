@@ -60,7 +60,7 @@ services:
     volumes:
       - $DATA/ghost/db:/var/lib/mysql
     healthcheck:
-      test: mysqladmin -h 'localhost' -u root -p ghost -s ping
+      test: mysqladmin -h0.0.0.0 -uroot -pghost -s ping
       interval: 2s
       retries: 120
       timeout: 5s

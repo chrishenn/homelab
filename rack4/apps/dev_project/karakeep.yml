@@ -58,11 +58,12 @@ services:
 
   karakeep_meili:
     profiles: [karakeep]
-    image: getmeili/meilisearch:v1.13.3
+    image: getmeili/meilisearch:latest
     container_name: karakeep_meili
     restart: unless-stopped
     environment:
       <<: *karakeep_env
+      MEILI_UPGRADE_DB: true
     volumes:
       - $DATA/karakeep/meili:/meili_data
     networks: [karakeep]
