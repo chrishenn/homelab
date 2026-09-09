@@ -16,4 +16,6 @@ services:
       HUB_URL: ${VPS0_BESZEL_HUB_URL}
     healthcheck:
       test: ['CMD', '/agent', 'health']
-      interval: 120s
+      interval: 60s
+      timeout: 5s
+      retries: 10
