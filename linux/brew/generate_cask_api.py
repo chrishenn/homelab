@@ -77,13 +77,13 @@ def brew_metadata(tap: str, token: str) -> dict[str, Any]:
 
 
 def validate_metadata(
-        metadata: dict[str, Any],
-        *,
-        tap: str,
-        token: str,
-        cask_path: pathlib.Path,
-        root: pathlib.Path,
-        source_head: str,
+    metadata: dict[str, Any],
+    *,
+    tap: str,
+    token: str,
+    cask_path: pathlib.Path,
+    root: pathlib.Path,
+    source_head: str,
 ) -> None:
     expected_full_token = f"{tap}/{token}"
     expected_source_path = cask_path.relative_to(root).as_posix()
@@ -123,11 +123,11 @@ def validate_metadata(
 
 
 def generate(
-        *,
-        tap_repo: str,
-        root: pathlib.Path = ROOT,
-        metadata_reader: Callable[[str, str], dict[str, Any]] = brew_metadata,
-        source_head: str | None = None,
+    *,
+    tap_repo: str,
+    root: pathlib.Path = ROOT,
+    metadata_reader: Callable[[str, str], dict[str, Any]] = brew_metadata,
+    source_head: str | None = None,
 ) -> list[pathlib.Path]:
     casks_dir = root / "Casks"
     output_dir = root / "api" / "cask"
@@ -154,11 +154,14 @@ def generate(
             root=root,
             source_head=head,
         )
-        generated[output_dir / f"{token}.json"] = json.dumps(
-            metadata,
-            indent=2,
-            sort_keys=True,
-        ) + "\n"
+        generated[output_dir / f"{token}.json"] = (
+            json.dumps(
+                metadata,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
     expected_paths = set(generated)

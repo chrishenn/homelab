@@ -229,6 +229,7 @@ sudo sysctl -q --system
 "~/Projects/py_ref" = { url = "https://github.com/chrishenn/py_ref" }
 "~/Projects/realtek" = { url = "https://github.com/chrishenn/realtek" }
 "~/Projects/rtoolz" = { url = "https://github.com/chrishenn/rtoolz" }
+"~/Projects/setup" = { url = "https://github.com/chrishenn/setup" }
 "~/Projects/scoops" = { url = "https://github.com/chrishenn/scoops" }
 "~/Projects/tr_agent" = { url = "https://github.com/chrishenn/tr_agent" }
 "~/Projects/tr_backend" = { url = "https://github.com/chrishenn/tr_backend" }
