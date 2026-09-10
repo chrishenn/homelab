@@ -3,6 +3,7 @@ x-kaneo_env: &kaneo_env
   KANEO_CLIENT_URL: https://kaneo.chenn.dev
   KANEO_API_URL: https://kaneo-api.chenn.dev
   BETTER_AUTH_SECRET: ${KANEO_SECRET}
+  AUTH_SECRET: ${KANEO_SECRET}
 
   DATABASE_URL: postgresql://kaneo:kaneo@kaneo_db/kaneo
   POSTGRES_DB: kaneo

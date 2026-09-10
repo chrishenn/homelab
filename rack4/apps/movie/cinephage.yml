@@ -2,7 +2,7 @@
 services:
   cinephage:
     profiles: [cinephage]
-    image: ghcr.io/moldytaint/cinephage:latest
+    image: ghcr.io/moldytaint/cinephage:0.17
     container_name: cinephage
     restart: unless-stopped
     environment:

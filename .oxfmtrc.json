@@ -7,7 +7,7 @@
   "bracketSpacing": false,
   "overrides": [
     {
-      "files": ["*.yml", "*.yaml", "*.json", "*.jsonl", "*.jsonc", "*.prettierrc"],
+      "files": ["*.yml", "*.yaml", "*.json", "*.jsonl", "*.jsonc"],
       "options": {
         "tabWidth": 2,
         "printWidth": 240

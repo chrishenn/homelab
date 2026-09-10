@@ -12,7 +12,7 @@ fix:
     hk fix --all
 
 slow:
-    hk run slow --all --fix
+    hk run slow --all
 
 lint:
     hk run slow --all

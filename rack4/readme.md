@@ -25,7 +25,7 @@ our local images we must manually build and push them to the local registry ($RE
 
 ```bash
 # Local images requiring a local build. The current list may be longer
-imgs="openresume transcodarr blocky_k rsync bulwark campfire opencut"
+imgs="openresume transcodarr blocky_k rsync bulwark opencut"
 j build "$imgs"
 j pullup core "$imgs"
 

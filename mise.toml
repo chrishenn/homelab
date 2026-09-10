@@ -1,37 +1,29 @@
 [settings]
 env_shell_expand = true
 
+[monorepo]
+# only python subprojects require a local mise+uv env when running (eg) "ty check"
+config_roots = [".", "dns", "k3s", "protonmail", "traefik", "vps0"]
+
 [tools]
-gitleaks = "latest"
-just = "latest"
-ruff = "latest"
-bun = "latest"
-node = "latest"
-pnpm = "latest"
-pkl = "latest"
-shfmt = "latest"
-shellcheck = "latest"
-eza = "latest"
-prettier = "latest"
-ty = "latest"
-hk = "latest"
-trufflehog = "latest"
-uv = "latest"
-"pipx:mypy" = "latest"
-"npm:dclint" = "latest"
-oxfmt = "latest"
-"aqua:owenlamont/ryl" = "latest"
 "aqua:anordal/shellharden" = "latest"
+"aqua:owenlamont/ryl" = "latest"
 "github:mongodb/kingfisher" = "latest"
+"npm:dclint" = "latest"
+"pipx:mypy" = "latest"
 betterleaks = "latest"
-
-[hooks.enter]
-shell = "bash"
-script = "mise i -q"
-
-[tasks.pre-commit]
-alias = "pc"
-run = "hk run pre-commit"
+bun = "latest"
+gitleaks = "latest"
+hk = "latest"
+just = "latest"
+oxfmt = "latest"
+pkl = "latest"
+pnpm = "latest"
+ruff = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+ty = "latest"
+uv = "latest"
 
 [env]
 REPO = "{{ config_root | absolute }}"
@@ -65,3 +57,7 @@ LANCACHE_DNS = "192.168.1.143"
 
 # cuelang settings
 CUE_DEBUG = "sortfields"
+
+[tasks.slow]
+description = "run slow project linters declared in hk.pkl"
+run = "hk run slow --all"

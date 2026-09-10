@@ -1,6 +1,6 @@
-amends "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   ["oxfmt"] = Builtins.oxfmt
@@ -12,29 +12,27 @@ local linters = new Mapping<String, Step> {
   ["shfmt"] = Builtins.shfmt
   ["shellharden"] = Builtins.shellharden
 
-  ["pkl"] = (Builtins.pkl) { stomp = true }
+  ["pkl"] = Builtins.pkl
   ["pkl_format"] = Builtins.pkl_format
   ["just"] = Builtins.just_format
   ["mise"] = Builtins.mise
   ["ryl"] = Builtins.ryl
   ["ryl_markdown"] = Builtins.ryl_markdown
 
-  ["check_case_conflict"] = (Builtins.check_case_conflict) { stomp = true }
-  ["check_merge_conflict"] = (Builtins.check_merge_conflict) { stomp = true }
-  ["check_symlinks"] = (Builtins.check_symlinks) { stomp = true }
+  ["check_case_conflict"] = Builtins.check_case_conflict
+  ["check_merge_conflict"] = Builtins.check_merge_conflict
+  ["check_symlinks"] = Builtins.check_symlinks
   ["fix_smart_quotes"] = Builtins.fix_smart_quotes
   ["mixed_line_ending"] = Builtins.mixed_line_ending
   ["newlines"] = Builtins.newlines
   ["trailing_whitespace"] = Builtins.trailing_whitespace
-
-  ["gitleaks_staged"] = (Builtins.gitleaks_staged) { stomp = true; output_summary = "hide" }
-  ["detect_private_key"] = (Builtins.detect_private_key) { stomp = true }
+  ["detect_private_key"] = Builtins.detect_private_key
 
   //   todo: enable
-  //   ["shellcheck"] = (Builtins.shellcheck) {stomp = true}
-  //   ["gitleaks"] = (Builtins.gitleaks) {stomp = true}
-  //   ["betterleaks"] = (Builtins.betterleaks) { stomp = true }
-  //   ["kingfisher"] = (Builtins.kingfisher) { stomp = true }
+  //   ["shellcheck"] = Builtins.shellcheck
+  //   ["gitleaks"] = Builtins.gitleaks
+  //   ["betterleaks"] = Builtins.betterleaks
+  //   ["kingfisher"] = Builtins.kingfisher
 
   // maybe don't enable - quite slow
   //   ["trufflehog"] {
@@ -86,6 +84,7 @@ hooks {
     steps = linters
   }
   ["slow"] {
+    fix = true
     steps = slow
   }
 }

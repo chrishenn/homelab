@@ -19,8 +19,6 @@ N8N_LICENSE = { provider = "op", value = "op://homelab/n8n/license" }
 
 TRACEARR_SECRET = { provider = "op", value = "op://homelab/tracearr/tracearr_secret" }
 TRACEARR_COOKIE_SECRET = { provider = "op", value = "op://homelab/tracearr/tracearr_cookie_secret" }
-TRACEARR_AUTH_USER = { provider = "op", value = "op://homelab/tracearr/tracearr_auth_user" }
-TRACEARR_AUTH_PASS = { provider = "op", value = "op://homelab/tracearr/tracearr_auth_pass" }
 
 ARCANE_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/arcane/encryption_key" }
 ARCANE_API_KEY = { provider = "op", value = "op://homelab/arcane/api_key" }

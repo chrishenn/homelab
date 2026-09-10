@@ -57,4 +57,5 @@ services:
       test: wg show wg0 | grep -q peer
       interval: 60s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 5s
