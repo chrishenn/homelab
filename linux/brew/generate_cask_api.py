@@ -33,14 +33,13 @@ LOCAL_STATE_DEFAULTS = {
 
 
 def git_head(root: pathlib.Path) -> str:
-    result = subprocess.run(
+    return subprocess.run(
         ["git", "rev-parse", "HEAD"],
         cwd=root,
         check=True,
         capture_output=True,
         text=True,
-    )
-    return result.stdout.strip()
+    ).stdout.strip()
 
 
 def brew_metadata(tap: str, token: str) -> dict[str, Any]:

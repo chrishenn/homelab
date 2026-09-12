@@ -62,7 +62,7 @@ include:
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
 
-#  - apps/dev_project/plane.yml
+  #  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
 
   - apps/dev_slack/mattermost.yml

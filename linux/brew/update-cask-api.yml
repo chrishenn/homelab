@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - "Casks/**"
+      - 'Casks/**'
   workflow_run:
     workflows:
       - Update Formula
@@ -40,7 +40,7 @@ jobs:
 
       - name: Tap checked-out source
         env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_AUTO_UPDATE: '1'
         run: |
           if brew tap | grep -qx "$GITHUB_REPOSITORY"; then
             tap_repo="$(brew --repo "$GITHUB_REPOSITORY")"
@@ -57,7 +57,7 @@ jobs:
 
       - name: Commit and push
         env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_AUTO_UPDATE: '1'
         run: |
           git add api/cask
           if git diff --cached --quiet; then

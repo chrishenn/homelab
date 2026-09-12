@@ -43,6 +43,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 select = ["ALL"]
 ignore = [
+    "PLR0913", "S607", "S603",
     # implicit namespace packages - used by pulumi
     "INP001",
 
