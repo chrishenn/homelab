@@ -27,7 +27,7 @@ services:
     labels:
       homepage.group: Calendar
       homepage.name: calich
-      homepage.icon: calich.png
+      homepage.icon: https://raw.githubusercontent.com/XiovV/calich/af68e59ee75764ab24d5d392b342519e2e99c49d/public/favicon.svg
       homepage.href: https://calich.chenn.dev
       homepage.description: Calendar
 
