@@ -1,5 +1,7 @@
 # ok I am not dealing with this spaghetti script BS. GET IT TOGETHER PPL
 # migrations are a bash script calling raw sql scripts mounted into containers - bad bad bad
+
+# j u c kurrier_baikal_db kurrier_db kurrier_migrate
 ---
 configs:
   kurrier_s3:
