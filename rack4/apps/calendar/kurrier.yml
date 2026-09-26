@@ -1,0 +1,120 @@
+# wip
+# not terribly impressed by this setup
+---
+services:
+  kurrier_web:
+    image: ghcr.io/kurrier-org/kurrier-web:v4.3.0
+    restart: unless-stopped
+#    env_file:
+#      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  kurrier_worker:
+    image: ghcr.io/kurrier-org/kurrier-worker:v4.3.0
+    restart: unless-stopped
+#    env_file:
+#      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  kurrier_redis:
+    image: valkey/valkey:alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --stop-writes-on-bgsave-error no --requirepass kurrier
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "kurrier", "PING" ]
+      interval: 2s
+      timeout: 1s
+      retries: 30
+    volumes:
+      - $DATA/kurrier/redis:/data
+
+  kurrier_dav:
+    image: ckulka/baikal:nginx
+    restart: always
+    volumes:
+      - ./dav_config:/var/www/baikal/config
+      - ./dav_data:/var/www/baikal/Specific
+
+  kurrier_typesense:
+    image: typesense/typesense:29.0
+    restart: unless-stopped
+    command: >
+      --data-dir /data
+      --api-key=${TYPESENSE_API_KEY}
+      --enable-cors
+    environment:
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+    volumes:
+      - $DATA/kurrier/typesense:/data
+
+  kurrier_garage:
+    image: dxflrs/garage:v2.3.0
+    container_name: garage
+    restart: unless-stopped
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_DEFAULT_ACCESS_KEY: ${GARAGE_ACCESS_KEY}
+      GARAGE_DEFAULT_SECRET_KEY: ${GARAGE_SECRET_KEY}
+      GARAGE_DEFAULT_BUCKET: ${GARAGE_BUCKET}
+    volumes:
+      - ./garage/garage.toml:/etc/garage.toml
+      - ./garage/data:/var/lib/garage/data
+      - ./garage/meta:/var/lib/garage/meta
+    command: >
+      /garage server
+      --single-node
+      --default-bucket  
+
+  kurrier_baikal-postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: baikal
+      POSTGRES_PASSWORD: strong_baikal_password
+      POSTGRES_DB: baikal
+    volumes:
+      - ./baikal-data:/var/lib/postgresql
+      - ./baikal-init:/docker-entrypoint-initdb.d
+    command: >
+      postgres
+      -c shared_buffers=128MB
+      -c max_connections=100
+      -c work_mem=4MB
+
+  kurrier_postgres:
+    image: postgres:18-alpine
+    container_name: app-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    volumes:
+      - ./data:/var/lib/postgresql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c max_connections=200
+      -c work_mem=4MB
+
+  kurrier_migrate:
+    image: postgres:18-alpine
+    restart: no
+    entrypoint: [ "/bin/bash", "/scripts/db-bootstrap.sh" ]
+    environment:
+      PGHOST: postgres
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+    volumes:
+      - ./init:/scripts

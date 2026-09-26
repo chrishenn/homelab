@@ -1,0 +1,48 @@
+# integrates only with onlyoffice, not collabora - boo
+# does not ship onlyoffice built in
+# sudo chown -R 4001:4001 $DATA/cryptpad/data $DATA/cryptpad/customize $DATA/cryptpad/onlyoffice-dist $DATA/cryptpad/onlyoffice-conf
+---
+configs:
+  cryptpad:
+    content: |
+      AppConfig.defaultDarkTheme = 'true';
+
+services:
+  cryptpad:
+    profiles: [cryptpad]
+    image: cryptpad/cryptpad:latest
+    container_name: cryptpad
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    environment:
+      CPAD_MAIN_DOMAIN: https://cryptpad.chenn.dev
+      CPAD_SANDBOX_DOMAIN: https://sandbox.cryptpad.chenn.dev
+      CPAD_CONF: /cryptpad/config/config.js
+      CPAD_INSTALL_ONLYOFFICE: yes
+    configs:
+      - source: cryptpad
+        target: /cryptpad/customize/application_config.js
+    volumes:
+      - $DATA/cryptpad/data/data:/cryptpad/data
+      - $DATA/cryptpad/data/blob:/cryptpad/blob
+      - $DATA/cryptpad/data/block:/cryptpad/block
+      - $DATA/cryptpad/data/files:/cryptpad/datastore
+      - $DATA/cryptpad/customize:/cryptpad/customize
+      - $DATA/cryptpad/onlyoffice-dist:/cryptpad/www/common/onlyoffice/dist
+      - $DATA/cryptpad/onlyoffice-conf:/cryptpad/onlyoffice-conf
+    networks: [newt]
+    labels:
+      homepage.group: General Tools
+      homepage.name: cryptpad
+      homepage.icon: cryptpad.png
+      homepage.href: https://cryptpad.chenn.dev
+      homepage.description: Google Calendar Clone
+
+      pangolin.public-resources.cryptpad.name: cryptpad
+      pangolin.public-resources.cryptpad.full-domain: cryptpad.chenn.dev
+      pangolin.public-resources.cryptpad.mode: http
+      pangolin.public-resources.cryptpad.targets[0].method: http
+      pangolin.public-resources.cryptpad.targets[0].port: 3000
+      pangolin.public-resources.cryptpad.policy: member

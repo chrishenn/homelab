@@ -1,0 +1,39 @@
+# looks decent, and event repeat rules are on par with google's
+# I can't get google integrations to work
+services:
+  calich:
+    profiles: [calich]
+    image: xiovv/calich:latest
+    container_name: calich
+    restart: unless-stopped
+    environment:
+      INITIAL_EMAIL: ${EMAIL}
+      INITIAL_NAME: ${USER}
+      INITIAL_PASSWORD: ${PASS}
+      COOKIE_SECURE: true
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_USER}
+
+#      GOOGLE_CLIENT_ID: ${CALICH_GOOGLE_CLIENT_ID}
+#      GOOGLE_CLIENT_SECRET: ${CALICH_GOOGLE_CLIENT_SECRET}
+#      CONNECTIONS_ENCRYPTION_KEY: ${CALICH_KEY}
+    volumes:
+      - $DATA/calich/data:/data
+    networks: [newt]
+    labels:
+      homepage.group: Calendar
+      homepage.name: calich
+      homepage.icon: calich.png
+      homepage.href: https://calich.chenn.dev
+      homepage.description: Calendar
+
+      pangolin.public-resources.calich.name: calich
+      pangolin.public-resources.calich.full-domain: calich.chenn.dev
+      pangolin.public-resources.calich.mode: http
+      pangolin.public-resources.calich.targets[0].method: http
+      pangolin.public-resources.calich.targets[0].port: 8080
+      pangolin.public-resources.calich.policy: member

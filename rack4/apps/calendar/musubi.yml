@@ -1,0 +1,140 @@
+# pretty nice. google sign-in and calendar integration just works
+# repeat event automation is not at parity with google or calich.
+# sudo chown -R 1000:1000 $DATA/musubi/media
+---
+configs:
+  musubi:
+    content: |
+      :80 {
+          encode zstd gzip
+          header {
+              Content-Security-Policy "frame-ancestors 'none'"
+              Referrer-Policy "no-referrer"
+              X-Content-Type-Options "nosniff"
+              X-Frame-Options "DENY"
+          }
+          @stream path /api/stream
+          handle @stream {
+              reverse_proxy {env.API_UPSTREAM} {
+                  flush_interval -1
+                  transport http {
+                      read_timeout 0
+                  }
+              }
+          }
+          handle /api/* {
+              reverse_proxy {env.API_UPSTREAM}
+          }
+          handle /reset-password {
+              reverse_proxy {env.API_UPSTREAM}
+          }
+          handle /delete-account {
+              reverse_proxy {env.API_UPSTREAM}
+          }
+          handle /email-verified {
+              reverse_proxy {env.API_UPSTREAM}
+          }
+          handle /.well-known/apple-app-site-association {
+              reverse_proxy {env.API_UPSTREAM}
+          }
+          @webclient path /app /app/* /login /login/ /invite/* /healthz /healthz/ /favicon.svg /assets/* /_serverFn/*
+          handle @webclient {
+              reverse_proxy {env.WEB_UPSTREAM}
+          }
+          handle {
+              reverse_proxy {env.MARKETING_UPSTREAM}
+          }
+      }
+
+services:
+  musubi:
+    profiles: [musubi]
+    image: caddy:2-alpine
+    container_name: musubi
+    restart: unless-stopped
+    configs:
+      - source: musubi
+        target: /etc/caddy/Caddyfile
+    environment:
+      API_UPSTREAM: musubi_api:7531
+      WEB_UPSTREAM: musubi_web:3000
+      MARKETING_UPSTREAM: musubi_web:3000
+    volumes:
+      - $DATA/musubi/caddy_data:/data
+      - $DATA/musubi/caddy_config:/config
+    networks: [musubi, newt]
+    labels:
+      homepage.group: Calendar
+      homepage.name: musubi
+      homepage.icon: https://github.com/frgtn-dot-dev/musubi/blob/main/.github/assets/icon.png?raw=true
+      homepage.href: https://musubi.chenn.dev
+      homepage.description: Calendar
+
+      pangolin.public-resources.musubi.name: musubi
+      pangolin.public-resources.musubi.full-domain: musubi.chenn.dev
+      pangolin.public-resources.musubi.mode: http
+      pangolin.public-resources.musubi.targets[0].method: http
+      pangolin.public-resources.musubi.targets[0].port: 80
+      pangolin.public-resources.musubi.policy: member
+
+      pangolin.public-resources.musubi.rules[0].action: allow
+      pangolin.public-resources.musubi.rules[0].match: path
+      pangolin.public-resources.musubi.rules[0].value: /api/*
+
+  musubi_web:
+    profiles: [musubi]
+    image: frgtndev/musubi-web:latest
+    container_name: musubi_web
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+    networks: [musubi]
+
+  musubi_api:
+    profiles: [musubi]
+    image: frgtndev/musubi:latest
+    container_name: musubi_api
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: prod
+      MEDIA_DIR: /app/data/media
+      LOG_LEVEL: info
+
+      BETTER_AUTH_URL: https://musubi.chenn.dev
+      BETTER_AUTH_SECRET: ${MUSUBI_BETTER_AUTH_SECRET}
+      ADMIN_EMAILS: ${EMAIL}
+      REQUIRE_EMAIL_VERIFICATION: true
+      DATABASE_URL: postgresql://musubi:musubi@musubi_db:5432/musubi
+
+      GOOGLE_WEB_CLIENT_ID: ${CALICH_GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${CALICH_GOOGLE_CLIENT_SECRET}
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      FROM_EMAIL: ${SMTP_USER}
+    volumes:
+      - $DATA/musubi/media:/app/data/media
+    networks: [musubi]
+
+  musubi_db:
+    profiles: [musubi]
+    image: postgres:18-alpine
+    container_name: musubi_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: musubi
+      POSTGRES_PASSWORD: musubi
+      POSTGRES_DB: musubi
+    volumes:
+      - $DATA/musubi/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [musubi]
+
+networks:
+  musubi:

@@ -14,11 +14,11 @@ services:
       BETTER_AUTH_SECRET: secret_key
     networks: [newt, keeper]
     labels:
-      homepage.group: Project Management
+      homepage.group: Calendar
       homepage.name: Keeper
       homepage.icon: https://github.com/ridafkih/keeper.sh/blob/main/applications/web/public/512x512-on-light.png?raw=true
       homepage.href: https://keeper.chenn.dev
-      homepage.description: Calendar Automation
+      homepage.description: Calendar
 
       pangolin.public-resources.keeper.name: keeper
       pangolin.public-resources.keeper.full-domain: keeper.chenn.dev

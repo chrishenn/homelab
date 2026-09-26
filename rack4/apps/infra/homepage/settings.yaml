@@ -41,6 +41,10 @@ layout:
     style: row
     columns: 5
     tab: Media
+  Calendar:
+    style: row
+    columns: 5
+    tab: Media
   Discordalikes:
     style: row
     columns: 5

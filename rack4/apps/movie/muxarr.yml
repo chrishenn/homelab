@@ -11,7 +11,7 @@ services:
       PUID: $PUID
       PGID: $PGID
     volumes:
-      - $DATA/muxarr/data:/data
+      - $DATA/muxarr/data:/config
       - $MEDIA:/media
     networks: [arr, newt]
     labels:

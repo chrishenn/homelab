@@ -1,0 +1,111 @@
+# this is uncle crunchy, super-og libre styling. Think android 4. There's a dark mode but it don't work fer NUTHIN
+# sudo chown -R 999:999 $DATA/wekan/data
+---
+services:  
+  wekan:
+    profiles: [wekan]
+    image: ghcr.io/wekan/wekan:latest
+    container_name: wekan
+    restart: unless-stopped
+    environment:
+      DEFAULT_METEOR_REACTIVITY_ORDER: polling
+      METEOR_REACTIVITY_ORDER: polling
+      DDP_TRANSPORT: sockjs
+      WRITABLE_PATH: /data
+      MONGO_URL: mongodb://wekan_db:27017/wekan
+      ROOT_URL: https://wekan.chenn.dev
+      WITH_API: true
+      CARDS_LOADING: auto
+      CARD_OPENED_WEBHOOK_ENABLED: false
+      BIGEVENTS_PATTERN: NONE
+      BROWSER_POLICY_ENABLED: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/wekan/data:/data
+    depends_on:
+      wekan_db:
+        condition: service_healthy
+    networks: [wekan, newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: wekan
+      homepage.icon: wekan.png
+      homepage.href: https://wekan.chenn.dev
+      homepage.description: Kanban
+
+      pangolin.public-resources.wekan.name: wekan
+      pangolin.public-resources.wekan.full-domain: wekan.chenn.dev
+      pangolin.public-resources.wekan.mode: http
+      pangolin.public-resources.wekan.targets[0].method: http
+      pangolin.public-resources.wekan.targets[0].port: 8080
+      pangolin.public-resources.wekan.policy: member
+        
+  wekan_db:
+    profiles: [wekan]
+    image: debian:bookworm-slim
+    container_name: wekan_db
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - |
+        set -eux
+        BIN=/data/bin/ferretdb
+        RELEASE_FILE=/data/bin/ferretdb.release
+        if ! command -v curl >/dev/null 2>&1; then
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends curl ca-certificates >/dev/null
+        fi
+        DOWNLOAD_RELEASE="$$FERRETDB_RELEASE"
+        REQUIRED_RELEASE="$$FERRETDB_RELEASE"
+        if [ "$$FERRETDB_RELEASE" = latest/download ]; then
+          LATEST_URL="$$(curl -fsSIL --retry 5 -o /dev/null -w '%{url_effective}' \
+            https://github.com/wekan/FerretDB/releases/latest)"
+          REQUIRED_RELEASE="$${LATEST_URL##*/}"
+          [ -n "$$REQUIRED_RELEASE" ]
+          DOWNLOAD_RELEASE="download/$$REQUIRED_RELEASE"
+        fi
+        CACHED_RELEASE="$$(cat "$$RELEASE_FILE" 2>/dev/null || true)"
+        if [ ! -x "$$BIN" ] || [ "$$CACHED_RELEASE" != "$$REQUIRED_RELEASE" ]; then
+          echo "Fetching newest FerretDB v1 $${REQUIRED_RELEASE} from the wekan/FerretDB release ..."
+          arch="$$(dpkg --print-architecture)"
+          case "$$arch" in ppc64el) arch=ppc64le ;; esac
+          mkdir -p /data/bin
+          # Download only this arch's binary (per-arch release assets, no ferretdb.zip).
+          curl -fSL --retry 5 -o "$$BIN.new" \
+            "https://github.com/wekan/FerretDB/releases/$${DOWNLOAD_RELEASE}/ferretdb-$${arch}"
+          curl -fSL --retry 5 -o "$$BIN.new.sha256sum" \
+            "https://github.com/wekan/FerretDB/releases/$${DOWNLOAD_RELEASE}/ferretdb-$${arch}.sha256sum"
+          EXPECTED="$$(awk '{print $$1; exit}' "$$BIN.new.sha256sum")"
+          ACTUAL="$$(sha256sum "$$BIN.new" | awk '{print $$1}')"
+          [ -n "$$EXPECTED" ] && [ "$$ACTUAL" = "$$EXPECTED" ]
+          chmod +x "$$BIN.new"
+          mv "$$BIN.new" "$$BIN"
+          rm "$$BIN.new.sha256sum"
+          printf '%s\n' "$$REQUIRED_RELEASE" > "$$RELEASE_FILE"
+          chmod +x "$$BIN"
+        fi
+        mkdir -p /data/files/db
+        # FerretDB v1 SQLite is standalone; WeKan observes it with polling.
+        exec "$$BIN" \
+          --handler=sqlite \
+          --sqlite-url=file:/data/files/db/ \
+          --listen-addr=0.0.0.0:27017 \
+          --telemetry=disable \
+          --log-level=error
+    environment:
+      DO_NOT_TRACK: "1"
+      FERRETDB_TELEMETRY: disable
+      FERRETDB_RELEASE: latest/download
+    volumes:
+      - $DATA/wekan/db:/data
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/27017' 2>/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+      start_period: 30s
+    networks: [wekan]
+
+networks:
+  wekan:

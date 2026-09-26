@@ -31,6 +31,12 @@ BESZEL_TOKEN = { provider = "op", value = "op://homelab/beszel/token" }
 GENIUS_API_CLIENT = { provider = "op", value = "op://homelab/GENIUS/API_CLIENT" }
 GENIUS_API_SECRET = { provider = "op", value = "op://homelab/GENIUS/API_SECRET" }
 
+CALICH_GOOGLE_CLIENT_ID = { provider = "op", value = "op://homelab/calich/google_client_id" }
+CALICH_GOOGLE_CLIENT_SECRET = { provider = "op", value = "op://homelab/calich/google_client_secret" }
+CALICH_KEY = { provider = "op", value = "op://homelab/calich/key" }
+
+MUSUBI_BETTER_AUTH_SECRET = { provider = "op", value = "op://homelab/musubi/better_auth_secret" }
+
 LASTFM_API_KEY = { provider = "op", value = "op://homelab/LASTFM/API_KEY" }
 LASTFM_API_SECRET = { provider = "op", value = "op://homelab/LASTFM/API_SECRET" }
 

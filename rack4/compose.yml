@@ -24,6 +24,11 @@ include:
   - apps/book/listenarr.yml
   - apps/book/readmeabook.yml
 
+  - apps/calendar/musubi.yml
+  - apps/calendar/silentsuite.yml
+  - apps/calendar/calich.yml
+  - apps/calendar/keeper.yml
+
   - apps/converter/8mb.yml
   - apps/converter/convertx.yml
   - apps/converter/handbrake.yml
@@ -44,6 +49,7 @@ include:
   - apps/dev/pgadmin.yml
   - apps/dev/scanopy.yml
   - apps/dev/ghstat.yml
+  - apps/dev/wekan.yml
 
   - apps/dev_project/affine.yml
   - apps/dev_project/appflowy.yml
@@ -52,7 +58,6 @@ include:
   - apps/dev_project/kan.yml
   - apps/dev_project/kaneo.yml
   - apps/dev_project/karakeep.yml
-  - apps/dev_project/keeper.yml
   - apps/dev_project/memos.yml
   - apps/dev_project/notediscovery.yml
   - apps/dev_project/outline.yml
@@ -61,7 +66,6 @@ include:
   - apps/dev_project/vikunja.yml
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
-
   #  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
 
@@ -187,7 +191,6 @@ include:
   - apps/tool/rally.yml
   - apps/tool/sure.yml
   - apps/tool/warden.yml
-
 #  - apps/tool/netbox.yml
 #  - apps/tool/kestra.yml
 #  - apps/tool/shlink.yml
