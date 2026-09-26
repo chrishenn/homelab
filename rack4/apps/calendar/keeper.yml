@@ -14,6 +14,8 @@ services:
       BETTER_AUTH_SECRET: ${KEEPER_BETTER_AUTH_SECRET}
       ENCRYPTION_KEY: ${KEEPER_ENCRYPTION_KEY}
 
+      # https://keeper.chenn.dev/api/auth/callback/google
+      # https://keeper.chenn.dev/api/sources/callback/google
       GOOGLE_CLIENT_ID: ${KEEPER_GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${KEEPER_GOOGLE_CLIENT_SECRET}
     networks: [newt, keeper]
@@ -22,7 +24,7 @@ services:
       homepage.name: Keeper
       homepage.icon: https://github.com/ridafkih/keeper.sh/blob/main/applications/web/public/512x512-on-light.png?raw=true
       homepage.href: https://keeper.chenn.dev
-      homepage.description: Calendar
+      homepage.description: Calendar Mux
 
       pangolin.public-resources.keeper.name: keeper
       pangolin.public-resources.keeper.full-domain: keeper.chenn.dev
@@ -30,6 +32,10 @@ services:
       pangolin.public-resources.keeper.targets[0].method: http
       pangolin.public-resources.keeper.targets[0].port: 3000
       pangolin.public-resources.keeper.policy: member
+
+      pangolin.public-resources.keeper.rules[0].action: allow
+      pangolin.public-resources.keeper.rules[0].match: path
+      pangolin.public-resources.keeper.rules[0].value: /api/*
 
   keeper_db:
     profiles: [keeper]

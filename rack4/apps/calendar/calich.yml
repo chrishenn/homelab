@@ -1,6 +1,6 @@
-# looks p good
 # event repeat rules are on par with google's
 # I can't get the google integration to work - "connections" tab in settings doesn't show; nothing in logs
+# either very new or just sloppy
 services:
   calich:
     profiles: [calich]
@@ -38,3 +38,7 @@ services:
       pangolin.public-resources.calich.targets[0].method: http
       pangolin.public-resources.calich.targets[0].port: 8080
       pangolin.public-resources.calich.policy: member
+
+      pangolin.public-resources.calich.rules[0].action: allow
+      pangolin.public-resources.calich.rules[0].match: path
+      pangolin.public-resources.calich.rules[0].value: /api/*

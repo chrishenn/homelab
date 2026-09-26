@@ -30,6 +30,9 @@ services:
     image: fosrl/gerbil:latest
     container_name: gerbil
     restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
     depends_on: {pangolin: *healthy}
     command:
       - --reachableAt=http://gerbil:3004
@@ -41,9 +44,6 @@ services:
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
       - $DATA/pangolin/db:/var/config/db
       - $DATA/pangolin/key:/var/config/key
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
     ports:
       - '80:80'
       - '443:443'

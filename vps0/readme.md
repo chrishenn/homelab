@@ -31,6 +31,9 @@ update
 # update pangolin profile containers
 just pullup pangolin
 
+# update non-pangolin (note that stalwart will need to restart when stalwart_wg_exit is restarted) 
+just pullup c beszel_agent rustdesk_hbbs rustdesk_hbbr stalwart_wg_exit 
+
 # update all
 just pullup
 ```
