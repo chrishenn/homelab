@@ -1,7 +1,15 @@
 # ok I am not dealing with this spaghetti script BS. GET IT TOGETHER PPL
 # migrations are a bash script calling raw sql scripts mounted into containers - bad bad bad
+# I had to manually edit one of their migrations? jesus h christ
+# chokes on an env var AND DOESNT F@#$#$%ING MENTION IT IN THE LOGS IM GONNA LOSE IT
+# DOCUMENTATION IS OUT OF SYNC WITH REPO. PEOPLE I SWEAR ON ALL THAT IS HOLY
+# login with google only works for an existing email account. sign up with google is broken.
 
-# j u c kurrier_baikal_db kurrier_db kurrier_migrate
+# feature soup. incomprehensible ui. total slop. it may be able to do a bunch of stuff, but the config is terrible enough
+# that it's not worth the time to figure it out.
+
+# https://kurrier.chenn.dev/api/oauth/google/callback
+# https://kurrier.chenn.dev/api/auth/oidc/google/callback
 ---
 configs:
   kurrier_s3:
@@ -30,27 +38,28 @@ x-kurrier_env: &kurrier_env
   WEB_PORT: 3000
   NITRO_PORT: 3001
   DISABLE_DRIVE: false
-  DISABLE_LOCAL_LOGIN: true
+  DISABLE_LOCAL_LOGIN: false
   SEARCH_REBUILD_ON_BOOT: false
   JWT_SECRET: d81ac6c5620d31d8395d7c226063374d3a8a450e21a6b9af1ed1fef3db4dfa1b
   APP_SECRET_ENCRYPTION_KEY: e15fb25bb83f71010e8cc7a788451226f25f6fe4789813077a6162a3853821ab
-
-  REDIS_HOST: kurrier_redis
-  REDIS_PASSWORD: kurrier
-  REDIS_PORT: 6379
-  
-  TYPESENSE_HOST: kurrier_typesense
-  TYPESENSE_API_KEY: cb928da727baf4d59c14bf74d6e7cf1a738cb84883c98fe3fd9c35bad31c3cd5
-  TYPESENSE_PORT: 8108
-  TYPESENSE_PROTOCOL: http
-
   DOCS_PORT: 3002
   DOCS_URL: http://kurrier_docs:3002
   DAV_URL: http://kurrier_dav
   DAV_DATABASE_URL: postgresql://kurrier:kurrier@kurrier_baikal_db:5432/kurrier
   WORKER_URL: http://kurrier_worker:3001
   HOST: 0.0.0.0
-  
+  API_ADMIN_KEY: 9b84429136e2c6419910e9d5fb31788d949185941d1f2bf9764d2dc5cf88f67e
+  CUSTOM_EMAIL_PROVIDERS: '[]'
+
+  REDIS_HOST: kurrier_redis
+  REDIS_PASSWORD: kurrier
+  REDIS_PORT: 6379
+
+  TYPESENSE_HOST: kurrier_typesense
+  TYPESENSE_API_KEY: cb928da727baf4d59c14bf74d6e7cf1a738cb84883c98fe3fd9c35bad31c3cd5
+  TYPESENSE_PORT: 8108
+  TYPESENSE_PROTOCOL: http
+
   POSTGRES_HOST: kurrier_db
   POSTGRES_PORT: 5432
   POSTGRES_USER: kurrier
@@ -75,18 +84,17 @@ x-kurrier_env: &kurrier_env
   S3_REGION: kurrier-s3
   S3_FORCE_PATH_STYLE: true
     
-  OIDC_GOOGLE_CLIENT_ID: 
-  OIDC_GOOGLE_CLIENT_SECRET: 
+  GOOGLE_MAIL_CLIENT_ID: ${KURRIER_GOOGLE_CLIENT_ID}
+  GOOGLE_MAIL_CLIENT_SECRET: ${KURRIER_GOOGLE_CLIENT_SECRET}
 
-  OIDC_ISSUER_URL: 
-  OIDC_CLIENT_ID: 
-  OIDC_CLIENT_SECRET:
-  OIDC_PROVIDER_NAME:
-  OIDC_SCOPES:
-  OIDC_TOKEN_AUTH_METHOD:
-  OIDC_REQUIRE_VERIFIED_EMAIL:
-  API_ADMIN_KEY: 9b84429136e2c6419910e9d5fb31788d949185941d1f2bf9764d2dc5cf88f67e
-  CUSTOM_EMAIL_PROVIDERS: '[]'
+  OIDC_GOOGLE_CLIENT_ID: ${KURRIER_GOOGLE_CLIENT_ID}
+  OIDC_GOOGLE_CLIENT_SECRET: ${KURRIER_GOOGLE_CLIENT_SECRET}
+
+  OIDC_ISSUER_URL: ${OIDC}
+  OIDC_CLIENT_ID:  ${KURRIER_OIDC_CLIENT}
+  OIDC_CLIENT_SECRET: ${KURRIER_OIDC_SECRET}
+  OIDC_PROVIDER_NAME: Pocket ID
+  OIDC_REQUIRE_VERIFIED_EMAIL: true
 
 x-kurrier_cmn: &kurrier_cmn
   profiles: [kurrier]
@@ -99,9 +107,9 @@ x-kurrier_dep: &kurrier_dep
       condition: service_healthy
 
 services:
-  kurrier_web:
+  kurrier:
     image: ghcr.io/kurrier-org/kurrier-web:v4.3.0
-    container_name: kurrier_web
+    container_name: kurrier
     <<: [*kurrier_cmn, *kurrier_dep]
     environment:
       <<: *kurrier_env
@@ -118,11 +126,11 @@ services:
       pangolin.public-resources.kurrier.mode: http
       pangolin.public-resources.kurrier.targets[0].method: http
       pangolin.public-resources.kurrier.targets[0].port: 3000
-#      pangolin.public-resources.kurrier.policy: member
+      pangolin.public-resources.kurrier.policy: member
 
-#      pangolin.public-resources.kurrier.rules[0].action: allow
-#      pangolin.public-resources.kurrier.rules[0].match: path
-#      pangolin.public-resources.kurrier.rules[0].value: /api/*
+      pangolin.public-resources.kurrier.rules[0].action: allow
+      pangolin.public-resources.kurrier.rules[0].match: path
+      pangolin.public-resources.kurrier.rules[0].value: /api/*
 
   kurrier_worker:
     image: ghcr.io/kurrier-org/kurrier-worker:v4.3.0
@@ -163,7 +171,7 @@ services:
   kurrier-s3:
     <<: *kurrier_cmn
     image: dxflrs/garage:v2.3.0
-    container_name: kurrier_s3
+    container_name: kurrier-s3
     command: /garage server --single-node --default-bucket
     configs:
       - source: kurrier_s3
