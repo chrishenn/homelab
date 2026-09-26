@@ -1,6 +1,7 @@
 ---
 # very impressive for ~4 months work! Documentation is also stellar.
 # video player ui has some issues in chrome - but playback is flawless, and playback+ui work perfectly on firefox!
+#   note: the video player problem is due to my setup, none of these players can manage it
 # video call ui can't rearrange streams - but all the pieces work! Once this is fixed, it'll be stellar
 # HA: Livekit supports redis for coordinating multiple instances. Nats also supports clustering. Chatto already supports
 #   S3-based storage, and a zero-migration changeover from nats to S3
@@ -14,7 +15,6 @@ configs:
     content: |
       :80 {
         encode gzip zstd
-
         reverse_proxy {
           dynamic a chatto 4000 {
             refresh 5s
@@ -139,7 +139,7 @@ services:
     image: nats:latest
     container_name: chatto_nats
     <<: *chatto_common
-    command: [--jetstream, --store_dir=/data, '--auth=${CHATTO_NATS}']
+    command: --jetstream --store_dir=/data --auth=${CHATTO_NATS}
     volumes:
       - $DATA/chatto/nats:/data
 

@@ -41,7 +41,6 @@ services:
       MM_OPENIDSETTINGS_DISCOVERYENDPOINT: https://pocketid.chenn.dev/.well-known/openid-configuration
       MM_OPENIDSETTINGS_ID: ${MATTERMOST_OIDC_CLIENT}
       MM_OPENIDSETTINGS_SECRET: ${MATTERMOST_OIDC_SECRET}
-
     volumes:
       - $DATA/mattermost/app/config:/mattermost/config
       - $DATA/mattermost/app/data:/mattermost/data

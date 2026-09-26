@@ -54,7 +54,3 @@ log *args:
 
 follow *args:
     just log -f {{ args }}
-
-# secret sync
-ss:
-    fnox sync --provider age --local-file -f

@@ -1,0 +1,35 @@
+# sudo chown -R 1000:1000 $DATA/fizzy
+---
+services:
+  fizzy:
+    profiles: [fizzy]
+    image: ghcr.io/basecamp/fizzy:main
+    container_name: fizzy
+    restart: unless-stopped
+    environment:
+      BASE_URL: https://fizzy.chenn.dev
+      SECRET_KEY_BASE: ${FIZZY_KEY}
+      VAPID_PRIVATE_KEY: ${FIZZY_VAPID_PUBLIC}
+      VAPID_PUBLIC_KEY: ${FIZZY_VAPID_PRIVATE}
+
+      SMTP_ADDRESS: ${SMTP_HOST}
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASS}
+      MAILER_FROM_ADDRESS: ${SMTP_USER}
+      SMTP_TLS: true
+    volumes:
+      - $DATA/fizzy/data:/rails/storage
+    networks: [newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: fizzy
+      homepage.icon: fizzy.png
+      homepage.href: https://fizzy.chenn.dev
+      homepage.description: Kanban
+
+      pangolin.public-resources.fizzy.name: fizzy
+      pangolin.public-resources.fizzy.full-domain: fizzy.chenn.dev
+      pangolin.public-resources.fizzy.mode: http
+      pangolin.public-resources.fizzy.targets[0].method: http
+      pangolin.public-resources.fizzy.targets[0].port: 80
+      pangolin.public-resources.fizzy.policy: member

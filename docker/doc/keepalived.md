@@ -1,5 +1,7 @@
 # keepalived
 
+keepalived is running in docker containers with `network_mode: host`, binding a virtual ip to a host's network interface
+
 ## troubleshooting
 
 add "ip_vs" to

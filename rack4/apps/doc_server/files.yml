@@ -6,36 +6,66 @@ configs:
       frontend:
         name: 'Quantum Chicken'
         description: A file server for the Dancing Chicken
+        oidcLoginButtonText: Pocket ID
 
-      server:
+      http:
         externalUrl: https://files.chenn.dev
         internalUrl: http://files:80
+        trustProxyHeaders: true
+        disableWebDAV: true
 
+      server:
         sources:
           - path: /mnt/f/
             name: f
             config:
               defaultEnabled: true
+              defaultUserScope: "/"
+              defaultPermissions:
+                view: true
+                modify: true
+                create: true
+                delete: true
+                download: true
           - path: /mnt/h/
             name: h
             config:
               defaultEnabled: true
+              defaultUserScope: "/"
+              defaultPermissions:
+                view: true
+                modify: true
+                create: true
+                delete: true
+                download: true
           - path: /mnt/k/
             name: k
             config:
               defaultEnabled: true
+              defaultUserScope: "/"
+              defaultPermissions:
+                view: true
+                modify: true
+                create: true
+                delete: true
+                download: true
           - path: /mnt/r/
             name: r
             config:
               defaultEnabled: true
+              defaultUserScope: "/"
+              defaultPermissions:
+                view: true
+                modify: true
+                create: true
+                delete: true
+                download: true
 
       auth:
         adminUsername: chris
         methods:
           password:
             enabled: false
-            minLength: 5
-            signup: true
           oidc:
             enabled: true
             issuerUrl: https://pocketid.chenn.dev
@@ -46,16 +76,19 @@ configs:
             createUser: true
 
       userDefaults:
-        loginMethod: oidc
-        permissions:
-          api: false
-          admin: false
-          modify: true
-          share: true
-          realtime: true
-          delete: true
-          create: true
-          download: true
+        account:
+          loginMethod: oidc
+          disableUpdateNotifications: true
+          permissions:
+            admin: false
+            api: true
+            share: true
+            realtime: true
+        listing:
+          deleteWithoutConfirming: true
+          showHidden: true
+          quickDownload: true
+          viewMode: "compact"
 
 services:
   files:

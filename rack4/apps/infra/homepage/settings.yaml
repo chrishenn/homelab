@@ -1,7 +1,7 @@
 # https://gethomepage.dev/configs/settings/
 ---
 instanceName: public
-title: 'Dancing Chicken: Public'
+title: 'Dancing Chicken'
 theme: dark
 color: slate
 statusStyle: dot
@@ -38,6 +38,10 @@ layout:
     columns: 5
     tab: Media
   Music:
+    style: row
+    columns: 5
+    tab: Media
+  Calendar:
     style: row
     columns: 5
     tab: Media

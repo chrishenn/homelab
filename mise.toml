@@ -6,24 +6,27 @@ env_shell_expand = true
 config_roots = [".", "dns", "k3s", "protonmail", "traefik", "vps0"]
 
 [tools]
-"aqua:anordal/shellharden" = "latest"
-"aqua:owenlamont/ryl" = "latest"
-"github:mongodb/kingfisher" = "latest"
-"npm:dclint" = "latest"
-"pipx:mypy" = "latest"
-betterleaks = "latest"
-bun = "latest"
-gitleaks = "latest"
-hk = "latest"
-just = "latest"
-oxfmt = "latest"
-pkl = "latest"
-pnpm = "latest"
-ruff = "latest"
-shellcheck = "latest"
-shfmt = "latest"
-ty = "latest"
-uv = "latest"
+"aqua:anordal/shellharden" = { version = "latest", lazy = true, lazy_bins = [
+  "shellharden",
+] }
+"aqua:owenlamont/ryl" = { version = "latest", lazy = true, lazy_bins = ["ryl"] }
+"github:mongodb/kingfisher" = { version = "latest", lazy = true, lazy_bins = ["kingfisher"] }
+"npm:dclint" = { version = "latest", lazy = true, lazy_bins = ["dclint"] }
+"pipx:mypy" = { version = "latest", lazy = true, lazy_bins = ["mypy"] }
+betterleaks = { version = "latest", lazy = true }
+bun = { version = "latest", lazy = true }
+gitleaks = { version = "latest", lazy = true }
+hk = { version = "latest", lazy = true }
+just = { version = "latest", lazy = true }
+oxfmt = { version = "latest", lazy = true }
+pkl = { version = "latest", lazy = true }
+pnpm = { version = "latest", lazy = true }
+ruff = { version = "latest", lazy = true }
+shellcheck = { version = "latest", lazy = true }
+shfmt = { version = "latest", lazy = true }
+ty = { version = "latest", lazy = true }
+uv = { version = "latest", lazy = true }
+node = { version = "latest", lazy = true }
 
 [env]
 REPO = "{{ config_root | absolute }}"
@@ -53,7 +56,7 @@ RACK4_NIC = "enp47s0np0"
 
 # lancache dns
 LANCACHE_IP = "192.168.1.143"
-LANCACHE_DNS = "192.168.1.143"
+LANCACHE_DNS = "192.168.1.142"
 
 # cuelang settings
 CUE_DEBUG = "sortfields"

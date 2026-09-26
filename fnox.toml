@@ -40,3 +40,6 @@ FORGEJO_PASS = { provider = "op", value = "op://homelab/forgejo/password" }
 
 MAXMIND_KEY = { provider = "op", value = "op://homelab/maxmind/license" }
 MAXMIND_ACCOUNT = { provider = "op", value = "op://homelab/maxmind/account_id" }
+
+ARR_PANGOLIN_AUTH_USER = { provider = "op", value = "op://homelab/radarr/auth_user" }
+ARR_PANGOLIN_AUTH_PASS = { provider = "op", value = "op://homelab/radarr/auth_pass" }

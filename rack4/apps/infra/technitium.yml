@@ -1,0 +1,76 @@
+---
+services:
+  technitium:
+    profiles: [technitium]
+    image: technitium/dns-server:15.5.1
+    container_name: technitium
+    restart: unless-stopped
+    sysctls:
+      net.ipv4.ip_local_port_range: '1024 65535'
+    ports:
+      - '${SVC_IP}:53443:53443/tcp'
+    environment:
+      DNS_SERVER_DOMAIN: rack4
+      DNS_SERVER_ADMIN_PASSWORD: ${PASS}
+      DNS_SERVER_WEB_SERVICE_HTTP_PORT: 5380
+      DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS: false
+      DNS_SERVER_PREFER_IPV6: false
+      DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTP: true
+      DNS_SERVER_RECURSION: Allow
+      DNS_SERVER_ENABLE_BLOCKING: true
+      DNS_SERVER_BLOCK_LIST_URLS: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+      DNS_SERVER_FORWARDERS: https://1.1.1.1/dns-query,https://9.9.9.9/dns-query
+      DNS_SERVER_FORWARDER_PROTOCOL: Https
+      DNS_SERVER_LOG_USING_LOCAL_TIME: true
+    volumes:
+      - $DATA/technitium/config:/etc/dns
+      - $DATA/technitium/logs:/var/log/technitium/dns
+
+    healthcheck:
+      test: dig +short +norecurse +retry=0 @127.0.0.1 localhost
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [traefik, newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Technitium Dashboard
+      homepage.icon: technitium.png
+      homepage.href: https://dash.dns.chenn.dev
+      homepage.description: DNS
+
+      pangolin.public-resources.technitium.name: technitium
+      pangolin.public-resources.technitium.full-domain: dash.dns.chenn.dev
+      pangolin.public-resources.technitium.mode: http
+      pangolin.public-resources.technitium.targets[0].method: http
+      pangolin.public-resources.technitium.targets[0].port: 5380
+      pangolin.public-resources.technitium.policy: member
+
+      traefik.enable: true
+      traefik.http.routers.technitium-web.rule: Host(`dash.dns.henn.dev`)
+      traefik.http.routers.technitium-web.entrypoints: websecure
+      traefik.http.routers.technitium-web.tls.certresolver: cf
+      traefik.http.routers.technitium-web.service: technitium-web
+      traefik.http.services.technitium-web.loadbalancer.server.port: 5380
+
+      traefik.http.routers.technitium-dns.rule: Host(`dns.henn.dev`) && PathPrefix(`/dns-query`)
+      traefik.http.routers.technitium-dns.entrypoints: websecure
+      traefik.http.routers.technitium-dns.tls.certresolver: cf
+      traefik.http.routers.technitium-dns.service: technitium-dns
+      traefik.http.services.technitium-dns.loadbalancer.server.port: 80
+
+      traefik.tcp.routers.technitium-tls.rule: HostSNI(`dns.henn.dev`)
+      traefik.tcp.routers.technitium-tls.entrypoints: tcp-853
+      traefik.tcp.routers.technitium-tls.tls.certresolver: cf
+      traefik.tcp.routers.technitium-tls.service: technitium-tls
+      traefik.tcp.services.technitium-tls.loadbalancer.server.port: 53
+
+      traefik.tcp.routers.technitium-tcp.rule: HostSNI(`*`)
+      traefik.tcp.routers.technitium-tcp.entrypoints: tcp-53
+      traefik.tcp.routers.technitium-tcp.service: technitium-tcp
+      traefik.tcp.services.technitium-tcp.loadbalancer.server.port: 53
+
+      traefik.udp.routers.technitium-udp.entrypoints: udp-53
+      traefik.udp.routers.technitium-udp.service: technitium-udp
+      traefik.udp.services.technitium-udp.loadbalancer.server.port: 53

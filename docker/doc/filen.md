@@ -37,7 +37,7 @@ Mount an S3-ish proxy to filen cloud files using the filne cli
 
 ```yml
 # docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' filenS3
-# mc alias set filen http://192.168.100.109:80 "filen_key" "filen_secret" --insecure --path "off" --api "s3v4"
+# rc alias set filen http://192.168.100.109:80 "filen_key" "filen_secret" --insecure --path "off" --api "s3v4"
 filenS3:
     profiles: [nextcloud]
     image: filen/cli:latest

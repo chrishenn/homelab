@@ -1,26 +1,19 @@
 ---
-# C# and shell - it's a bit old-school and crunchy
-# lancache manager stores application state outside of its dedicated directory. NO! BAD!
-# I managed to corrupt some internal state by clicking in the ui, and it fell over permanently
-x-lancache_env: &lancache_env
-  USE_GENERIC_CACHE: true
-  LANCACHE_IP: ${LANCACHE_IP}
-  DNS_BIND_IP: ${LANCACHE_DNS}
-
-  UPSTREAM_DNS: ${DNS_VIP}
-  CACHE_DISK_SIZE: 1000g
-  CACHE_INDEX_SIZE: 500m
-  TZ: ${TZ}
-
 services:
-  # nslookup lancache.steamcontent.com
   lancache:
     profiles: [lancache]
-    image: lancachenet/monolithic:latest
+    image: ghcr.io/regix1/monolithic:latest
     container_name: lancache
     restart: unless-stopped
     environment:
-      <<: *lancache_env
+      UPSTREAM_DNS: 1.1.1.1
+      NOSLICE_FALLBACK: true
+
+      CACHE_DISK_SIZE: 1000g
+      CACHE_INDEX_SIZE: 500m
+      CACHE_MAX_AGE: 3560d
+      CACHE_SLICE_SIZE: 1m
+      MIN_FREE_DISK: 10g
     volumes:
       - $DATA/lancache/cache:/data/cache
       - $DATA/lancache/logs:/data/logs
@@ -28,31 +21,8 @@ services:
       - '${LANCACHE_IP}:80:80/tcp'
       - '${LANCACHE_IP}:443:443/tcp'
 
-  lancache_dns:
-    profiles: [lancache]
-    image: lancachenet/lancache-dns:latest
-    container_name: lancache_dns
-    restart: unless-stopped
-    environment:
-      <<: *lancache_env
-    ports:
-      - '${LANCACHE_DNS}:53:53/udp'
-      - '${LANCACHE_DNS}:53:53/tcp'
-
-  # dc run --rm -it --entrypoint /bin/bash --workdir /app lancache_prefill
-  # dc run --rm -it lancache_prefill select-apps
-  # dc run --rm -it lancache_prefill prefill
-  lancache_prefill:
-    profiles: [lancache]
-    image: tpill90/steam-lancache-prefill:latest
-    container_name: lancache_prefill
-    restart: no
-    network_mode: host
-    volumes:
-      - $DATA/lancache/prefill:/Config
-
   # dc exec lancache_manager cat /data/security/api_key.txt
-  # initial login api key is also in the docker log
+  # one-time print of admin api key is also in the docker log
   lancache_manager:
     profiles: [lancache]
     image: ghcr.io/regix1/lancache-manager:latest

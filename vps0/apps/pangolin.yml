@@ -1,0 +1,165 @@
+# note: nested mounts (like $DATA/pangolin/db) will appear as empty folders under $DIR_HOST/pangolin
+#   but the data is safely stored under $DATA/pangolin
+---
+x-healthy: &healthy
+  condition: service_healthy
+
+configs:
+  pangolin_cfg:
+    content: |
+      gerbil:
+        start_port: 51820
+        base_endpoint: pangolin.chenn.dev
+
+      app:
+        dashboard_url: https://pangolin.chenn.dev
+        log_level: warn
+        telemetry:
+          anonymous_usage: true
+
+      branding:
+        app_name: Chicky Pangolin
+
+      domains:
+        domain1:
+          base_domain: chenn.dev
+          prefer_wildcard_cert: true
+
+      server:
+        cors:
+          origins: [https://pangolin.chenn.dev]
+          methods: [GET, POST, PUT, DELETE, PATCH]
+          allowed_headers: [X-CSRF-Token, Content-Type]
+          credentials: false
+        maxmind_db_path: ./config/GeoLite2/GeoLite2-Country.mmdb
+        maxmind_asn_path: ./config/GeoLite2/GeoLite2-ASN.mmdb
+
+      flags:
+        require_email_verification: true
+        disable_signup_without_invite: true
+        disable_user_create_org: true
+        allow_raw_resources: true
+
+      email:
+        smtp_host: smtp.protonmail.ch
+        smtp_port: 465
+        no_reply: chris@henn.dev
+        smtp_secure: true
+        smtp_tls_reject_unauthorized: true
+
+services:
+  pangolin:
+    profiles: [pangolin]
+    image: fosrl/pangolin:ee-latest
+    container_name: pangolin
+    restart: unless-stopped
+    environment:
+      SERVER_SECRET: ${PANGOLIN_SERVER_SECRET}
+      EMAIL_SMTP_USER: ${SMTP_USER}
+      EMAIL_SMTP_PASS: ${SMTP_PASS}
+    configs:
+      - source: pangolin_cfg
+        target: /app/config/config.yml
+    volumes:
+      # yes, these traefik config paths are hardcoded into the pangolin application
+      - $DIR_HOST/apps/pangolin/traefik_static.yml:/app/config/traefik/traefik_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
+
+      - $DATA/pangolin/GeoLite2:/app/config/GeoLite2
+      - $DATA/pangolin/letsencrypt:/app/config/letsencrypt
+      - $DATA/pangolin/db:/app/config/db
+      - $DATA/pangolin/key:/app/config/key
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:3001/api/v1/]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 20s
+
+  gerbil:
+    profiles: [pangolin]
+    image: fosrl/gerbil:latest
+    container_name: gerbil
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    depends_on: {pangolin: *healthy}
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
+      - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
+      - $DATA/pangolin/db:/var/config/db
+      - $DATA/pangolin/key:/var/config/key
+    ports:
+      - '80:80'
+      - '443:443'
+      - '51820:51820/udp'
+      - '21820:21820/udp'
+
+      - '2424:2424'
+      - '2525:2525'
+      - '2626:2626'
+
+      - '10000:10000/udp'
+      - '40000-40010:40000-40010/tcp'
+      - '40000-40010:40000-40010/udp'
+
+      - '3478:3478/udp'
+      - '7881:7881'
+      - '7882:7882/udp'
+      - '7883:7883'
+      - '7884:7884/udp'
+      - '50000-50040:50000-50040/udp'
+
+  traefik:
+    profiles: [pangolin]
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    command: --configFile=/etc/traefik/traefik_static.yml
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+    volumes:
+      - $DIR_HOST/apps/pangolin/traefik_static.yml:/etc/traefik/traefik_static.yml
+      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml
+      - $DATA/pangolin/letsencrypt:/letsencrypt
+    depends_on: {pangolin: *healthy}
+    healthcheck:
+      test: wget -q --tries=1 --spider http://localhost/ping
+      interval: 10s
+      timeout: 10s
+      retries: 15
+
+  traefik_cert:
+    profiles: [pangolin]
+    image: ghcr.io/kereis/traefik-certs-dumper:alpine
+    container_name: traefik_cert
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/pangolin/letsencrypt:/traefik:ro
+      - $DATA/pangolin/ssl_dump:/output
+
+  geoipupdate:
+    profiles: [pangolin]
+    image: ghcr.io/maxmind/geoipupdate
+    container_name: geoipupdate
+    restart: unless-stopped
+    environment:
+      GEOIPUPDATE_ACCOUNT_ID: ${MAXMIND_ACCOUNT}
+      GEOIPUPDATE_LICENSE_KEY: ${MAXMIND_KEY}
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-Country GeoLite2-ASN
+      GEOIPUPDATE_FREQUENCY: 72
+    volumes:
+      - $DATA/pangolin/GeoLite2:/usr/share/GeoIP
+
+networks:
+  default:
+    driver: bridge
+    name: pangolin
+    enable_ipv6: true

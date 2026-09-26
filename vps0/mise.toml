@@ -1,10 +1,11 @@
 [settings]
-python.uv_venv_auto = "create|source"
+#python.uv_venv_auto = "create|source"
 
 [tools]
-fnox = "latest"
-pulumi = "latest"
-uv = "latest"
+fnox = { version = "latest", lazy = true }
+pulumi = { version = "latest", lazy = true }
+uv = { version = "latest", lazy = true }
+"github:fosrl/cli" = { version = "latest", rename_exe = "pangolin" , lazy = true, lazy_bins = "pangolin" }
 
 [env]
 DOCKER_HOST = "ssh://chris@chenn.dev:2200"

@@ -1,18 +1,19 @@
 [tools]
-just = "latest"
-bun = "latest"
-node = "latest"
-pnpm = "latest"
-fnox = "latest"
-rclone = "latest"
-mc = "latest"
-cargo-binstall = "latest"
-age = "latest"
-regctl = "latest"
-crane = "latest"
-cue = "latest"
+just = { version = "latest", lazy = true }
+bun = { version = "latest", lazy = true }
+node = { version = "latest", lazy = true }
+pnpm = { version = "latest", lazy = true }
+fnox = { version = "latest", lazy = true }
+rclone = { version = "latest", lazy = true }
+cargo-binstall = { version = "latest", lazy = true }
+age = { version = "latest", lazy = true }
+regctl = { version = "latest", lazy = true }
+crane = { version = "latest", lazy = true }
+cue = { version = "latest", lazy = true }
 glab = { version = "latest", exe = "glab" }
-"cargo:forgejo-cli" = "latest"
+doggo = { version = "latest", lazy = true }
+"github:rustfs/cli" = { version = "latest", lazy = true, lazy_bins = ["rc"] }
+"cargo:forgejo-cli" = { version = "latest", lazy = true, lazy_bins = ["forgejo-cli"] }
 
 [env]
 OP_RUN_NO_MASKING = true
@@ -40,7 +41,7 @@ TRAEFIK_SUBNET = "192.170.0.0/16"
 NEWT_GATEWAY = "192.169.0.1"
 NEWT_SUBNET = "192.169.0.0/16"
 
-# SVC_IP is the default bound IP for docker services, including blocky-dns on port 53
+# SVC_IP is the default bound IP for docker services, including dns on port 53
 SVC_IP = "192.168.1.142"
 
 # VPS0_USER

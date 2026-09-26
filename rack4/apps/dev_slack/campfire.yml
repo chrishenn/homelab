@@ -5,12 +5,11 @@ services:
   campfire:
     profiles: [campfire]
     image: ${REGISTRY}/campfire:latest
-    build: https://github.com/basecamp/once-campfire.git
+    build: https://github.com/basecamp/once-campfire-rust.git
     container_name: campfire
     restart: unless-stopped
     environment:
       SECRET_KEY_BASE: ${CAMPFIRE_SECRET_KEY_BASE}
-      DISABLE_SSL: true
       VAPID_PUBLIC_KEY: ${CAMPFIRE_VAPID_PUBLIC_KEY}
       VAPID_PRIVATE_KEY: ${CAMPFIRE_VAPID_PRIVATE_KEY}
     volumes:
