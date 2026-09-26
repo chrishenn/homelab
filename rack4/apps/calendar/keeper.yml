@@ -10,8 +10,12 @@ services:
       TRUSTED_ORIGINS: https://keeper.chenn.dev
       DATABASE_URL: postgresql://keeper:keeper@keeper_db/keeper
       REDIS_URL: redis://keeper_redis:6379
-      ENCRYPTION_KEY: secret_key
-      BETTER_AUTH_SECRET: secret_key
+
+      BETTER_AUTH_SECRET: ${KEEPER_BETTER_AUTH_SECRET}
+      ENCRYPTION_KEY: ${KEEPER_ENCRYPTION_KEY}
+
+      GOOGLE_CLIENT_ID: ${KEEPER_GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${KEEPER_GOOGLE_CLIENT_SECRET}
     networks: [newt, keeper]
     labels:
       homepage.group: Calendar

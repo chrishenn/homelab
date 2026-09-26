@@ -1,5 +1,6 @@
-# looks decent, and event repeat rules are on par with google's
-# I can't get google integrations to work
+# looks p good
+# event repeat rules are on par with google's
+# I can't get the google integration to work - "connections" tab in settings doesn't show; nothing in logs
 services:
   calich:
     profiles: [calich]
@@ -18,9 +19,9 @@ services:
       SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM: ${SMTP_USER}
 
-#      GOOGLE_CLIENT_ID: ${CALICH_GOOGLE_CLIENT_ID}
-#      GOOGLE_CLIENT_SECRET: ${CALICH_GOOGLE_CLIENT_SECRET}
-#      CONNECTIONS_ENCRYPTION_KEY: ${CALICH_KEY}
+      GOOGLE_CLIENT_ID: ${CALICH_GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${CALICH_GOOGLE_CLIENT_SECRET}
+      CONNECTIONS_ENCRYPTION_KEY: ${CALICH_KEY}
     volumes:
       - $DATA/calich/data:/data
     networks: [newt]

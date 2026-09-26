@@ -1,18 +1,15 @@
-# google calendar alternative, plus tasks and contacts. E2E encrypted. Native android and ios apps
-# no env var for database hostname. Like, guys, come the f*ck on
-# python server process crashes when config is missing required keys - no validation. GUYS!? COME ON GUYS!!
-# documentation is a fragmented disaster. guys it's actually less work to just have ONE source of documentation
+# calendar, tasks and contacts. E2E encrypted. Native android and ios apps.
 
+# no env var for database hostname
+# python server process crashes when config is missing required keys - no validation
+# documentation is a fragmented disaster
 # oh ffs - if config ini is provided, env vars are ignored
-# I just feel like I can't explain how crappy this is, with my voice echoing across the eons ...
-# they serve the frontend from their public url, and expect you to use it to log into your server - but of course
-# that won't work with pangolin auth. So I'll puch through /api
+# they serve the frontend from their public url, and expect you to use it to log into your server
 # admin login is busted
-# have to type in the server url every time I log in. bad bad bad
+# have to type in the server url every time I log in
 # container user id undocumented
-# the deal-breaker: calendar event repeat rules are not sophisticated enough
+# calendar event repeat rules are missing "monthly, every third monday"
 # can't make an event from the monthly view. Can't create an event by clicking on a day. Can't create an event inline.
-# import works well. so there's that.
 
 # sudo chown -R 100:101 $DATA/silentsuite/data
 ---

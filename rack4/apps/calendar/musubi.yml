@@ -1,5 +1,7 @@
-# pretty nice. google sign-in and calendar integration just works
-# repeat event automation is not at parity with google or calich.
+# pretty nice. google sign-in and calendar integration work, but only on chrome/desktop
+# there's an app, but it can't sign in using google
+# repeat event automation is missing "repeat monthly on the third monday"
+
 # sudo chown -R 1000:1000 $DATA/musubi/media
 ---
 configs:
