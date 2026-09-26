@@ -28,6 +28,7 @@ include:
   - apps/calendar/silentsuite.yml
   - apps/calendar/calich.yml
   - apps/calendar/keeper.yml
+  - apps/calendar/kurrier.yml
 
   - apps/converter/8mb.yml
   - apps/converter/convertx.yml

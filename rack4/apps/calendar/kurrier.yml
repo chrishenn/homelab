@@ -1,31 +1,141 @@
-# wip
-# not terribly impressed by this setup
+# ok I am not dealing with this spaghetti script BS. GET IT TOGETHER PPL
+# migrations are a bash script calling raw sql scripts mounted into containers - bad bad bad
 ---
+configs:
+  kurrier_s3:
+    content: |
+      metadata_dir = "/var/lib/garage/meta"  
+      data_dir = "/var/lib/garage/data"      
+      db_engine = "sqlite"      
+      replication_factor = 1
+      consistency_mode = "consistent"      
+      rpc_bind_addr = "[::]:3901"
+      rpc_public_addr = "127.0.0.1:3901"
+      
+      [s3_api]
+      s3_region = "kurrier-s3"
+      api_bind_addr = "[::]:3900"
+      
+      [s3_web]
+      bind_addr = "[::]:3902"
+      root_domain = "localhost"
+      
+      [admin]
+      api_bind_addr = "[::]:3903"
+
+x-kurrier_env: &kurrier_env
+  WEB_URL: https://kurrier.chenn.dev
+  WEB_PORT: 3000
+  NITRO_PORT: 3001
+  DISABLE_DRIVE: false
+  DISABLE_LOCAL_LOGIN: true
+  SEARCH_REBUILD_ON_BOOT: false
+  JWT_SECRET: d81ac6c5620d31d8395d7c226063374d3a8a450e21a6b9af1ed1fef3db4dfa1b
+  APP_SECRET_ENCRYPTION_KEY: e15fb25bb83f71010e8cc7a788451226f25f6fe4789813077a6162a3853821ab
+
+  REDIS_HOST: kurrier_redis
+  REDIS_PASSWORD: kurrier
+  REDIS_PORT: 6379
+  
+  TYPESENSE_HOST: kurrier_typesense
+  TYPESENSE_API_KEY: cb928da727baf4d59c14bf74d6e7cf1a738cb84883c98fe3fd9c35bad31c3cd5
+  TYPESENSE_PORT: 8108
+  TYPESENSE_PROTOCOL: http
+
+  DOCS_PORT: 3002
+  DOCS_URL: http://kurrier_docs:3002
+  DAV_URL: http://kurrier_dav
+  DAV_DATABASE_URL: postgresql://kurrier:kurrier@kurrier_baikal_db:5432/kurrier
+  WORKER_URL: http://kurrier_worker:3001
+  HOST: 0.0.0.0
+  
+  POSTGRES_HOST: kurrier_db
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: kurrier
+  POSTGRES_PASSWORD: kurrier
+  POSTGRES_DB: kurrier
+  DATABASE_URL: postgresql://kurrier:kurrier@kurrier_db:5432/kurrier
+  DATABASE_RLS_URL: postgresql://kurrier:kurrier@kurrier_db:5432/kurrier
+        
+  GARAGE_ACCESS_KEY: 4e0d6c40d99ee1bff7e735671c38f8fda71270cdd51a684f5be34c0a9c60640b
+  GARAGE_SECRET_KEY: 7f659e65b2b57022517e87f91c57043b9a8ad9ffde35007ce938e7b159b8e047
+  GARAGE_RPC_SECRET: 04e2a799e185759c1dcbd0da6e8284d2be8b3b23dc38c320bbd18dd6aca726fb
+  GARAGE_BUCKET: kurrier-s3
+
+  GARAGE_DEFAULT_ACCESS_KEY: 4e0d6c40d99ee1bff7e735671c38f8fda71270cdd51a684f5be34c0a9c60640b
+  GARAGE_DEFAULT_SECRET_KEY: 7f659e65b2b57022517e87f91c57043b9a8ad9ffde35007ce938e7b159b8e047
+  GARAGE_DEFAULT_BUCKET: kurrier-s3
+
+  S3_ENDPOINT: http://kurrier-s3:3900
+  S3_ACCESS_KEY: 4e0d6c40d99ee1bff7e735671c38f8fda71270cdd51a684f5be34c0a9c60640b
+  S3_SECRET_KEY: 7f659e65b2b57022517e87f91c57043b9a8ad9ffde35007ce938e7b159b8e047
+  S3_BUCKET: kurrier-s3
+  S3_REGION: kurrier-s3
+  S3_FORCE_PATH_STYLE: true
+    
+  OIDC_GOOGLE_CLIENT_ID: 
+  OIDC_GOOGLE_CLIENT_SECRET: 
+
+  OIDC_ISSUER_URL: 
+  OIDC_CLIENT_ID: 
+  OIDC_CLIENT_SECRET:
+  OIDC_PROVIDER_NAME:
+  OIDC_SCOPES:
+  OIDC_TOKEN_AUTH_METHOD:
+  OIDC_REQUIRE_VERIFIED_EMAIL:
+  API_ADMIN_KEY: 9b84429136e2c6419910e9d5fb31788d949185941d1f2bf9764d2dc5cf88f67e
+  CUSTOM_EMAIL_PROVIDERS: '[]'
+
+x-kurrier_cmn: &kurrier_cmn
+  profiles: [kurrier]
+  restart: unless-stopped
+  networks: [kurrier]
+
+x-kurrier_dep: &kurrier_dep
+  depends_on:
+    kurrier_db:
+      condition: service_healthy
+
 services:
   kurrier_web:
     image: ghcr.io/kurrier-org/kurrier-web:v4.3.0
-    restart: unless-stopped
-#    env_file:
-#      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
+    container_name: kurrier_web
+    <<: [*kurrier_cmn, *kurrier_dep]
+    environment:
+      <<: *kurrier_env
+    networks: [kurrier, newt]
+    labels:
+      homepage.group: Calendar
+      homepage.name: kurrier
+      homepage.icon: kurrier.png
+      homepage.href: https://kurrier.chenn.dev
+      homepage.description: Calendar
+
+      pangolin.public-resources.kurrier.name: kurrier
+      pangolin.public-resources.kurrier.full-domain: kurrier.chenn.dev
+      pangolin.public-resources.kurrier.mode: http
+      pangolin.public-resources.kurrier.targets[0].method: http
+      pangolin.public-resources.kurrier.targets[0].port: 3000
+#      pangolin.public-resources.kurrier.policy: member
+
+#      pangolin.public-resources.kurrier.rules[0].action: allow
+#      pangolin.public-resources.kurrier.rules[0].match: path
+#      pangolin.public-resources.kurrier.rules[0].value: /api/*
 
   kurrier_worker:
     image: ghcr.io/kurrier-org/kurrier-worker:v4.3.0
-    restart: unless-stopped
-#    env_file:
-#      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
+    container_name: kurrier_worker
+    <<: [*kurrier_cmn, *kurrier_dep]
+    environment:
+      <<: *kurrier_env
 
   kurrier_redis:
+    <<: *kurrier_cmn
     image: valkey/valkey:alpine
-    restart: unless-stopped
+    container_name: kurrier_redis
     command: redis-server --appendonly yes --stop-writes-on-bgsave-error no --requirepass kurrier
     healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "kurrier", "PING" ]
+      test: redis-cli -a kurrier PING
       interval: 2s
       timeout: 1s
       retries: 30
@@ -33,88 +143,78 @@ services:
       - $DATA/kurrier/redis:/data
 
   kurrier_dav:
+    <<: *kurrier_cmn
     image: ckulka/baikal:nginx
-    restart: always
+    container_name: kurrier_dav
     volumes:
-      - ./dav_config:/var/www/baikal/config
-      - ./dav_data:/var/www/baikal/Specific
+      - $DATA/kurrier/dav:/var/www/baikal/Specific
+      - ./kurrier/dav_config:/var/www/baikal/config
 
   kurrier_typesense:
+    <<: *kurrier_cmn
     image: typesense/typesense:29.0
-    restart: unless-stopped
-    command: >
-      --data-dir /data
-      --api-key=${TYPESENSE_API_KEY}
-      --enable-cors
-    environment:
-      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+    container_name: kurrier_typesense
+    command: --data-dir /data --api-key=cb928da727baf4d59c14bf74d6e7cf1a738cb84883c98fe3fd9c35bad31c3cd5 --enable-cors
     volumes:
       - $DATA/kurrier/typesense:/data
 
-  kurrier_garage:
+  kurrier-s3:
+    <<: *kurrier_cmn
     image: dxflrs/garage:v2.3.0
-    container_name: garage
-    restart: unless-stopped
+    container_name: kurrier_s3
+    command: /garage server --single-node --default-bucket
+    configs:
+      - source: kurrier_s3
+        target: /etc/garage.toml
     environment:
-      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
-      GARAGE_DEFAULT_ACCESS_KEY: ${GARAGE_ACCESS_KEY}
-      GARAGE_DEFAULT_SECRET_KEY: ${GARAGE_SECRET_KEY}
-      GARAGE_DEFAULT_BUCKET: ${GARAGE_BUCKET}
+      <<: *kurrier_env
     volumes:
-      - ./garage/garage.toml:/etc/garage.toml
-      - ./garage/data:/var/lib/garage/data
-      - ./garage/meta:/var/lib/garage/meta
-    command: >
-      /garage server
-      --single-node
-      --default-bucket  
+      - $DATA/kurrier/s3/data:/var/lib/garage/data
+      - $DATA/kurrier/s3/meta:/var/lib/garage/meta
 
-  kurrier_baikal-postgres:
+  kurrier_baikal_db:
+    <<: *kurrier_cmn
     image: postgres:18-alpine
-    restart: unless-stopped
+    container_name: kurrier_baikal_db
+    command: postgres -c shared_buffers=128MB -c max_connections=100 -c work_mem=4MB
     environment:
-      POSTGRES_USER: baikal
-      POSTGRES_PASSWORD: strong_baikal_password
-      POSTGRES_DB: baikal
+      POSTGRES_USER: kurrier
+      POSTGRES_PASSWORD: kurrier
+      POSTGRES_DB: kurrier
     volumes:
-      - ./baikal-data:/var/lib/postgresql
-      - ./baikal-init:/docker-entrypoint-initdb.d
-    command: >
-      postgres
-      -c shared_buffers=128MB
-      -c max_connections=100
-      -c work_mem=4MB
+      - $DATA/kurrier/baikal_db:/var/lib/postgresql
+      - ./kurrier/baikal-init:/docker-entrypoint-initdb.d
 
-  kurrier_postgres:
+  kurrier_db:
+    <<: *kurrier_cmn
     image: postgres:18-alpine
-    container_name: app-postgres
-    restart: unless-stopped
+    container_name: kurrier_db
+    command: postgres -c shared_buffers=256MB -c max_connections=200 -c work_mem=4MB
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: kurrier
+      POSTGRES_PASSWORD: kurrier
+      POSTGRES_DB: kurrier
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 2s
-      timeout: 2s
-      retries: 30
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
-      - ./data:/var/lib/postgresql
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    command: >
-      postgres
-      -c shared_buffers=256MB
-      -c max_connections=200
-      -c work_mem=4MB
+      - $DATA/kurrier/db:/var/lib/postgresql
+      - ./kurrier/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   kurrier_migrate:
+    <<: *kurrier_cmn
     image: postgres:18-alpine
+    container_name: kurrier_migrate
     restart: no
     entrypoint: [ "/bin/bash", "/scripts/db-bootstrap.sh" ]
     environment:
-      PGHOST: postgres
-      PGUSER: ${POSTGRES_USER}
-      PGPASSWORD: ${POSTGRES_PASSWORD}
-      PGDATABASE: ${POSTGRES_DB}
+      PGHOST: kurrier_db
+      PGUSER: kurrier
+      PGPASSWORD: kurrier
+      PGDATABASE: kurrier
     volumes:
-      - ./init:/scripts
+      - ./kurrier:/scripts
+
+networks: {kurrier}
