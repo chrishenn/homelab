@@ -14,22 +14,22 @@
 configs:
   kurrier_s3:
     content: |
-      metadata_dir = "/var/lib/garage/meta"  
-      data_dir = "/var/lib/garage/data"      
-      db_engine = "sqlite"      
+      metadata_dir = "/var/lib/garage/meta"
+      data_dir = "/var/lib/garage/data"
+      db_engine = "sqlite"
       replication_factor = 1
-      consistency_mode = "consistent"      
+      consistency_mode = "consistent"
       rpc_bind_addr = "[::]:3901"
       rpc_public_addr = "127.0.0.1:3901"
-      
+
       [s3_api]
       s3_region = "kurrier-s3"
       api_bind_addr = "[::]:3900"
-      
+
       [s3_web]
       bind_addr = "[::]:3902"
       root_domain = "localhost"
-      
+
       [admin]
       api_bind_addr = "[::]:3903"
 
@@ -67,7 +67,7 @@ x-kurrier_env: &kurrier_env
   POSTGRES_DB: kurrier
   DATABASE_URL: postgresql://kurrier:kurrier@kurrier_db:5432/kurrier
   DATABASE_RLS_URL: postgresql://kurrier:kurrier@kurrier_db:5432/kurrier
-        
+
   GARAGE_ACCESS_KEY: 4e0d6c40d99ee1bff7e735671c38f8fda71270cdd51a684f5be34c0a9c60640b
   GARAGE_SECRET_KEY: 7f659e65b2b57022517e87f91c57043b9a8ad9ffde35007ce938e7b159b8e047
   GARAGE_RPC_SECRET: 04e2a799e185759c1dcbd0da6e8284d2be8b3b23dc38c320bbd18dd6aca726fb
@@ -83,7 +83,7 @@ x-kurrier_env: &kurrier_env
   S3_BUCKET: kurrier-s3
   S3_REGION: kurrier-s3
   S3_FORCE_PATH_STYLE: true
-    
+
   GOOGLE_MAIL_CLIENT_ID: ${KURRIER_GOOGLE_CLIENT_ID}
   GOOGLE_MAIL_CLIENT_SECRET: ${KURRIER_GOOGLE_CLIENT_SECRET}
 
@@ -91,7 +91,7 @@ x-kurrier_env: &kurrier_env
   OIDC_GOOGLE_CLIENT_SECRET: ${KURRIER_GOOGLE_CLIENT_SECRET}
 
   OIDC_ISSUER_URL: ${OIDC}
-  OIDC_CLIENT_ID:  ${KURRIER_OIDC_CLIENT}
+  OIDC_CLIENT_ID: ${KURRIER_OIDC_CLIENT}
   OIDC_CLIENT_SECRET: ${KURRIER_OIDC_SECRET}
   OIDC_PROVIDER_NAME: Pocket ID
   OIDC_REQUIRE_VERIFIED_EMAIL: true
@@ -218,7 +218,7 @@ services:
     image: postgres:18-alpine
     container_name: kurrier_migrate
     restart: no
-    entrypoint: [ "/bin/bash", "/scripts/db-bootstrap.sh" ]
+    entrypoint: ['/bin/bash', '/scripts/db-bootstrap.sh']
     environment:
       PGHOST: kurrier_db
       PGUSER: kurrier

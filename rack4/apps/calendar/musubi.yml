@@ -1,6 +1,7 @@
-# pretty nice. google sign-in and calendar integration work, but only on chrome/desktop
+# google sign-in and calendar integration work (chrome desktop only)
 # there's an app, but it can't sign in using google
 # repeat event automation is missing "repeat monthly on the third monday"
+# can't change event color
 
 # sudo chown -R 1000:1000 $DATA/musubi/media
 ---

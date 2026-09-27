@@ -1,7 +1,7 @@
 # this is uncle crunchy, super-og libre styling. Think android 4. There's a dark mode but it don't work fer NUTHIN
 # sudo chown -R 999:999 $DATA/wekan/data
 ---
-services:  
+services:
   wekan:
     profiles: [wekan]
     image: ghcr.io/wekan/wekan:latest
@@ -39,7 +39,7 @@ services:
       pangolin.public-resources.wekan.targets[0].method: http
       pangolin.public-resources.wekan.targets[0].port: 8080
       pangolin.public-resources.wekan.policy: member
-        
+
   wekan_db:
     profiles: [wekan]
     image: debian:bookworm-slim
@@ -94,13 +94,13 @@ services:
           --telemetry=disable \
           --log-level=error
     environment:
-      DO_NOT_TRACK: "1"
+      DO_NOT_TRACK: '1'
       FERRETDB_TELEMETRY: disable
       FERRETDB_RELEASE: latest/download
     volumes:
       - $DATA/wekan/db:/data
     healthcheck:
-      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/27017' 2>/dev/null"]
+      test: ['CMD-SHELL', "bash -c '</dev/tcp/127.0.0.1/27017' 2>/dev/null"]
       interval: 5s
       timeout: 3s
       retries: 40

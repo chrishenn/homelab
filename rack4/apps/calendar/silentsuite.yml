@@ -8,6 +8,9 @@
 # admin login is busted
 # have to type in the server url every time I log in
 # container user id undocumented
+# initial e2e decrypt is slow (~20sec)
+# no event colors
+
 # calendar event repeat rules are missing "monthly, every third monday"
 # can't make an event from the monthly view. Can't create an event by clicking on a day. Can't create an event inline.
 
@@ -20,11 +23,11 @@ configs:
       debug = false
       media_root = /data/media
       static_root = /data/static
-      
+
       [allowed_hosts]
       allowed_host1 = silentsuite.chenn.dev
       allowed_host2 = chenn.dev
-      
+
       [database]
       engine = django.db.backends.postgresql
       host = silentsuite_db
@@ -156,7 +159,7 @@ services:
     volumes:
       - $DATA/silentsuite/data:/data
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import http.client,sys; c=http.client.HTTPConnection('localhost',3735,timeout=5); c.request('GET','/'); sys.exit(0 if c.getresponse().status<500 else 1)\""]
+      test: ['CMD-SHELL', 'python -c "import http.client,sys; c=http.client.HTTPConnection(''localhost'',3735,timeout=5); c.request(''GET'',''/''); sys.exit(0 if c.getresponse().status<500 else 1)"']
       interval: 30s
       timeout: 10s
       retries: 3
