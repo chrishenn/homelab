@@ -1,6 +1,8 @@
 # calendar
 
-These all look nice and are donk suck to use
+These all look nice but are donk butt to boot and use
+
+--
 
 None of them can do everything below:
 
@@ -15,7 +17,7 @@ that's not a deal-breaker, it would be nice.
 
 Interesting to note that google login for any of these will typically only work on chrome, and not zen.
 
-There were a slew of php-based projects, that I will not consider under any conditions.
+There were a slew of php-based projects, that I will not consider under any circumstances.
 
 Additional general problems:
 

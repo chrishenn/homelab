@@ -72,7 +72,7 @@ NOTE
 curl -fsSL https://static.pangolin.net/get-cli.sh | bash
 pangolin login
 pangolin select org --org coop
-pangolin apply blueprint --file $REPO/rack4/policies.yml
+pangolin apply blueprint --file $REPO/vps0/pangolin/policies.yml
 ```
 
 ### bare-metal host newt service install: to provide pangolin ssh access
@@ -129,29 +129,6 @@ sudo systemctl enable --now newt
 sudo systemctl status newt
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 
 ## auth
@@ -159,8 +136,8 @@ sudo systemctl status newt
 This config is for compose services on the same host as your pangolin+traefik+gerbil
 
 Pangolin's traefik must trust headers from the pangolin container. I locked the pangolin ip via docker-compose
-docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pangolin
-172.18.0.2
+`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pangolin`
+`172.18.0.2`
 
 sudo nano docker-compose.yml
 the default network {name: "pangolin", reference: "default"} is defined by pangolin's docker compose

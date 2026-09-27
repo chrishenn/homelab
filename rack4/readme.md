@@ -2,8 +2,23 @@
 
 Deploys to machine: rack4
 
-You have to clone+pull the repo to the remote machine, to sync config files via github. Is it great? No. Do I want to
-deal with a more complicated setup? Also no.
+Here's the general thrust of this setup:
+
+- rack4 deploys this docker-compose stack
+- some of those services depend on files here in rack4 - I sync them from my workstation to rack4 via github
+- projects are provided with all the supporting docker services they would need to run standalone
+  - each project gets its own postgres service, redis service, etc, as needed
+- docker compose profiles are used to make sure all associated (single-project's worth) services are managed together
+  - using the docker compose --profile <profile> flag
+- services with an http ui are registered with a card on a single homepage instance
+  - I had initially separated 'private' and 'public' services with two homepage instances, but gave up at some point
+- web services are exposed through either traefik or newt/pangolin (or both)
+  - traefik-routed services at a <name>.henn.dev domain resolve to a LAN ip
+  - pangolin-routed services at a <name>.chenn.dev domain resolve to a public ip, which is pangolin, hosted on my
+    hostinger vps0 machine
+  - newt is hosted in a container on rack4, automatically reading pangolin resource config from docker labels
+- public services are usually protected by pangolin SSO; some common policies are defined in
+  homelab/vps0/pangolin/policies.yml
 
 ---
 
