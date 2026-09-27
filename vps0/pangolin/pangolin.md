@@ -64,9 +64,97 @@ NOTE
 - domain names with underscores (eg my_serv.chenn.dev) may or may not be kosher - stack overflow is unclear on it
     - the pangolin web UI will not allow this, but the docker blueprint does, and browsers seem to be ok with it
 
+
+### apply pangolin blueprint from cli
+
+```bash
+# see rack4/mise.toml to manage pangolin-cli as a mise tool "github:fosrl/cli"
+curl -fsSL https://static.pangolin.net/get-cli.sh | bash
+pangolin login
+pangolin select org --org coop
+pangolin apply blueprint --file $REPO/rack4/policies.yml
+```
+
+### bare-metal host newt service install: to provide pangolin ssh access
+
+- newt in docker mounts the docker socket and can auto-apply blueprints from container labels, but cannot provide ssh access
+- see also: mise bootstrap file to manage the newt systemd service state:
+  https://github.com/chrishenn/bootstrap/blob/main/home/.config/mise/conf.d/pkg.newt.toml
+
+```bash
+# manual start
+newt \
+--id ${RACK4_NEWT_ID} \
+--secret ${RACK4_NEWT_SECRET} \
+--endpoint ${VPS0_PANGOLIN_ENDPOINT}
+
+# use the pangolin cli to install and manage the service
+sudo pangolin service install site \
+--id ${RACK4_NEWT_ID} \
+--secret ${RACK4_NEWT_SECRET} \
+--endpoint ${VPS0_PANGOLIN_ENDPOINT}
+
+# systemd unit
+sudo mkdir -p /etc/newt
+sudo tee -a /etc/newt/newt.env >/dev/null <<- END
+NEWT_ID=${RACK4_NEWT_ID}
+NEWT_SECRET=${RACK4_NEWT_SECRET}
+PANGOLIN_ENDPOINT=${VPS0_PANGOLIN_ENDPOINT}
+END
+sudo chmod 600 /etc/newt/newt.env
+
+sudo tee -a /etc/systemd/system/newt.service >/dev/null <<- END
+[Unit]
+Description=Newt
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/etc/newt/newt.env
+ExecStart=/usr/local/bin/newt
+Restart=always
+RestartSec=2
+UMask=0077
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+END
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now newt
+sudo systemctl status newt
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
-# auth
+## auth
 
 This config is for compose services on the same host as your pangolin+traefik+gerbil
 

@@ -7,9 +7,9 @@ deal with a more complicated setup? Also no.
 
 ---
 
-# dev
+## dev
 
-#### update
+### update
 
 Pull newer images and recreate all services. As long as the $REGISTRY image is not being updated, this can just be one
 step
@@ -18,7 +18,7 @@ step
 j pullup
 ```
 
-#### update local images
+### update local images
 
 if services depend on images that are built locally, and depend on images that may have been updated, then to update
 our local images we must manually build and push them to the local registry ($REGISTRY)
@@ -37,11 +37,7 @@ j pullup
 docker system prune -a
 ```
 
----
-
-# dev
-
-generate secrets
+### generate secrets
 
 ```bash
 python3 -c "import secrets; print(secrets.token_urlsafe(64))"
@@ -49,59 +45,8 @@ openssl rand -base64 32
 openssl rand -hex 32
 ```
 
-generate vapid keys
+### generate vapid keys
 
 ```bash
 npx web-push generate-vapid-keys
-```
-
-host pangolin install for ssh access
-
-```bash
-newt \
---id ${RACK4_NEWT_ID} \
---secret ${RACK4_NEWT_SECRET} \
---endpoint ${VPS0_PANGOLIN_ENDPOINT}
-
-sudo mkdir -p /etc/newt
-sudo tee -a /etc/newt/newt.env >/dev/null <<- END
-NEWT_ID=${RACK4_NEWT_ID}
-NEWT_SECRET=${RACK4_NEWT_SECRET}
-PANGOLIN_ENDPOINT=${VPS0_PANGOLIN_ENDPOINT}
-END
-sudo chmod 600 /etc/newt/newt.env
-
-sudo tee -a /etc/systemd/system/newt.service >/dev/null <<- END
-[Unit]
-Description=Newt
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-Type=simple
-User=root
-Group=root
-EnvironmentFile=/etc/newt/newt.env
-ExecStart=/usr/local/bin/newt
-Restart=always
-RestartSec=2
-UMask=0077
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-END
-
-sudo systemctl daemon-reload
-sudo systemctl enable --now newt
-sudo systemctl status newt
-```
-
-apply pangolin blueprint from cli
-
-```bash
-curl -fsSL https://static.pangolin.net/get-cli.sh | bash
-pangolin login
-pangolin select org --org coop
-pangolin apply blueprint --file $REPO/rack4/policies.yml
 ```
