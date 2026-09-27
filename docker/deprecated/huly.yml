@@ -1,3 +1,5 @@
+# wow this thing is big, dumb, and ugly. Yucky yucky, no thanks
+
 # sudo rm -rf $DATA/huly
 # mkdir -p $DATA/huly/redpanda $DATA/huly/elastic
 # sudo chown -R 101:101 $DATA/huly/redpanda
@@ -13,11 +15,11 @@ configs:
 
       rpc_bind_addr = "[::]:3901"
       rpc_public_addr = "127.0.0.1:3901"
-      rpc_secret = "3edbcd68eab32e34ec932062ed499f0dd828eda5eec3b3643f7ca03146f7701b"
+      rpc_secret = "$HULY_S3_RPC"
 
       [s3_api]
-      s3_region = "huly"
-      api_bind_addr = "[::]:9000"
+      s3_region = "$HULY_S3_REGION"
+      api_bind_addr = "[::]:3900"
       root_domain = ".s3.garage.localhost"
 
   huly_nginx:
@@ -26,73 +28,73 @@ configs:
           listen 80;
           server_name _;
           client_max_body_size 100M;
-      
+
           location / {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
               proxy_pass http://huly_front:8080;
-          }      
+          }
           location /_accounts {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-      
+
               rewrite ^/_accounts(/.*)$$ $$1 break;
               proxy_pass http://huly_account:3000/;
-          }      
+          }
           location /_collaborator {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-      
+
               proxy_http_version 1.1;
               proxy_set_header Upgrade $$http_upgrade;
               proxy_set_header Connection "upgrade";
               rewrite ^/_collaborator(/.*)$$ $$1 break;
               proxy_pass http://huly_collaborator:3078/;
-          }      
+          }
           location /_transactor {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-              
+
               proxy_http_version 1.1;
               proxy_set_header Upgrade $$http_upgrade;
               proxy_set_header Connection "upgrade";
               rewrite ^/_transactor(/.*)$$ $$1 break;
               proxy_pass http://huly_transactor:3333/;
-          }      
+          }
           location ~ ^/eyJ {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-              
+
               proxy_http_version 1.1;
               proxy_set_header Upgrade $$http_upgrade;
               proxy_set_header Connection "upgrade";
               proxy_pass http://huly_transactor:3333;
-          }      
+          }
           location /_rekoni {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-      
+
               rewrite ^/_rekoni(/.*)$$ $$1 break;
               proxy_pass http://huly_rekoni:4004/;
-          }      
+          }
           location /_stats {
               proxy_set_header Host $$host;
               proxy_set_header X-Real-IP $$remote_addr;
               proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $$scheme;
-      
+
               rewrite ^/_stats(/.*)$$ $$1 break;
               proxy_pass http://huly_stats:4900/;
           }
@@ -103,10 +105,62 @@ x-huly_cmn: &huly_cmn
   restart: unless-stopped
   networks: [huly]
 
+x-huly_env: &huly_env
+  HULY_TOKEN_SECRET: $HULY_SECRET
+  SERVER_SECRET: $HULY_SECRET
+  SECRET: $HULY_SECRET
+
+  HULY_DB_CONNECTION: postgres://huly:huly@huly_db:26257/huly
+  DB_URL: postgres://huly:huly@huly_db:26257/huly
+  ACCOUNTS_DB_URL: postgres://huly:huly@huly_db:26257/huly
+
+  STORAGE_CONFIG: minio|huly_s3:3900?accessKey=$HULY_S3_ACCESS&secretKey=$HULY_S3_KEY&region=$HULY_S3_REGION&bucket=$HULY_S3_BUCKET
+  TRANSACTOR_URL: ws://huly_transactor:3333;wss://$HULY_DOMAIN/_transactor
+  QUEUE_CONFIG: huly_redpanda:9092
+  REKONI_URL: http://huly_rekoni:4004
+  ACCOUNTS_URL: http://huly_account:3000
+  STATS_URL: http://huly_stats:4900
+  FULLTEXT_URL: http://huly_fulltext:4700
+  ELASTIC_URL: http://huly_elastic:9200
+  FULLTEXT_DB_URL: http://huly_elastic:9200
+
+  LAST_NAME_FIRST: true
+  UPLOAD_URL: /files
+  TITLE: Chicken Huly
+  DEFAULT_LANGUAGE: en
+  DESKTOP_UPDATES_CHANNEL: 0.7.426
+  DISABLED_FEATURES: auto-translate,mailboxes
+  MODEL_ENABLED: '*'
+  ELASTIC_INDEX_NAME: huly_storage_index
+  COLLABORATOR_PORT: 3078
+
+x-huly_db: &huly_db
+  COCKROACH_DATABASE: huly
+  COCKROACH_USER: huly
+  COCKROACH_PASSWORD: huly
+
+x-huly_s3: &huly_s3
+  GARAGE_DEFAULT_ACCESS_KEY: $HULY_S3_ACCESS
+  GARAGE_DEFAULT_SECRET_KEY: $HULY_S3_KEY
+  GARAGE_DEFAULT_BUCKET: $HULY_S3_BUCKET
+
+x-huly_redpanda: &huly_redpanda
+  REDPANDA_SUPERUSER_USERNAME: huly
+  REDPANDA_SUPERUSER_PASSWORD: huly
+
+x-huly_elastic: &huly_elastic
+  ELASTICSEARCH_PORT_NUMBER: 9200
+  BITNAMI_DEBUG: true
+  discovery: type=single-node
+  ES_JAVA_OPTS: -Xms1024m -Xmx1024m
+  http.cors.enabled: true
+  http.cors.allow-origin: http://localhost:8082
+
 services:
   huly:
     <<: *huly_cmn
     image: nginx:1.21.3
+    container_name: huly
     configs:
       - source: huly_nginx
         target: /etc/nginx/conf.d/default.conf
@@ -114,25 +168,24 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: huly
-      homepage.icon: huly.png
-      homepage.href: https://huly.chenn.dev
+      homepage.icon: https://github.com/hcengineering/platform/blob/develop/desktop/public/AppIcon.png?raw=true
+      homepage.href: https://$HULY_DOMAIN
       homepage.description: huly
 
       pangolin.public-resources.huly.name: huly
-      pangolin.public-resources.huly.full-domain: huly.chenn.dev
+      pangolin.public-resources.huly.full-domain: $HULY_DOMAIN
       pangolin.public-resources.huly.mode: http
       pangolin.public-resources.huly.targets[0].method: http
       pangolin.public-resources.huly.targets[0].port: 80
       pangolin.public-resources.huly.policy: member
 
-  huly_cockroach:
+  huly_db:
     <<: *huly_cmn
     image: cockroachdb/cockroach:latest-v24.2
+    container_name: huly_db
     command: start-single-node --accept-sql-without-tls
     environment:
-      COCKROACH_DATABASE: huly
-      COCKROACH_USER: huly
-      COCKROACH_PASSWORD: huly
+      <<: *huly_db
     volumes:
       - $DATA/huly/cockroach/data:/cockroach/cockroach-data
       - $DATA/huly/cockroach/certs:/cockroach/certs
@@ -140,39 +193,34 @@ services:
   huly_redpanda:
     <<: *huly_cmn
     image: docker.redpanda.com/redpandadata/redpanda:v24.3.6
-    command:
-      - redpanda
-      - start
-      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
-      - --advertise-kafka-addr internal://huly_redpanda:9092,external://localhost:19092
-      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
-      - --advertise-pandaproxy-addr internal://huly_redpanda:8082,external://localhost:18082
-      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
-      - --rpc-addr huly_redpanda:33145
-      - --advertise-rpc-addr huly_redpanda:33145
-      - --mode dev-container
-      - --smp 1
-      - --default-log-level=info
+    container_name: huly_redpanda
+    command: >
+      redpanda start
+      --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      --advertise-kafka-addr internal://huly_redpanda:9092,external://localhost:19092
+      --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      --advertise-pandaproxy-addr internal://huly_redpanda:8082,external://localhost:18082
+      --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+      --rpc-addr huly_redpanda:33145
+      --advertise-rpc-addr huly_redpanda:33145
+      --mode dev-container --smp 1 --default-log-level=info
     volumes:
       - $DATA/huly/redpanda:/var/lib/redpanda/data
     environment:
-      REDPANDA_SUPERUSER_USERNAME: huly
-      REDPANDA_SUPERUSER_PASSWORD: huly
+      <<: *huly_redpanda
     healthcheck:
       test: rpk cluster info -X user=huly -X pass=huly
       interval: 10s
       timeout: 5s
       retries: 10
-  
-  huly-s3:
+
+  huly_s3:
     profiles: [huly]
     image: dxflrs/garage:v2.3.0
-    container_name: huly-s3
+    container_name: huly_s3
     restart: unless-stopped
     environment:
-      GARAGE_DEFAULT_ACCESS_KEY: hulyhuly
-      GARAGE_DEFAULT_SECRET_KEY: 09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d
-      GARAGE_DEFAULT_BUCKET: huly
+      <<: *huly_s3
     configs:
       - source: huly_s3
         target: /etc/garage.toml
@@ -185,138 +233,99 @@ services:
   huly_elastic:
     <<: *huly_cmn
     image: elasticsearch:7.14.2
+    container_name: huly_elastic
     command: |
       /bin/sh -c "./bin/elasticsearch-plugin list | grep -q ingest-attachment || yes | ./bin/elasticsearch-plugin install --silent ingest-attachment;
       /usr/local/bin/docker-entrypoint.sh eswrapper"
+    environment:
+      <<: *huly_elastic
     volumes:
       - $DATA/huly/elastic:/usr/share/elasticsearch/data
-    environment:
-      - ELASTICSEARCH_PORT_NUMBER=9200
-      - BITNAMI_DEBUG=true
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
-      - http.cors.enabled=true
-      - http.cors.allow-origin=http://localhost:8082
     healthcheck:
       interval: 20s
       retries: 10
       test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
-    
+
   huly_rekoni:
     <<: *huly_cmn
     image: hardcoreeng/rekoni-service:v0.7.426
+    container_name: huly_rekoni
     environment:
-      - SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-    deploy:
-      resources:
-        limits:
-          memory: 500M
+      <<: *huly_env
+    deploy: {resources: {limits: {memory: 500M}}}
 
   huly_transactor:
     <<: *huly_cmn
     image: hardcoreeng/transactor:v0.7.426
+    container_name: huly_transactor
     environment:
-      - SERVER_PORT=3333
-      - SERVER_SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - DB_URL=postgres://huly:huly@huly_cockroach:26257/huly
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
-      - FRONT_URL=http://localhost:8087
-      - ACCOUNTS_URL=http://huly_account:3000
-      - FULLTEXT_URL=http://huly_fulltext:4700
-      - STATS_URL=http://huly_stats:4900
-      - LAST_NAME_FIRST=true
-      - QUEUE_CONFIG=huly_redpanda:9092
+      <<: *huly_env
+      SERVER_PORT: 3333
+      FRONT_URL: http://localhost:8087
 
   huly_collaborator:
     <<: *huly_cmn
     image: hardcoreeng/collaborator:v0.7.426
+    container_name: huly_collaborator
     environment:
-      - COLLABORATOR_PORT=3078
-      - SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - ACCOUNTS_URL=http://huly_account:3000
-      - STATS_URL=http://huly_stats:4900
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
+      <<: *huly_env
 
   huly_account:
     <<: *huly_cmn
     image: hardcoreeng/account:v0.7.426
+    container_name: huly_account
     environment:
-      - SERVER_PORT=3000
-      - SERVER_SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - DB_URL=postgres://huly:huly@huly_cockroach:26257/huly
-      - TRANSACTOR_URL=ws://huly_transactor:3333;wss://huly.chenn.dev/_transactor
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
-      - FRONT_URL=https://huly.chenn.dev
-      - STATS_URL=https://huly.chenn.dev/_stats
-      - MODEL_ENABLED=*
-      - ACCOUNTS_URL=https://huly.chenn.dev/_accounts
-      - ACCOUNT_PORT=3000
-      - QUEUE_CONFIG=huly_redpanda:9092
+      <<: *huly_env
+      SERVER_PORT: 3000
+      FRONT_URL: https://$HULY_DOMAIN
+      STATS_URL: https://$HULY_DOMAIN/_stats
+      ACCOUNTS_URL: https://$HULY_DOMAIN/_accounts
+      ACCOUNT_PORT: 3000
 
   huly_workspace:
     <<: *huly_cmn
     image: hardcoreeng/workspace:v0.7.426
+    container_name: huly_workspace
     environment:
-      - SERVER_SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - DB_URL=postgres://huly:huly@huly_cockroach:26257/huly
-      - TRANSACTOR_URL=ws://huly_transactor:3333;wss://huly.chenn.dev/_transactor
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
-      - MODEL_ENABLED=*
-      - ACCOUNTS_URL=http://huly_account:3000
-      - STATS_URL=http://huly_stats:4900
-      - QUEUE_CONFIG=huly_redpanda:9092
-      - ACCOUNTS_DB_URL=postgres://huly:huly@huly_cockroach:26257/huly
+      <<: *huly_env
 
   huly_front:
     <<: *huly_cmn
     image: hardcoreeng/front:v0.7.426
+    container_name: huly_front
     environment:
-      - SERVER_PORT=8080
-      - SERVER_SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - LOVE_ENDPOINT=https://huly.chenn.dev/_love
-      - ACCOUNTS_URL=https://huly.chenn.dev/_accounts
-      - ACCOUNTS_URL_INTERNAL=http://huly_account:3000
-      - REKONI_URL=https://huly.chenn.dev/_rekoni
-      - CALENDAR_URL=https://huly.chenn.dev/_calendar
-      - GMAIL_URL=https://huly.chenn.dev/_gmail
-      - TELEGRAM_URL=https://huly.chenn.dev/_telegram
-      - STATS_URL=https://huly.chenn.dev/_stats
-      - UPLOAD_URL=/files
-      - ELASTIC_URL=http://huly_elastic:9200
-      - COLLABORATOR_URL=wss://huly.chenn.dev/_collaborator
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
-      - TITLE='Chicken Huly'
-      - DEFAULT_LANGUAGE=en
-      - LAST_NAME_FIRST=true
-      - DESKTOP_UPDATES_CHANNEL=0.7.426
-      - DISABLED_FEATURES=auto-translate,mailboxes
+      <<: *huly_env
+      SERVER_PORT: 8080
+      LOVE_ENDPOINT: https://$HULY_DOMAIN/_love
+      ACCOUNTS_URL: https://$HULY_DOMAIN/_accounts
+      ACCOUNTS_URL_INTERNAL: http://huly_account:3000
+      REKONI_URL: https://$HULY_DOMAIN/_rekoni
+      CALENDAR_URL: https://$HULY_DOMAIN/_calendar
+      GMAIL_URL: https://$HULY_DOMAIN/_gmail
+      TELEGRAM_URL: https://$HULY_DOMAIN/_telegram
+      STATS_URL: https://$HULY_DOMAIN/_stats
+      COLLABORATOR_URL: wss://$HULY_DOMAIN/_collaborator
 
   huly_fulltext:
     <<: *huly_cmn
     image: hardcoreeng/fulltext:v0.7.426
+    container_name: huly_fulltext
     environment:
-      - SERVER_SECRET=68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
-      - DB_URL=postgres://huly:huly@huly_cockroach:26257/huly
-      - FULLTEXT_DB_URL=http://huly_elastic:9200
-      - ELASTIC_INDEX_NAME=huly_storage_index
-      - STORAGE_CONFIG=minio|huly-s3:9000?accessKey=hulyhuly&secretKey=09af8a1c44b49b9f3cd73a148402aef1bed12f58646f8b2e0cc022d8a4ca8e1d&region=huly
-      - REKONI_URL=http://huly_rekoni:4004
-      - ACCOUNTS_URL=http://huly_account:3000
-      - STATS_URL=http://huly_stats:4900
-      - QUEUE_CONFIG=huly_redpanda:9092
+      <<: *huly_env
 
   huly_stats:
     <<: *huly_cmn
     image: hardcoreeng/stats:v0.7.426
+    container_name: huly_stats
     environment:
       PORT: 4900
-      SERVER_SECRET: 68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
+      <<: *huly_env
 
   huly_kvs:
     <<: *huly_cmn
     image: hardcoreeng/hulykvs:v0.7.426
+    container_name: huly_kvs
     environment:
-      HULY_DB_CONNECTION: postgres://huly:huly@huly_cockroach:26257/huly
-      HULY_TOKEN_SECRET: 68fa2c555a8d79d501b968e9b80758e26cd8cba09bf16fe2fabd0ac7154de92b
+      <<: *huly_env
 
 networks: {huly}

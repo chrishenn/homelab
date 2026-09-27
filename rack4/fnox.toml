@@ -40,6 +40,14 @@ KEEPER_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/keeper/encrypti
 KEEPER_GOOGLE_CLIENT_ID = { provider = "op", value = "op://homelab/keeper/google_client_id" }
 KEEPER_GOOGLE_CLIENT_SECRET = { provider = "op", value = "op://homelab/keeper/google_client_secret" }
 
+HULY_DOMAIN = { provider = "op", value = "op://homelab/huly/domain" }
+HULY_S3_KEY = { provider = "op", value = "op://homelab/huly/s3_key" }
+HULY_S3_ACCESS = { provider = "op", value = "op://homelab/huly/s3_access" }
+HULY_S3_RPC = { provider = "op", value = "op://homelab/huly/s3_rpc" }
+HULY_S3_BUCKET = { provider = "op", value = "op://homelab/huly/s3_bucket" }
+HULY_S3_REGION = { provider = "op", value = "op://homelab/huly/s3_region" }
+HULY_SECRET = { provider = "op", value = "op://homelab/huly/secret" }
+
 MUSUBI_GOOGLE_CLIENT_ID = { provider = "op", value = "op://homelab/musubi/google_client_id" }
 MUSUBI_GOOGLE_CLIENT_SECRET = { provider = "op", value = "op://homelab/musubi/google_client_secret" }
 MUSUBI_BETTER_AUTH_SECRET = { provider = "op", value = "op://homelab/musubi/better_auth_secret" }
