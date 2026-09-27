@@ -124,6 +124,10 @@ entryPoints:
     address: :3128
   spice-tls:
     address: :61001
+  udp-853:
+    address: :853/udp
+  tcp-853:
+    address: :853/tcp
 
 certificatesResolvers:
   cf:

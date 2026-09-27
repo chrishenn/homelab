@@ -1,22 +1,27 @@
----
 # C# and shell - it's a bit old-school and crunchy
 # lancache manager stores application state outside of its dedicated directory. NO! BAD!
 # I managed to corrupt some internal state by clicking in the ui, and it fell over permanently
+---
 x-lancache_env: &lancache_env
+  TZ: ${TZ}
   USE_GENERIC_CACHE: true
+  NOSLICE_FALLBACK: true
+
   LANCACHE_IP: ${LANCACHE_IP}
   DNS_BIND_IP: ${LANCACHE_DNS}
+  UPSTREAM_DNS: 1.1.1.1
 
-  UPSTREAM_DNS: ${DNS_VIP}
   CACHE_DISK_SIZE: 1000g
   CACHE_INDEX_SIZE: 500m
-  TZ: ${TZ}
+  CACHE_MAX_AGE: 3560d
+  CACHE_SLICE_SIZE: 1m
+  MIN_FREE_DISK: 10g
 
 services:
   # nslookup lancache.steamcontent.com
   lancache:
     profiles: [lancache]
-    image: lancachenet/monolithic:latest
+    image: ghcr.io/regix1/monolithic:latest
     container_name: lancache
     restart: unless-stopped
     environment:

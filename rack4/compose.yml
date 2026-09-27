@@ -111,6 +111,7 @@ include:
   - apps/infra/pocketid.yml
   - apps/infra/traefik.yml
   - apps/infra/traefik_k.yml
+  - apps/infra/technitium.yml
   #  - apps/infra/watchtower.yml
 
   - apps/job/openresume.yml

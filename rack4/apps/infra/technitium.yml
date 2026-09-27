@@ -1,0 +1,89 @@
+# admin/$PASS
+# reverse proxy network acl: 192.170.0.0/16 (this is the traefik subnet, where traefik lives)
+
+# dig @dns.henn.dev +https google.com
+# dig @dns.henn.dev +https-get google.com
+# dig @dns.henn.dev +quic google.com
+
+# dig +tls +tls-ca +tls-hostname=one.one.one.one @1.1.1.1 google.com
+# dig +tls +tls-ca +tls-hostname=dns.henn.dev @dns.henn.dev google.com
+
+# these won't work behind traefik
+# dig @dns.henn.dev +http-plain google.com
+# dig @http://dns.henn.dev/dns-query +http-plain google.com
+# dig @dns.henn.dev +http-plain-get google.com
+
+# visit https://dns.henn.dev/dns-query in the browser to see the technitium DoH help page
+
+---
+services:
+  technitium:
+    profiles: [technitium]
+    image: docker.io/technitium/dns-server:15.5.1
+    container_name: technitium
+    restart: unless-stopped
+    hostname: rack4-technitium
+    sysctls:
+      net.ipv4.ip_local_port_range: '1024 65535'
+    ports:
+      # serving dns-over-http means resolving dns.henn.dev -> rack4's TRAEFIK_VIP (192.168.1.4)
+      # vanilla dns
+      - "${SVC_IP}:53:53/udp"
+      - "${SVC_IP}:53:53/tcp"
+      - "${TRAEFIK_VIP}:53:53/udp"
+      - "${TRAEFIK_VIP}:53:53/tcp"
+
+      # quic, tls
+#      - "${SVC_IP}:853:853/udp"
+#      - "${SVC_IP}:853:853/tcp"
+#      - "${TRAEFIK_VIP}:853:853/udp"
+#      - "${TRAEFIK_VIP}:853:853/tcp"
+
+      # technitium clustering
+      - "${TRAEFIK_VIP}:53443:53443/tcp"
+      - "${SVC_IP}:53443:53443/tcp"
+
+      # - "67:67/udp" #DHCP service
+    environment:
+      DNS_SERVER_DOMAIN: dns.henn.dev
+      DNS_SERVER_ADMIN_PASSWORD: $PASS
+      DNS_SERVER_PREFER_IPV6: false
+      DNS_SERVER_WEB_SERVICE_HTTP_PORT: 5380
+      DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS: false
+      DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTP: true
+      DNS_SERVER_RECURSION: AllowOnlyForPrivateNetworks
+      DNS_SERVER_ENABLE_BLOCKING: true
+      DNS_SERVER_BLOCK_LIST_URLS:  
+      DNS_SERVER_FORWARDERS: 1.1.1.1,9.9.9.9
+      DNS_SERVER_FORWARDER_PROTOCOL: Udp
+      DNS_SERVER_LOG_USING_LOCAL_TIME: true
+    volumes:
+      - $DATA/technitium/config:/etc/dns
+      - $DATA/technitium/logs:/var/log/technitium/dns
+    healthcheck:
+      test: dig +short +norecurse +retry=0 @127.0.0.1 localhost
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [traefik]
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.technitium-web.rule: Host(`rack4-technitium.henn.dev`)
+      traefik.http.routers.technitium-web.entrypoints: websecure
+      traefik.http.routers.technitium-web.tls.certresolver: cf
+      traefik.http.routers.technitium-web.service: technitium-web
+      traefik.http.services.technitium-web.loadbalancer.server.port: 5380
+
+      traefik.http.routers.technitium-dns.rule: Host(`dns.henn.dev`)
+      traefik.http.routers.technitium-dns.entrypoints: websecure
+      traefik.http.routers.technitium-dns.tls.certresolver: cf
+      traefik.http.routers.technitium-dns.service: technitium-dns
+      traefik.http.services.technitium-dns.loadbalancer.server.port: 80
+
+      traefik.http.routers.technitium-tls.rule: Host(`dns-tls.henn.dev`)
+      traefik.http.routers.technitium-tls.entrypoints: udp-853, tcp-853
+      traefik.http.routers.technitium-tls.tls.certresolver: cf
+      traefik.http.routers.technitium-tls.service: technitium-tls
+      traefik.http.services.technitium-tls.loadbalancer.server.port: 53
