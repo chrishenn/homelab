@@ -97,10 +97,6 @@ rsync message="sync":
 reset:
     just ssh 'cd {{ repo }} && git fetch origin && git reset --hard origin/main'
 
-# secret sync
-ss:
-    fnox sync --provider age --local-file -f
-
 # service-specific recipes
 
 sync_dns:

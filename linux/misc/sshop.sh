@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # https://github.com/crochat/1p-ssh
+# todo: write a comprehensive (fast) op vault backup (in a real language)
 
 function check_dependencies() {
 	local dependencies=("op" "jq" "ssh-add" "ssh-keygen")

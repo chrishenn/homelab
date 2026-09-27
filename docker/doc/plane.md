@@ -1,3 +1,5 @@
+# plane
+
 initial boot still incredibly difficult to debug
 with a working env setup, the processes all came up - then couldn't log in until the migrator exited A MINUTE LATER?!
 WITH NO INDICATION THAT THE SERVER WAS WAITING FOR ANYTHING. NO SUPPORT FOR THE LOG_LEVEL FLAG?!

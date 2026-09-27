@@ -1,6 +1,6 @@
 # docker
 
-references for docker/podman usage from various projects. currently unused.
+References for docker/podman from various projects. None of these are running on any host.
 
 Deploys to platform: docker
 
