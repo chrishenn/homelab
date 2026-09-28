@@ -65,12 +65,12 @@ services:
       traefik.tcp.routers.technitium-tls.tls.certresolver: cf
       traefik.tcp.routers.technitium-tls.service: technitium-tls
       traefik.tcp.services.technitium-tls.loadbalancer.server.port: 53
-      
+
       traefik.tcp.routers.technitium-tcp.rule: HostSNI(`*`)
       traefik.tcp.routers.technitium-tcp.entrypoints: tcp-53
       traefik.tcp.routers.technitium-tcp.service: technitium-tcp
       traefik.tcp.services.technitium-tcp.loadbalancer.server.port: 53
-      
+
       traefik.udp.routers.technitium-udp.entrypoints: udp-53
       traefik.udp.routers.technitium-udp.service: technitium-udp
       traefik.udp.services.technitium-udp.loadbalancer.server.port: 53

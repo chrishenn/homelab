@@ -10,16 +10,16 @@ available as env vars. So sad)
 - tls (with ssl terminated by traefik) did not work until I set `DNS_SERVER_RECURSION: Allow`
 - you need to manually set settings -> optional protocols -> Reverse Proxy Network ACL
   - 192.170.0.0/16,172.16.0.0/12
-  - aka ${TRAEFIK_SUBNET},172.16.0.0/12  
+  - aka ${TRAEFIK_SUBNET},172.16.0.0/12
 
 The plan is to set up multiple technitium servers, clustering them together. The primary node in the cluster gets configuration
-pushed to it, and secondaries will get that config (this is configurable). 
+pushed to it, and secondaries will get that config (this is configurable).
 
 Then, the dhcp server (one.mikrotik.henn.dev) will hand out ips for each node in the cluster, and it's up to the client device
 to detect and failover (how well does this work? unknown).
 
 I've also installed the lancache technitium app (https://github.com/ruifung/LANCache-TDNSApp) to route DNS for lancache
-services. 
+services.
 
 With technitium, I've replaced:
 - lancache_dns
@@ -27,7 +27,7 @@ With technitium, I've replaced:
 - blocky keepalived
 
 The hope is that client-side dns failover will be as good as the keepalived setup. If this all fails, I'll probably go
-straight to K8s for intelligent clustering and service failover. But I'll be sad. 
+straight to K8s for intelligent clustering and service failover. But I'll be sad.
 
 ## upstream records
 
@@ -44,10 +44,10 @@ I've added these records to cloudflare to simplify these services:
 
 ## cache clear
 
-Remember that DNS is a giant PITA. If you make a change to (eg) a cloudflare dns record, in order to see that change 
+Remember that DNS is a giant PITA. If you make a change to (eg) a cloudflare dns record, in order to see that change
 locally you may need to:
 
-- clear the dns cache in technitium web ui 
+- clear the dns cache in technitium web ui
 - `sudo resolvectl flush-caches`
 - clear the dns cache in your browser
 - possibly clear cookies for the affected sites in browser
@@ -57,7 +57,7 @@ in rare cases:
 - `sudo systemctl restart systemd-resolved`
 - manually disconnect and reconnect network in network manager / nmcli
 
-Don't forget that Zen (and probably firefox) has REALLY TERRIBLE DNS CACHING BEHAVIOR. EVEN AFTER MANUALLY CLEARING THE 
+Don't forget that Zen (and probably firefox) has REALLY TERRIBLE DNS CACHING BEHAVIOR. EVEN AFTER MANUALLY CLEARING THE
 DNS CACHE, ZEN CANNOT RESOLVE A HOSTNAME THAT WAS PREVIOUSLY NS_ERROR_UNKNOWN. USE CHROME INSTEAD
 
 ## blocking

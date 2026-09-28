@@ -67,7 +67,7 @@ lancache_dns:
   container_name: lancache_dns
   restart: unless-stopped
   environment:
-    <<: *lancache_env
+  #    <<: *lancache_env
   ports:
     - '${LANCACHE_DNS}:53:53/udp'
     - '${LANCACHE_DNS}:53:53/tcp'
