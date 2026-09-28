@@ -28,7 +28,6 @@ services:
 
       - '${SVC_IP}:853:853/udp' # dns over tls
       - '${SVC_IP}:853:853/tcp' # dns over quic
-
       - '${SVC_IP}:53:53/udp' # dns
       - '${SVC_IP}:53:53/tcp' # dns
 
@@ -45,6 +44,8 @@ services:
 
       - '${TRAEFIK_VIP}:853:853/udp' # dns over tls
       - '${TRAEFIK_VIP}:853:853/tcp' # dns over quic
+      - '${TRAEFIK_VIP}:53:53/udp' # dns
+      - '${TRAEFIK_VIP}:53:53/tcp' # dns
     networks: [traefik]
     labels:
       homepage.group: Infra
