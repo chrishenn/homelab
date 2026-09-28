@@ -102,7 +102,6 @@ include:
   #  - apps/game/cs2.yml
   #  - apps/game/csgo.yml
 
-  - apps/infra/blocky.yml
   - apps/infra/blocky_k.yml
   - apps/infra/homepage.yml
   - apps/infra/lancache.yml
