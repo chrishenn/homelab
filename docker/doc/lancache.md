@@ -21,11 +21,14 @@ steam.cache.lancache.net
 sudo resolvectl flush-caches
 sudo systemctl restart systemd-resolved
 
+sudo apt install -y bind9-dnsutils
+
+nslookup lancache.steamcontent.com
+nslookup worldwide.l3cdn.riotgames.com
 
 dig lancache.steamcontent.com
+dig worldwide.l3cdn.riotgames.com
 
-sudo apt install -y bind9-dnsutils
-nslookup lancache.steamcontent.com
 
 # windows
 ipconfig /flushdns
@@ -53,4 +56,35 @@ todo: use the homelab/dns or homelab/protonmail pulumi stack to set this
   "disabledCaches": [],
   "recordTtl": 3600
 }
+```
+
+## replaced with technitium: lancache_dns
+
+```yml
+lancache_dns:
+  profiles: [lancache]
+  image: lancachenet/lancache-dns:latest
+  container_name: lancache_dns
+  restart: unless-stopped
+  environment:
+    <<: *lancache_env
+  ports:
+    - '${LANCACHE_DNS}:53:53/udp'
+    - '${LANCACHE_DNS}:53:53/tcp'
+```
+
+## replaced with lancache_manager
+
+```yml
+# dc run --rm -it --entrypoint /bin/bash --workdir /app lancache_prefill
+# dc run --rm -it lancache_prefill select-apps
+# dc run --rm -it lancache_prefill prefill
+lancache_prefill:
+    profiles: [lancache]
+    image: tpill90/steam-lancache-prefill:latest
+    container_name: lancache_prefill
+    restart: no
+    network_mode: host
+    volumes:
+      - $DATA/lancache/prefill:/Config
 ```

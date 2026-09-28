@@ -13,20 +13,21 @@ services:
       net.ipv4.ip_local_port_range: '1024 65535'
     ports:
       # vanilla dns
-      - '${SVC_IP}:53:53/udp'
-      - '${SVC_IP}:53:53/tcp'
-      - '${DNS_VIP}:53:53/tcp'
-      - '${DNS_VIP}:53:53/udp'
-      - '${TRAEFIK_VIP}:53:53/udp'
-      - '${TRAEFIK_VIP}:53:53/tcp'
+#      - '${SVC_IP}:53:53/udp'
+#      - '${SVC_IP}:53:53/tcp'
+#      - '${DNS_VIP}:53:53/tcp'
+#      - '${DNS_VIP}:53:53/udp'
+#      - '${TRAEFIK_VIP}:53:53/udp'
+#      - '${TRAEFIK_VIP}:53:53/tcp'
 
       # technitium clustering
-      - '${TRAEFIK_VIP}:53443:53443/tcp'
+#      - '${TRAEFIK_VIP}:53443:53443/tcp'
       - '${SVC_IP}:53443:53443/tcp'
 
+      # dhcp
       # - "67:67/udp"
     environment:
-      DNS_SERVER_DOMAIN: dns.henn.dev
+      DNS_SERVER_DOMAIN: rack4.dns.henn.dev
       DNS_SERVER_ADMIN_PASSWORD: ${PASS}
       DNS_SERVER_WEB_SERVICE_HTTP_PORT: 5380
       DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS: false
@@ -58,31 +59,27 @@ services:
       homepage.description: DNS
 
       pangolin.public-resources.technitium.name: technitium
-      pangolin.public-resources.technitium.full-domain: dash.dns.chenn.dev
+      pangolin.public-resources.technitium.full-domain: rack4-dash-dns.chenn.dev
       pangolin.public-resources.technitium.mode: http
       pangolin.public-resources.technitium.targets[0].method: http
       pangolin.public-resources.technitium.targets[0].port: 5380
       pangolin.public-resources.technitium.policy: member
 
       traefik.enable: true
-      traefik.http.routers.technitium-web.rule: Host(`dash.dns.henn.dev`)
+      traefik.http.routers.technitium-web.rule: Host(`rack4-dash-dns.henn.dev`)
       traefik.http.routers.technitium-web.entrypoints: websecure
       traefik.http.routers.technitium-web.tls.certresolver: cf
       traefik.http.routers.technitium-web.service: technitium-web
       traefik.http.services.technitium-web.loadbalancer.server.port: 5380
 
-      traefik.http.routers.technitium-dns.rule: Host(`dns.henn.dev`) && PathPrefix(`/dns-query`)
+      traefik.http.routers.technitium-dns.rule: Host(`rack4.dns.henn.dev`) && PathPrefix(`/dns-query`)
       traefik.http.routers.technitium-dns.entrypoints: websecure
       traefik.http.routers.technitium-dns.tls.certresolver: cf
       traefik.http.routers.technitium-dns.service: technitium-dns
       traefik.http.services.technitium-dns.loadbalancer.server.port: 80
 
-      traefik.tcp.routers.technitium-tls.rule: HostSNI(`dns.henn.dev`)
+      traefik.tcp.routers.technitium-tls.rule: HostSNI(`rack4.dns.henn.dev`)
       traefik.tcp.routers.technitium-tls.entrypoints: tcp-853
       traefik.tcp.routers.technitium-tls.tls.certresolver: cf
       traefik.tcp.routers.technitium-tls.service: technitium-tls
       traefik.tcp.services.technitium-tls.loadbalancer.server.port: 53
-
-      traefik.udp.routers.technitium-quic.entrypoints: udp-853
-      traefik.udp.routers.technitium-quic.service: technitium-quic
-      traefik.udp.services.technitium-quic.loadbalancer.server.port: 53

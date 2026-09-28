@@ -7,6 +7,17 @@ reverse proxy network acl: 192.170.0.0/16 (this is the traefik subnet, where tra
 - tls (with ssl terminated by traefik) did not work until I set `DNS_SERVER_RECURSION: Allow`
 - serving dns-over-http means resolving dns.henn.dev -> rack4's TRAEFIK_VIP (192.168.1.4)
 
+once clustered, these domains will no longer resolve to the machine's ip:
+- dns.henn.dev
+- dash.rack4.dns.henn.dev
+
+cloudflare responds as expected, but technitium does not recursively query up to cloudflare to resolve these. Also, adding
+102.168.1.4 manually in an A record does not work - probably some mechanism of 'dns zones' that disallows these
+
+the node name rack4.dns.henn.dev does resolve to the expected ip
+
+yeah this 'zone name space' domain is used internally for technitium only. 
+
 ```bash
 dig @dns.henn.dev +https google.com
 dig @dns.henn.dev +https-get google.com
@@ -28,7 +39,7 @@ doggo @https://$url/dns-query --http3 google.com
 doggo @sdns://AgcAAAAAAAAABzEuMC4wLjEAEmNsb3VkZmxhcmUtZG5zLmNvbQovZG5zLXF1ZXJ5 google.com
 
 dig +tls +tls-ca +tls-hostname=one.one.one.one @1.1.1.1 google.com
-dig +tls +tls-ca @dns-tls.henn.dev google.com
+dig +tls +tls-ca @dns.henn.dev google.com
 doggo @tls://dns-tls.henn.dev --tls-hostname=dns-tls.henn.dev google.com
 doggo @tls://dns-tls.henn.dev --skip-hostname-verification google.com
 
