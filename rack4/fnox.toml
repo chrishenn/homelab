@@ -31,6 +31,10 @@ BESZEL_TOKEN = { provider = "op", value = "op://homelab/beszel/token" }
 GENIUS_API_CLIENT = { provider = "op", value = "op://homelab/GENIUS/API_CLIENT" }
 GENIUS_API_SECRET = { provider = "op", value = "op://homelab/GENIUS/API_SECRET" }
 
+FIZZY_KEY = { provider = "op", value = "op://homelab/fizzy/key" }
+FIZZY_VAPID_PUBLIC = { provider = "op", value = "op://homelab/fizzy/vapid_public" }
+FIZZY_VAPID_PRIVATE = { provider = "op", value = "op://homelab/fizzy/vapid_private" }
+
 CALICH_GOOGLE_CLIENT_ID = { provider = "op", value = "op://homelab/calich/google_client_id" }
 CALICH_GOOGLE_CLIENT_SECRET = { provider = "op", value = "op://homelab/calich/google_client_secret" }
 CALICH_KEY = { provider = "op", value = "op://homelab/calich/key" }
@@ -192,6 +196,8 @@ FLUXER_MEDIA_SECRET = { provider = "op", value = "op://homelab/FLUXER/MEDIA" }
 FLUXER_MEDIA_UPLOAD = { provider = "op", value = "op://homelab/FLUXER/UPLOAD" }
 FLUXER_ADMIN_BASE = { provider = "op", value = "op://homelab/FLUXER/ADMIN_BASE" }
 FLUXER_ADMIN_OAUTH = { provider = "op", value = "op://homelab/FLUXER/ADMIN_OAUTH" }
+FLUXER_ERLANG_COOKIE = { provider = "op", value = "op://homelab/FLUXER/ERLANG_COOKIE" }
+FLUXER_ATTACHMENT = { provider = "op", value = "op://homelab/FLUXER/ATTACHMENT" }
 
 STALWART_USER = { provider = "op", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "op", value = "op://homelab/stalwart/password" }
