@@ -211,11 +211,6 @@ services:
       pangolin.public-resources.stoat.mode: http
       pangolin.public-resources.stoat.targets[0].method: http
       pangolin.public-resources.stoat.targets[0].port: 80
-  #      pangolin.public-resources.stoat.policy: member
-  #
-  #      pangolin.public-resources.stoat.rules[0].action: allow
-  #      pangolin.public-resources.stoat.rules[0].match: path
-  #      pangolin.public-resources.stoat.rules[0].value: /livekit/*
 
   stoat_livekit:
     image: ghcr.io/stoatchat/livekit-server:latest

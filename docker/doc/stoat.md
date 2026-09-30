@@ -15,14 +15,15 @@ A real, functional, discord replacement! Assuming that it scales to a couple doz
   - video playback is at the whim of the codec gods - highly variable support on diff browsers and platforms
   - there are third-party clients for android and desktop, which is very cool
 - web client
-  - screen share no worky
+  - voice/video won't connect
 - android app
   - It can't connect to a custom url :(
   - best-case on android is dekstop mode in chrome browser. Not the worst, but not great
 - linux desktop client
-  - can connect to my server with `stoat --force-server=https://stoat.chenn.dev`
+  - can connect to my server with `/var/home/chris/.local/share/soar/bin/stoat --force-server=https://stoat.chenn.dev`
   - limited video codecs supported - probably electron's fault - but playback works for supported vids
   - screen share works, but refreshes are limited, encoding is limited, resolutions are limited
+  - can't handle pangolin auth
 
 ---
 

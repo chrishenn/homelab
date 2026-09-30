@@ -106,6 +106,8 @@ x-fluxer_app_shared: &fluxer_app_shared
 x-fluxer_env: &fluxer_env
   <<: *fluxer_app_shared
 
+  FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: https://fluxer.chenn.dev/media
+
   FLUXER_ENV: production
   NODE_ENV: production
   RUST_LOG: info
@@ -280,7 +282,6 @@ services:
       RUSTFS_SCANNER_MAX_WAIT_SECS: 120
       RUSTFS_SCANNER_CYCLE: 3600
       RUSTFS_SCANNER_CACHE_SAVE_TIMEOUT_SECS: 120
-
       RUSTFS_OBS_LOG_STDOUT_ENABLED: true
       RUSTFS_ACCESS_KEY: fluxer
       RUSTFS_SECRET_KEY: ${FLUXER_S3}
