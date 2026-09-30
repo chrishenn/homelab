@@ -84,6 +84,10 @@ entryPoints:
     address: :7881/tcp
   udp-7882:
     address: :7882/udp
+  tcp-7883:
+    address: :7883/tcp
+  udp-7884:
+    address: :7884/udp
 
   udp-10000:
     address: :10000/udp
