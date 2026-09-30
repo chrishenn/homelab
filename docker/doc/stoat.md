@@ -4,6 +4,25 @@ A real, functional, discord replacement! Assuming that it scales to a couple doz
 
 - running on docker rack4
 - exposed by pangolin on vps0
+- generate an invite code: `j stoat_invite`
+
+---
+
+- general notes
+  - gifbox currently broken everywhere - probably on me
+  - UI lacks polish
+  - pretty damn simple to configure (esp compared to fluxer - what a mess)
+  - video playback is at the whim of the codec gods - highly variable support on diff browsers and platforms
+  - there are third-party clients for android and desktop, which is very cool
+- web client
+  - screen share no worky
+- android app
+  - It can't connect to a custom url :(
+  - best-case on android is dekstop mode in chrome browser. Not the worst, but not great
+- linux desktop client
+  - can connect to my server with `stoat --force-server=https://stoat.chenn.dev`
+  - limited video codecs supported - probably electron's fault - but playback works for supported vids
+  - screen share works, but refreshes are limited, encoding is limited, resolutions are limited
 
 ---
 
@@ -23,12 +42,12 @@ stoat-s3
 livekit.yml
 
 - I set 'use_external_ip: false' and hardcoded the public vps ip VPS0_IP into the livekit start cmd '--node-ip'
-- I bound 40 udp ports 50000-50040 instead of the recommended 100. Just because pangolin config is cumbersome for port
-  ranges
+- I'm using two ports for media instead of the port ranges - livekit doc sucks donkey - can't find any info as to whether
+    this will matter for perf or not
 
 pangolin
 
-- pangolin can reverse proxy each service, but it can't mangle headers on a per-target basis
+- pangolin can reverse proxy each service, but it can't mangle headers on a per-target basis, so caddy is required
 
 secrets
 

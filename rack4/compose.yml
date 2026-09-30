@@ -77,8 +77,8 @@ include:
   - apps/discord/miro.yml
   - apps/discord/owncast.yml
   - apps/discord/fluxer.yml
+  - apps/discord/stoat.yml
   #  - apps/discord/chatto.yml
-  #  - apps/discord/stoat.yml
   #  - apps/discord/vocechat.yml
 
   - apps/doc_server/docmost.yml
