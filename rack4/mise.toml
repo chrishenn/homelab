@@ -13,7 +13,6 @@ crane = "latest"
 cue = "latest"
 glab = { version = "latest", exe = "glab" }
 "cargo:forgejo-cli" = "latest"
-"github:fosrl/cli" = { version = "latest", rename_exe = "pangolin" }
 doggo = "latest"
 
 [env]

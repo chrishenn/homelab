@@ -2,9 +2,19 @@
 
 https://docs.fluxer.app/
 
+My god, they went sicko mode on the documentation. Plus, actually usuable log messages in each container's process?
+Absolutely top-tier work.
+
+sso callback urls. second one is for the android app
+
+- https://fluxer.chenn.dev/auth/sso/callback
+- fluxer://auth/sso/callback
+
 ## todo
 
-- passkey login failed on android app (cors?)
+- [x] passkey login failed on android app
+- [ ] enable fcm firebase push
+- [ ] fix performance issues (video playback to android. May be unfixable due to pangolin tunnel)
 
 ---
 
@@ -60,6 +70,11 @@ fluxer-s3-init:
 ```
 
 notes
+
+setting this, or using the google play app, breaks passkeys as of 09/26/26
+FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: https://fluxer.chenn.dev
+
+---
 
 I found out that these video playback issues affect all messaging apps on chrome/linux on my fedora aurora setup. Zen
 browser works fine.

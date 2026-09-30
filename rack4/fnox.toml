@@ -7,9 +7,6 @@ RACK4_DOCKER_NEWT_SECRET = { provider = "op", value = "op://homelab/pangolin/rac
 RACK4_NEWT_ID = { provider = "op", value = "op://homelab/pangolin/rack4_NEWT_ID" }
 RACK4_NEWT_SECRET = { provider = "op", value = "op://homelab/pangolin/rack4_NEWT_SECRET" }
 
-ARR_PANGOLIN_AUTH_USER = { provider = "op", value = "op://homelab/radarr/auth_user" }
-ARR_PANGOLIN_AUTH_PASS = { provider = "op", value = "op://homelab/radarr/auth_pass" }
-
 SYNCIN_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/syncin/ENCRYPTION_KEY" }
 SYNCIN_TOKEN_ACCESS_SECRET = { provider = "op", value = "op://homelab/syncin/TOKEN_ACCESS_SECRET" }
 SYNCIN_TOKEN_REFRESH_SECRET = { provider = "op", value = "op://homelab/syncin/TOKEN_REFRESH_SECRET" }

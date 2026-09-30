@@ -5,6 +5,7 @@ python.uv_venv_auto = "create|source"
 fnox = "latest"
 pulumi = "latest"
 uv = "latest"
+"github:fosrl/cli" = { version = "latest", rename_exe = "pangolin" }
 
 [env]
 DOCKER_HOST = "ssh://chris@chenn.dev:2200"

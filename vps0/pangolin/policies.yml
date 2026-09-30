@@ -56,3 +56,18 @@ public-policies:
       - action: deny
         match: country
         value: ALL
+
+  canam:
+    name: US and Canada Only
+    sso: false
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: pass
+        match: country
+        value: CA
+      - action: deny
+        match: country
+        value: ALL
