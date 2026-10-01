@@ -5,15 +5,15 @@ node = { version = "latest", lazy = true }
 pnpm = { version = "latest", lazy = true }
 fnox = { version = "latest", lazy = true }
 rclone = { version = "latest", lazy = true }
-"github:rustfs/cli" = { version = "latest", lazy = true, lazy_bins = ["rc"] }
 cargo-binstall = { version = "latest", lazy = true }
 age = { version = "latest", lazy = true }
 regctl = { version = "latest", lazy = true }
 crane = { version = "latest", lazy = true }
 cue = { version = "latest", lazy = true }
 glab = { version = "latest", exe = "glab" }
-"cargo:forgejo-cli" = { version = "latest", lazy = true, lazy_bins = ["forgejo-cli"] }
 doggo = { version = "latest", lazy = true }
+"github:rustfs/cli" = { version = "latest", lazy = true, lazy_bins = ["rc"] }
+"cargo:forgejo-cli" = { version = "latest", lazy = true, lazy_bins = ["forgejo-cli"] }
 
 [env]
 OP_RUN_NO_MASKING = true
