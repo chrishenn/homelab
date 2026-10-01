@@ -61,7 +61,11 @@ services:
       - source: pangolin_cfg
         target: /app/config/config.yml
     volumes:
-      - $DIR_HOST/pangolin:/app/config
+      - $DIR_HOST/apps/pangolin:/app/config
+      # needed?
+#      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/app/config/traefik/traefik_config.yml
+#      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
+
       - $DATA/pangolin/GeoLite2:/app/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/app/config/letsencrypt
       - $DATA/pangolin/db:/app/config/db
@@ -87,7 +91,11 @@ services:
       - --generateAndSaveKeyTo=/var/config/key
       - --remoteConfig=http://pangolin:3001/api/v1/
     volumes:
-      - $DIR_HOST/pangolin:/var/config
+      - $DIR_HOST/apps/pangolin:/var/config
+      # needed?
+#      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/var/config/traefik/traefik_config.yml
+#      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/var/config/traefik/dynamic_config.yml
+
       - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
       - $DATA/pangolin/db:/var/config/db
@@ -125,7 +133,9 @@ services:
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - $DIR_HOST/pangolin/traefik:/etc/traefik:ro
+      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/etc/traefik/traefik_config.yml
+      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/etc/traefik/dynamic_config.yml
+
       - $DATA/pangolin/letsencrypt:/letsencrypt
     healthcheck:
       test: wget -q --tries=1 --spider http://localhost/ping
