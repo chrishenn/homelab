@@ -1,19 +1,19 @@
 [tools]
-just = "latest"
-bun = "latest"
-node = "latest"
-pnpm = "latest"
-fnox = "latest"
-rclone = "latest"
-mc = "latest"
-cargo-binstall = "latest"
-age = "latest"
-regctl = "latest"
-crane = "latest"
-cue = "latest"
+just = { version = "latest", lazy = true }
+bun = { version = "latest", lazy = true }
+node = { version = "latest", lazy = true }
+pnpm = { version = "latest", lazy = true }
+fnox = { version = "latest", lazy = true }
+rclone = { version = "latest", lazy = true }
+mc = { version = "latest", lazy = true }
+cargo-binstall = { version = "latest", lazy = true }
+age = { version = "latest", lazy = true }
+regctl = { version = "latest", lazy = true }
+crane = { version = "latest", lazy = true }
+cue = { version = "latest", lazy = true }
 glab = { version = "latest", exe = "glab" }
-"cargo:forgejo-cli" = "latest"
-doggo = "latest"
+"cargo:forgejo-cli" = { version = "latest", lazy = true }
+doggo = { version = "latest", lazy = true }
 
 [env]
 OP_RUN_NO_MASKING = true
