@@ -3,3 +3,4 @@ GeoLite2/
 letsencrypt/
 logs/
 key
+config.yml
