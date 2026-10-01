@@ -61,8 +61,8 @@ services:
       - source: pangolin_cfg
         target: /app/config/config.yml
     volumes:
+      # yes, these traefik config paths are hardcoded into the pangolin application
       - $DIR_HOST/apps/pangolin:/app/config
-      # needed?
       - $DIR_HOST/apps/pangolin/traefik_static.yml:/app/config/traefik/traefik_config.yml
       - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
 
@@ -92,10 +92,6 @@ services:
       - --remoteConfig=http://pangolin:3001/api/v1/
     volumes:
       - $DIR_HOST/apps/pangolin:/var/config
-      # needed?
-#      - $DIR_HOST/apps/pangolin/traefik_static.yml:/var/config/traefik/traefik_config.yml
-#      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/var/config/traefik/dynamic_config.yml
-
       - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
       - $DATA/pangolin/db:/var/config/db
@@ -135,7 +131,6 @@ services:
     volumes:
       - $DIR_HOST/apps/pangolin/traefik_static.yml:/etc/traefik/traefik_config.yml
       - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/etc/traefik/dynamic_config.yml
-
       - $DATA/pangolin/letsencrypt:/letsencrypt
     healthcheck:
       test: wget -q --tries=1 --spider http://localhost/ping

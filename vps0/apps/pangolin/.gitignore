@@ -4,3 +4,4 @@ letsencrypt/
 logs/
 key
 config.yml
+traefik/
