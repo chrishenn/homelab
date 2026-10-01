@@ -404,7 +404,7 @@ generate_env_vars() {
 
 	# Output ENV vars (only if not already set)
 	cat <<EOF
-# PostgreSQL configuration calculated for: $PG_DB_TYPE workload, ${CPU_COUNT} CPUs, $(to_mb $TOTAL_MEMORY_KB)MB RAM, $PG_STORAGE_TYPE storage
+# PostgreSQL configuration calculated for: $PG_DB_TYPE workload, ${CPU_COUNT} CPUs, $(to_mb "$TOTAL_MEMORY_KB")MB RAM, $PG_STORAGE_TYPE storage
 export PG_MAX_CONNECTIONS=\${PG_MAX_CONNECTIONS:-$max_connections}
 export PG_SHARED_BUFFERS_MB=\${PG_SHARED_BUFFERS_MB:-$(to_mb "$shared_buffers_kb")}
 export PG_EFFECTIVE_CACHE_SIZE_MB=\${PG_EFFECTIVE_CACHE_SIZE_MB:-$(to_mb "$effective_cache_kb")}

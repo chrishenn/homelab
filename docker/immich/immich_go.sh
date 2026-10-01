@@ -5,7 +5,7 @@ shopt -s nullglob
 SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
 
-function install {
+function install_imgo {
 	# https://github.com/simulot/immich-go/releases/latest
 	ver="v0.26.3"
 	url="https://github.com/simulot/immich-go/releases/download/$ver/immich-go_Linux_x86_64.tar.gz"

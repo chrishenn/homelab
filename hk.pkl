@@ -29,7 +29,9 @@ local linters = new Mapping<String, Step> {
   ["detect_private_key"] = Builtins.detect_private_key
 
   //   todo: enable
-  //   ["shellcheck"] = Builtins.shellcheck
+  //   ["shellcheck"] = (Builtins.shellcheck) {
+  //     check = "shellcheck --exclude=SC2102 {{files}}"
+  //   }
   //   ["gitleaks"] = Builtins.gitleaks
   //   ["betterleaks"] = Builtins.betterleaks
   //   ["kingfisher"] = Builtins.kingfisher
