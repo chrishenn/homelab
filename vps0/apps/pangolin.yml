@@ -62,7 +62,7 @@ services:
         target: /app/config/config.yml
     volumes:
       # yes, these traefik config paths are hardcoded into the pangolin application
-      - $DIR_HOST/apps/pangolin:/app/config
+#      - $DIR_HOST/apps/pangolin:/app/config
       - $DIR_HOST/apps/pangolin/traefik_static.yml:/app/config/traefik/traefik_config.yml
       - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
 
@@ -91,7 +91,7 @@ services:
       - --generateAndSaveKeyTo=/var/config/key
       - --remoteConfig=http://pangolin:3001/api/v1/
     volumes:
-      - $DIR_HOST/apps/pangolin:/var/config
+#      - $DIR_HOST/apps/pangolin:/var/config
       - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
       - $DATA/pangolin/db:/var/config/db
@@ -123,15 +123,14 @@ services:
     container_name: traefik
     restart: unless-stopped
     network_mode: service:gerbil
+    command: --configFile=/etc/traefik/traefik_static.yml
     environment:
       CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
-    depends_on: {pangolin: *healthy}
-    command:
-      - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - $DIR_HOST/apps/pangolin/traefik_static.yml:/etc/traefik/traefik_config.yml
-      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/etc/traefik/dynamic_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_static.yml:/etc/traefik/traefik_static.yml
+      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml
       - $DATA/pangolin/letsencrypt:/letsencrypt
+    depends_on: {pangolin: *healthy}
     healthcheck:
       test: wget -q --tries=1 --spider http://localhost/ping
       interval: 10s
