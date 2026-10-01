@@ -12,7 +12,7 @@ regctl = { version = "latest", lazy = true }
 crane = { version = "latest", lazy = true }
 cue = { version = "latest", lazy = true }
 glab = { version = "latest", exe = "glab" }
-"cargo:forgejo-cli" = { version = "latest", lazy = true }
+"cargo:forgejo-cli" = { version = "latest", lazy = true, lazy_bins = ["forgejo-cli"] }
 doggo = { version = "latest", lazy = true }
 
 [env]
