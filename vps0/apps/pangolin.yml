@@ -63,8 +63,8 @@ services:
     volumes:
       - $DIR_HOST/apps/pangolin:/app/config
       # needed?
-#      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/app/config/traefik/traefik_config.yml
-#      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_static.yml:/app/config/traefik/traefik_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/app/config/traefik/dynamic_config.yml
 
       - $DATA/pangolin/GeoLite2:/app/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/app/config/letsencrypt
@@ -93,8 +93,8 @@ services:
     volumes:
       - $DIR_HOST/apps/pangolin:/var/config
       # needed?
-#      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/var/config/traefik/traefik_config.yml
-#      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/var/config/traefik/dynamic_config.yml
+#      - $DIR_HOST/apps/pangolin/traefik_static.yml:/var/config/traefik/traefik_config.yml
+#      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/var/config/traefik/dynamic_config.yml
 
       - $DATA/pangolin/GeoLite2:/var/config/GeoLite2
       - $DATA/pangolin/letsencrypt:/var/config/letsencrypt
@@ -133,8 +133,8 @@ services:
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - $DIR_HOST/apps/pangolin/cfg_traefik_static.yml:/etc/traefik/traefik_config.yml
-      - $DIR_HOST/apps/pangolin/cfg_traefik_dynamic.yml:/etc/traefik/dynamic_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_static.yml:/etc/traefik/traefik_config.yml
+      - $DIR_HOST/apps/pangolin/traefik_dynamic.yml:/etc/traefik/dynamic_config.yml
 
       - $DATA/pangolin/letsencrypt:/letsencrypt
     healthcheck:

@@ -3,4 +3,4 @@ include:
   - apps/beszel.yml
   - apps/rustdesk.yml
   - apps/wg.yml
-  - pangolin/pangolin.yml
+  - apps/pangolin.yml
