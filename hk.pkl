@@ -15,7 +15,6 @@ local linters = new Mapping<String, Step> {
   ["pkl"] = Builtins.pkl
   ["pkl_format"] = Builtins.pkl_format
   ["just"] = Builtins.just_format
-  ["mise"] = Builtins.mise
   ["ryl"] = Builtins.ryl
   ["ryl_markdown"] = Builtins.ryl_markdown
 
