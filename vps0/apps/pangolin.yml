@@ -10,21 +10,21 @@ configs:
       gerbil:
         start_port: 51820
         base_endpoint: pangolin.chenn.dev
-    
+
       app:
         dashboard_url: https://pangolin.chenn.dev
         log_level: warn
         telemetry:
           anonymous_usage: true
-    
+
       branding:
         app_name: Chicky Pangolin
-    
+
       domains:
         domain1:
           base_domain: chenn.dev
           prefer_wildcard_cert: true
-    
+
       server:
         cors:
           origins: [https://pangolin.chenn.dev]
@@ -33,13 +33,13 @@ configs:
           credentials: false
         maxmind_db_path: ./config/GeoLite2/GeoLite2-Country.mmdb
         maxmind_asn_path: ./config/GeoLite2/GeoLite2-ASN.mmdb
-    
+
       flags:
         require_email_verification: true
         disable_signup_without_invite: true
         disable_user_create_org: true
         allow_raw_resources: true
-    
+
       email:
         smtp_host: smtp.protonmail.ch
         smtp_port: 465
