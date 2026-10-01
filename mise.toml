@@ -6,11 +6,11 @@ env_shell_expand = true
 config_roots = [".", "dns", "k3s", "protonmail", "traefik", "vps0"]
 
 [tools]
-"aqua:anordal/shellharden" = { version = "latest", lazy = true }
-"aqua:owenlamont/ryl" = { version = "latest", lazy = true }
-"github:mongodb/kingfisher" = { version = "latest", lazy = true }
-"npm:dclint" = { version = "latest", lazy = true }
-"pipx:mypy" = { version = "latest", lazy = true }
+"aqua:anordal/shellharden" = { version = "latest", lazy = true, lazy_bins = ["shellharden"] }
+"aqua:owenlamont/ryl" = { version = "latest", lazy = true, lazy_bins = ["ryl"] }
+"github:mongodb/kingfisher" = { version = "latest", lazy = true, lazy_bins = ["kingfisher"] }
+"npm:dclint" = { version = "latest", lazy = true, lazy_bins = ["dclint"] }
+"pipx:mypy" = { version = "latest", lazy = true, lazy_bins = ["mypy"] }
 betterleaks = { version = "latest", lazy = true }
 bun = { version = "latest", lazy = true }
 gitleaks = { version = "latest", lazy = true }
