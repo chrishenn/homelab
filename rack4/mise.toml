@@ -5,7 +5,7 @@ node = { version = "latest", lazy = true }
 pnpm = { version = "latest", lazy = true }
 fnox = { version = "latest", lazy = true }
 rclone = { version = "latest", lazy = true }
-mc = { version = "latest", lazy = true }
+"github:rustfs/cli" = { version = "latest", lazy = true, lazy_bins = ["rc"] }
 cargo-binstall = { version = "latest", lazy = true }
 age = { version = "latest", lazy = true }
 regctl = { version = "latest", lazy = true }
