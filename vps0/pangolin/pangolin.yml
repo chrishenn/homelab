@@ -24,6 +24,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 15
+      start_interval: 20s
 
   gerbil:
     profiles: [pangolin]

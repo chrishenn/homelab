@@ -4,7 +4,7 @@ gerbil:
 
 app:
   dashboard_url: https://pangolin.chenn.dev
-  log_level: warning
+  log_level: warn
   telemetry:
     anonymous_usage: true
 
