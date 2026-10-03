@@ -1,0 +1,21 @@
+# .prettierrc
+trailingComma: 'all'
+semi: false
+singleQuote: true
+tabWidth: 4
+printWidth: 120
+useTabs: false
+
+overrides:
+  - files: ['*.yml', '*.yaml']
+    options:
+      tabWidth: 2
+      printWidth: 240
+  - files: ['*.conf']
+    options:
+      tabWidth: 4
+      printWidth: 240
+  # just for reference. Prettier does not format sh files
+  - files: ['*.sh']
+    options:
+      useTabs: true
