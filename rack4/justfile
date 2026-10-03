@@ -126,11 +126,11 @@ git_sync:
     branch="$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')"
     git fetch origin $branch && git reset --hard FETCH_HEAD
 
-wasabi_add:
-    mc alias set wasabi $WASABI_URL $WASABI_ACCESS_KEY $WASABI_SECRET_KEY
+wasabi_alias:
+    rc alias set wasabi $WASABI_URL $WASABI_ACCESS_KEY $WASABI_SECRET_KEY
 
 wasabi:
-    mc du wasabi
+    rc du wasabi --fallback
 
 stoat_invite:
     #!/bin/bash

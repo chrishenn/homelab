@@ -56,7 +56,7 @@ services:
       traefik.http.services.plane_s3.loadbalancer.server.port: 9001
     profiles: [plane]
   plane_s3_setup:
-    image: minio/mc
+    image: rustfs/rc
     container_name: plane_s3_setup
     depends_on:
       plane_s3:
@@ -69,10 +69,10 @@ services:
       - -c
       - |
         set -e
-        until mc alias set rustfs $${AWS_S3_ENDPOINT_URL} $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY}; do
+        until rc alias set rustfs $${AWS_S3_ENDPOINT_URL} $${RUSTFS_ACCESS_KEY} $${RUSTFS_SECRET_KEY}; do
           echo 'waiting to connect to plane_s3'
           sleep 2
         done
-        mc mb rustfs/$${AWS_S3_BUCKET_NAME} --ignore-existing
+        rc mb rustfs/$${AWS_S3_BUCKET_NAME} --ignore-existing
     restart: no
     profiles: [plane]

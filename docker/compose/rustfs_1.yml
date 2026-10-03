@@ -30,7 +30,7 @@ services:
     profiles: [stoat]
 
   stoat-s3_bucket:
-    image: minio/mc
+    image: rustfs/rc
     container_name: stoat-s3_bucket
     depends_on:
       stoat-s3:
@@ -41,11 +41,11 @@ services:
       - -c
       - |
         set -e
-        until mc alias set rustfs http://stoat-s3:9000 minioautumn minioautumn; do
+        until rc alias set rustfs http://stoat-s3:9000 minioautumn minioautumn; do
           echo 'waiting to connect to stoat-s3'
           sleep 2
         done
-        mc mb rustfs/revolt-uploads --ignore-existing
+        rc mb rustfs/revolt-uploads --ignore-existing
     restart: no
     profiles: [stoat]
 
