@@ -1,9 +1,6 @@
 set fallback
 
-alias f := fix
-alias c := check
 alias l := lint
-alias s := sync
 
 slow:
     hk run slow --all
