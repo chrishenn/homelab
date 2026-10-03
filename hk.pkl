@@ -1,14 +1,11 @@
-amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   ["oxfmt"] = Builtins.oxfmt
-
   ["ruff"] = Builtins.ruff
   ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide" }
-  ["dclint"] = Builtins.dclint
-
   ["shfmt"] = Builtins.shfmt
   ["shellharden"] = Builtins.shellharden
 
@@ -55,6 +52,8 @@ local linters = new Mapping<String, Step> {
   //         --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}
   //       """
   //   }
+  // deprecated - abandonware; inserts spaces into inline lists, for some reason
+  // ["dclint"] = Builtins.dclint
 }
 
 local slow = new Mapping<String, Step> {
