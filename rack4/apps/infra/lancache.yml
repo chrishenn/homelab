@@ -26,7 +26,8 @@ services:
       - '${LANCACHE_IP}:80:80/tcp'
       - '${LANCACHE_IP}:443:443/tcp'
 
-  # dc exec lancache_manager cat /data/security/api_key.txt | login api key is also in the docker log
+  # dc exec lancache_manager cat /data/security/api_key.txt
+  # one-time print of admin api key is also in the docker log
   lancache_manager:
     profiles: [lancache]
     image: ghcr.io/regix1/lancache-manager:latest

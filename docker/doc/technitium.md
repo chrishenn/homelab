@@ -86,7 +86,6 @@ dig @dns.henn.dev +https google.com
 dig @dns.henn.dev +https-get google.com
 
 # dig automatically appends the /dns-query, but doggo does not
-
 url="1.1.1.1"
 url="dns.henn.dev"
 doggo @udp://$url google.com

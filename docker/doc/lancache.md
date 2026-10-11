@@ -29,7 +29,6 @@ nslookup worldwide.l3cdn.riotgames.com
 dig lancache.steamcontent.com
 dig worldwide.l3cdn.riotgames.com
 
-
 # windows
 ipconfig /flushdns
 nslookup lancache.steamcontent.com
@@ -40,23 +39,9 @@ nslookup lancache.steamcontent.com
 I added cache.henn.dev as $LANCACHE_IP in cloudflare dns (manually) - 192.168.1.143 right now
 todo: use the homelab/dns or homelab/protonmail pulumi stack to set this
 
-```json
-{
-  "lanCacheEnabled": true,
-  "appPreference": 50,
-  "operatingMode": "Authoritative",
-  "enableDebugLogging": false,
-  "domainsDataUrl": "https://github.com/uklans/cache-domains/archive/refs/heads/master.zip",
-  "domainsDataPathPrefix": "cache-domains-master/",
-  "domainsUpdatePeriodHours": 24,
-  "ignoreClientAddresses": [],
-  "globalCacheAddresses": ["cache.henn.dev"],
-  "cacheAddresses": {},
-  "enabledCaches": [],
-  "disabledCaches": [],
-  "recordTtl": 3600
-}
-```
+see: rack4/infra/technitium/lancache_app.json
+
+---
 
 ## replaced with technitium: lancache_dns
 
