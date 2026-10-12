@@ -1,4 +1,3 @@
-# todo: boot up and use our own stun/turn servers
 ---
 services:
   miro:
