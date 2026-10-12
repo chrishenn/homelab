@@ -43,7 +43,7 @@ services:
       HOST_USERS: '[{"username": "admin", "password": "admin"},{"username": "guest", "password": "guest"}]'
       HOST_MAX_LOGIN_ATTEMPTS: 5
       HOST_MIN_LOGIN_BLOCK_TIME: 15
-      JWT_KEY: mirotalkp2p_jwt_secret
+      JWT_KEY: ${MIRO_KEY}
       JWT_EXP: 1h
 
       # Stun/Turn
@@ -163,7 +163,7 @@ services:
 
       IP_WHITELIST_ENABLED: false # Restrict access by IP (true|false)
       IP_WHITELIST_ALLOWED: 127.0.0.1,::1 # Allowed IPs (comma-separated)
-      JWT_SECRET: mirotalksfu_jwt_secret # Secret for JWT tokens
+      JWT_SECRET: ${MIROS_KEY} # Secret for JWT tokens
       JWT_EXPIRATION: 1h # JWT token expiration (e.g., 1h, 7d)
 
       OIDC_ENABLED: false # Enable OpenID Connect (true|false)

@@ -66,7 +66,7 @@ include:
   - apps/dev_project/vikunja.yml
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
-  - apps/dev_project/fizzy.yml
+  #  - apps/dev_project/fizzy.yml
   #  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
 
@@ -91,10 +91,10 @@ include:
   - apps/doc_server/syncthing.yml
   - apps/doc_server/zipline.yml
 
-  - apps/download/byparr.yml
   - apps/download/qbit.yml
   - apps/download/sab.yml
   - apps/download/solverr.yml
+  #  - apps/download/byparr.yml
 
   - apps/email/mailflow.yml
   - apps/email/stalwart.yml
@@ -184,7 +184,6 @@ include:
   - apps/tool/airtrail.yml
   - apps/tool/dumb.yml
   - apps/tool/fileflow.yml
-  - apps/tool/linkbreeze.yml
   - apps/tool/linkding.yml
   - apps/tool/n8n.yml
   - apps/tool/openspeedtest.yml

@@ -41,7 +41,7 @@ TRAEFIK_SUBNET = "192.170.0.0/16"
 NEWT_GATEWAY = "192.169.0.1"
 NEWT_SUBNET = "192.169.0.0/16"
 
-# SVC_IP is the default bound IP for docker services, including blocky-dns on port 53
+# SVC_IP is the default bound IP for docker services, including dns on port 53
 SVC_IP = "192.168.1.142"
 
 # VPS0_USER
