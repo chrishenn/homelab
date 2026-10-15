@@ -77,7 +77,6 @@ sudo rpm-ostree remove doca-host
 # troubleshooting
 
 ```bash
-cat /proc/fs/nfsd/portlist
 sudo ibstat
 sudo iblinkinfo
 sudo apt install nfstest -y
@@ -236,6 +235,7 @@ all packages/kernels for nfs over rdma client are included ootb
 systemctl status nfs-server
 # Dependency failed for nfs-server.service - NFS server and services
 journalctl -xe
+journalctl -xeu nfs-server
 # /var/mnt/f ntfs dirty flag set and -force not specified
 sudo ntfsfix -d /dev/sda1
 sudo mount -a
