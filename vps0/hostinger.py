@@ -1,7 +1,6 @@
 import os
 from enum import StrEnum, auto
 
-import pulumi
 import pulumi_cloudflare as cf
 import pulumi_hostinger as hs
 from pydantic.dataclasses import dataclass
@@ -106,11 +105,7 @@ class Rule:
 def hostinger_firewall() -> None:
     env_valid("HOSTINGER_API_TOKEN")
     home_ip: str = env_valid("HOME_IP")
-
-    fw = hs.VpsFirewall(resource_name="vps0_firewall_default", name="default")
-    fwid = fw.vps_firewall_id
-
-    pulumi.export("vps0_firewall_default_id", fwid)
+    vps0_id: str = env_valid("VPS0_HOSTINGER_ID")
 
     rules: list[Rule] = [
         # ssh
@@ -144,22 +139,22 @@ def hostinger_firewall() -> None:
         Rule(Proto.tcp, "40000:40100"),
         Rule(Proto.udp, "50000:50100"),
     ]
-
-    for rule in rules:
-        hs.VpsFirewallRule(
-            resource_name=f"fw_default_{rule}",
-            firewall_id=fwid,
+    frules = [
+        hs.VpsFirewallRuleArgs(
             port=rule.port,
             protocol=rule.proto,
             source=rule.source,
             source_detail=rule.source_detail,
         )
-
-    # Unfortunately, the terraform provider only inclues an "action" to sync or activate a firewall (aka group of
-    # firewall rules), which do not appear to translate into pulumi's state-management model - or at least, the auto-gen
-    # that ports the terraform module into pulumi doesn't. Also, the data source to check the firewall's state
-    # (fw.is_synced) does not appear to work.
-    pulumi.log.warn("If firewall rules changed you will need to manually activate and/or sync them")
+        for rule in rules
+    ]
+    fw = hs.VpsFirewall(resource_name="vps0_firewall_default", name="default", rules=frules)
+    hs.VpsFirewallActivation(
+        resource_name="vps0_firewall_default_activate",
+        firewall_id=fw.vps_firewall_id,
+        virtual_machine_id=vps0_id,
+        triggers={"rules": hash(fw.rules)},
+    )
 
 
 if __name__ == "__main__":

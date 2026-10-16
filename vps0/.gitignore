@@ -2,3 +2,4 @@ config_backup/
 pangolin_backup/
 build/
 /.venv/
+/terraform-provider-hostinger/

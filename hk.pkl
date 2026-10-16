@@ -4,8 +4,8 @@ import "package://github.com/jdx/hk/releases/download/v2.6.0/hk@2.6.0#/Builtins.
 
 local linters = new Mapping<String, Step> {
   ["oxfmt"] = Builtins.oxfmt
+  ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide"; stomp = false }
   ["ruff"] = Builtins.ruff
-  ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide" }
   ["shfmt"] = Builtins.shfmt
   ["shellharden"] = Builtins.shellharden
 

@@ -9,3 +9,6 @@ VPS0_BESZEL_KEY = { provider = "op", value = "op://homelab/vps0/beszel_key" }
 VPS0_BESZEL_TOKEN = { provider = "op", value = "op://homelab/vps0/beszel_token" }
 VPS0_BESZEL_HUB_URL = { provider = "op", value = "op://homelab/vps0/beszel_hub_url" }
 VPS0_CHRIS_PASS = { provider = "op", value = "op://homelab/vps0/chris_pass" }
+
+HOME_IP = { provider = "op", value = "op://homelab/home_ip/ip" }
+VPS0_HOSTINGER_ID = { provider = "op", value = "op://homelab/vps0/vps_id" }
