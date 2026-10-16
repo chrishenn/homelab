@@ -38,18 +38,24 @@ just pullup c beszel_agent rustdesk_hbbs rustdesk_hbbr stalwart_wg_exit
 just pullup
 ```
 
+find a vps id
+
+In hostinger dashboard, go to vps -> manage. The Vps ID is in the url.
+
 add a terraform plugin
 
 ```bash
-pulumi package add terraform-provider registry.terraform.io/comradesharf/hostinger
+# need to build from main to get new firewall stuff. import from terraform registry when it's released
+git clone https://github.com/hostinger/terraform-provider-hostinger
+pushd terraform-provider-hostinger
+go build -o terraform-provider-hostinger
+popd
+pulumi package add terraform-provider ./terraform-provider-hostinger/terraform-provider-hostinger
 ```
 
 ---
 
 ## todo
-
-- pulumi has a hostinger provider - use that to configure the VPS, rather than the bash snippets used here
-- set up docker host with secure remote access from local docker cli
 
 ---
 

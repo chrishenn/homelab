@@ -1,31 +1,31 @@
-[rules]
-quoted-strings = "disable"
+[lint.rules]
 brackets = "enable"
 colons = "enable"
 commas = "enable"
 comments-indentation = "enable"
 hyphens = "enable"
 new-line-at-end-of-file = "enable"
+quoted-strings = "disable"
 trailing-spaces = "enable"
 
-[rules.braces]
-min-spaces-inside = 0
+[lint.rules.braces]
 max-spaces-inside = 1
-min-spaces-inside-empty = 0
 max-spaces-inside-empty = 0
+min-spaces-inside = 0
+min-spaces-inside-empty = 0
 
-[rules.comments]
+[lint.rules.comments]
 min-spaces-from-content = 1
 
-[rules.new-lines]
-type = "unix"
-
-[rules.empty-lines]
+[lint.rules.empty-lines]
 max = 2
 
-[rules.indentation]
-spaces = 2
+[lint.rules.indentation]
 indent-sequences = true
+spaces = 2
 
-[rules.line-length]
+[lint.rules.line-length]
 max = 240
+
+[lint.rules.new-lines]
+type = "unix"

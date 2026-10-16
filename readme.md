@@ -55,8 +55,15 @@ mise x -C rack3 -c 'ty check . --config-file ../ty.toml'
 when moving, your public home ip will need to change in the following places:
 
 - hostinger dashboard, whitelisting the ips that can ssh into the vps
-- nzbgeek ip whitelist
 
+```bash
+pushd vps0
+pulumi up -y
+popd
+```
+
+- nzbgeek ip whitelist
+    - https://nzbgeek.info/logon.php
 ---
 
 # todo

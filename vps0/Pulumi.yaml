@@ -9,4 +9,4 @@ packages:
     source: terraform-provider
     version: 1.3.0
     parameters:
-      - registry.terraform.io/comradesharf/hostinger
+      - ./terraform-provider-hostinger/terraform-provider-hostinger
