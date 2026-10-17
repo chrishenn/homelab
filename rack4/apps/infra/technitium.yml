@@ -2,7 +2,7 @@
 services:
   technitium:
     profiles: [technitium]
-    image: technitium/dns-server:15.5.1
+    image: technitium/dns-server:latest
     container_name: technitium
     restart: unless-stopped
     sysctls:
@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Technitium Dashboard
-      homepage.icon: technitium.png
+      homepage.icon: https://icons.chenn.dev/technitium.png
       homepage.href: https://dash.dns.chenn.dev
       homepage.description: DNS
 

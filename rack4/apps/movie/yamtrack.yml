@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Yamtrack
-      homepage.icon: yamtrack.png
+      homepage.icon: https://icons.chenn.dev/yamtrack.png
       homepage.href: https://yamtrack.chenn.dev
       homepage.description: Media Manager
 

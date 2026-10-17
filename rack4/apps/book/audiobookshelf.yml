@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: AudioBookshelf
-      homepage.icon: audiobookshelf.png
+      homepage.icon: https://icons.chenn.dev/audiobookshelf.png
       homepage.href: https://audiobookshelf.chenn.dev
       homepage.description: Audiobook Server
 

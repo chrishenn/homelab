@@ -35,7 +35,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Rally
-      homepage.icon: rallly.png
+      homepage.icon: https://icons.chenn.dev/rallly.png
       homepage.href: https://rally.chenn.dev
       homepage.description: Group Event Scheduler
 

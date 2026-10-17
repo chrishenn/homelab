@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Notify
       homepage.name: Apprise
-      homepage.icon: apprise.png
+      homepage.icon: https://icons.chenn.dev/apprise.png
       homepage.href: https://apprise.chenn.dev
       homepage.description: Notification Server
 

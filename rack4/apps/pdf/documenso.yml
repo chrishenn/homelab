@@ -65,7 +65,7 @@ services:
     labels:
       homepage.group: PDF Tools
       homepage.name: Documenso
-      homepage.icon: documenso.png
+      homepage.icon: https://icons.chenn.dev/documenso.png
       homepage.href: https://documenso.chenn.dev
       homepage.description: Free Docusign
 

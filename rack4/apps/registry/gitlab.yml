@@ -115,7 +115,7 @@ services:
     labels:
       homepage.group: Registry and Code Forge
       homepage.name: Gitlab
-      homepage.icon: gitlab.png
+      homepage.icon: https://icons.chenn.dev/gitlab.png
       homepage.href: https://gitlab.chenn.dev
       homepage.description: Gitlab
 

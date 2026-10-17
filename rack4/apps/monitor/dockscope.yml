@@ -12,7 +12,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Dockscope
-      homepage.icon: docker-engine.png
+      homepage.icon: https://icons.chenn.dev/docker-engine.png
       homepage.href: https://dockscope.chenn.dev
       homepage.description: 3D Docker Visualizer
 

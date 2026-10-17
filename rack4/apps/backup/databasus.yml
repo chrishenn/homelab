@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: Backup
       homepage.name: Databasus
-      homepage.icon: databasus.png
+      homepage.icon: https://icons.chenn.dev/databasus.png
       homepage.href: https://databasus.chenn.dev
       homepage.description: Database Backup GUI
 

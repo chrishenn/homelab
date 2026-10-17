@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Archivebox
-      homepage.icon: archivebox.png
+      homepage.icon: https://icons.chenn.dev/archivebox.png
       homepage.href: https://archive.chenn.dev
       homepage.description: Web Archive
 
@@ -60,7 +60,7 @@ services:
 #    labels:
 #      homepage.group: General Media
 #      homepage.name: Archivebox VNC
-#      homepage.icon: archivebox.png
+#      homepage.icon: https://icons.chenn.dev/archivebox.png
 #      homepage.href: https://archive_vnc.chenn.dev
 #      homepage.description: Web Archive Viewer
 #
@@ -94,7 +94,7 @@ services:
 #    labels:
 #      homepage.group: General Media
 #      homepage.name: Archivebox PyWB
-#      homepage.icon: archivebox.png
+#      homepage.icon: https://icons.chenn.dev/archivebox.png
 #      homepage.href: https://archive_pywb.chenn.dev
 #      homepage.description: Web Archive Recorder
 #

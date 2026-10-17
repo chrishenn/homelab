@@ -51,7 +51,7 @@ services:
     labels:
       homepage.group: Slackalikes
       homepage.name: Mattermost
-      homepage.icon: mattermost.png
+      homepage.icon: https://icons.chenn.dev/mattermost.png
       homepage.href: https://mattermost.chenn.dev
       homepage.description: Slack Clone
 

@@ -23,7 +23,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: fizzy
-      homepage.icon: fizzy.png
+      homepage.icon: https://icons.chenn.dev/fizzy.png
       homepage.href: https://fizzy.chenn.dev
       homepage.description: Kanban
 

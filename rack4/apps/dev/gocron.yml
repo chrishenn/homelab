@@ -39,7 +39,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Go Cron
-      homepage.icon: chronograf.png
+      homepage.icon: https://icons.chenn.dev/chronograf.png
       homepage.href: https://gocron.chenn.dev
       homepage.description: Cron UI
 

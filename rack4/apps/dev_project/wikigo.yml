@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Wiki Go
-      homepage.icon: wiki-go.png
+      homepage.icon: https://icons.chenn.dev/wiki-go.png
       homepage.href: https://wikigo.chenn.dev
       homepage.description: Simple Wiki
 

@@ -57,7 +57,7 @@ services:
     labels:
       homepage.group: Registry and Code Forge
       homepage.name: Forgejo
-      homepage.icon: forgejo.png
+      homepage.icon: https://icons.chenn.dev/forgejo.png
       homepage.href: https://forgejo.henn.dev
       homepage.description: Git Server
 

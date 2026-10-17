@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Feishin
-      homepage.icon: feishin.png
+      homepage.icon: https://icons.chenn.dev/feishin.png
       homepage.href: https://feishin.chenn.dev
       homepage.description: Navidrome Frontend
 

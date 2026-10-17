@@ -1,0 +1,48 @@
+# git clone --depth 1 --branch main https://github.com/selfhst/icons.git $DATA/icons
+---
+services:
+  icons:
+    profiles: [icons]
+    image: ghcr.io/selfhst/icons:latest
+    container_name: icons
+    restart: unless-stopped
+    environment:
+      ICON_SOURCE: hybrid
+      REMOTE_URL: https://cdn.jsdelivr.net/gh/selfhst/icons@main
+      CACHE_SIZE: 1000
+      CACHE_TTL: 604800
+      CORS_ALLOWED_ORIGINS: https://homepage.chenn.dev,https://homepage.henn.dev
+    volumes:
+      - $DATA/icons/svg:/app/icons/svg:ro
+      - $DATA/icons/png:/app/icons/png:ro
+      - $DATA/icons/webp:/app/icons/webp:ro
+      - $DATA/icons/avif:/app/icons/avif:ro
+      - $DATA/icons/ico:/app/icons/ico:ro
+      - $DATA/icons/custom:/app/icons/custom:ro
+    healthcheck:
+      test: ['CMD', '/server', '-healthcheck']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks: [traefik, newt]
+    labels:
+      homepage.group: Infra
+      homepage.name: Icons
+      homepage.icon: https://icons.chenn.dev/icons.png
+      homepage.href: https://icons.chenn.dev
+      homepage.description: Icons
+
+      traefik.enable: true
+      traefik.http.routers.icons.rule: Host(`icons.henn.dev`)
+      traefik.http.routers.icons.entrypoints: websecure
+      traefik.http.routers.icons.middlewares: hdrs@file
+      traefik.http.routers.icons.tls.certresolver: cf
+      traefik.http.services.icons.loadbalancer.server.port: 4050
+
+      pangolin.public-resources.icons.name: icons
+      pangolin.public-resources.icons.full-domain: icons.chenn.dev
+      pangolin.public-resources.icons.mode: http
+      pangolin.public-resources.icons.targets[0].method: http
+      pangolin.public-resources.icons.targets[0].port: 4050
+#      pangolin.public-resources.icons.policy: member

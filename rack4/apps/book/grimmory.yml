@@ -27,7 +27,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Grimmory
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/grimmory.svg
+      homepage.icon: https://icons.chenn.dev/grimmory.png
       homepage.href: https://grimmory.chenn.dev
       homepage.description: Book Server
 

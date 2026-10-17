@@ -78,7 +78,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Netbox
-      homepage.icon: netbox.png
+      homepage.icon: https://icons.chenn.dev/netbox.png
       homepage.href: https://netbox.chenn.dev
       homepage.description: Network Automation
 

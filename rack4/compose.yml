@@ -103,15 +103,14 @@ include:
   #  - apps/game/cs2.yml
   #  - apps/game/csgo.yml
 
-  - apps/infra/blocky_k.yml
   - apps/infra/homepage.yml
   - apps/infra/lancache.yml
   - apps/infra/netboot.yml
   - apps/infra/newt.yml
   - apps/infra/pocketid.yml
   - apps/infra/traefik.yml
-  - apps/infra/traefik_k.yml
   - apps/infra/technitium.yml
+  - apps/infra/icons.yml
   #  - apps/infra/watchtower.yml
 
   - apps/job/openresume.yml

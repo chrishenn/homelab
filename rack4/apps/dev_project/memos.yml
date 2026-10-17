@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Memos
-      homepage.icon: memos.png
+      homepage.icon: https://icons.chenn.dev/memos.png
       homepage.href: https://memos.chenn.dev
       homepage.description: Simple Lists
 

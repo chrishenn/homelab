@@ -43,7 +43,7 @@ services:
 
       Prefill__NetworkMode: host
       Prefill__LancacheIp: ${LANCACHE_IP}
-      Prefill__LancacheDnsIp: ${LANCACHE_DNS}
+      Prefill__LancacheDnsIp: ${SVC_IP}
 
       POSTGRES_MODE: embedded
       POSTGRES_USER: lancache
@@ -57,7 +57,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Lancache Manager
-      homepage.icon: lancache.png
+      homepage.icon: https://icons.chenn.dev/lancache.png
       homepage.href: https://lancache.chenn.dev
       homepage.description: Lancache Manager GUI
 

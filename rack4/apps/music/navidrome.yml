@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Navidrome
-      homepage.icon: navidrome.png
+      homepage.icon: https://icons.chenn.dev/navidrome.png
       homepage.href: https://navidrome.chenn.dev
       homepage.description: Music Server
 

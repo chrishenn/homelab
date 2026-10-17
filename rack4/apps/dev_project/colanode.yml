@@ -99,7 +99,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Colanode
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/colanode.png
+      homepage.icon: https://icons.chenn.dev/colanode.png
       homepage.href: https://colanode.chenn.dev
       homepage.description: Slack with Wiki
 

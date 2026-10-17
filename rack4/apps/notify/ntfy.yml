@@ -34,7 +34,7 @@ services:
     labels:
       homepage.group: Notify
       homepage.name: Ntfy
-      homepage.icon: ntfy.png
+      homepage.icon: https://icons.chenn.dev/ntfy.png
       homepage.href: https://ntfy.chenn.dev
       homepage.description: Notifications Server
 

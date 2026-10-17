@@ -60,7 +60,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Outline
-      homepage.icon: outline.png
+      homepage.icon: https://icons.chenn.dev/outline.png
       homepage.href: https://outline.chenn.dev
       homepage.description: Documentation Wiki
 

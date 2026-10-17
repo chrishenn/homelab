@@ -70,7 +70,7 @@ services:
     labels:
       homepage.group: Photos
       homepage.name: Dawarich
-      homepage.icon: dawarich.png
+      homepage.icon: https://icons.chenn.dev/dawarich.png
       homepage.href: https://dawarich.chenn.dev
       homepage.description: Geolocation for Immich
 

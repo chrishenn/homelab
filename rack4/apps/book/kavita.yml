@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Kavita
-      homepage.icon: kavita.png
+      homepage.icon: https://icons.chenn.dev/kavita.png
       homepage.href: https://kavita.chenn.dev
       homepage.description: Book Server
 

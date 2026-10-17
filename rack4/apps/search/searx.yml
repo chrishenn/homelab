@@ -23,7 +23,7 @@ services:
     labels:
       homepage.group: Search
       homepage.name: Searx
-      homepage.icon: searxng.png
+      homepage.icon: https://icons.chenn.dev/searxng.png
       homepage.href: https://searx.chenn.dev
       homepage.description: Private Google
 

@@ -54,7 +54,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Oxicloud
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/oxicloud.png
+      homepage.icon: https://icons.chenn.dev/oxicloud.png
       homepage.href: https://oxicloud.chenn.dev
       homepage.description: Rust File Server
 

@@ -52,7 +52,7 @@ services:
     labels:
       homepage.group: PDF Tools
       homepage.name: Overleaf
-      homepage.icon: overleaf.png
+      homepage.icon: https://icons.chenn.dev/overleaf.png
       homepage.href: https://overleaf.chenn.dev
       homepage.description: Latex PDF Compiler
 

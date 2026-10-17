@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Aurral
-      homepage.icon: aurral.png
+      homepage.icon: https://icons.chenn.dev/aurral.png
       homepage.href: https://aurral.chenn.dev
       homepage.description: Music Recommendations
 

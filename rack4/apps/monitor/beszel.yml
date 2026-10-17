@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Beszel
-      homepage.icon: beszel.png
+      homepage.icon: https://icons.chenn.dev/beszel.png
       homepage.href: https://beszel.chenn.dev
       homepage.description: Server Stats
 

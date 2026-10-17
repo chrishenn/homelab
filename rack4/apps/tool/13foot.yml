@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: 13ft
-      homepage.icon: 13ft.png
+      homepage.icon: https://icons.chenn.dev/13ft.png
       homepage.href: https://13ft.chenn.dev
       homepage.description: Paywall Defeat
 

@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: AI
       homepage.name: Speach
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/speaches.svg
+      homepage.icon: https://icons.chenn.dev/speaches.png
       homepage.href: https://speach.henn.dev
       homepage.description: AI TTS/STT
 

@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Opencut
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/opencut.png
+      homepage.icon: https://icons.chenn.dev/opencut.png
       homepage.href: https://opencut.chenn.dev
       homepage.description: Video Editor
 

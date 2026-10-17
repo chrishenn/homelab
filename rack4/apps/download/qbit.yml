@@ -17,7 +17,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Qbittorrent (VPN)
-      homepage.icon: qbittorrent.png
+      homepage.icon: https://icons.chenn.dev/qbittorrent.png
       homepage.href: https://vpn.qbit.chenn.dev
       homepage.description: VPN Torrents
 
@@ -45,7 +45,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Gluetun
-      homepage.icon: gluetun.png
+      homepage.icon: https://icons.chenn.dev/gluetun.png
       homepage.description: Qbittorrent VPN Tunnel
 
       traefik.enable: true
@@ -95,7 +95,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: QBittorrent (No VPN)
-      homepage.icon: qbittorrent.png
+      homepage.icon: https://icons.chenn.dev/qbittorrent.png
       homepage.href: https://novpn.qbit.chenn.dev
       homepage.description: Torrent Client
 
@@ -137,7 +137,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Qui
-      homepage.icon: qui.png
+      homepage.icon: https://icons.chenn.dev/qui.png
       homepage.href: https://qui.chenn.dev
       homepage.description: Bittorrent GUI
 

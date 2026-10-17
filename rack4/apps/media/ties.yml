@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: ties
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/ties-link-sharing.png
+      homepage.icon: https://icons.chenn.dev/ties-link-sharing.png
       homepage.href: https://ties.chenn.dev
       homepage.description: Bookmark Manager
 

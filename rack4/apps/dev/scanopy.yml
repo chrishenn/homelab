@@ -25,7 +25,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Scanopy
-      homepage.icon: scanopy.png
+      homepage.icon: https://icons.chenn.dev/scanopy.png
       homepage.href: https://scanopy.chenn.dev
       homepage.description: Network Mapper
 

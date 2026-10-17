@@ -22,7 +22,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Watchtower
-      homepage.icon: watchtower.png
+      homepage.icon: https://icons.chenn.dev/watchtower.png
       homepage.description: Watchtower Container Updater
       homepage.widget.type: watchtower
       homepage.widget.url: http://watchtower:8080

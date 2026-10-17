@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Syncthing
-      homepage.icon: syncthing.png
+      homepage.icon: https://icons.chenn.dev/syncthing.png
       homepage.href: https://syncthing.chenn.dev
       homepage.description: File Sync
 

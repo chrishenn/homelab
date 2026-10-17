@@ -30,27 +30,11 @@ services:
       - '${SVC_IP}:853:853/tcp' # dns over quic
       - '${SVC_IP}:53:53/udp' # dns
       - '${SVC_IP}:53:53/tcp' # dns
-
-      - '${TRAEFIK_VIP}:80:80' # http
-      - '${TRAEFIK_VIP}:8080:8080' # traefik internal entrypoint
-      - '${TRAEFIK_VIP}:443:443' # https
-      - '${TRAEFIK_VIP}:22:22' # ssh
-      - '${TRAEFIK_VIP}:2222:2222' # ssh
-      - '${TRAEFIK_VIP}:2424:2424' # ssh
-      - '${TRAEFIK_VIP}:1935:1935' # rtmp
-      - '${TRAEFIK_VIP}:3128:3128' # spice
-      - '${TRAEFIK_VIP}:61001:61001' # spice-tls
-      - '${TRAEFIK_VIP}:10000:10000' # livekit-ish
-
-      - '${TRAEFIK_VIP}:853:853/udp' # dns over tls
-      - '${TRAEFIK_VIP}:853:853/tcp' # dns over quic
-      - '${TRAEFIK_VIP}:53:53/udp' # dns
-      - '${TRAEFIK_VIP}:53:53/tcp' # dns
     networks: [traefik]
     labels:
       homepage.group: Infra
       homepage.name: Traefik-Docker
-      homepage.icon: traefik.png
+      homepage.icon: https://icons.chenn.dev/traefik.png
       homepage.href: https://docker-traefik.henn.dev
       homepage.description: Docker Traefik Gui (Rack 4)
 
@@ -63,7 +47,7 @@ services:
 
 networks:
   traefik:
-    # the traefik instance expects this network name, and the default would be "project-traefik" if now spec'd here
+    # the traefik instance expects this network name, and the default would be "project-traefik" if not spec'd here
     name: traefik
     ipam:
       config:

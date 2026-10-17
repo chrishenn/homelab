@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Photos
       homepage.name: Foldergram
-      homepage.icon: instagram.png
+      homepage.icon: https://icons.chenn.dev/instagram.png
       homepage.href: https://foldergram.chenn.dev
       homepage.description: Private Instagram
 

@@ -45,7 +45,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: PocketID
-      homepage.icon: pocket-id.png
+      homepage.icon: https://icons.chenn.dev/pocket-id.png
       homepage.href: https://pocketid.chenn.dev
       homepage.description: OIDC Server
 

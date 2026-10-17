@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Metube
-      homepage.icon: metube.png
+      homepage.icon: https://icons.chenn.dev/metube.png
       homepage.href: https://metube.chenn.dev
       homepage.description: Youtube Downloader
 

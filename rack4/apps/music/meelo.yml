@@ -127,7 +127,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Meelo
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/meelo.png
+      homepage.icon: https://icons.chenn.dev/meelo.png
       homepage.href: https://meelo.chenn.dev
       homepage.description: Music Server
 

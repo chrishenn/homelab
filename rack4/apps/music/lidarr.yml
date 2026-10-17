@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Lidarr
-      homepage.icon: lidarr.png
+      homepage.icon: https://icons.chenn.dev/lidarr.png
       homepage.href: https://lidarr.chenn.dev
       homepage.description: Music Manager
 

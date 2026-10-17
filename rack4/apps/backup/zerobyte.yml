@@ -22,7 +22,7 @@ services:
     labels:
       homepage.group: Backup
       homepage.name: Zerobyte
-      homepage.icon: zerobyte.png
+      homepage.icon: https://icons.chenn.dev/zerobyte.png
       homepage.href: https://zerobyte.chenn.dev
       homepage.description: Backup Automation
 

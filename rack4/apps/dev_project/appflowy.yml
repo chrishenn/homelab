@@ -143,7 +143,7 @@ services:
 
       homepage.group: Project Management
       homepage.name: Appflowy
-      homepage.icon: appflowy.png
+      homepage.icon: https://icons.chenn.dev/appflowy.png
       homepage.href: https://appflowy.chenn.dev
       homepage.description: Linear Clone
 

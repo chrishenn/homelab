@@ -40,7 +40,7 @@ services:
     labels:
       homepage.group: Photos
       homepage.name: Immich
-      homepage.icon: immich.png
+      homepage.icon: https://icons.chenn.dev/immich.png
       homepage.href: https://immich.chenn.dev
       homepage.description: Private Google Photos
 

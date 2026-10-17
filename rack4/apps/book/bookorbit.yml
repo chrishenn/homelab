@@ -30,7 +30,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Bookorbit
-      homepage.icon: bookorbit.png
+      homepage.icon: https://icons.chenn.dev/bookorbit.png
       homepage.href: https://bookorbit.chenn.dev
       homepage.description: Book Server
 

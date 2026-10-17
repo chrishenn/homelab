@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Dumb Do
-      homepage.icon: dumbpad.png
+      homepage.icon: https://icons.chenn.dev/dumbpad.png
       homepage.href: https://do.henn.dev
       homepage.description: Todo List
 
@@ -38,7 +38,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Dumb Kanban
-      homepage.icon: dumbpad.png
+      homepage.icon: https://icons.chenn.dev/dumbpad.png
       homepage.href: https://kan.henn.dev
       homepage.description: Kanban
 
@@ -63,7 +63,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Dumb Drop
-      homepage.icon: dumbpad.png
+      homepage.icon: https://icons.chenn.dev/dumbpad.png
       homepage.href: https://drop.henn.dev
       homepage.description: File Drop
 
@@ -87,7 +87,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Dumb Whois
-      homepage.icon: dumbpad.png
+      homepage.icon: https://icons.chenn.dev/dumbpad.png
       homepage.href: https://whois.henn.dev
       homepage.description: Whois
 
@@ -112,7 +112,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Dumb Notepad
-      homepage.icon: dumbpad.png
+      homepage.icon: https://icons.chenn.dev/dumbpad.png
       homepage.href: https://dumbpad.henn.dev
       homepage.description: Simple Notepad
 

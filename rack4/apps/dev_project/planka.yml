@@ -44,7 +44,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Planka
-      homepage.icon: planka.png
+      homepage.icon: https://icons.chenn.dev/planka.png
       homepage.href: https://planka.chenn.dev
       homepage.description: Trello Clone
 

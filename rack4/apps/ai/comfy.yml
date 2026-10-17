@@ -32,7 +32,7 @@ services:
     labels:
       homepage.group: AI
       homepage.name: ComfyUI
-      homepage.icon: comfy-ui.png
+      homepage.icon: https://icons.chenn.dev/comfy-ui.png
       homepage.href: https://comfy.chenn.dev
       homepage.description: Image Gen
 

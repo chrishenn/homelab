@@ -57,7 +57,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Sure
-      homepage.icon: sure.png
+      homepage.icon: https://icons.chenn.dev/sure.png
       homepage.href: https://sure.chenn.dev
       homepage.description: Finance Tracking
 

@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: wekan
-      homepage.icon: wekan.png
+      homepage.icon: https://icons.chenn.dev/wekan.png
       homepage.href: https://wekan.chenn.dev
       homepage.description: Kanban
 

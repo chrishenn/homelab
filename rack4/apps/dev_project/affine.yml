@@ -63,7 +63,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Affine
-      homepage.icon: affine.png
+      homepage.icon: https://icons.chenn.dev/affine.png
       homepage.href: https://affine.chenn.dev
       homepage.description: Linear Clone
 

@@ -12,7 +12,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Openspeedtest
-      homepage.icon: openspeedtest.png
+      homepage.icon: https://icons.chenn.dev/openspeedtest.png
       # bypass traefik and use the ip for performance over 3Gbps
       homepage.href: http://$SVC_IP:3030
       homepage.description: Internet Speed test

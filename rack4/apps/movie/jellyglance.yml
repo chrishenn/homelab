@@ -22,7 +22,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Jellyglance
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/jellyglance.png
+      homepage.icon: https://icons.chenn.dev/jellyglance.png
       homepage.href: https://jellyglance.chenn.dev
       homepage.description: Jellyfin Stats UI
 
