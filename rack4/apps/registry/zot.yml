@@ -2,12 +2,16 @@
 #  "registry-mirrors": ["https://zot.henn.dev"],
 ---
 configs:
-  zot_auth:
+  zot_passwd:
     content: $HTPASSWD
-  zot_dockerhub:
+  zot_auth:
     content: |
       {
         "https://registry-1.docker.io": {
+          "username": "$DOCKERHUB_USER",
+          "password": "$DOCKERHUB_PASS"
+        },
+        "https://index.docker.io": {
           "username": "$DOCKERHUB_USER",
           "password": "$DOCKERHUB_PASS"
         }
@@ -21,17 +25,22 @@ configs:
   zot_config:
     content: |
       {
+        "distSpecVersion": "1.1.1",
         "storage": {
+          "rootDirectory": "/var/lib/zot",
+          "commit": true,
           "dedupe": true,
           "gc": true,
-          "rootDirectory": "/var/lib/zot"
+          "gcDelay": "1h",
+          "gcInterval": "24h"
         },
         "http": {
           "externalUrl": "https://zot.henn.dev",
           "address": "0.0.0.0",
           "port": "8080",
+          "compat": ["docker2s2"],
           "auth": {
-            "HTPasswd": {
+            "htpasswd": {
               "path": "/etc/zot/passwd"
             },
             "apikey": true,
@@ -63,11 +72,10 @@ configs:
             "credentialsFile": "/etc/zot/auth.json",
             "registries": [
               {
-                "urls": [
-                  "https://registry-1.docker.io"
-                ],
+                "urls": ["https://index.docker.io", "https://registry-1.docker.io"],
                 "onDemand": true,
-                "tlsVerify": true
+                "maxRetries": 2,
+                "retryDelay": "1s"
               }
             ]
           }
@@ -77,13 +85,14 @@ configs:
 services:
   zot:
     profiles: [zot]
-    image: ghcr.io/project-zot/zot:latest
+    image: ghcr.io/project-zot/zot:v2.1.21
+    #    image: ghcr.io/project-zot/zot:latest
     container_name: zot
     restart: unless-stopped
     configs:
-      - source: zot_auth
+      - source: zot_passwd
         target: /etc/zot/passwd
-      - source: zot_dockerhub
+      - source: zot_auth
         target: /etc/zot/auth.json
       - source: zot_oidc
         target: /etc/zot/oidc.json

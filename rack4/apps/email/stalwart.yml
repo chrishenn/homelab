@@ -277,6 +277,7 @@ services:
       args:
         NEXT_PUBLIC_BASE_PATH: /webmail
     image: ${REGISTRY}/bulwarkmail/webmail:latest
+    # image: ghcr.io/bulwarkmail/webmail:latest
     container_name: bulwark
     restart: unless-stopped
     environment:
