@@ -41,7 +41,7 @@ services:
       traefik.http.services.alpine.loadbalancer.server.port: 3000
       homepage.group: Webtop
       homepage.name: Alpine
-      homepage.icon: alpine-linux.png
+      homepage.icon: alpine-linux.svg
       homepage.href: https://alpine.henn.dev
       homepage.description: Alpine Linux Desktop
 
@@ -80,7 +80,7 @@ services:
       traefik.http.services.arch.loadbalancer.server.port: 3000
       homepage.group: Webtop
       homepage.name: Arch
-      homepage.icon: arch-linux.png
+      homepage.icon: arch-linux.svg
       homepage.href: https://arch.henn.dev
       homepage.description: Arch Linux Desktop
 
@@ -118,7 +118,7 @@ services:
       traefik.http.services.debian.loadbalancer.server.port: 3000
       homepage.group: Webtop
       homepage.name: Debian
-      homepage.icon: debian-linux.png
+      homepage.icon: debian-linux.svg
       homepage.href: https://debian.henn.dev
       homepage.description: Debian Linux Desktop
 
@@ -157,7 +157,7 @@ services:
 
       homepage.group: Webtop
       homepage.name: Ubuntu
-      homepage.icon: ubuntu-linux.png
+      homepage.icon: ubuntu-linux.svg
       homepage.href: https://ubuntu.henn.dev
       homepage.description: Ubuntu Linux Desktop
 

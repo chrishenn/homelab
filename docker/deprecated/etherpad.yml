@@ -28,7 +28,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Etherpad
-      homepage.icon: etherpad.png
+      homepage.icon: etherpad.svg
       homepage.href: https://etherpad.chenn.dev
       homepage.description: Realtime Document Editor
 

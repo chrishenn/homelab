@@ -81,7 +81,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Mydia
-      homepage.icon: https://github.com/getmydia/mydia/blob/master/player/assets/icon.png?raw=true
+      homepage.icon: https://icons.chenn.dev/custom/mydia.svg
       homepage.href: https://mydia.chenn.dev
       homepage.description: Video Manager
 

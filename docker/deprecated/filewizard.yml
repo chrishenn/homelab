@@ -31,7 +31,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Filewizard
-      homepage.icon: filewizard.png
+      homepage.icon: filewizard.svg
       homepage.href: https://filewizard.chenn.dev
       homepage.description: File Converters
 

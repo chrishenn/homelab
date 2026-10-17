@@ -26,7 +26,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Tugtainer
-      homepage.icon: tugtainer.png
+      homepage.icon: tugtainer.svg
       homepage.href: https://tugtainer.chenn.dev
       homepage.description: Container Updater
 

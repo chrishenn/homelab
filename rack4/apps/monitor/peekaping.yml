@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Peekaping
-      homepage.icon: https://github.com/0xfurai/peekaping/raw/refs/heads/main/apps/docs/static/img/logo.svg
+      homepage.icon: https://icons.chenn.dev/peekaping.svg
       homepage.href: https://peekaping.chenn.dev
       homepage.description: Service Monitoring
 

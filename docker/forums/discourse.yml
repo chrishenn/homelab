@@ -55,7 +55,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Discourse
-      homepage.icon: discourse.png
+      homepage.icon: discourse.svg
       homepage.href: https://discourse.chenn.dev
       homepage.description: Forum
 

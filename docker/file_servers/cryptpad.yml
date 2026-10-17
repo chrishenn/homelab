@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: cryptpad
-      homepage.icon: cryptpad.png
+      homepage.icon: cryptpad.svg
       homepage.href: https://cryptpad.chenn.dev
       homepage.description: Google Calendar Clone
 

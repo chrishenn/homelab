@@ -103,7 +103,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Mirotalk
-      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
+      homepage.icon: https://icons.chenn.dev/mirotalk.svg
       homepage.href: https://miro.chenn.dev
       homepage.description: P2P Video Chat
 
@@ -435,7 +435,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Mirotalk
-      homepage.icon: https://github.com/miroslavpejic85/mirotalk/blob/master/public/images/mirotalk-logo.gif?raw=true
+      homepage.icon: https://icons.chenn.dev/mirotalk.svg
       homepage.href: https://miros.chenn.dev
       homepage.description: Group Video Chat
 

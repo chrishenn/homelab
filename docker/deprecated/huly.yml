@@ -168,7 +168,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: huly
-      homepage.icon: https://github.com/hcengineering/platform/blob/develop/desktop/public/AppIcon.png?raw=true
+      homepage.icon: https://github.com/hcengineering/platform/blob/develop/desktop/public/AppIcon.svg?raw=true
       homepage.href: https://$HULY_DOMAIN
       homepage.description: huly
 

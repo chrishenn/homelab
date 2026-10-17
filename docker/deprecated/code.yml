@@ -22,7 +22,7 @@ services:
     labels:
       homepage.group: Dev
       homepage.name: Code
-      homepage.icon: code.png
+      homepage.icon: code.svg
       homepage.href: https://code.chenn.dev
       homepage.description: Vs Code
 

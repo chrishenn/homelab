@@ -31,7 +31,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Cronmaster
-      homepage.icon: cronmaster-dark.png
+      homepage.icon: cronmaster-dark.svg
       homepage.href: https://cronmaster.chenn.dev
       homepage.description: Cron UI
 

@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Metadata-Remote
-      homepage.icon: https://raw.githubusercontent.com/wow-signal-dev/metadata-remote/refs/heads/main/static/favicon.ico
+      homepage.icon: https://icons.chenn.dev/metadata-remote.svg
       homepage.href: https://mdrm.chenn.dev
       homepage.description: Music Metadata Editor
 

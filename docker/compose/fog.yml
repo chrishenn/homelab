@@ -103,7 +103,7 @@ services:
       traefik.http.services.fog.loadbalancer.server.port: 8000
   #      homepage.group: Infra
   #      homepage.name: Apprise
-  #      homepage.icon: apprise.png
+  #      homepage.icon: apprise.svg
   #      homepage.href: https://apprise.henn.dev
   #      homepage.description: Notification Server
 

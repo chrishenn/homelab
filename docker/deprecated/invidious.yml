@@ -38,7 +38,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Invidious
-      homepage.icon: invidious.png
+      homepage.icon: invidious.svg
       homepage.href: https://invidious.henn.dev
       homepage.description: Private Youtube Frontend
 

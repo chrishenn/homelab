@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Pairdrop
-      homepage.icon: pairdrop.png
+      homepage.icon: pairdrop.svg
       homepage.href: https://pairdrop.chenn.dev
       homepage.description: Private Airdrop
 

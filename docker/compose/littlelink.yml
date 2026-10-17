@@ -53,7 +53,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Littlelink
-      homepage.icon: littlelink-custom.png
+      homepage.icon: https://icons.chenn.dev/littlelink.svg
       homepage.href: https://littlelink.henn.dev
       homepage.description: Linktree (simple)
 

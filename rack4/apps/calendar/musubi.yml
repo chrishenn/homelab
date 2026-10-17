@@ -69,7 +69,7 @@ services:
     labels:
       homepage.group: Calendar
       homepage.name: musubi
-      homepage.icon: https://github.com/frgtn-dot-dev/musubi/blob/main/.github/assets/icon.png?raw=true
+      homepage.icon: https://icons.chenn.dev/custom/musubi.svg
       homepage.href: https://musubi.chenn.dev
       homepage.description: Calendar
 

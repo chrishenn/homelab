@@ -32,7 +32,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Nodebb
-      homepage.icon: nodebb.svg
+      homepage.icon: https://icons.chenn.dev/nodebb.svg
       homepage.href: https://nodebb.chenn.dev
       homepage.description: Forum
 

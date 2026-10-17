@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Media
       homepage.name: Soulbeet
-      homepage.icon: soulbeet.png
+      homepage.icon: soulbeet.svg
       homepage.href: https://soulbeet.chenn.dev
       homepage.description: Music Automation
 

@@ -55,7 +55,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Drivebase
-      homepage.icon: https://github.com/drivebase/drivebase/blob/main/packages/apps/files/src/icon.png?raw=true
+      homepage.icon: https://github.com/drivebase/drivebase/blob/main/packages/apps/files/src/icon.svg?raw=true
       homepage.href: https://drivebase.chenn.dev
       homepage.description: File Server
 

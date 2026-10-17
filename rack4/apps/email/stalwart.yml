@@ -277,6 +277,7 @@ services:
       args:
         NEXT_PUBLIC_BASE_PATH: /webmail
     image: ${REGISTRY}/bulwarkmail/webmail:latest
+    # image: ghcr.io/bulwarkmail/webmail:latest
     container_name: bulwark
     restart: unless-stopped
     environment:
@@ -297,7 +298,7 @@ services:
     labels:
       homepage.group: Email
       homepage.name: bulwark
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/bulwark.png
+      homepage.icon: https://icons.chenn.dev/bulwark.svg
       homepage.href: https://mail.chenn.dev/webmail
       homepage.description: Email Server
 

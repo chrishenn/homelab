@@ -48,6 +48,6 @@ services:
       traefik.http.services.copyparty.loadbalancer.server.port: 3923
       homepage.group: File Edit, Convert
       homepage.name: Copy Party
-      homepage.icon: copyparty.png
+      homepage.icon: copyparty.svg
       homepage.href: https://copyparty.henn.dev
       homepage.description: File server

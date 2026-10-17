@@ -117,7 +117,7 @@ services:
     labels:
       homepage.group: Calendar
       homepage.name: kurrier
-      homepage.icon: kurrier.png
+      homepage.icon: kurrier.svg
       homepage.href: https://kurrier.chenn.dev
       homepage.description: Calendar
 

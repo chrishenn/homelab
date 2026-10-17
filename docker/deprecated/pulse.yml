@@ -34,7 +34,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Pulse
-      homepage.icon: pulse.png
+      homepage.icon: pulse.svg
       homepage.href: https://pulse.chenn.dev
       homepage.description: Unified Dash
 

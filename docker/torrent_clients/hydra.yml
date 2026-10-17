@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Hydra
-      homepage.icon: nzbhydra2.png
+      homepage.icon: nzbhydra2.svg
       homepage.href: https://hydra.henn.dev
       homepage.description: Usenet Search
 

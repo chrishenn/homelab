@@ -24,7 +24,7 @@ paperless_ai:
   labels:
     homepage.group: File Servers
     homepage.name: Paperless AI
-    homepage.icon: paperless.png
+    homepage.icon: paperless.svg
     homepage.href: https://paperless_ai.chenn.dev
     homepage.description: AI Document Processing
 

@@ -18,6 +18,6 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: NetalertX
-      homepage.icon: netalertx.png
+      homepage.icon: netalertx.svg
       homepage.href: https://netalert.henn.dev
       homepage.description: Network Scanner

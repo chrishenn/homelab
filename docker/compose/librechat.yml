@@ -84,7 +84,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Librechat
-      homepage.icon: librechat.png
+      homepage.icon: librechat.svg
       homepage.href: https://librechat.chenn.dev
       homepage.description: AI Something
 

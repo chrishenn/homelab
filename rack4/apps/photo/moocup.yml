@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Photos
       homepage.name: Moocup
-      homepage.icon: https://github.com/jellydeck/moocup/raw/refs/heads/main/static/favicon.svg
+      homepage.icon: https://icons.chenn.dev/moocup.svg
       homepage.href: https://moocup.chenn.dev
       homepage.description: Screenshot Beautifier
 

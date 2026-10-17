@@ -45,7 +45,7 @@ services:
 
       #      homepage.group: Tools
       #      homepage.name: Jitsi
-      #      homepage.icon: jitsi.png
+      #      homepage.icon: jitsi.svg
       #      homepage.href: https://jitsi.chenn.dev
       #      homepage.description: Private Google Meet
 

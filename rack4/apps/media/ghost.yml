@@ -35,7 +35,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Ghost
-      homepage.icon: ghost.png
+      homepage.icon: https://icons.chenn.dev/ghost.svg
       homepage.href: https://ghost.chenn.dev
       homepage.description: Blog
 
