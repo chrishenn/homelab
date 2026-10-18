@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Icons
-      homepage.icon: https://icons.chenn.dev/icons.svg
+      homepage.icon: https://icons.chenn.dev/selfh-st.svg
       homepage.href: https://icons.chenn.dev
       homepage.description: Icons
 
@@ -45,4 +45,3 @@ services:
       pangolin.public-resources.icons.mode: http
       pangolin.public-resources.icons.targets[0].method: http
       pangolin.public-resources.icons.targets[0].port: 4050
-#      pangolin.public-resources.icons.policy: member

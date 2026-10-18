@@ -202,7 +202,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Stoat
-      homepage.icon: https://icons.chenn.dev/stoat.svg
+      homepage.icon: https://icons.chenn.dev/custom/stoat.svg
       homepage.href: https://stoat.chenn.dev
       homepage.description: Discord Clone
 

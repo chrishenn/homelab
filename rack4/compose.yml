@@ -148,11 +148,11 @@ include:
   - apps/movie/yamtrack.yml
 
   - apps/music/aurral.yml
+  - apps/music/dneedle.yml
   - apps/music/feishin.yml
   - apps/music/lidarr.yml
   - apps/music/mdrm.yml
   - apps/music/meelo.yml
-  - apps/music/mseerr.yml
   - apps/music/navidrome.yml
 
   - apps/notify/apprise.yml

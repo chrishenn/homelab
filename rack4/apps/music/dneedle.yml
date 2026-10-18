@@ -1,0 +1,38 @@
+---
+services:
+  dneedle:
+    profiles: [dneedle]
+    image: droppedneedle/droppedneedle:latest
+    container_name: dneedle
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: $TZ
+      PORT: 8688
+    volumes:
+      - $DATA/dneedle/config:/app/config
+      - $DATA/dneedle/cache:/app/cache
+      - $DATA/dneedle/plugins:/app/plugins
+      - $MEDIA/Music:/data:ro
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:8688/health]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    networks: [arr, newt]
+    labels:
+      homepage.group: Music
+      homepage.name: Dropped Needle
+      homepage.icon: https://icons.chenn.dev/droppedneedle.png
+      homepage.href: https://dneedle.chenn.dev
+      homepage.description: Music Discovery
+
+      pangolin.public-resources.dneedle.name: dneedle
+      pangolin.public-resources.dneedle.full-domain: dneedle.chenn.dev
+      pangolin.public-resources.dneedle.mode: http
+      pangolin.public-resources.dneedle.targets[0].method: http
+      pangolin.public-resources.dneedle.targets[0].port: 8688
+      pangolin.public-resources.dneedle.policy: member
+#      pangolin.public-resources.dneedle.policy: arr

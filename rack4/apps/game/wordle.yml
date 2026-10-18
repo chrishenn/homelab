@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Games
       homepage.name: Wordle
-      homepage.icon: https://icons.chenn.dev/microsoft-word.svg
+      homepage.icon: https://icons.chenn.dev/nyt-wordle.svg
       homepage.href: https://wordle.chenn.dev
       homepage.description: Wordle Clone
 
