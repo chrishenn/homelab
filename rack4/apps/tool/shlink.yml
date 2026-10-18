@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Shlink
-      homepage.icon: https://icons.chenn.dev/shlink.png
+      homepage.icon: https://icons.chenn.dev/shlink.svg
       homepage.href: https://shlink.chenn.dev
       homepage.description: Link Shortener
 

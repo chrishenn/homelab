@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: IT-Tools
-      homepage.icon: https://icons.chenn.dev/it-tools.png
+      homepage.icon: https://icons.chenn.dev/it-tools.svg
       homepage.href: https://ittools.chenn.dev
       homepage.description: Code Calculators
 

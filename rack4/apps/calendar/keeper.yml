@@ -22,7 +22,7 @@ services:
     labels:
       homepage.group: Calendar
       homepage.name: Keeper
-      homepage.icon: https://github.com/ridafkih/keeper.sh/blob/main/applications/web/public/512x512-on-light.png?raw=true
+      homepage.icon: https://icons.chenn.dev/keeper.svg
       homepage.href: https://keeper.chenn.dev
       homepage.description: Calendar Mux
 

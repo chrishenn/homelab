@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: PDF Tools
       homepage.name: Bento PDF
-      homepage.icon: https://icons.chenn.dev/bentopdf.png
+      homepage.icon: https://icons.chenn.dev/bentopdf.svg
       homepage.href: https://bento.chenn.dev
       homepage.description: PDF Editing
 

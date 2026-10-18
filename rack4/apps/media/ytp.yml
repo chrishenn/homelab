@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Ytp
-      homepage.icon: https://github.com/arabcoders/ytptube/blob/dev/ui/public/images/favicon.png?raw=true
+      homepage.icon: https://icons.chenn.dev/custom/ytptube.png
       homepage.href: https://ytp.chenn.dev
       homepage.description: Youtube Downloader
 

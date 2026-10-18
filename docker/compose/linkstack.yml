@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Linkstack
-      homepage.icon: linkstack.png
+      homepage.icon: linkstack.svg
       homepage.href: https://linkstack.henn.dev
       homepage.description: Linktree
 

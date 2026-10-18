@@ -57,7 +57,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Lancache Manager
-      homepage.icon: https://icons.chenn.dev/lancache.png
+      homepage.icon: https://icons.chenn.dev/lancache.svg
       homepage.href: https://lancache.chenn.dev
       homepage.description: Lancache Manager GUI
 

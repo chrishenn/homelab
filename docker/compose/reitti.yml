@@ -25,7 +25,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: reitti
-      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/reitti.png
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/reitti.svg
       homepage.href: https://reitti.chenn.dev
       homepage.description: Location Tracking
 

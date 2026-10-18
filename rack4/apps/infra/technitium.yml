@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Technitium Dashboard
-      homepage.icon: https://icons.chenn.dev/technitium.png
+      homepage.icon: https://icons.chenn.dev/technitium.svg
       homepage.href: https://dash.dns.chenn.dev
       homepage.description: DNS
 

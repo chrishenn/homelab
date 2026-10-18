@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Email
       homepage.name: MailFlow
-      homepage.icon: https://icons.chenn.dev/mailflow.png
+      homepage.icon: https://icons.chenn.dev/mailflow.svg
       homepage.href: https://mailflow.chenn.dev
       homepage.description: Unified Email Inbox
 

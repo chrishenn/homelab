@@ -212,7 +212,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Fluxer
-      homepage.icon: https://icons.chenn.dev/fluxer.png
+      homepage.icon: https://icons.chenn.dev/fluxer.svg
       homepage.href: https://fluxer.chenn.dev
       homepage.description: Discord Clone
 

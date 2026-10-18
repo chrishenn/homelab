@@ -31,6 +31,6 @@ services:
       traefik.http.services.rustdesk.loadbalancer.server.port: 3000
       homepage.group: Webtop
       homepage.name: Rustdesk
-      homepage.icon: rustdesk.png
+      homepage.icon: rustdesk.svg
       homepage.href: https://rustdesk.henn.dev
       homepage.description: Remote Desktop

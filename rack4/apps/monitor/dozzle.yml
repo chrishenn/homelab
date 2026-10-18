@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Dozzle
-      homepage.icon: https://icons.chenn.dev/dozzle.png
+      homepage.icon: https://icons.chenn.dev/dozzle.svg
       homepage.href: https://dozzle.chenn.dev
       homepage.description: Docker Logs Viewer
 

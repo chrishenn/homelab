@@ -12,7 +12,7 @@ services:
     labels:
       homepage.group: AI
       homepage.name: vane
-      homepage.icon: vane.png
+      homepage.icon: vane.svg
       homepage.href: https://vane.chenn.dev
       homepage.description: Private AI Search
 

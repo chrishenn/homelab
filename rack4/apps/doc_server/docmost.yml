@@ -25,7 +25,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Docmost
-      homepage.icon: https://icons.chenn.dev/docmost.png
+      homepage.icon: https://icons.chenn.dev/docmost.svg
       homepage.href: https://docmost.chenn.dev
       homepage.description: Document Collaboration
 

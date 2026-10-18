@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: 8MB
-      homepage.icon: https://icons.chenn.dev/compreface.png
+      homepage.icon: https://icons.chenn.dev/compreface.svg
       homepage.href: https://8MB.chenn.dev
       homepage.description: Video Compressor
 

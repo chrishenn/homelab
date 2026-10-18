@@ -60,7 +60,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: Redlib
-      homepage.icon: redlib.png
+      homepage.icon: redlib.svg
       homepage.href: https://reddit.henn.dev
       homepage.description: Private Reddit Frontend
 

@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Flood
-      homepage.icon: flood.png
+      homepage.icon: flood.svg
       homepage.href: https://flood.chenn.dev
       homepage.description: Torrent Client
 

@@ -40,7 +40,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Transcodarr
-      homepage.icon: https://raw.githubusercontent.com/reedylab/transcodarr/refs/heads/main/web/static/favicon.svg
+      homepage.icon: https://icons.chenn.dev/custom/transcodarr.svg
       homepage.href: https://transcodarr.chenn.dev
       homepage.description: Auto Video Transcode
 

@@ -41,7 +41,7 @@ services:
     labels:
       homepage.group: General Media
       homepage.name: Minuspod
-      homepage.icon: https://icons.chenn.dev/minuspod.png
+      homepage.icon: https://icons.chenn.dev/minuspod.svg
       homepage.href: https://minuspod.chenn.dev/ui
       homepage.description: Podcast Server
 

@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: Backup
       homepage.name: Duplicati
-      homepage.icon: https://icons.chenn.dev/duplicati.png
+      homepage.icon: https://icons.chenn.dev/duplicati.svg
       homepage.href: https://duplicati.chenn.dev
       homepage.description: Backup Automation
 

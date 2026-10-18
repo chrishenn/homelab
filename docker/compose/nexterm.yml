@@ -13,7 +13,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Nexterm
-      homepage.icon: nexterm.png
+      homepage.icon: nexterm.svg
       homepage.href: https://nexterm.chenn.dev
       homepage.description: Server Manager
 

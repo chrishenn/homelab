@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Zipline
-      homepage.icon: https://icons.chenn.dev/zipline.png
+      homepage.icon: https://icons.chenn.dev/zipline.svg
       homepage.href: https://zipline.chenn.dev
       homepage.description: File Sharing
 

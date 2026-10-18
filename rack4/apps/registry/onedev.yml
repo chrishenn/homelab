@@ -27,7 +27,7 @@ services:
     labels:
       homepage.group: Registry and Code Forge
       homepage.name: Onedev
-      homepage.icon: https://icons.chenn.dev/onedev.png
+      homepage.icon: https://icons.chenn.dev/onedev.svg
       homepage.href: https://onedev.chenn.dev
       homepage.description: Git Server
 

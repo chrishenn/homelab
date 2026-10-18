@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Excalidraw
-      homepage.icon: https://icons.chenn.dev/excalidraw.png
+      homepage.icon: https://icons.chenn.dev/excalidraw.svg
       homepage.href: https://draw.chenn.dev
       homepage.description: Draw Diagrams
 

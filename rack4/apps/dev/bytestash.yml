@@ -30,7 +30,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: ByteStash
-      homepage.icon: https://icons.chenn.dev/bytestash.png
+      homepage.icon: https://icons.chenn.dev/bytestash.svg
       homepage.href: https://stash.chenn.dev
       homepage.description: Code Snippets
 

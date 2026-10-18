@@ -27,7 +27,7 @@ services:
     labels:
       homepage.group: Job
       homepage.name: Job Ops
-      homepage.icon: https://icons.chenn.dev/atlassian-opsgenie.png
+      homepage.icon: https://icons.chenn.dev/atlassian-opsgenie.svg
       homepage.href: https://ops.chenn.dev
       homepage.description: Job Search Automation
 

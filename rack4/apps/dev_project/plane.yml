@@ -74,7 +74,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Plane
-      homepage.icon: https://icons.chenn.dev/plane.png
+      homepage.icon: https://icons.chenn.dev/plane.svg
       homepage.href: https://plane.chenn.dev
       homepage.description: Linear Clone
 
@@ -194,7 +194,7 @@ services:
 #    labels:
 #      homepage.group: Project Management
 #      homepage.name: Plane
-#      homepage.icon: https://icons.chenn.dev/plane.png
+#      homepage.icon: https://icons.chenn.dev/plane.svg
 #      homepage.href: https://plane.chenn.dev
 #      homepage.description: Linear Alternative
 #

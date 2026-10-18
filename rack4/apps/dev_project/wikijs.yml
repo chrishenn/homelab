@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: WikiJS
-      homepage.icon: https://icons.chenn.dev/wikijs.png
+      homepage.icon: https://icons.chenn.dev/wikijs.svg
       homepage.href: https://wikijs.chenn.dev
       homepage.description: Wiki
 

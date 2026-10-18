@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Seerr
-      homepage.icon: https://icons.chenn.dev/jellyseerr.png
+      homepage.icon: https://icons.chenn.dev/jellyseerr.svg
       homepage.href: https://seerr.chenn.dev
       homepage.description: Media Requests
 

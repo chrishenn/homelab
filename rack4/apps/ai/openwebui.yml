@@ -45,7 +45,7 @@ services:
     labels:
       homepage.group: AI
       homepage.name: Ollama
-      homepage.icon: https://icons.chenn.dev/ollama.png
+      homepage.icon: https://icons.chenn.dev/ollama.svg
       homepage.href: https://ollama.chenn.dev
       homepage.description: AI Chat
 

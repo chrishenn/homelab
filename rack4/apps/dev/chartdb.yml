@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Chartdb
-      homepage.icon: https://icons.chenn.dev/chart-db.png
+      homepage.icon: https://icons.chenn.dev/chart-db.svg
       homepage.href: https://chart.chenn.dev
       homepage.description: Database Doodler
 

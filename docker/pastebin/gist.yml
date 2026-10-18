@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: OpenGist
-      homepage.icon: opengist.png
+      homepage.icon: opengist.svg
       homepage.href: https://gist.chenn.dev
       homepage.description: Private Gists
 

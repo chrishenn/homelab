@@ -40,7 +40,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Kaneo
-      homepage.icon: https://raw.githubusercontent.com/usekaneo/kaneo/refs/heads/main/apps/docs/favicon.svg
+      homepage.icon: https://icons.chenn.dev/kaneo.svg
       homepage.href: https://kaneo.chenn.dev
       homepage.description: Project Coordination
 

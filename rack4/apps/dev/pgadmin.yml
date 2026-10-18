@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: PgAdmin
-      homepage.icon: https://icons.chenn.dev/pgadmin.png
+      homepage.icon: https://icons.chenn.dev/pgadmin.svg
       homepage.href: https://pgadmin.henn.dev
       homepage.description: Postgres GUI
 

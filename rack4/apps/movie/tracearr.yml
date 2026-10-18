@@ -23,7 +23,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Tracearr
-      homepage.icon: https://icons.chenn.dev/tracearr.png
+      homepage.icon: https://icons.chenn.dev/tracearr.svg
       homepage.href: https://tracearr.chenn.dev
       homepage.description: Jellyfin Stats
 

@@ -33,7 +33,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Hoodik
-      homepage.icon: https://icons.chenn.dev/hoodik.png
+      homepage.icon: https://icons.chenn.dev/hoodik.svg
       homepage.href: https://hoodik.chenn.dev
       homepage.description: Rust File Server
 

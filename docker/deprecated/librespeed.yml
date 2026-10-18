@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: librespeed
-      homepage.icon: librespeed.png
+      homepage.icon: librespeed.svg
       homepage.href: http://$SVC_IP:3040
       homepage.description: Internet Speed test
     ports:

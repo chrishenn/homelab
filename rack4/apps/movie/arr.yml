@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Radarr
-      homepage.icon: https://icons.chenn.dev/radarr.png
+      homepage.icon: https://icons.chenn.dev/radarr.svg
       homepage.href: https://radarr.chenn.dev
       homepage.description: Movie Manager
 
@@ -49,7 +49,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Sonarr
-      homepage.icon: https://icons.chenn.dev/sonarr.png
+      homepage.icon: https://icons.chenn.dev/sonarr.svg
       homepage.href: https://sonarr.chenn.dev
       homepage.description: TV Manager
 
@@ -75,7 +75,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Prowlarr
-      homepage.icon: https://icons.chenn.dev/prowlarr.png
+      homepage.icon: https://icons.chenn.dev/prowlarr.svg
       homepage.href: https://prowlarr.chenn.dev
       homepage.description: Indexer Manager
 
@@ -115,7 +115,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Bazarr
-      homepage.icon: https://icons.chenn.dev/bazarr.png
+      homepage.icon: https://icons.chenn.dev/bazarr.svg
       homepage.href: https://bazarr.chenn.dev
       homepage.description: Subtitle Manager
 
@@ -144,7 +144,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: questarr
-      homepage.icon: https://icons.chenn.dev/questarr.png
+      homepage.icon: https://icons.chenn.dev/questarr.svg
       homepage.href: https://questarr.chenn.dev
       homepage.description: Games Manager
 

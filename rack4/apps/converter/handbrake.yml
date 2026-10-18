@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Handbrake
-      homepage.icon: https://icons.chenn.dev/handbrake.png
+      homepage.icon: https://icons.chenn.dev/handbrake.svg
       homepage.href: https://handbrake.chenn.dev
       homepage.description: Video Converter
 

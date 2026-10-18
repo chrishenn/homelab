@@ -33,7 +33,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Fileflow
-      homepage.icon: https://icons.chenn.dev/fileflows.png
+      homepage.icon: https://icons.chenn.dev/fileflows.svg
       homepage.href: https://fileflow.chenn.dev
       homepage.description: Automatic File Flows
 

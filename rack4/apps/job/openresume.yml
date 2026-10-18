@@ -10,7 +10,7 @@ services:
     labels:
       homepage.group: Job
       homepage.name: openresume
-      homepage.icon: https://icons.chenn.dev/open-resume.png
+      homepage.icon: https://icons.chenn.dev/open-resume.svg
       homepage.href: https://openresume.chenn.dev
       homepage.description: Resume Generator
 

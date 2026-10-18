@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: PDF Tools
       homepage.name: Stirling PDF
-      homepage.icon: https://icons.chenn.dev/stirling-pdf.png
+      homepage.icon: https://icons.chenn.dev/stirling-pdf.svg
       homepage.href: https://stirling.chenn.dev
       homepage.description: PDF Editing
 

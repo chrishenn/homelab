@@ -60,7 +60,7 @@ services:
     labels:
       homepage.group: Notify
       homepage.name: Gotify
-      homepage.icon: https://icons.chenn.dev/gotify.png
+      homepage.icon: https://icons.chenn.dev/gotify.svg
       homepage.href: https://gotify.chenn.dev
       homepage.description: Notification Server
 

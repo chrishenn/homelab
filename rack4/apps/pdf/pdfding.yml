@@ -43,7 +43,7 @@ services:
     labels:
       homepage.group: PDF Tools
       homepage.name: PDF Ding
-      homepage.icon: https://icons.chenn.dev/pdfding.png
+      homepage.icon: https://icons.chenn.dev/pdfding.svg
       homepage.href: https://pdfding.chenn.dev
       homepage.description: PDF Editing
 

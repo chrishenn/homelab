@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Termix
-      homepage.icon: https://icons.chenn.dev/termix.png
+      homepage.icon: https://icons.chenn.dev/termix.svg
       homepage.href: https://termix.chenn.dev
       homepage.description: Server Manager
 

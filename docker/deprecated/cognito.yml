@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: AI
       homepage.name: Cognito
-      homepage.icon: meilisearch.png
+      homepage.icon: meilisearch.svg
       homepage.href: https://cognito.chenn.dev
       homepage.description: Private AI Google
 

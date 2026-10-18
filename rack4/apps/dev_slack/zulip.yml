@@ -85,7 +85,7 @@ services:
     labels:
       homepage.group: Slackalikes
       homepage.name: Zulip
-      homepage.icon: https://icons.chenn.dev/zulip.png
+      homepage.icon: https://icons.chenn.dev/zulip.svg
       homepage.href: https://zulip.chenn.dev
       homepage.description: Private Slack
 

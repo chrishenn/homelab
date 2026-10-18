@@ -34,7 +34,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Traefik-Docker
-      homepage.icon: https://icons.chenn.dev/traefik.png
+      homepage.icon: https://icons.chenn.dev/traefik.svg
       homepage.href: https://docker-traefik.henn.dev
       homepage.description: Docker Traefik Gui (Rack 4)
 

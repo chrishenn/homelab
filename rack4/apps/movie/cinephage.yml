@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Cinephage
-      homepage.icon: https://github.com/MoldyTaint/Cinephage/blob/main/static/logo.png?raw=true
+      homepage.icon: https://icons.chenn.dev/cinephage.svg
       homepage.href: https://cinephage.chenn.dev
       homepage.description: Movie and TV Management
 

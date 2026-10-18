@@ -49,7 +49,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: N8n
-      homepage.icon: https://icons.chenn.dev/n8n.png
+      homepage.icon: https://icons.chenn.dev/n8n.svg
       homepage.href: https://n8n.chenn.dev
       homepage.description: GUI Data Flow
 

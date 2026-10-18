@@ -48,7 +48,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Kestra
-      homepage.icon: https://icons.chenn.dev/kestra.png
+      homepage.icon: https://icons.chenn.dev/kestra.svg
       homepage.href: https://kestra.chenn.dev
       homepage.description: Workflow Automation
 

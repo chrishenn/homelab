@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Media
       homepage.name: Slskd
-      homepage.icon: slskd.png
+      homepage.icon: slskd.svg
       homepage.href: https://slskd.chenn.dev
       homepage.description: Music Automation
 

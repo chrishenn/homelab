@@ -17,7 +17,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: muxarr
-      homepage.icon: https://github.com/KirovAir/muxarr/blob/master/docs/logo.png?raw=true
+      homepage.icon: https://icons.chenn.dev/muxarr.svg
       homepage.href: https://muxarr.chenn.dev
       homepage.description: Auto Video Mux
 

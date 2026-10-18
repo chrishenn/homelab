@@ -43,7 +43,7 @@ services:
     labels:
       homepage.group: Job
       homepage.name: Reactive Resume
-      homepage.icon: https://icons.chenn.dev/reactive-resume.png
+      homepage.icon: https://icons.chenn.dev/reactive-resume.svg
       homepage.href: https://resume.chenn.dev
       homepage.description: Resume Editor
 

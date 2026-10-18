@@ -9,7 +9,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Cyberchef
-      homepage.icon: https://icons.chenn.dev/cyberchef.png
+      homepage.icon: https://icons.chenn.dev/cyberchef.svg
       homepage.href: https://cyberchef.chenn.dev
       homepage.description: Cyber Security Tools
 

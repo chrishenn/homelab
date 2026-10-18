@@ -45,7 +45,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Karakeep
-      homepage.icon: https://icons.chenn.dev/karakeep.png
+      homepage.icon: https://icons.chenn.dev/karakeep.svg
       homepage.href: https://karakeep.chenn.dev
       homepage.description: Notes with AI tagging
 

@@ -17,7 +17,7 @@ services:
     labels:
       homepage.group: Backup
       homepage.name: Borg
-      homepage.icon: https://icons.chenn.dev/borg.png
+      homepage.icon: https://icons.chenn.dev/borg.svg
       homepage.href: https://borg.chenn.dev
       homepage.description: Borg Backup GUI
 

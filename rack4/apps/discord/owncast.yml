@@ -12,7 +12,7 @@ services:
     labels:
       homepage.group: Discordalikes
       homepage.name: Owncast
-      homepage.icon: https://icons.chenn.dev/owncast.png
+      homepage.icon: https://icons.chenn.dev/owncast.svg
       homepage.href: https://owncast.henn.dev
       homepage.description: Federated Streaming Server
 

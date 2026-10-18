@@ -53,7 +53,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: PenPot
-      homepage.icon: https://icons.chenn.dev/penpot.png
+      homepage.icon: https://icons.chenn.dev/penpot.svg
       homepage.href: https://penpot.chenn.dev
       homepage.description: Figma Clone
 

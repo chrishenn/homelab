@@ -448,7 +448,7 @@ services:
     labels:
       homepage.group: Download
       homepage.name: Sab
-      homepage.icon: https://icons.chenn.dev/sabnzbd.png
+      homepage.icon: https://icons.chenn.dev/sabnzbd.svg
       homepage.href: https://sab.chenn.dev
       homepage.description: Usenet Downloads
 

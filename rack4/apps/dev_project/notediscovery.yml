@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Notediscovery
-      homepage.icon: https://icons.chenn.dev/notediscovery.png
+      homepage.icon: https://icons.chenn.dev/notediscovery.svg
       homepage.href: https://notediscovery.chenn.dev
       homepage.description: Note Server
 

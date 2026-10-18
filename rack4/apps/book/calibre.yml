@@ -21,7 +21,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Calibre
-      homepage.icon: https://icons.chenn.dev/calibre.png
+      homepage.icon: https://icons.chenn.dev/calibre.svg
       homepage.href: https://calibre.chenn.dev
       homepage.description: Book Server
 
@@ -55,7 +55,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Shelfmark
-      homepage.icon: https://icons.chenn.dev/shelfmark.png
+      homepage.icon: https://icons.chenn.dev/shelfmark.svg
       homepage.href: https://shelfmark.chenn.dev
       homepage.description: Book Downloader
 

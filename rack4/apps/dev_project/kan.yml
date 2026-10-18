@@ -33,7 +33,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Kan
-      homepage.icon: https://icons.chenn.dev/kan.png
+      homepage.icon: https://icons.chenn.dev/kan.svg
       homepage.href: https://kan.chenn.dev
       homepage.description: Kanban
 

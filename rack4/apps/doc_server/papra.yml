@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Papra
-      homepage.icon: https://icons.chenn.dev/papra.png
+      homepage.icon: https://icons.chenn.dev/papra.svg
       homepage.href: https://papra.chenn.dev
       homepage.description: File Server
 

@@ -17,7 +17,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Listenarr
-      homepage.icon: https://github.com/Listenarrs/Listenarr/blob/canary/fe/public/icon.png?raw=true
+      homepage.icon: https://icons.chenn.dev/listenarr.svg
       homepage.href: https://listenarr.chenn.dev
       homepage.description: Audiobook Server
 

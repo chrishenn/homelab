@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Icons
-      homepage.icon: https://icons.chenn.dev/icons.png
+      homepage.icon: https://icons.chenn.dev/icons.svg
       homepage.href: https://icons.chenn.dev
       homepage.description: Icons
 

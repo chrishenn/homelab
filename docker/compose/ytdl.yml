@@ -38,6 +38,6 @@ services:
       traefik.http.services.ytdl.loadbalancer.server.port: 8443
       homepage.group: Tools
       homepage.name: Youtube Download
-      homepage.icon: youtube-dl.png
+      homepage.icon: youtube-dl.svg
       homepage.href: https://ytdl.henn.dev
       homepage.description: Youtube Downloader

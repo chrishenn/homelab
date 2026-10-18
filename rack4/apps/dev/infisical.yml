@@ -32,7 +32,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Infisical
-      homepage.icon: https://icons.chenn.dev/infisical.png
+      homepage.icon: https://icons.chenn.dev/infisical.svg
       homepage.href: https://infisical.chenn.dev
       homepage.description: Dev Secrets
 

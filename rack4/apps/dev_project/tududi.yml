@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Tududi
-      homepage.icon: https://icons.chenn.dev/atlassian.png
+      homepage.icon: https://icons.chenn.dev/atlassian.svg
       homepage.href: https://tududi.chenn.dev
       homepage.description: Project Management
 

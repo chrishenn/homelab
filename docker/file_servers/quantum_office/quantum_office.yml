@@ -28,7 +28,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Filebrowser Quantum
-      homepage.icon: filebrowser-quantum.png
+      homepage.icon: filebrowser-quantum.svg
       homepage.href: https://files.chenn.dev
       homepage.description: File Server
 

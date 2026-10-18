@@ -32,7 +32,7 @@ services:
     labels:
       homepage.group: Movies and TV
       homepage.name: Jellyfin
-      homepage.icon: https://icons.chenn.dev/jellyfin.png
+      homepage.icon: https://icons.chenn.dev/jellyfin.svg
       homepage.href: https://jellyfin.chenn.dev
       homepage.description: Media Server
 

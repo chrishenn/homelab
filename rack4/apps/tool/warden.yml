@@ -36,7 +36,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Vaultwarden
-      homepage.icon: https://icons.chenn.dev/vaultwarden.png
+      homepage.icon: https://icons.chenn.dev/vaultwarden.svg
       homepage.href: https://warden.chenn.dev
       homepage.description: Private Bitwarden
 

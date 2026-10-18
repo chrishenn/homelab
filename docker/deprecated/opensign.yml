@@ -70,7 +70,7 @@ services:
       traefik.http.services.opensign.loadbalancer.server.port: 3000
       homepage.group: File Edit, Convert
       homepage.name: OpenSign
-      homepage.icon: docuseal.png
+      homepage.icon: docuseal.svg
       homepage.href: https://opensign.henn.dev
       homepage.description: Free Docusign
 

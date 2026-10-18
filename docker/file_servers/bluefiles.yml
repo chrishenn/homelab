@@ -19,7 +19,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: BluFiles
-      homepage.icon: https://github.com/BluDood/BluFiles/blob/main/web/static/assets/BluFiles.png?raw=true
+      homepage.icon: https://github.com/BluDood/BluFiles/blob/main/web/static/assets/BluFiles.svg?raw=true
       homepage.href: https://bluefiles.chenn.dev
       homepage.description: File Server
 

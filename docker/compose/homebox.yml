@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Homebox
-      homepage.icon: homebox.png
+      homepage.icon: homebox.svg
       homepage.href: https://homebox.chenn.dev
       homepage.description: Home Inventory
 

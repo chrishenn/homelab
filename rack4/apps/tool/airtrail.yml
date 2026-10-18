@@ -25,7 +25,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Airtrail
-      homepage.icon: https://icons.chenn.dev/air-trail.png
+      homepage.icon: https://icons.chenn.dev/air-trail.svg
       homepage.href: https://airtrail.chenn.dev
       homepage.description: Flight Mapper
 

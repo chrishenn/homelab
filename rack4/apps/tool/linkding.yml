@@ -28,7 +28,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Linkding
-      homepage.icon: https://icons.chenn.dev/linkding.png
+      homepage.icon: https://icons.chenn.dev/linkding.svg
       homepage.href: https://linkding.chenn.dev
       homepage.description: Bookmarks Manager
 

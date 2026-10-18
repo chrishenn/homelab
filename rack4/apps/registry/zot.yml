@@ -104,7 +104,7 @@ services:
     labels:
       homepage.group: Registry and Code Forge
       homepage.name: Zot
-      homepage.icon: https://icons.chenn.dev/zot-registry.png
+      homepage.icon: https://icons.chenn.dev/zot-registry.svg
       homepage.href: https://zot.henn.dev
       homepage.description: Container Registry
 

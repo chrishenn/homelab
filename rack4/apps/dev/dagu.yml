@@ -28,7 +28,7 @@ services:
     labels:
       homepage.group: Development Tools
       homepage.name: Dagu
-      homepage.icon: https://icons.chenn.dev/dagu.png
+      homepage.icon: https://icons.chenn.dev/dagu.svg
       homepage.href: https://dagu.chenn.dev
       homepage.description: Task Runner
 

@@ -24,7 +24,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: Music Seerr
-      homepage.icon: https://github.com/HabiRabbu/Musicseerr/blob/main/Images/logo_icon.png?raw=true
+      homepage.icon: https://icons.chenn.dev/custom/musicseerr.png
       homepage.href: https://mseerr.chenn.dev
       homepage.description: Music Discovery
 

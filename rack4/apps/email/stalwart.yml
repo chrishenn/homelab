@@ -298,7 +298,7 @@ services:
     labels:
       homepage.group: Email
       homepage.name: bulwark
-      homepage.icon: https://icons.chenn.dev/bulwark.png
+      homepage.icon: https://icons.chenn.dev/bulwark.svg
       homepage.href: https://mail.chenn.dev/webmail
       homepage.description: Email Server
 

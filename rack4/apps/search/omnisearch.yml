@@ -35,7 +35,7 @@ services:
     labels:
       homepage.group: Search
       homepage.name: Omnisearch
-      homepage.icon: https://icons.chenn.dev/quickwit.png
+      homepage.icon: https://icons.chenn.dev/quickwit.svg
       homepage.href: https://omnisearch.chenn.dev
       homepage.description: Private Google
 

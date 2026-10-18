@@ -15,7 +15,7 @@ services:
     labels:
       homepage.group: Tools
       homepage.name: VoceChat
-      homepage.icon: https://github.com/Privoce/vocechat-server-rust/blob/master/src/api/assets/organization-logo.png?raw=true
+      homepage.icon: https://github.com/Privoce/vocechat-server-rust/blob/master/src/api/assets/organization-logo.svg?raw=true
       homepage.href: https://vocechat.chenn.dev
       homepage.description: Slack Clone
 

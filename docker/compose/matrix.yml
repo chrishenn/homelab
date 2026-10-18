@@ -30,7 +30,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: Matrix Chat
-      homepage.icon: matrix.png
+      homepage.icon: https://icons.chenn.dev/matrix.svg
       homepage.href: https://app.element.io/#/room/#chikn:matrix.henn.dev
       homepage.description: Federated Discord
 

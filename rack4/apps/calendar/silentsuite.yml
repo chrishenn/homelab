@@ -168,7 +168,7 @@ services:
     labels:
       homepage.group: Calendar
       homepage.name: silentsuite
-      homepage.icon: https://github.com/silent-suite/silentsuite/blob/main/apps/web/public/icon-maskable-512.png?raw=true
+      homepage.icon: https://icons.chenn.dev/custom/silentsuite.svg
       homepage.href: https://silentsuite.chenn.dev
       homepage.description: Calendar, Tasks, Contacts
 

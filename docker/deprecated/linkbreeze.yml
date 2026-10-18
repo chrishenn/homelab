@@ -14,7 +14,7 @@ services:
     labels:
       homepage.group: General Tools
       homepage.name: linkbreeze
-      homepage.icon: https://github.com/Manak-hash/LinkBreeze/blob/main/public/logo.png?raw=true
+      homepage.icon: https://github.com/Manak-hash/LinkBreeze/blob/main/public/logo.svg?raw=true
       homepage.href: https://linkbreeze.chenn.dev
       homepage.description: Linktree Clone
 

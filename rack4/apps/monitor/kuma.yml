@@ -34,7 +34,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Uptime Kuma
-      homepage.icon: https://icons.chenn.dev/uptime-kuma.png
+      homepage.icon: https://icons.chenn.dev/uptime-kuma.svg
       homepage.href: https://kuma.chenn.dev
       homepage.description: Uptime Tracker
 

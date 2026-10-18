@@ -48,7 +48,7 @@ services:
     labels:
       homepage.group: Monitoring
       homepage.name: Arcane
-      homepage.icon: https://icons.chenn.dev/arcane.png
+      homepage.icon: https://icons.chenn.dev/arcane.svg
       homepage.href: https://arcane.chenn.dev
       homepage.description: Docker Manager (Rack 4)
 

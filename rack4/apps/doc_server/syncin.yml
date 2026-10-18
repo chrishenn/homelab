@@ -83,7 +83,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Sync-In
-      homepage.icon: https://raw.githubusercontent.com/Sync-in/server/refs/heads/main/frontend/src/assets/favicon.svg
+      homepage.icon: https://icons.chenn.dev/sync-in.svg
       homepage.href: https://syncin.chenn.dev
       homepage.description: File Server
 

@@ -29,7 +29,7 @@ services:
     labels:
       homepage.group: Project Management
       homepage.name: Vikunja
-      homepage.icon: https://icons.chenn.dev/vikunja.png
+      homepage.icon: https://icons.chenn.dev/vikunja.svg
       homepage.href: https://vikunja.chenn.dev
       homepage.description: Project Planner
 
