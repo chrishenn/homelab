@@ -177,7 +177,7 @@ configs:
       email_dir = ""
       email_rss = 0
       email_cats = *,
-            
+
       [servers]
       [[news.newshosting.com]]
       name = news.newshosting.com
@@ -201,7 +201,7 @@ configs:
       usage_at_start = 0
       priority = 0
       notes = ""
-            
+
       [categories]
       [[*]]
       name = *
@@ -259,12 +259,12 @@ configs:
       dir = ""
       newzbin = ""
       priority = -100
-      
+
       [logging]
       log_level = 1
       max_log_size = 5242880
       log_backups = 5
-      
+
       [ncenter]
       ncenter_enable = 0
       ncenter_cats = *,
@@ -281,7 +281,7 @@ configs:
       ncenter_prio_error = 0
       ncenter_prio_queue_done = 0
       ncenter_prio_other = 1
-      
+
       [acenter]
       acenter_enable = 0
       acenter_cats = *,
@@ -298,7 +298,7 @@ configs:
       acenter_prio_error = 0
       acenter_prio_queue_done = 0
       acenter_prio_other = 1
-      
+
       [ntfosd]
       ntfosd_enable = 1
       ntfosd_cats = *,
@@ -315,7 +315,7 @@ configs:
       ntfosd_prio_error = 0
       ntfosd_prio_queue_done = 0
       ntfosd_prio_other = 1
-      
+
       [prowl]
       prowl_enable = 0
       prowl_cats = *,
@@ -333,7 +333,7 @@ configs:
       prowl_prio_error = -3
       prowl_prio_queue_done = -3
       prowl_prio_other = 0
-      
+
       [pushover]
       pushover_token = ""
       pushover_userkey = ""
@@ -355,7 +355,7 @@ configs:
       pushover_prio_error = 1
       pushover_prio_queue_done = -3
       pushover_prio_other = -1
-      
+
       [pushbullet]
       pushbullet_enable = 0
       pushbullet_cats = *,
@@ -374,7 +374,7 @@ configs:
       pushbullet_prio_error = 0
       pushbullet_prio_queue_done = 0
       pushbullet_prio_other = 1
-      
+
       [apprise]
       apprise_enable = 0
       apprise_cats = *,
@@ -405,7 +405,7 @@ configs:
       apprise_target_queue_done_enable = 0
       apprise_target_other = ""
       apprise_target_other_enable = 1
-      
+
       [nscript]
       nscript_enable = 0
       nscript_cats = *,
