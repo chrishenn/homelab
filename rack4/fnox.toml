@@ -89,9 +89,6 @@ FILEN_EMAIL = { provider = "op", value = "op://homelab/filen/username" }
 FILEN_PASSWORD = { provider = "op", value = "op://homelab/filen/password" }
 FILEN_2FA_CODE = { provider = "op", value = "op://homelab/Filen/2fa_recovery" }
 
-IMMICH_PANGOLIN_AUTH_USER = { provider = "op", value = "op://homelab/immich/auth_user" }
-IMMICH_PANGOLIN_AUTH_PASS = { provider = "op", value = "op://homelab/immich/auth_pass" }
-
 KARAKEEP_NEXTAUTH_SECRET = { provider = "op", value = "op://homelab/karakeep/nextauth_secret" }
 KARAKEEP_MEILI_MASTER_KEY = { provider = "op", value = "op://homelab/karakeep/meili_master_key" }
 

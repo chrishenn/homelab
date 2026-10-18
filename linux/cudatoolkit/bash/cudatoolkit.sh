@@ -66,8 +66,8 @@ function link_cudatoolkit_gcc13 {
 }
 
 function install_cudatoolkit_alt {
-	ver="12.6.3"
-	mver="12.6"
+	# ver="12.6.3"
+	# mver="12.6"
 	rfile="cuda_12.6.3_560.35.05_linux.run"
 
 	# install cudatoolkit

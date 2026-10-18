@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: Infra
       homepage.name: Netboot.xyz
-      homepage.icon: https://icons.chenn.dev/netbootxyz.svg
+      homepage.icon: https://icons.chenn.dev/netboot-xyz.svg
       homepage.href: https://netboot.henn.dev
       homepage.description: iPXE Network Boot Server
 

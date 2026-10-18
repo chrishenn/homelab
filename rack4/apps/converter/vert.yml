@@ -11,7 +11,7 @@ services:
     labels:
       homepage.group: File Converters
       homepage.name: Vert
-      homepage.icon: https://icons.chenn.dev/converse-light.svg
+      homepage.icon: https://icons.chenn.dev/vert.svg
       homepage.href: https://vert.chenn.dev
       homepage.description: Image + Video Converter
 
@@ -29,8 +29,6 @@ services:
     restart: unless-stopped
     environment:
       PORT: 24153
-      WEBHOOK_URL:
-      WEBHOOK_PINGS:
     runtime: nvidia
     deploy:
       resources:
@@ -48,9 +46,4 @@ services:
       pangolin.public-resources.vertd.mode: http
       pangolin.public-resources.vertd.targets[0].method: http
       pangolin.public-resources.vertd.targets[0].port: 24153
-      pangolin.public-resources.vertd.rules[0].action: pass
-      pangolin.public-resources.vertd.rules[0].match: country
-      pangolin.public-resources.vertd.rules[0].value: US
-      pangolin.public-resources.vertd.rules[1].action: deny
-      pangolin.public-resources.vertd.rules[1].match: country
-      pangolin.public-resources.vertd.rules[1].value: ALL
+      pangolin.public-resources.vertd.policy: us

@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=all
 
 function spack_once {
 	git clone --depth=2 --branch=releases/latest https://github.com/spack/spack.git ~/spack

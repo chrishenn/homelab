@@ -1,0 +1,33 @@
+# crappy initial setup and login flow
+---
+services:
+  chaptarr:
+    profiles: [chaptarr]
+    image: chaptarr/chaptarr:latest
+    container_name: chaptarr
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $MEDIA/Books:/audiobooks
+      - $MEDIA/Books:/ebooks
+      - $DATA/chaptarr/config:/config
+      - $DATA/chaptarr/downloads:/downloads
+      - $DATA/sab/downloads:/sab/downloads
+      - $DATA/qbit/downloads:/qbit/downloads
+    networks: [newt]
+    labels:
+      homepage.group: Books
+      homepage.name: Chaptarr
+      homepage.icon: https://icons.chenn.dev/chaptarr.svg
+      homepage.href: https://chaptarr.chenn.dev
+      homepage.description: Books
+
+      pangolin.public-resources.chaptarr.name: chaptarr
+      pangolin.public-resources.chaptarr.full-domain: chaptarr.chenn.dev
+      pangolin.public-resources.chaptarr.mode: http
+      pangolin.public-resources.chaptarr.targets[0].method: http
+      pangolin.public-resources.chaptarr.targets[0].port: 8789
+      pangolin.public-resources.chaptarr.policy: member

@@ -7,7 +7,7 @@ function install_nccl {
 	pushd nccl && make -j src.build
 	sudo cp -a build/include/* /usr/local/cuda/include/
 	sudo cp -a build/lib/* /usr/local/cuda/lib64/
-	popd
+	popd || exit
 	rm -rf nccl
 }
 
@@ -17,14 +17,14 @@ function install_nccl_alt {
 
 	echo "Installing: NCCL ${NCCL_VER}"
 
-	mkdir tmp && pushd tmp
+	mkdir tmp && pushd tmp || exit
 	git clone -b "$NCCL_VER" --depth 1 https://github.com/NVIDIA/nccl.git
-	pushd nccl
+	pushd nccl || exit
 	NVCC_GENCODE="-gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_90,code=sm_90 -gencode=arch=compute_100,code=sm_100 -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_120,code=compute_120" \
 		make -j -Wno-deprecated-gpu-targets src.build
 	cp -a build/include/* /usr/local/cuda/include/
 	cp -a build/lib/* /usr/local/cuda/lib64/
-	popd
-	popd
+	popd || exit
+	popd || exit
 	rm -rf tmp
 }

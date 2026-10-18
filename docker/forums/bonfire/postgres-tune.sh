@@ -10,7 +10,7 @@ set -euo pipefail
 readonly KB=1024
 readonly MB=$((1024 * KB))
 readonly GB=$((1024 * MB))
-readonly TB=$((1024 * GB))
+#readonly TB=$((1024 * GB))
 
 # Database types
 readonly DB_TYPE_WEB="web"

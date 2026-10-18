@@ -18,7 +18,7 @@ services:
     labels:
       homepage.group: Slackalikes
       homepage.name: Campfire
-      homepage.icon: https://icons.chenn.dev/firebase.svg
+      homepage.icon: https://icons.chenn.dev/custom/campfire.png
       homepage.href: https://campfire.chenn.dev
       homepage.description: Slack Clone
 

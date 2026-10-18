@@ -1,4 +1,5 @@
 #!/bin/bash
+sdir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]:-$0}")")
 
 function sudo_timeout {
 	# replaced with mise bootstrap

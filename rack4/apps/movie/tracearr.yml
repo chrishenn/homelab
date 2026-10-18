@@ -27,7 +27,7 @@ services:
       homepage.href: https://tracearr.chenn.dev
       homepage.description: Jellyfin Stats
 
-      # {qbit, tracearr, prowlarr} it appears that api auth headers conflict with pangolin's basic auth header
+      # the tracearr app will not support auth headers (https://github.com/connorgallopo/Tracearr/issues/391)
       pangolin.public-resources.tracearr.name: tracearr
       pangolin.public-resources.tracearr.full-domain: tracearr.chenn.dev
       pangolin.public-resources.tracearr.mode: http

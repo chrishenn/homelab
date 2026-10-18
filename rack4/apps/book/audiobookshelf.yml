@@ -14,7 +14,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: Books
-      homepage.name: AudioBookshelf
+      homepage.name: Audio Bookshelf
       homepage.icon: https://icons.chenn.dev/audiobookshelf.svg
       homepage.href: https://audiobookshelf.chenn.dev
       homepage.description: Audiobook Server

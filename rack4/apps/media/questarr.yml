@@ -1,0 +1,30 @@
+# sudo chown -R 1000:1000 $DATA/questarr
+---
+services:
+  questarr:
+    profiles: [arr]
+    image: ghcr.io/doezer/questarr:latest
+    container_name: questarr
+    restart: unless-stopped
+    volumes:
+      - $DATA/questarr:/app/data
+    healthcheck:
+      test: [CMD, node, -e, "require('http').get('http://localhost:5000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks: [arr, newt]
+    labels:
+      homepage.group: Movies and TV
+      homepage.name: Questarr
+      homepage.icon: https://icons.chenn.dev/questarr.svg
+      homepage.href: https://questarr.chenn.dev
+      homepage.description: Games Manager
+
+      pangolin.public-resources.questarr.name: questarr
+      pangolin.public-resources.questarr.full-domain: questarr.chenn.dev
+      pangolin.public-resources.questarr.mode: http
+      pangolin.public-resources.questarr.targets[0].method: http
+      pangolin.public-resources.questarr.targets[0].port: 5000
+      pangolin.public-resources.questarr.policy: arr

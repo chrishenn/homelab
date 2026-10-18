@@ -27,7 +27,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: Calendar
-      homepage.name: calich
+      homepage.name: Calich
       homepage.icon: https://icons.chenn.dev/custom/calich.svg
       homepage.href: https://calich.chenn.dev
       homepage.description: Calendar

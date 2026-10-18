@@ -167,7 +167,7 @@ services:
     networks: [silentsuite, newt]
     labels:
       homepage.group: Calendar
-      homepage.name: silentsuite
+      homepage.name: Silentsuite
       homepage.icon: https://icons.chenn.dev/custom/silentsuite.svg
       homepage.href: https://silentsuite.chenn.dev
       homepage.description: Calendar, Tasks, Contacts

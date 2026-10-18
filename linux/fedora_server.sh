@@ -69,7 +69,7 @@ function homelab_clone {
 	# just ssh '$(op read op://homelab/svc/bash); $(op read op://homelab/github/token); bash -l'
 
 	mkdir -p ~/Projects
-	cd ~/Projects
+	cd ~/Projects || exit
 	gh repo clone chrishenn/homelab
 }
 

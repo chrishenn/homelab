@@ -20,7 +20,7 @@ services:
     labels:
       homepage.group: Books
       homepage.name: Readmeabook
-      homepage.icon: https://icons.chenn.dev/read-me-a-book.svg
+      homepage.icon: https://icons.chenn.dev/readmeabook.svg
       homepage.href: https://readmeabook.chenn.dev
       homepage.description: Audiobook Downloader
 

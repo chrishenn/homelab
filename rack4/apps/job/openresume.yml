@@ -9,7 +9,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: Job
-      homepage.name: openresume
+      homepage.name: Openresume
       homepage.icon: https://icons.chenn.dev/open-resume.svg
       homepage.href: https://openresume.chenn.dev
       homepage.description: Resume Generator
