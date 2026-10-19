@@ -72,7 +72,7 @@ NOTE
 curl -fsSL https://static.pangolin.net/get-cli.sh | bash
 pangolin login
 pangolin select org --org coop
-pangolin apply blueprint --file $REPO/vps0/pangolin/policies.yml
+pangolin apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml
 ```
 
 ### bare-metal host newt service install: to provide pangolin ssh access

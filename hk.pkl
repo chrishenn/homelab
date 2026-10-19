@@ -3,7 +3,7 @@ amends "package://github.com/jdx/hk/releases/download/v2.6.0/hk@2.6.0#/Config.pk
 import "package://github.com/jdx/hk/releases/download/v2.6.0/hk@2.6.0#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
-  ["oxfmt"] = Builtins.oxfmt
+  ["oxfmt"] = (Builtins.oxfmt) { stomp = false }
   ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide"; stomp = false }
   ["ruff"] = Builtins.ruff
   ["shfmt"] = Builtins.shfmt

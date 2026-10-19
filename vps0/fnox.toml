@@ -12,3 +12,9 @@ VPS0_CHRIS_PASS = { provider = "op", value = "op://homelab/vps0/chris_pass" }
 
 HOME_IP = { provider = "op", value = "op://homelab/home_ip/ip" }
 VPS0_HOSTINGER_ID = { provider = "op", value = "op://homelab/vps0/vps_id" }
+
+IMMICH_PANGOLIN_AUTH_USER = { provider = "op", value = "op://homelab/immich/auth_user" }
+IMMICH_PANGOLIN_AUTH_PASS = { provider = "op", value = "op://homelab/immich/auth_pass" }
+
+ARR_PANGOLIN_AUTH_USER = { provider = "op", value = "op://homelab/radarr/auth_user" }
+ARR_PANGOLIN_AUTH_PASS = { provider = "op", value = "op://homelab/radarr/auth_pass" }

@@ -33,8 +33,26 @@ public-policies:
     sso-roles:
       - Member
     basic-auth:
-      user: {{env.ARR_PANGOLIN_AUTH_USER}}
-      password: {{env.ARR_PANGOLIN_AUTH_PASS}}
+      user: '{{env.ARR_PANGOLIN_AUTH_USER}}'
+      password: '{{env.ARR_PANGOLIN_AUTH_PASS}}'
+      extended-compatibility: true
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL
+
+  immich:
+    name: Immich Basic Auth
+    sso: true
+    sso-roles:
+      - Member
+    basic-auth:
+      user: '{{env.IMMICH_PANGOLIN_AUTH_USER}}'
+      password: '{{env.IMMICH_PANGOLIN_AUTH_PASS}}'
       extended-compatibility: true
     apply-rules: true
     rules:
