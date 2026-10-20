@@ -22,11 +22,9 @@
   "domainsUpdatePeriodHours": 24,
   "ignoreClientAddresses": [],
   "globalCacheAddresses": ["cache.henn.dev"],
-  "cacheAddresses": {
-    "riot": ["l3cdn.riotgames.com", "riotgamespatcher-a.akamaihd.net", "riotgamespatcher-a.akamaihd.net.edgesuite.net", "worldwide.l3cdn.riotgames.com"]
-  },
+  "cacheAddresses": {},
   "enabledCaches": [],
-  "disabledCaches": [],
+  "disabledCaches": ["riot"],
   "recordTtl": 3600
 }
 
