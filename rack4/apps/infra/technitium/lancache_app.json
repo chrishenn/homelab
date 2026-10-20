@@ -1,3 +1,17 @@
+// riot is serving their installer and user login on something.dyn.riotcdn.net, so caching breaks installer dl
+// riot launcher totally broken now - is this a domain/caching issue and/or an http/https issue?
+
+// uklans domain list for riot:
+// *.dyn.riotcdn.net
+// l3cdn.riotgames.com
+// riotgamespatcher-a.akamaihd.net
+// riotgamespatcher-a.akamaihd.net.edgesuite.net
+// worldwide.l3cdn.riotgames.com
+
+// installer url
+// https://valorant.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.live.eu.exe
+
+// technitium lancache dns plugin config, with overrides cutting out *.dyn.riotcdn.net
 {
   "lanCacheEnabled": true,
   "appPreference": 50,
@@ -8,8 +22,27 @@
   "domainsUpdatePeriodHours": 24,
   "ignoreClientAddresses": [],
   "globalCacheAddresses": ["cache.henn.dev"],
-  "cacheAddresses": {},
+  "cacheAddresses": {
+    "riot": ["l3cdn.riotgames.com", "riotgamespatcher-a.akamaihd.net", "riotgamespatcher-a.akamaihd.net.edgesuite.net", "worldwide.l3cdn.riotgames.com"]
+  },
   "enabledCaches": [],
   "disabledCaches": [],
   "recordTtl": 3600
 }
+
+// usual config
+//{
+//  "lanCacheEnabled": true,
+//  "appPreference": 50,
+//  "operatingMode": "Authoritative",
+//  "enableDebugLogging": false,
+//  "domainsDataUrl": "https://github.com/uklans/cache-domains/archive/refs/heads/master.zip",
+//  "domainsDataPathPrefix": "cache-domains-master/",
+//  "domainsUpdatePeriodHours": 24,
+//  "ignoreClientAddresses": [],
+//  "globalCacheAddresses": ["cache.henn.dev"],
+//  "cacheAddresses": {},
+//  "enabledCaches": [],
+//  "disabledCaches": [],
+//  "recordTtl": 3600
+//}

@@ -19,7 +19,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: General Media
-      homepage.name: Ytp
+      homepage.name: Ytp Tube
       homepage.icon: https://icons.chenn.dev/custom/ytptube.png
       homepage.href: https://ytp.chenn.dev
       homepage.description: Youtube Downloader

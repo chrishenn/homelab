@@ -39,7 +39,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Paperless
-      homepage.icon: https://icons.chenn.dev/paperless.svg
+      homepage.icon: https://icons.chenn.dev/paperless-ngx.svg
       homepage.href: https://paperless.chenn.dev
       homepage.description: Document Organization
 
@@ -85,7 +85,7 @@ services:
     labels:
       homepage.group: File Servers
       homepage.name: Paperless GPT
-      homepage.icon: https://icons.chenn.dev/paperless.svg
+      homepage.icon: https://icons.chenn.dev/paperless-ai.png
       homepage.href: https://paperless-gpt.chenn.dev
       homepage.description: AI Document Processing
 

@@ -15,7 +15,7 @@ services:
     networks: [ties, newt]
     labels:
       homepage.group: General Media
-      homepage.name: ties
+      homepage.name: Ties
       homepage.icon: https://icons.chenn.dev/ties-link-sharing.svg
       homepage.href: https://ties.chenn.dev
       homepage.description: Bookmark Manager

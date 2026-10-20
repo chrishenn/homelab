@@ -68,7 +68,7 @@ services:
     networks: [musubi, newt]
     labels:
       homepage.group: Calendar
-      homepage.name: musubi
+      homepage.name: Musubi
       homepage.icon: https://icons.chenn.dev/custom/musubi.svg
       homepage.href: https://musubi.chenn.dev
       homepage.description: Calendar
