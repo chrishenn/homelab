@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2181
 
 # https://github.com/crochat/1p-ssh
 # todo: write a comprehensive (fast) op vault backup (in a real language)
@@ -108,7 +109,7 @@ function connect_to_1password() {
 
 	# Prompt the user for their master password
 	echo -n "Enter your 1Password (shorthand: $shorthand) master password: "
-	read -s master_password
+	read -rs master_password
 	echo
 
 	# Sign in and capture the session token
@@ -167,7 +168,8 @@ function add_key_to_agent() {
 	setup_ssh_agent
 
 	local id=$1
-	local key_id=$(get_key_id "$id")
+	local key_id
+	key_id=$(get_key_id "$id")
 
 	local ssh_key
 	ssh_key=$(op item get "$key_id" --fields private_key --reveal 2>/dev/null | sed -e 's/^"//;s/"$//' -e '/^$/d')
@@ -189,7 +191,8 @@ function extract_key() {
 
 	local id=$1
 	local field=$2
-	local key_id=$(get_key_id "$id")
+	local key_id
+	key_id=$(get_key_id "$id")
 
 	local key
 	key=$(op item get "$key_id" --fields "$field" --reveal 2>/dev/null | sed -e 's/^"//;s/"$//' -e '/^$/d')

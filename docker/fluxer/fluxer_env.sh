@@ -1,3 +1,6 @@
+#!/bin/bash
+# shellcheck disable=all
+
 # Every variable docker-compose.yml reads. A value an install must set is
 # uncommented. A commented line shows the default, or an example where its comment
 # says so, and nothing after = means the service decides. An empty value keeps the

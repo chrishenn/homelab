@@ -23,6 +23,7 @@ include:
   - apps/book/kavita.yml
   - apps/book/listenarr.yml
   - apps/book/readmeabook.yml
+  - apps/book/chaptarr.yml
 
   - apps/calendar/musubi.yml
   - apps/calendar/silentsuite.yml
@@ -125,6 +126,7 @@ include:
   - apps/media/opencut.yml
   - apps/media/ties.yml
   - apps/media/ytp.yml
+  - apps/media/questarr.yml
 
   - apps/monitor/arcane.yml
   - apps/monitor/beszel.yml

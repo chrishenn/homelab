@@ -12,14 +12,14 @@ function install_imgo {
 
 	tmp="$SCRIPT_DIR/tmp"
 	mkdir -p "$tmp"
-	pushd "$tmp"
+	pushd "$tmp" || exit
 
 	wget -O immich-go.tar.gz "$url"
 	tar -xzf immich-go.tar.gz --wildcards 'immich-go'
 	sudo chmod a+x immich-go
 	sudo install immich-go /usr/bin/
 
-	popd
+	popd || exit
 	rm -rf "$tmp"
 }
 

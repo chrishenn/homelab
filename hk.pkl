@@ -1,6 +1,6 @@
-amends "package://github.com/jdx/hk/releases/download/v2.7.1/hk@2.7.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.7.1/hk@2.7.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   ["oxfmt"] = (Builtins.oxfmt) { stomp = false }
@@ -40,36 +40,15 @@ local linters = new Mapping<String, Step> {
   ["trailing_whitespace"] = Builtins.trailing_whitespace
   ["detect_private_key"] = Builtins.detect_private_key
 
+  ["shellcheck"] = (Builtins.shellcheck) {
+    exclude = List("*deprecated*")
+    check = "shellcheck --exclude=SC1008,SC2002,SC2088,SC2129,SC2164,SC2317,SC1091,SC2009,SC1090 {{files}}"
+  }
+
   //   todo: enable
-  //   ["shellcheck"] = (Builtins.shellcheck) {
-  //     check = "shellcheck --exclude=SC2102 {{files}}"
-  //   }
   //   ["gitleaks"] = Builtins.gitleaks
   //   ["betterleaks"] = Builtins.betterleaks
   //   ["kingfisher"] = Builtins.kingfisher
-
-  // maybe don't enable - quite slow
-  //   ["trufflehog"] {
-  //     glob = List("*")
-  //     workspace_indicator = "hk.pkl"
-  //     check =
-  //       """
-  //       trufflehog filesystem --fail --no-update --no-verification \
-  //         --exclude-detectors=Postgres,RabbitMQ,JDBC,Box {{files}}
-  //       """
-  //     output_summary = "hide"
-  //   }
-  //   ["detect-secrets"] {
-  //     glob = List("*")
-  //     exclude = List("docker/*", "*deprecated*")
-  //     check =
-  //       """
-  //       detect-secrets-hook -n --disable-plugin KeywordDetector --disable-plugin Base64HighEntropyString \
-  //         --disable-plugin HexHighEntropyString --disable-plugin BasicAuthDetector {{files}}
-  //       """
-  //   }
-  // deprecated - abandonware; inserts spaces into inline lists, for some reason
-  // ["dclint"] = Builtins.dclint
 }
 
 local slow = new Mapping<String, Step> {

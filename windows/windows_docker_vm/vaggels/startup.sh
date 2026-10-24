@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2016,SC2001
 set -eou pipefail
 
 cpus=$(("$CORES" * 2))

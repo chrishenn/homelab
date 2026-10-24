@@ -104,9 +104,9 @@ function tools {
 	# jetbrains toolbox
 	curl -Lo pkg.tar.gz https://download.jetbrains.com/toolbox/jetbrains-toolbox-3.4.0.77112.tar.gz
 	tar -xvf pkg.tar.gz -C ~/.local/share
-	pushd ~/.local/share/jetbrains*
+	pushd ~/.local/share/jetbrains* || exit
 	./bin/jetbrains-toolbox
-	popd
+	popd || exit
 	rm pkg.tar.gz
 
 	# 1password GUI and CLI. note: other installs will not integrate with browsers

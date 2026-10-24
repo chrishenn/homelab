@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1090
 
 function modcfg {
 	# ensure that required networking modules are loaded on boot
@@ -151,7 +152,7 @@ function cluster_ips {
 	POD_CIDR=$(kubectl cluster-info dump | grep -m 1 -Po '(?<=--cluster-cidr=)[0-9.\/]+')
 	SVC_CIDR=$(kubectl cluster-info dump | grep -m 1 -Po '(?<=--service-cluster-ip-range=)[0-9.\/]+')
 	echo "POD_CIDR: $POD_CIDR"
-	echo "SERVICE_CIDR: $SERVICE_CIDR"
+	echo "SERVICE_CIDR: $SVC_CIDR"
 
 	APISERVER_ADDR=$(kubectl get endpointslice kubernetes -n default -o jsonpath='{.endpoints[0].addresses[0]}')
 	APISERVER_PORT=$(kubectl get endpointslice kubernetes -n default -o jsonpath='{.ports[0].port}')

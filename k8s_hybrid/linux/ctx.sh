@@ -17,7 +17,7 @@ function k_dev {
 	ctx=$(kubectl config current-context)
 	echo "current context: $ctx"
 
-	if [[ ! "$ctx" =~ "$ctx_tgt" ]]; then
+	if [[ ! "$ctx" =~ $ctx_tgt ]]; then
 		echo "kube: error setting ctx"
 		k_unset
 	fi

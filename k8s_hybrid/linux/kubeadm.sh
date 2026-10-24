@@ -4,7 +4,8 @@ function kubeadm_install() {
 	kube_ver=${1}
 
 	# major.minor only of kube version (so 1.33 instead of 1.33.0)
-	local ver=$(echo "$kube_ver" | cut -d '.' -f 1,2)
+	local ver
+	ver=$(echo "$kube_ver" | cut -d '.' -f 1,2)
 
 	sudo mkdir -p /var/lib/kubelet
 	sudo chmod 777 /var/lib/kubelet

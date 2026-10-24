@@ -13,6 +13,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $DATA/qbit/config:/config
       - $DATA/qbit/downloads:/qbit/downloads
+    depends_on:
+      - gluetun
     network_mode: service:gluetun
     labels:
       homepage.group: Download
@@ -55,9 +57,9 @@ services:
       traefik.http.routers.qbit.tls.certresolver: cf
       traefik.http.services.qbit.loadbalancer.server.port: 8080
 
-      # using qbittorrent's api key appears to collide with (break) pangolin's header-based auth
+      # It appears that qbit can't deal with with pangolin's basic auth header. This could also be an nzb360 problem.
       # nzb360 appears to be negotiating with qbit only for part of the login exchange
-      # it looks like the "Authoriztion: Bearer..." and "Authorization: Basic ..." are confusing qbittorrent
+      # password auth into qbit (as opposed to qbit api key) is also not fixing this
       pangolin.public-resources.qbit.name: qbit
       pangolin.public-resources.qbit.full-domain: vpn.qbit.chenn.dev
       pangolin.public-resources.qbit.mode: http
@@ -65,7 +67,6 @@ services:
       pangolin.public-resources.qbit.targets[0].port: 8080
       pangolin.public-resources.qbit.policy: member
 
-      # {qbit, tracearr, prowlarr} it appears that api auth headers conflict with pangolin's basic auth header
       pangolin.public-resources.qbit.rules[0].action: allow
       pangolin.public-resources.qbit.rules[0].match: path
       pangolin.public-resources.qbit.rules[0].value: /api/*

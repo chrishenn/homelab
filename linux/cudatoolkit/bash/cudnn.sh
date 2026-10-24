@@ -21,7 +21,7 @@ function install_cudnn {
 	urlb="https://developer.download.nvidia.com/compute/cudnn/redist/cudnn"
 	url="${urlb}/linux-x86_64/cudnn-linux-x86_64-${cudnn_ver}_cuda${cuda_major}-archive.tar.xz"
 
-	mkdir tmp && pushd tmp
+	mkdir tmp && pushd tmp || exit
 	wget -O pkg.tar.xz "$url"
 	tar xf pkg.tar.xz --strip-components=1
 	sudo cp -a include/* "$tgt/include/"
@@ -38,13 +38,13 @@ function install_cudnn_13 {
 
 function install_cudnn_alt2 {
 	cudnn_ver=9.5.1.17
-	mkdir tmp_cudnn && pushd tmp_cudnn
+	mkdir tmp_cudnn && pushd tmp_cudnn || exit
 	wget -q https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-"${cudnn_ver}"_cuda12-archive.tar.xz -O cudnn-linux-x86_64-"${cudnn_ver}"_cuda12-archive.tar.xz
 	tar xf cudnn-linux-x86_64-"${cudnn_ver}"_cuda12-archive.tar.xz
 	sudo cp -a cudnn-linux-x86_64-"${cudnn_ver}"_cuda12-archive/include/* /usr/local/cuda/include/
 	sudo cp -a cudnn-linux-x86_64-"${cudnn_ver}"_cuda12-archive/lib/* /usr/local/cuda/lib64/
 	sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
-	popd
+	popd || exit
 	rm -rf tmp_cudnn
 }
 
@@ -52,7 +52,7 @@ function install_cudnn_alt3 {
 	cudnn_ver=9.5.1.17
 
 	mkdir tmp_cudnn
-	pushd tmp_cudnn
+	pushd tmp_cudnn || exit
 	if [[ ${CUDA_VERSION:0:4} == "12.6" ]]; then
 		CUDNN_NAME="cudnn-linux-x86_64-9.5.1.17_cuda12-archive"
 	elif [[ ${CUDA_VERSION:0:2} == "12" ]]; then
@@ -67,7 +67,7 @@ function install_cudnn_alt3 {
 	tar xf "$CUDNN_NAME".tar.xz
 	cp -a "$CUDNN_NAME"/include/* /usr/local/cuda/include/
 	cp -a "$CUDNN_NAME"/lib/* /usr/local/cuda/lib64/
-	popd
+	popd || exit
 	rm -rf tmp_cudnn
 	ldconfig
 }
