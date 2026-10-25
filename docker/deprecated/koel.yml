@@ -1,0 +1,49 @@
+# breaks my "no php" rule. SSO is paywalled. Terrible initial setup - do not use!
+---
+services:
+  koel:
+    profiles: [koel]
+    image: phanan/koel
+    container_name: koel
+    restart: unless-stopped
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: koel_db
+      DB_PORT: 5432
+      DB_USERNAME: koel
+      DB_PASSWORD: koel
+      DB_DATABASE: koel
+    volumes:
+      - $DATA/koel/music:/music
+      - $DATA/koel/images:/var/www/html/storage/app/public/images
+      - $DATA/koel/index:/var/www/html/storage/search-indexes
+    networks: [koel, newt]
+    labels:
+      homepage.group: Music
+      homepage.name: Koel
+      homepage.icon: https://icons.chenn.dev/koel.svg
+      homepage.href: https://koel.chenn.dev
+      homepage.description: Music Manager
+
+      pangolin.public-resources.koel.name: koel
+      pangolin.public-resources.koel.full-domain: koel.chenn.dev
+      pangolin.public-resources.koel.mode: http
+      pangolin.public-resources.koel.targets[0].method: http
+      pangolin.public-resources.koel.targets[0].port: 80
+      pangolin.public-resources.koel.policy: arr
+
+  koel_db:
+    profiles: [koel]
+    image: postgres:18-alpine
+    container_name: database
+    restart: unless-stopped
+    volumes:
+      - $DATA/koel/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: koel
+      POSTGRES_USER: koel
+      POSTGRES_PASSWORD: koel
+    networks: [koel]
+
+networks:
+  koel:

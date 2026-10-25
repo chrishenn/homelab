@@ -1,0 +1,46 @@
+# not sure which restreamer would be better without standing them up - haven't yet, no need for one atm
+# - https://github.com/datarhei <- this is probably the one you want
+#   - https://docs.datarhei.com/restreamer/
+#   - https://docker-compose.net/m6glgh2s
+# - https://github.com/savonet/liquidsoap
+# - https://github.com/morrowshore/prism
+# - https://github.com/kreuzhofer/restreamer/tree/main
+---
+configs:
+  restreamer:
+    content: |
+      {
+        "listen": ":1935",
+        "health_listen": ":8080",
+        "application": "live",
+        "ingestion_key_file": "/data/ingestion-key.json",
+        "stream_key": "${STREAM_KEY}",
+        "queue_bytes": 16777216,
+        "dashboard_username": "${USER}",
+        "dashboard_password": "${PASS}",
+        "state_file": "/data/targets.json",
+        "library_directory": "/data/videos",
+        "library_upload_mib": 4096,
+        "brb": {
+          "enabled": "false",
+          "directory": "/data/brb",
+          "width": 1920,
+          "height": 1080,
+          "fps": 30,
+          "sample_rate": 48000
+        },
+        "targets": [],
+        "destinations_file": "/data/destinations.json"
+      }
+
+services:
+  restreamer:
+    profiles: [restreamer]
+    image: ghcr.io/kreuzhofer/restreamer:main
+    container_name: restreamer
+    restart: unless-stopped
+    #    ports:
+    #      - "${RTMP_BIND_ADDRESS:-0.0.0.0}:1935:1935"
+    #      - "${STATUS_BIND_ADDRESS:-127.0.0.1}:${STATUS_PORT:-8080}:8080"
+    volumes:
+      - $DATA/restreamer/data:/data

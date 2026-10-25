@@ -35,4 +35,3 @@ services:
       pangolin.public-resources.dneedle.targets[0].method: http
       pangolin.public-resources.dneedle.targets[0].port: 8688
       pangolin.public-resources.dneedle.policy: member
-#      pangolin.public-resources.dneedle.policy: arr
