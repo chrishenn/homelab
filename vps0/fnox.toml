@@ -5,6 +5,8 @@ ZONEID = { provider = "op", value = "op://homelab/cloudflare/zoneid/chenndev" }
 
 PANGOLIN_SERVER_SECRET = { provider = "op", value = "op://homelab/vps0/pangolin_server_secret" }
 
+MTLS_CA_CERT = { provider = "op", value = "op://homelab/tocata/mtls_ca_cert" }
+
 VPS0_BESZEL_KEY = { provider = "op", value = "op://homelab/vps0/beszel_key" }
 VPS0_BESZEL_TOKEN = { provider = "op", value = "op://homelab/vps0/beszel_token" }
 VPS0_BESZEL_HUB_URL = { provider = "op", value = "op://homelab/vps0/beszel_hub_url" }
