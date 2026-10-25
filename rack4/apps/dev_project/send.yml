@@ -1,0 +1,82 @@
+---
+x-send_cmn: &send_cmn
+  profiles: [send]
+  restart: unless-stopped
+  networks: [send]
+
+services:
+  send:
+    <<: *send_cmn
+    image: projectsend/projectsend:2
+    container_name: send
+    environment:
+      APP_URL: https://send.chenn.dev
+      APP_ENV: production
+      APP_DEBUG: false
+      TRUSTED_PROXIES: '*'
+
+      DB_CONNECTION: mysql
+      DB_HOST: send_db
+      DB_PORT: 3306
+      DB_DATABASE: projectsend
+      DB_USERNAME: projectsend
+      DB_PASSWORD: projectsend
+
+      REDIS_HOST: send_redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+
+      MAIL_MAILER: smtp
+      MAIL_HOST: $SMTP_HOST
+      MAIL_PORT: $SMTP_PORT
+      MAIL_USERNAME: $SMTP_USER
+      MAIL_PASSWORD: $SMTP_PASS
+      MAIL_FROM_ADDRESS: $SMTP_USER
+
+      ADMIN_NAME: $USER
+      ADMIN_EMAIL: $EMAIL
+      ADMIN_PASSWORD: $SEND_PASS
+    volumes:
+      - $DATA/send/data:/var/www/html/storage
+    networks: [send, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Project Send
+      homepage.icon: https://icons.chenn.dev/projectsend.svg
+      homepage.href: https://send.chenn.dev
+      homepage.description: Send Project Files
+
+      pangolin.public-resources.send.name: send
+      pangolin.public-resources.send.full-domain: send.chenn.dev
+      pangolin.public-resources.send.mode: http
+      pangolin.public-resources.send.targets[0].method: http
+      pangolin.public-resources.send.targets[0].port: 80
+      pangolin.public-resources.send.policy: member
+
+  send_db:
+    <<: *send_cmn
+    image: mysql:8.4
+    container_name: send_db
+    environment:
+      MYSQL_DATABASE: projectsend
+      MYSQL_USER: projectsend
+      MYSQL_PASSWORD: projectsend
+      MYSQL_ROOT_PASSWORD: projectsend
+    volumes:
+      - $DATA/send/db:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '--silent']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  send_redis:
+    <<: *send_cmn
+    image: valkey/valkey:alpine
+    container_name: send_redis
+    volumes:
+      - $DATA/send/redis:/data
+
+networks:
+  send:
