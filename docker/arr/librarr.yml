@@ -1,0 +1,36 @@
+# looks promising, but I just brought prowlarr down in the hope that I won't need it anymore...
+---
+services:
+  librarr:
+    profiles: [librarr]
+    image: ghcr.io/jeremiahm37/librarr:latest
+    container_name: librarr
+    restart: unless-stopped
+    volumes:
+      - $DATA/librarr/data:/data
+      - $MEDIA/Books:/books/ebooks
+      - $MEDIA/Audiobooks:/books/audiobooks
+      - $MEDIA/Manga:/books/manga
+    environment:
+      AUTH_USERNAME: ${USER}
+      AUTH_PASSWORD: ${PASS}
+      API_KEY:
+      QB_URL: http://qbittorrent:8080
+      QB_USER: admin
+      QB_PASS: changeme
+      PROWLARR_URL: http://prowlarr:9696
+      PROWLARR_API_KEY: your-prowlarr-api-key
+    networks: [newt]
+    labels:
+      homepage.group: Books
+      homepage.name: Librarr
+      homepage.icon: https://icons.chenn.dev/librarr.svg
+      homepage.href: https://librarr.chenn.dev
+      homepage.description: Book Management
+
+      pangolin.public-resources.librarr.name: librarr
+      pangolin.public-resources.librarr.full-domain: librarr.chenn.dev
+      pangolin.public-resources.librarr.mode: http
+      pangolin.public-resources.librarr.targets[0].method: http
+      pangolin.public-resources.librarr.targets[0].port: 5050
+      pangolin.public-resources.librarr.policy: member

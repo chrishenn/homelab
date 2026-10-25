@@ -1,10 +1,16 @@
 ---
 services:
   byparr:
-    profiles: [download]
+    profiles: [byparr]
     image: ghcr.io/thephaseless/byparr:latest
     container_name: byparr
     restart: unless-stopped
+    shm_size: 1gb
+    tmpfs:
+      - /tmp:exec,mode=1777,size=1G
     environment:
       TZ: $TZ
-    networks: [arr]
+    networks: [byparr]
+
+networks:
+  byparr:

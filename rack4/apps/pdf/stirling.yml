@@ -1,5 +1,3 @@
-# initial login: admin/stirling
-# OIDC requires a pro license
 ---
 services:
   stirling:
@@ -16,14 +14,27 @@ services:
       UI_LOGOSTYLE: modern
       METRICS_ENABLED: true
 
+      SECURITY_INITIALLOGIN_USERNAME: ${USER}
+      SECURITY_INITIALLOGIN_PASSWORD: ${PASS}
+
       MAIL_ENABLED: true
       MAIL_ENABLEINVITES: true
       MAIL_HOST: ${SMTP_HOST}
-      MAIL_PORT: 587
+      MAIL_PORT: ${SMTP_PORT}
       MAIL_USERNAME: ${SMTP_USER}
       MAIL_PASSWORD: ${SMTP_PASS}
       MAIL_FROM: ${SMTP_USER}
       MAIL_TLS_ENABLED: true
+
+      SECURITY_OAUTH2_ENABLED: true
+      SECURITY_OAUTH2_AUTOCREATEUSER: true
+      SECURITY_OAUTH2_BLOCKREGISTRATION: false
+      SECURITY_OAUTH2_PROVIDER: PocketID
+      SECURITY_OAUTH2_ISSUER: https://pocketid.chenn.dev
+      SECURITY_OAUTH2_CLIENTID: ${STIRLING_OIDC_CLIENT}
+      SECURITY_OAUTH2_CLIENTSECRET: ${STIRLING_OIDC_SECRET}
+      SECURITY_OAUTH2_SCOPES: openid,profile,email
+      SECURITY_OAUTH2_USEASUSERNAME: email
     volumes:
       - $DATA/stirling/tessdata:/usr/share/tessdata
       - $DATA/stirling/configs:/configs

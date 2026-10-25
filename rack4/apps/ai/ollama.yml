@@ -16,6 +16,7 @@ services:
     environment:
       OLLAMA_CONTEXT_LENGTH: 32000
       OLLAMA_FLASH_ATTENTION: 1
+      OLLAMA_LOAD_TIMEOUT: 4m
     volumes:
       - $DATA/ollama:/root/.ollama
     networks: [ollama]

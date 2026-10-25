@@ -1,4 +1,5 @@
 # git clone --depth 1 --branch main https://github.com/selfhst/icons.git $DATA/icons
+# cd $DATA/icons && git pull
 ---
 services:
   icons:

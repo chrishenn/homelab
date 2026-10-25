@@ -1,0 +1,63 @@
+# sudo chown -R 1000:1000 $DATA/scry/data/downloads
+services:
+  scry:
+    profiles: [scry]
+    image: ghcr.io/scryer-media/scryer:latest
+    container_name: scry
+    restart: unless-stopped
+    environment:
+      SCRYER_PUBLIC_URL: https://scry.chenn.dev
+      SCRYER_ADMIN_USERNAME: $USER
+      SCRYER_ADMIN_PASSWORD: $PASS
+      SCRYER_AUTH_ENABLED: true
+      SCRYER_RATE_LIMIT_TRUSTED_PROXY_IPS: $NEWT_SUBNET,$TRAEFIK_SUBNET
+    volumes:
+      - $DATA/scry/data:/data
+      - $DATA/scry/config:/config
+      - $DATA/qbit/downloads:/qbit/downloads
+      - $MEDIA:/media_library
+    networks: [newt, scry, qbit, byparr]
+    labels:
+      homepage.group: Movies and TV
+      homepage.name: Scryer
+      homepage.icon: https://icons.chenn.dev/custom/scryer.svg
+      homepage.href: https://scry.chenn.dev
+      homepage.description: Movies and TV
+
+      pangolin.public-resources.scry.name: scry
+      pangolin.public-resources.scry.full-domain: scry.chenn.dev
+      pangolin.public-resources.scry.mode: http
+      pangolin.public-resources.scry.targets[0].method: http
+      pangolin.public-resources.scry.targets[0].port: 8080
+      pangolin.public-resources.scry.policy: member
+
+  weaver:
+    profiles: [scry]
+    image: ghcr.io/scryer-media/weaver:latest
+    container_name: weaver
+    restart: unless-stopped
+    environment:
+      WEAVER_BOOTSTRAP_LOGIN_USERNAME: $USER
+      WEAVER_BOOTSTRAP_LOGIN_PASSWORD: $PASS
+      WEAVER_INTERMEDIATE_DIR: /data/intermediate
+      WEAVER_COMPLETE_DIR: /data/downloads
+    volumes:
+      - $DATA/scry/data:/data
+      - $DATA/scry/weaver:/config
+    networks: [newt, scry]
+    labels:
+      homepage.group: Movies and TV
+      homepage.name: Weaver
+      homepage.icon: https://icons.chenn.dev/custom/weaver.svg
+      homepage.href: https://weaver.chenn.dev
+      homepage.description: Downloader
+
+      pangolin.public-resources.weaver.name: weaver
+      pangolin.public-resources.weaver.full-domain: weaver.chenn.dev
+      pangolin.public-resources.weaver.mode: http
+      pangolin.public-resources.weaver.targets[0].method: http
+      pangolin.public-resources.weaver.targets[0].port: 9090
+      pangolin.public-resources.weaver.policy: member
+
+networks:
+  scry:

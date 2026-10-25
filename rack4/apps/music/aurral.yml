@@ -1,7 +1,7 @@
 ---
 services:
   aurral:
-    profiles: [arr]
+    profiles: [aurral]
     image: ghcr.io/lklynet/aurral:latest
     container_name: aurral
     restart: unless-stopped
@@ -10,13 +10,13 @@ services:
     volumes:
       - $DATA/aurral/downloads:/app/downloads
       - $DATA/aurral/data:/app/backend/data
-    networks: [arr, newt]
+    networks: [newt]
     labels:
       homepage.group: Music
       homepage.name: Aurral
       homepage.icon: https://icons.chenn.dev/aurral.svg
       homepage.href: https://aurral.chenn.dev
-      homepage.description: Music Recommendations
+      homepage.description: Music Discovery
 
       pangolin.public-resources.aurral.name: aurral
       pangolin.public-resources.aurral.full-domain: aurral.chenn.dev

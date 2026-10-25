@@ -16,7 +16,7 @@ services:
       - $DATA/readmeabook/pgdata:/var/lib/postgresql/data
       - $DATA/readmeabook/redis:/var/lib/redis
       - $DATA/qbit/downloads:/qbit/downloads
-    networks: [newt, arr]
+    networks: [newt]
     labels:
       homepage.group: Books
       homepage.name: Readmeabook

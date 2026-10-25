@@ -1,0 +1,33 @@
+# sudo chown -R 65532:65532 $DATA/hister
+---
+services:
+  hister:
+    profiles: [hister]
+    image: ghcr.io/asciimoo/hister:latest
+    container_name: hister
+    restart: unless-stopped
+    init: true
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    tmpfs:
+      - /tmp:noexec,nosuid,size=64m
+    environment:
+      HISTER__SERVER__ADDRESS: 0.0.0.0:4433
+      HISTER__SERVER__BASE_URL: https://hister.chenn.dev
+    volumes:
+      - $DATA/hister/data:/hister/data
+    networks: [newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: hister
+      homepage.icon: https://icons.chenn.dev/hister.svg
+      homepage.href: https://hister.chenn.dev
+      homepage.description: Web Archiver
+
+      pangolin.public-resources.hister.name: hister
+      pangolin.public-resources.hister.full-domain: hister.chenn.dev
+      pangolin.public-resources.hister.mode: http
+      pangolin.public-resources.hister.targets[0].method: http
+      pangolin.public-resources.hister.targets[0].port: 4433
+      pangolin.public-resources.hister.policy: member

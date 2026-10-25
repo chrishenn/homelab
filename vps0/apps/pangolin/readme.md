@@ -68,8 +68,7 @@ NOTE
 ### apply pangolin blueprint from cli
 
 ```bash
-# see rack4/mise.toml to manage pangolin-cli as a mise tool "github:fosrl/cli"
-curl -fsSL https://static.pangolin.net/get-cli.sh | bash
+mise use "github:fosrl/cli[rename_exe=pangolin]"
 pangolin login
 pangolin select org --org coop
 pangolin apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml

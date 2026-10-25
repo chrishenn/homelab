@@ -1,8 +1,9 @@
+# looks like they broke their docker image ~24/10/2026
 ---
 services:
   keeper:
     profiles: [keeper]
-    image: ghcr.io/ridafkih/keeper-services:latest
+    image: ghcr.io/ridafkih/keeper-services:2
     container_name: keeper
     restart: unless-stopped
     environment:

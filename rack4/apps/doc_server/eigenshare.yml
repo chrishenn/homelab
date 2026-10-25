@@ -1,0 +1,26 @@
+# admin/admin
+---
+services:
+  eigenshare:
+    profiles: [eigenshare]
+    image: ghcr.io/yousefalfoqaha/eigenshare
+    container_name: eigenshare
+    restart: unless-stopped
+    environment:
+      TRUST_PROXY: true
+    volumes:
+      - $DATA/eigenshare/data:/data
+    networks: [newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Eigenshare
+      homepage.icon: https://icons.chenn.dev/eigenshare.svg
+      homepage.href: https://eigenshare.chenn.dev
+      homepage.description: File Sharing
+
+      pangolin.public-resources.eigenshare.name: eigenshare
+      pangolin.public-resources.eigenshare.full-domain: eigenshare.chenn.dev
+      pangolin.public-resources.eigenshare.mode: http
+      pangolin.public-resources.eigenshare.targets[0].method: http
+      pangolin.public-resources.eigenshare.targets[0].port: 8080
+      pangolin.public-resources.eigenshare.policy: member

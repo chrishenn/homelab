@@ -1,6 +1,7 @@
----
+# needs some TLC
 # I'm having trouble getting album art to extract correctly
 # Can't get playback to work on linux desktop
+---
 configs:
   meelo:
     content: |
@@ -33,7 +34,7 @@ configs:
   meelo_nginx:
     content: |
       server {
-        listen 5000;
+        listen 80;
         server_name meelo.chenn.dev;
 
         location = /api {
@@ -135,7 +136,7 @@ services:
       pangolin.public-resources.meelo.full-domain: meelo.chenn.dev
       pangolin.public-resources.meelo.mode: http
       pangolin.public-resources.meelo.targets[0].method: http
-      pangolin.public-resources.meelo.targets[0].port: 5000
+      pangolin.public-resources.meelo.targets[0].port: 80
       pangolin.public-resources.meelo.policy: member
 
   meelo:

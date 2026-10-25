@@ -1,3 +1,5 @@
+# keeps crashing with "config file /config.yaml does not exist" after some time - why!?
+
 # sudo chown -R 1000:1000 $DATA/files
 ---
 configs:

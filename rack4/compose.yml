@@ -43,7 +43,7 @@ include:
   - apps/dev/chartdb.yml
   - apps/dev/cyberchef.yml
   - apps/dev/dagu.yml
-  - apps/dev/excalidraw.yml
+  - apps/dev/excal.yml
   - apps/dev/gocron.yml
   - apps/dev/infisical.yml
   - apps/dev/ittools.yml
@@ -67,6 +67,8 @@ include:
   - apps/dev_project/vikunja.yml
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
+  - apps/dev_project/send.yml
+  - apps/dev_project/flowplan.yml
   #  - apps/dev_project/fizzy.yml
   #  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
@@ -91,16 +93,21 @@ include:
   - apps/doc_server/syncin.yml
   - apps/doc_server/syncthing.yml
   - apps/doc_server/zipline.yml
+  - apps/doc_server/guardou.yml
+  - apps/doc_server/eigenshare.yml
 
   - apps/download/qbit.yml
+  - apps/download/qbit_novpn.yml
   - apps/download/sab.yml
-  - apps/download/solverr.yml
-  #  - apps/download/byparr.yml
+  - apps/download/byparr.yml
+  - apps/download/qui.yml
 
   - apps/email/mailflow.yml
   - apps/email/stalwart.yml
 
   - apps/game/wordle.yml
+  - apps/game/questarr.yml
+  - apps/game/gameyfin.yml
   #  - apps/game/cs2.yml
   #  - apps/game/csgo.yml
 
@@ -112,11 +119,14 @@ include:
   - apps/infra/traefik.yml
   - apps/infra/technitium.yml
   - apps/infra/icons.yml
+  - apps/infra/mbx.yml
+  #  - apps/infra/netdata.yml
   #  - apps/infra/watchtower.yml
 
   - apps/job/openresume.yml
   - apps/job/ops.yml
   - apps/job/resume.yml
+  - apps/job/littlelink.yml
 
   - apps/media/archive.yml
   - apps/media/ghost.yml
@@ -126,7 +136,8 @@ include:
   - apps/media/opencut.yml
   - apps/media/ties.yml
   - apps/media/ytp.yml
-  - apps/media/questarr.yml
+  - apps/media/orcah.yml
+  - apps/media/hister.yml
 
   - apps/monitor/arcane.yml
   - apps/monitor/beszel.yml
@@ -136,26 +147,22 @@ include:
   - apps/monitor/peekaping.yml
   - apps/monitor/termix.yml
 
-  - apps/movie/arr.yml
   - apps/movie/cinephage.yml
-  - apps/movie/doplarr.yml
   - apps/movie/jellyfin.yml
-  - apps/movie/jellyglance.yml
   - apps/movie/muxarr.yml
-  - apps/movie/mydia.yml
-  - apps/movie/recyclarr.yml
-  - apps/movie/seerr.yml
-  - apps/movie/tracearr.yml
   - apps/movie/transcodarr.yml
-  - apps/movie/yamtrack.yml
+  - apps/movie/scry.yml
+  - apps/movie/mediarium.yml
+  - apps/movie/silo.yml
 
   - apps/music/aurral.yml
   - apps/music/dneedle.yml
-  - apps/music/feishin.yml
   - apps/music/lidarr.yml
   - apps/music/mdrm.yml
-  - apps/music/meelo.yml
+  #  - apps/music/meelo.yml
   - apps/music/navidrome.yml
+  - apps/music/tocata.yml
+  - apps/music/juuz.yml
 
   - apps/notify/apprise.yml
   - apps/notify/gotify.yml
@@ -163,9 +170,9 @@ include:
 
   - apps/pdf/bento.yml
   - apps/pdf/documenso.yml
-  - apps/pdf/overleaf.yml
   - apps/pdf/pdfding.yml
   - apps/pdf/stirling.yml
+  - apps/pdf/aldine.yml
 
   - apps/photo/dawarich.yml
   - apps/photo/foldergram.yml
@@ -192,6 +199,7 @@ include:
   - apps/tool/rally.yml
   - apps/tool/sure.yml
   - apps/tool/warden.yml
+  - apps/tool/calrs.yml
 #  - apps/tool/netbox.yml
 #  - apps/tool/kestra.yml
 #  - apps/tool/shlink.yml

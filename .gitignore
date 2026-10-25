@@ -13,3 +13,4 @@ tmp/
 *.bak*
 .mise/
 sdks/
+/.ryl_cache/

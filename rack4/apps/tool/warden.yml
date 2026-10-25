@@ -46,3 +46,12 @@ services:
       pangolin.public-resources.warden.targets[0].method: http
       pangolin.public-resources.warden.targets[0].port: 80
       pangolin.public-resources.warden.policy: chris
+
+      # allow:
+      # /api/*
+      # /identity/*
+      # /wl/*
+      # /notifications/hub
+      # /icons/*
+      # deny:
+      # /admin/*

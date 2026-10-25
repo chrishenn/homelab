@@ -1,0 +1,46 @@
+---
+services:
+  excal:
+    profiles: [excal]
+    image: ghcr.io/maciekzygmunt/excaliself:${EXCALISELF_VERSION:-latest}
+    container_name: excal
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://excal:excal@excal_db:5432/excal
+      BETTER_AUTH_SECRET: 5068867c940b56bf77f038fe83baeda771ae4b0d74693e0eb987de7931ce4e4a
+      BASE_URL: https://excal.chenn.dev
+    networks: [excal, newt]
+    labels:
+      homepage.group: Development Tools
+      homepage.name: Excaliself
+      homepage.icon: https://icons.chenn.dev/excalidraw.svg
+      homepage.href: https://excal.chenn.dev
+      homepage.description: Diagrams
+
+      pangolin.public-resources.excal.name: excal
+      pangolin.public-resources.excal.full-domain: excal.chenn.dev
+      pangolin.public-resources.excal.mode: http
+      pangolin.public-resources.excal.targets[0].method: http
+      pangolin.public-resources.excal.targets[0].port: 3000
+      pangolin.public-resources.excal.policy: member
+
+  excal_db:
+    profiles: [excal]
+    image: postgres:18-alpine
+    container_name: excal_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: excal
+      POSTGRES_PASSWORD: excal
+      POSTGRES_DB: excal
+    volumes:
+      - $DATA/excal/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [excal]
+
+networks:
+  excal:

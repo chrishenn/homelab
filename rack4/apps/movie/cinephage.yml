@@ -16,7 +16,7 @@ services:
       - $DATA/qbit/downloads:/qbit/downloads
       - $DATA/sab/downloads:/sab/downloads
       - $DATA/cinephage/config:/config
-    networks: [newt, arr]
+    networks: [newt]
     labels:
       homepage.group: Movies and TV
       homepage.name: Cinephage

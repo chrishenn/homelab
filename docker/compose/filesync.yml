@@ -1,0 +1,67 @@
+# would need to plumb up coturn ports, and there may be an existing turn server(?)
+# Amateurish. Put your init script in your container plz.
+---
+services:
+  filesync:
+    profiles: [filesync]
+    image: poliuscorp/filesync
+    container_name: filesync
+    restart: unless-stopped
+    environment:
+      SECRET_FILE: /keys/secret
+    volumes:
+      - $DATA/filesync/keys:/keys:ro
+      #    ports:
+      #      - "80:80"
+    networks: [newt]
+
+  filesync_coturn:
+    profiles: [filesync]
+    image: coturn/coturn:4.18.0-alpine
+    container_name: filesync-coturn
+    restart: unless-stopped
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        secret=$$(cat /keys/secret) && exec turnserver \
+          --fingerprint \
+          --use-auth-secret \
+          --no-multicast-peers \
+          --no-tcp-relay \
+          --denied-peer-ip=0.0.0.0-0.255.255.255 \
+          --denied-peer-ip=10.0.0.0-10.255.255.255 \
+          --denied-peer-ip=100.64.0.0-100.127.255.255 \
+          --denied-peer-ip=127.0.0.0-127.255.255.255 \
+          --denied-peer-ip=169.254.0.0-169.254.255.255 \
+          --denied-peer-ip=172.16.0.0-172.31.255.255 \
+          --denied-peer-ip=192.0.0.0-192.0.0.255 \
+          --denied-peer-ip=192.168.0.0-192.168.255.255 \
+          --denied-peer-ip=198.18.0.0-198.19.255.255 \
+          --denied-peer-ip=::1 \
+          --denied-peer-ip=fc00::-fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff \
+          --denied-peer-ip=fe80::-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff \
+          --no-tls \
+          --log-file=stdout \
+          --realm=${TURN_REALM:-filesync} \
+          --static-auth-secret="$$secret" \
+          --listening-port=3478 \
+          --min-port=50000 \
+          --max-port=50100
+    volumes:
+      - $DATA/filesync/keys:/keys:ro
+    depends_on:
+      filesync_init:
+        condition: service_completed_successfully
+        #    ports:
+        #      - "3478:3478/tcp"
+        #      - "3478:3478/udp"
+        #      - "50000-50100:50000-50100/udp"
+
+  filesync_init:
+    profiles: [filesync]
+    image: poliuscorp/filesync
+    container_name: filesync-init
+    restart: unless-stopped
+    command: python3 api/init_secret.py
+    volumes:
+      - $DATA/filesync/keys:/keys

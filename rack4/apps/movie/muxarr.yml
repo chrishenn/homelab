@@ -2,7 +2,7 @@
 ---
 services:
   muxarr:
-    profiles: [arr]
+    profiles: [muxarr]
     image: ghcr.io/kirovair/muxarr:latest
     container_name: muxarr
     restart: unless-stopped
@@ -13,7 +13,7 @@ services:
     volumes:
       - $DATA/muxarr/data:/config
       - $MEDIA:/media
-    networks: [arr, newt]
+    networks: [newt]
     labels:
       homepage.group: Movies and TV
       homepage.name: Muxarr

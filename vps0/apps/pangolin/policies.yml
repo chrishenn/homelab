@@ -1,3 +1,7 @@
+# fosrl rolled their own template substitution for with a quick-n-dirty find-replace. So ... yeah
+# if you put the speshal chars in a comment, for example, explaining the issue, for example ... your bp will fail SILENTLY
+# I'm losing my mind
+
 public-policies:
   member:
     name: Default Member Policy
@@ -17,7 +21,7 @@ public-policies:
     name: Chris Only
     sso: true
     sso-users:
-      - {{env.EMAIL}}
+      - '{{env.EMAIL}}'
     apply-rules: true
     rules:
       - action: pass
@@ -86,6 +90,48 @@ public-policies:
       - action: pass
         match: country
         value: CA
+      - action: deny
+        match: country
+        value: ALL
+
+  subsonic:
+    name: Member SSO, Basic Auth, mTLS
+    sso: true
+    sso-roles:
+      - Member
+    basic-auth:
+      user: '{{env.ARR_PANGOLIN_AUTH_USER}}'
+      password: '{{env.ARR_PANGOLIN_AUTH_PASS}}'
+      extended-compatibility: true
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL
+    mtls:
+      enabled: true
+      # !!DANGER!! INDENTATION MUST BE BAKED INTO THE ENV VAR, READ FROM OP SECRET, BC FOSRL DOES NOT HANDLE IT PROPERLY
+      ca-certificates:
+        - |
+          {{env.MTLS_CA_CERT}}
+
+  # couldn't get vert to connect using basic auth header
+  vertd:
+    name: Vertd Basic Auth
+    sso: true
+    sso-roles:
+      - Member
+    basic-auth:
+      user: '{{env.VERTD_PANGOLIN_AUTH_USER}}'
+      password: '{{env.VERTD_PANGOLIN_AUTH_PASS}}'
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
       - action: deny
         match: country
         value: ALL

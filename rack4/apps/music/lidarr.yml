@@ -1,7 +1,7 @@
 ---
 services:
   lidarr:
-    profiles: [arr]
+    profiles: [lidarr]
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       - $DATA/sab/downloads:/sab/downloads
       - $DATA/qbit/downloads:/qbit/downloads
       - $MEDIA:/media_library
-    networks: [arr, newt]
+    networks: [newt]
     labels:
       homepage.group: Music
       homepage.name: Lidarr

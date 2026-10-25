@@ -1,4 +1,4 @@
-# oidc on the app side can only handle one domain
+# dawarich refuses to set an Authorization header, so we are forced to use a pangolin "shareable link" - this sucks
 ---
 x-dawarich_env: &dawarich_env
   DATABASE_HOST: dawarich_db

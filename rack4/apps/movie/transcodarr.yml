@@ -36,7 +36,7 @@ services:
       - $DATA/transcodarr/logs:/app/logs
       - $DATA/transcodarr/data:/app/data
       - $DATA/transcodarr/config:/app/config
-    networks: [transcodarr, arr, newt]
+    networks: [transcodarr, newt]
     labels:
       homepage.group: Movies and TV
       homepage.name: Transcodarr

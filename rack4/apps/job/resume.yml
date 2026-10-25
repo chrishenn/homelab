@@ -14,7 +14,7 @@ services:
 
       DATABASE_URL: postgresql://postgres:postgres@resume_db:5432/postgres
       REDIS_URL: redis://resume_redis:6379
-      ENCRYPTION_SECRET: change-me-to-a-secure-agent-secret-in-production
+      ENCRYPTION_SECRET: ${RESUME_SECRET}
 
       S3_ACCESS_KEY_ID: seaweedfs
       S3_SECRET_ACCESS_KEY: seaweedfs
