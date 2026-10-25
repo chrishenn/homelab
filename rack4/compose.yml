@@ -67,6 +67,7 @@ include:
   - apps/dev_project/vikunja.yml
   - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
+  - apps/dev_project/send.yml
   #  - apps/dev_project/fizzy.yml
   #  - apps/dev_project/plane.yml
   #  - apps/dev_project/penpot.yml
@@ -112,11 +113,13 @@ include:
   - apps/infra/traefik.yml
   - apps/infra/technitium.yml
   - apps/infra/icons.yml
+  #  - apps/infra/netdata.yml
   #  - apps/infra/watchtower.yml
 
   - apps/job/openresume.yml
   - apps/job/ops.yml
   - apps/job/resume.yml
+  - apps/job/littlelink.yml
 
   - apps/media/archive.yml
   - apps/media/ghost.yml

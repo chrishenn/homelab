@@ -6,8 +6,14 @@ local linters = new Mapping<String, Step> {
   ["oxfmt"] = (Builtins.oxfmt) { stomp = false }
   ["ruff_format"] = (Builtins.ruff_format) { output_summary = "hide"; stomp = false }
   ["ruff"] = Builtins.ruff
+
   ["shfmt"] = Builtins.shfmt
   ["shellharden"] = Builtins.shellharden
+  ["shellcheck"] = (Builtins.shellcheck) {
+    exclude = List("*deprecated*")
+    check =
+      "shellcheck --exclude=SC1008,SC2002,SC2088,SC2129,SC2164,SC2317,SC1091,SC2009,SC1090 {{files}}"
+  }
 
   ["pkl"] = Builtins.pkl
   ["pkl_format"] = Builtins.pkl_format
@@ -40,11 +46,6 @@ local linters = new Mapping<String, Step> {
   ["trailing_whitespace"] = Builtins.trailing_whitespace
   ["detect_private_key"] = Builtins.detect_private_key
 
-  ["shellcheck"] = (Builtins.shellcheck) {
-    exclude = List("*deprecated*")
-    check = "shellcheck --exclude=SC1008,SC2002,SC2088,SC2129,SC2164,SC2317,SC1091,SC2009,SC1090 {{files}}"
-  }
-
   //   todo: enable
   //   ["gitleaks"] = Builtins.gitleaks
   //   ["betterleaks"] = Builtins.betterleaks
@@ -54,7 +55,7 @@ local linters = new Mapping<String, Step> {
 local slow = new Mapping<String, Step> {
   ["ty"] = (Builtins.ty) {
     workspace_indicator = "pyproject.toml"
-    exclude = "rack3/*"
+    exclude = List("rack3/*", "vps0/*")
     check = new CommandSpec {
       command = new Command {
         argv = List("mise", "x", "-C", "{{workspace}}", "-c", "ty check {{workspace_files}}")

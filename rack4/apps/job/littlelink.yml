@@ -1,0 +1,55 @@
+---
+services:
+  littlelink:
+    profiles: [littlelink]
+    image: ghcr.io/timothystewart6/littlelink-server:latest
+    container_name: littlelink
+    environment:
+      META_TITLE: Chris Henn
+      META_DESCRIPTION: Machine Learning Researcher, Software Engineer
+      META_AUTHOR: Chris Henn
+      META_KEYWORDS: GPU, CUDA, Software, Data, ML, Engineering
+      LANG: en
+      META_INDEX_STATUS: all
+
+      THEME: Dark
+      FAVICON_URL: https://icons.chenn.dev/nvidia.svg
+      AVATAR_URL: https://avatars.githubusercontent.com/u/43179500
+      NAME: Chris Henn
+      BIO: Machine Learning Researcher, Software Engineer
+      BUTTON_ORDER: GITHUB,LINKED_IN,YOUTUBE,TWITCH,TWITTER,INSTAGRAM,DISCORD,FACEBOOK,TIKTOK,PATREON,GEAR,DOCUMENTATION
+      GITHUB: https://github.com/chrishenn
+      LINKED_IN: https://www.linkedin.com/in/christianhenn1000
+      FOOTER: Chris Henn © 2026
+
+      # TWITTER: https://chris.chenn.dev
+      # INSTAGRAM: https://chris.chenn.dev
+      # YOUTUBE: https://chris.chenn.dev
+      # TWITCH: https://chris.chenn.dev
+      # DISCORD: https://chris.chenn.dev
+      # TIKTOK: https://chris.chenn.dev
+      # FACEBOOK: https://chris.chenn.dev
+      # PATREON: https://chris.chenn.dev
+
+      # you can render unlimited custom buttons by adding CUSTOM_BUTTON_* vars, with comma-separated text for each
+      # CUSTOM_BUTTON_TEXT: Documentation,Recommended Gear
+      # CUSTOM_BUTTON_URL: https://chris.chenn.dev
+      # CUSTOM_BUTTON_COLOR: # 000000,#000000
+      # CUSTOM_BUTTON_TEXT_COLOR: # ffffff,#ffffff
+      # CUSTOM_BUTTON_ALT_TEXT: Documentation
+      # CUSTOM_BUTTON_NAME: DOCUMENTATION,GEAR
+      # CUSTOM_BUTTON_ICON: fas file-alt,fas fa-cog
+    networks: [newt]
+    restart: unless-stopped
+    labels:
+      homepage.group: Job
+      homepage.name: Littlelink
+      homepage.icon: https://icons.chenn.dev/littlelink.svg
+      homepage.href: https://chris.chenn.dev
+      homepage.description: Linktree
+
+      pangolin.public-resources.littlelink.name: littlelink
+      pangolin.public-resources.littlelink.full-domain: chris.chenn.dev
+      pangolin.public-resources.littlelink.mode: http
+      pangolin.public-resources.littlelink.targets[0].method: http
+      pangolin.public-resources.littlelink.targets[0].port: 3000
