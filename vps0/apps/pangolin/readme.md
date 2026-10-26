@@ -68,11 +68,10 @@ NOTE
 ### apply pangolin blueprint from cli
 
 ```bash
-# see rack4/mise.toml to manage pangolin-cli as a mise tool "github:fosrl/cli"
-curl -fsSL https://static.pangolin.net/get-cli.sh | bash
-pangolin-cli login
-pangolin-cli select org --org coop
-pangolin-cli apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml
+mise use "github:fosrl/cli[rename_exe=pangolin]"
+pangolin login
+pangolin select org --org coop
+pangolin apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml
 ```
 
 ### bare-metal host newt service install: to provide pangolin ssh access

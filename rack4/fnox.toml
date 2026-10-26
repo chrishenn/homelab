@@ -253,6 +253,7 @@ MIRO_KEY = { provider = "op", value = "op://homelab/miro/key" }
 MIROS_KEY = { provider = "op", value = "op://homelab/miro/miros_key" }
 SEND_PASS = { provider = "op", value = "op://homelab/send/password" }
 RESUME_SECRET = { provider = "op", value = "op://homelab/resume/secret" }
+JUUZ_PASS = { provider = "op", value = "op://homelab/juuz/password" }
 
 GIST_OIDC_CLIENT = { provider = "op", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "op", value = "op://homelab/gist/oidc_secret" }

@@ -5,11 +5,14 @@
 fnox = { version = "latest", lazy = true }
 pulumi = { version = "latest", lazy = true }
 uv = { version = "latest", lazy = true }
-"github:fosrl/cli" = { version = "latest", rename_exe = "pangolin" , lazy = true, lazy_bins = "pangolin" }
-go = "latest"
+"github:fosrl/cli" = { version = "latest", rename_exe = "pangolin" }
 
 [env]
 DOCKER_HOST = "ssh://chris@chenn.dev:2200"
 DIR_HOST = "/home/chris/Projects/homelab/vps0"
 DATA = "/home/chris/data"
 BACKUP = "/home/chris/backup"
+
+[tasks.policies]
+description = "Apply pangolin blueprint with shared access policies"
+run = "pangolin apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml"

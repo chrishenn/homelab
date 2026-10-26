@@ -1,3 +1,6 @@
+# turned off pangolin auth for testing - symfonium is not getting any albums or tracks, but can see and playback the files
+# mtls and header auth appears to be working, though. Which is neat
+
 # sudo chown -R 1000:1000 $DATA/tocata/data
 ---
 services:
@@ -8,7 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA/tocata/data:/data
-      - $DATA/tocata/media:/media:ro
+      - $MEDIA/Music:/media:ro
     networks: [newt]
     labels:
       homepage.group: Music
@@ -22,16 +25,4 @@ services:
       pangolin.public-resources.tocata.mode: http
       pangolin.public-resources.tocata.targets[0].method: http
       pangolin.public-resources.tocata.targets[0].port: 4224
-      pangolin.public-resources.tocata.policy: tocata
-
-      #      pangolin.public-resources.tocata.auth.mtls.enabled: true
-      #      pangolin.public-resources.tocata.auth.mtls.ca-certificates[0]: |
-      #        ${MTLS_CA_CERT}
-
-      pangolin.public-resources.tocata.rules[0].action: allow
-      pangolin.public-resources.tocata.rules[0].match: path
-      pangolin.public-resources.tocata.rules[0].value: /api/*
-
-      pangolin.public-resources.tocata.rules[1].action: allow
-      pangolin.public-resources.tocata.rules[1].match: path
-      pangolin.public-resources.tocata.rules[1].value: /rest/*
+      pangolin.public-resources.tocata.policy: subsonic
