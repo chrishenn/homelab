@@ -65,9 +65,5 @@ services:
       pangolin.public-resources.qbit.targets[0].port: 8080
       pangolin.public-resources.qbit.policy: member
 
-      pangolin.public-resources.qbit.rules[0].action: allow
-      pangolin.public-resources.qbit.rules[0].match: path
-      pangolin.public-resources.qbit.rules[0].value: /api/*
-
 networks:
   qbit:

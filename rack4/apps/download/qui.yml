@@ -20,7 +20,7 @@ services:
       - $DATA/qbit_novpn/downloads:/qbit_novpn/downloads
     healthcheck:
       test: [CMD, wget, -qO, --no-verbose, http://localhost:7476]
-    networks: [arr, newt]
+    networks: [qbit, newt]
     labels:
       homepage.group: Download
       homepage.name: Qui

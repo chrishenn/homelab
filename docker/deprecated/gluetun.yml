@@ -1,3 +1,4 @@
+# tends to fall over every couple days. Hopefully binhex/arch-qbittorrentvpn will be more reliable
 ---
 services:
   qbit_vpn:

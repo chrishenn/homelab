@@ -62,12 +62,15 @@ jellybox
 - https://github.com/avdept/JellyBoxPlayer
 - p good on both desktop and android
 
+### terminal
+
+ratune
+- https://github.com/acmagn/ratune
+
+
 ---
 
 # Nah
-
-ferrosonic (tui)
-- https://github.com/jaidaken/ferrosonic
 
 musly (android, desktop)
 - https://github.com/dddevid/musly
