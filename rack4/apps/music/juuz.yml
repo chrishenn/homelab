@@ -1,0 +1,112 @@
+# works great. Only thing missing is oidc
+# sudo chown -R 1000:1000 $DATA/juuz
+---
+services:
+  juuz:
+    profiles: [juuz]
+    image: ghcr.io/vleerapp/juuz:latest
+    container_name: juuz
+    restart: unless-stopped
+    environment:
+      JUUZ_ADMIN_PASSWORD: ${JUUZ_PASS}
+      JUUZ_OMM: true
+      JUUZ_LASTFM_API_KEY:
+      JUUZ_LASTFM_SECRET:
+      JUUZ_PUBLIC_URL: https://juuz.chenn.dev
+      JUUZ_TRUST_PROXY: true
+    volumes:
+      - $DATA/juuz/data:/data
+      - $MEDIA/Music:/music
+    networks: [newt]
+    labels:
+      homepage.group: Music
+      homepage.name: juuz
+      homepage.icon: https://icons.chenn.dev/custom/juuz.png
+      homepage.href: https://juuz.chenn.dev
+      homepage.description: Music Server
+
+      pangolin.public-resources.juuz.name: juuz
+      pangolin.public-resources.juuz.full-domain: juuz.chenn.dev
+      pangolin.public-resources.juuz.mode: http
+      pangolin.public-resources.juuz.targets[0].method: http
+      pangolin.public-resources.juuz.targets[0].port: 4533
+      pangolin.public-resources.juuz.policy: subsonic
+
+  mist:
+    image: ghcr.io/kusefiru/mist:latest
+    container_name: mist
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      pangolin.public-resources.mist.name: mist
+      pangolin.public-resources.mist.full-domain: mist.chenn.dev
+      pangolin.public-resources.mist.mode: http
+      pangolin.public-resources.mist.targets[0].method: http
+      pangolin.public-resources.mist.targets[0].port: 80
+      pangolin.public-resources.mist.policy: member
+
+  airsonic:
+    image: tamland/airsonic-refix:latest
+    container_name: airsonic
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      pangolin.public-resources.airsonic.name: airsonic
+      pangolin.public-resources.airsonic.full-domain: airsonic.chenn.dev
+      pangolin.public-resources.airsonic.mode: http
+      pangolin.public-resources.airsonic.targets[0].method: http
+      pangolin.public-resources.airsonic.targets[0].port: 80
+      pangolin.public-resources.airsonic.policy: member
+
+  aonsoku:
+    image: ghcr.io/victoralvesf/aonsoku:latest
+    container_name: aonsoku
+    restart: unless-stopped
+    environment:
+      APP_USER: admin
+      APP_PASSWORD: ${JUUZ_PASS}
+      APP_AUTH_TYPE: password
+      SERVER_URL: https://juuz.chenn.dev
+      HIDE_SERVER: true
+    networks: [newt]
+    labels:
+      pangolin.public-resources.aonsoku.name: aonsoku
+      pangolin.public-resources.aonsoku.full-domain: aonsoku.chenn.dev
+      pangolin.public-resources.aonsoku.mode: http
+      pangolin.public-resources.aonsoku.targets[0].method: http
+      pangolin.public-resources.aonsoku.targets[0].port: 8080
+      pangolin.public-resources.aonsoku.policy: member
+
+  airdrome:
+    image: h7p3ri0n/airdrome:latest
+    container_name: airdrome
+    restart: unless-stopped
+    networks: [newt]
+    labels:
+      pangolin.public-resources.airdrome.name: airdrome
+      pangolin.public-resources.airdrome.full-domain: airdrome.chenn.dev
+      pangolin.public-resources.airdrome.mode: http
+      pangolin.public-resources.airdrome.targets[0].method: http
+      pangolin.public-resources.airdrome.targets[0].port: 80
+      pangolin.public-resources.airdrome.policy: member
+
+  fei:
+    image: ghcr.io/jeffvli/feishin:latest
+    container_name: fei
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: Juuz
+      SERVER_LOCK: true
+      SERVER_TYPE: subsonic
+      SERVER_URL: https://juuz.chenn.dev
+      REMOTE_URL: https://juuz.chenn.dev
+      LEGACY_AUTHENTICATION: false
+      ANALYTICS_DISABLED: true
+    networks: [newt]
+    labels:
+      pangolin.public-resources.fei.name: fei
+      pangolin.public-resources.fei.full-domain: fei.chenn.dev
+      pangolin.public-resources.fei.mode: http
+      pangolin.public-resources.fei.targets[0].method: http
+      pangolin.public-resources.fei.targets[0].port: 9180
+      pangolin.public-resources.fei.policy: member

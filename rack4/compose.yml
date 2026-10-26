@@ -160,6 +160,7 @@ include:
   - apps/music/meelo.yml
   - apps/music/navidrome.yml
   - apps/music/tocata.yml
+  - apps/music/juuz.yml
 
   - apps/notify/apprise.yml
   - apps/notify/gotify.yml
