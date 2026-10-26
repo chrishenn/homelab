@@ -1,0 +1,61 @@
+---
+services:
+  aldine:
+    profiles: [aldine]
+    image: ghcr.io/trahloff/aldine-app:1.6.0
+    container_name: aldine
+    restart: unless-stopped
+    init: true
+    environment:
+      ALDINE_APP_BIND: 127.0.0.1
+      ALDINE_PUBLIC_URL: https://aldine.chenn.dev
+      COMPILER_URL: http://aldine_compiler:4020
+      COOKIE_SECURE: 1
+      TRUST_PROXY: 1
+
+      AUTH_ENABLED: 1
+      ALDINE_SSO_ONLY: 1
+      OIDC_ISSUER: $OIDC
+      OIDC_CLIENT_ID: ${ALDINE_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${ALDINE_OIDC_SECRET}
+      OIDC_LABEL: Pocket ID
+      OIDC_EMAIL_VERIFIED: require
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_USER}
+      SMTP_SECURE: true
+    volumes:
+      - $DATA/aldine/data:/data
+      - $DATA/aldine/secrets:/secrets
+    networks: [aldine, newt]
+    labels:
+      homepage.group: PDF Tools
+      homepage.name: aldine
+      homepage.icon: https://icons.chenn.dev/custom/aldine.svg
+      homepage.href: https://aldine.chenn.dev
+      homepage.description: Online Latex Editor
+
+      pangolin.public-resources.aldine.name: aldine
+      pangolin.public-resources.aldine.full-domain: aldine.chenn.dev
+      pangolin.public-resources.aldine.mode: http
+      pangolin.public-resources.aldine.targets[0].method: http
+      pangolin.public-resources.aldine.targets[0].port: 3000
+      pangolin.public-resources.aldine.policy: member
+
+  aldine_compiler:
+    profiles: [aldine]
+    image: ghcr.io/trahloff/aldine-compiler:1.6.0
+    container_name: aldine_compiler
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+    init: true
+    volumes:
+      - $DATA/aldine/data:/data
+    networks: [aldine]
+
+networks:
+  aldine:

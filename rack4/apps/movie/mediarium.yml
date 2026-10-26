@@ -1,0 +1,34 @@
+---
+services:
+  mediarium:
+    profiles: [mediarium]
+    image: ghcr.io/rdborg/mediarium:latest
+    container_name: mediarium
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      DOWNLOADS_DIR: /data/downloads
+      MOVIES_DIR: /data/Movies
+      TV_DIR: /data/TV
+      MUSIC_DIR: /data/Music
+      EBOOKS_DIR: /data/Books
+      AUDIOBOOKS_DIR: /data/Audiobooks
+    volumes:
+      - $DATA/mediarium/config:/config
+      - $DATA/mediarium/data:/data
+    networks: [arr, jellyfin, newt]
+    labels:
+      homepage.group: Movies and TV
+      homepage.name: mediarium
+      homepage.icon: https://icons.chenn.dev/custom/mediarium.svg
+      homepage.href: https://mediarium.chenn.dev
+      homepage.description: Media AIO
+
+      pangolin.public-resources.mediarium.name: mediarium
+      pangolin.public-resources.mediarium.full-domain: mediarium.chenn.dev
+      pangolin.public-resources.mediarium.mode: http
+      pangolin.public-resources.mediarium.targets[0].method: http
+      pangolin.public-resources.mediarium.targets[0].port: 8264
+      pangolin.public-resources.mediarium.policy: member

@@ -11,7 +11,7 @@ services:
       - $MEDIA/Books:/media
       - $DATA/audiobookshelf/config:/config
       - $DATA/audiobookshelf/metadata:/metadata
-    networks: [newt]
+    networks: [newt, arr]
     labels:
       homepage.group: Books
       homepage.name: Audio Bookshelf

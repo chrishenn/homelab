@@ -1,9 +1,3 @@
-[providers]
-op = { type = "1password", vault = "homelab", account = "my.1password.com" }
-age = { type = "age", recipients = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBDbuPSH93RCTHG7iTHxg+De/yMWUVB+Q4EFt4llpPDL",
-] }
-
 [secrets]
 USER = { provider = "op", value = "op://homelab/chris/username" }
 PASS = { provider = "op", value = "op://homelab/chris/password" }

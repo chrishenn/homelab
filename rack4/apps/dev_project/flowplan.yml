@@ -1,0 +1,53 @@
+# docker compose exec ollama ollama pull llama3.1
+# sudo chown -R 1000:1000 $DATA/flowplan
+---
+services:
+  flowplan:
+    profiles: [flowplan]
+    image: ghcr.io/yannicschuller/flowplan:latest
+    container_name: flowplan
+    restart: unless-stopped
+    environment:
+      APP_URL: https://flowplan.chenn.dev
+      FLOWPLAN_DATA_DIR: /app/data
+      FLOWPLAN_AI: on
+      OLLAMA_URL: http://ollama:11434
+      FLOWPLAN_TRUSTED_PROXIES: 1
+
+      OIDC_ISSUER: $OIDC
+      OIDC_CLIENT_ID: ${FLOWPLAN_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${FLOWPLAN_OIDC_SECRET}
+      OIDC_SCOPES: openid profile email groups
+      OIDC_GROUPS_CLAIM: groups
+      OIDC_ADMIN_GROUP: admin
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_USER}
+
+      GOOGLE_CALENDAR_CLIENT_ID: ${FLOWPLAN_CALENDAR_CLIENT_ID}
+      GOOGLE_CALENDAR_CLIENT_SECRET: ${FLOWPLAN_CALENDAR_CLIENT_SECRET}
+    volumes:
+      - $DATA/flowplan/data:/app/data
+    healthcheck:
+      test: node -e fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    networks: [ollama, newt]
+    labels:
+      homepage.group: Project Management
+      homepage.name: Flowplan
+      homepage.icon: https://icons.chenn.dev/custom/flowplan.svg
+      homepage.href: https://flowplan.chenn.dev
+      homepage.description: Project Management
+
+      pangolin.public-resources.flowplan.name: flowplan
+      pangolin.public-resources.flowplan.full-domain: flowplan.chenn.dev
+      pangolin.public-resources.flowplan.mode: http
+      pangolin.public-resources.flowplan.targets[0].method: http
+      pangolin.public-resources.flowplan.targets[0].port: 3000
+      pangolin.public-resources.flowplan.policy: member

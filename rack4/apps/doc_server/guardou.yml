@@ -1,0 +1,36 @@
+# Guardou is not a UI for the file system. It stores files in a specific folder structure that is not meant to be changed manually.
+# um, ok
+---
+services:
+  guardou:
+    profiles: [guardou]
+    image: ghcr.io/guardouapp/guardou:latest
+    container_name: guardou
+    restart: unless-stopped
+    environment:
+      EXTERNAL_URL: https://guardou.chenn.dev
+      PUID: ${PUID}
+      PGID: ${PGID}
+
+      OIDC_ISSUER: $OIDC
+      OIDC_CLIENT_ID: ${GUARDOU_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${GUARDOU_OIDC_SECRET}
+      OIDC_SCOPES: openid profile email
+      OIDC_USER_CLAIM: preferred_username
+    volumes:
+      - $DATA/guardou/data:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks: [newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: guardou
+      homepage.icon: https://icons.chenn.dev/custom/guardou.svg
+      homepage.href: https://guardou.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.guardou.name: guardou
+      pangolin.public-resources.guardou.full-domain: guardou.chenn.dev
+      pangolin.public-resources.guardou.mode: http
+      pangolin.public-resources.guardou.targets[0].method: http
+      pangolin.public-resources.guardou.targets[0].port: 2286
+      pangolin.public-resources.guardou.policy: member

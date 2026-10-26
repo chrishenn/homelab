@@ -1,0 +1,34 @@
+# sudo chown -R 1000:1000 $DATA/gameyfin
+---
+services:
+  gameyfin:
+    profiles: [gameyfin]
+    image: ghcr.io/gameyfin/gameyfin:2
+    container_name: gameyfin
+    restart: unless-stopped
+    environment:
+      APP_KEY: ${GAMEYFIN_APP_KEY}
+      APP_URL: https://gameyfin.chenn.dev
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - $DATA/gameyfin/db:/opt/gameyfin/db
+      - $DATA/gameyfin/data:/opt/gameyfin/data
+      - $DATA/gameyfin/backups:/opt/gameyfin/backups
+      - $DATA/gameyfin/plugindata:/opt/gameyfin/plugindata
+      - $DATA/gameyfin/plugins:/opt/gameyfin/plugins-installed
+      - $DATA/gameyfin/logs:/opt/gameyfin/logs
+    networks: [newt]
+    labels:
+      homepage.group: Games
+      homepage.name: Gameyfin
+      homepage.icon: https://icons.chenn.dev/gameyfin.svg
+      homepage.href: https://gameyfin.chenn.dev
+      homepage.description: Games Manager
+
+      pangolin.public-resources.gameyfin.name: gameyfin
+      pangolin.public-resources.gameyfin.full-domain: gameyfin.chenn.dev
+      pangolin.public-resources.gameyfin.mode: http
+      pangolin.public-resources.gameyfin.targets[0].method: http
+      pangolin.public-resources.gameyfin.targets[0].port: 8080
+      pangolin.public-resources.gameyfin.policy: member

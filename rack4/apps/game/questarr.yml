@@ -16,7 +16,7 @@ services:
       start_period: 40s
     networks: [arr, newt]
     labels:
-      homepage.group: Movies and TV
+      homepage.group: Games
       homepage.name: Questarr
       homepage.icon: https://icons.chenn.dev/questarr.svg
       homepage.href: https://questarr.chenn.dev

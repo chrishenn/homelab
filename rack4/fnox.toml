@@ -147,8 +147,20 @@ NETBOX_PEPPER = { provider = "op", value = "op://homelab/netbox/pepper" }
 BOOKORBIT_SECRET = { provider = "op", value = "op://homelab/bookorbit/secret" }
 BOOKORBIT_BOOT = { provider = "op", value = "op://homelab/bookorbit/boot" }
 
+MBX_S3 = { provider = "op", value = "op://homelab/mbx/s3" }
+MBX_TOKEN = { provider = "op", value = "op://homelab/mbx/credential" }
+
+FLOWPLAN_CALENDAR_CLIENT_ID = { provider = "op", value = "op://homelab/flowplan/calendar_client_id" }
+FLOWPLAN_CALENDAR_CLIENT_SECRET = { provider = "op", value = "op://homelab/flowplan/calendar_client_secret" }
+
+ORCAH_SESSION_SECRET = { provider = "op", value = "op://homelab/orcah/SESSION_SECRET" }
+ORCAH_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/orcah/ENCRYPTION_KEY" }
+
 PODCAST_INDEX_API_KEY = { provider = "op", value = "op://homelab/podcastindex/api_key" }
 PODCAST_INDEX_API_SECRET = { provider = "op", value = "op://homelab/podcastindex/api_secret" }
+
+KEPT_SECRET_KEY = { provider = "op", value = "op://homelab/kept/secret_key" }
+KEPT_SECRET_AUTH_SECRET = { provider = "op", value = "op://homelab/kept/auth_secret" }
 
 MAILFLOW_ENCRYPTION = { provider = "op", value = "op://homelab/mailflow/encryption" }
 MAILFLOW_VAPID_PUB = { provider = "op", value = "op://homelab/mailflow/vapid_pub" }
@@ -193,6 +205,7 @@ FLUXER_ADMIN_OAUTH = { provider = "op", value = "op://homelab/FLUXER/ADMIN_OAUTH
 FLUXER_ERLANG_COOKIE = { provider = "op", value = "op://homelab/FLUXER/ERLANG_COOKIE" }
 FLUXER_ATTACHMENT = { provider = "op", value = "op://homelab/FLUXER/ATTACHMENT" }
 FLUXER_PSEUDONYM = { provider = "op", value = "op://homelab/FLUXER/PSEUDONYM" }
+FLUXER_SETUP = { provider = "op", value = "op://homelab/FLUXER/SETUP" }
 
 STALWART_USER = { provider = "op", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "op", value = "op://homelab/stalwart/password" }
@@ -209,6 +222,7 @@ NEXTERM_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/nexterm/creden
 TUDUDI_SECRET = { provider = "op", value = "op://homelab/tududi/credential" }
 SEARXNG_SECRET = { provider = "op", value = "op://homelab/searxng/credential" }
 WIREGUARD_PRIVATE_KEY = { provider = "op", value = "op://homelab/proton/VPN/wireguard_private_key" }
+PROTONVPN_WG0 = { provider = "op", value = "op://homelab/proton/VPN/wg0.conf" }
 POCKETID_SECRET = { provider = "op", value = "op://homelab/Pocketid/secret_key" }
 VIKUNJA_SECRET = { provider = "op", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "op", value = "op://homelab/rally/secret" }
@@ -254,6 +268,7 @@ MIROS_KEY = { provider = "op", value = "op://homelab/miro/miros_key" }
 SEND_PASS = { provider = "op", value = "op://homelab/send/password" }
 RESUME_SECRET = { provider = "op", value = "op://homelab/resume/secret" }
 JUUZ_PASS = { provider = "op", value = "op://homelab/juuz/password" }
+GAMEYFIN_APP_KEY = { provider = "op", value = "op://homelab/gameyfin/app_key" }
 
 GIST_OIDC_CLIENT = { provider = "op", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "op", value = "op://homelab/gist/oidc_secret" }
@@ -353,3 +368,9 @@ HOMELABLE_OIDC_CLIENT = { provider = "op", value = "op://homelab/HOMELABLE/oidc_
 HOMELABLE_OIDC_SECRET = { provider = "op", value = "op://homelab/HOMELABLE/oidc_secret" }
 KURRIER_OIDC_CLIENT = { provider = "op", value = "op://homelab/kurrier/oidc_client" }
 KURRIER_OIDC_SECRET = { provider = "op", value = "op://homelab/kurrier/oidc_secret" }
+ALDINE_OIDC_CLIENT = { provider = "op", value = "op://homelab/ALDINE/oidc_client" }
+ALDINE_OIDC_SECRET = { provider = "op", value = "op://homelab/ALDINE/oidc_secret" }
+GUARDOU_OIDC_CLIENT = { provider = "op", value = "op://homelab/GUARDOU/oidc_client" }
+GUARDOU_OIDC_SECRET = { provider = "op", value = "op://homelab/GUARDOU/oidc_secret" }
+FLOWPLAN_OIDC_CLIENT = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_client" }
+FLOWPLAN_OIDC_SECRET = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_secret" }

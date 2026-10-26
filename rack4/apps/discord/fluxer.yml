@@ -8,6 +8,15 @@ configs:
       	servers {
           trusted_proxies static private_ranges
           trusted_proxies_strict
+          protocols h1 h2 h3
+        }
+      }
+
+      (upstream) {
+        reverse_proxy {args[0]} {
+          header_up X-Forwarded-For {client_ip}
+          header_up X-Real-IP {client_ip}
+          header_up -Forwarded
         }
       }
 
@@ -17,44 +26,54 @@ configs:
         handle /_health {
           respond "OK" 200
         }
+      	handle /_edge {
+          header Cache-Control no-store
+          respond "{system.hostname}" 200
+        }
       	handle_path /api/* {
-      		reverse_proxy fluxer_api:8080
+      	  import upstream fluxer_api:8080
       	}
       	handle /gateway {
-      		rewrite * /
-      		reverse_proxy fluxer_gateway:8080
+      	  rewrite * /
+      	  import upstream fluxer_gateway:8080
       	}
       	handle_path /gateway/* {
-      		reverse_proxy fluxer_gateway:8080
+      	  import upstream fluxer_gateway:8080
       	}
       	handle_path /media/* {
-      		reverse_proxy fluxer_media:8080
+      	  import upstream fluxer_media:8080
       	}
       	handle_path /livekit/* {
-      		reverse_proxy fluxer_livekit:7880
+      	  import upstream fluxer_livekit:7880
       	}
       	handle /admin {
-      		rewrite * /
-      		reverse_proxy fluxer_admin:8080
+      	  rewrite * /
+      	  import upstream fluxer_admin:8080
       	}
       	handle_path /admin/* {
-      		reverse_proxy fluxer_admin:8080
+      	  import upstream fluxer_admin:8080
       	}
         @staticAssets path /web/* /emoji/* /libs/* /avatars/* /badges/* /desktop/*
       	handle @staticAssets {
-      		reverse_proxy fluxer_static:8080
+      	  import upstream fluxer_static:8080
       	}
       	handle /.well-known/fluxer {
-      		reverse_proxy fluxer_api:8080
+      	  import upstream fluxer_api:8080
       	}
+      	handle /.well-known/webfinger {
+          import upstream api:8080
+        }
       	handle {
-      		reverse_proxy fluxer_app:8080
+      	  import upstream fluxer_app:8080
       	}
       }
 
       :8088 {
         handle /.well-known/fluxer {
-          reverse_proxy fluxer_api:8080
+          import upstream api:8080
+        }
+        handle /_edge {
+          respond "{system.hostname}" 200
         }
       }
 
@@ -115,6 +134,7 @@ x-fluxer_env: &fluxer_env
   RUST_LOG: info
   LOG_LEVEL: info
   FLUXER_SELF_HOSTED: true
+  FLUXER_SETTINGS_LOADED: true
   FLUXER_SVC_SHARD_COUNT: 1
   FLUXER_DISCOVERY_ENABLED: false
   FLUXER_TOR_EXIT_LIST_ENABLED: false
@@ -138,6 +158,7 @@ x-fluxer_env: &fluxer_env
   FLUXER_APP_ENDPOINT: https://fluxer.chenn.dev
   FLUXER_ADMIN_ENDPOINT: https://fluxer.chenn.dev/admin
 
+  FLUXER_SETUP_TOKEN: ${FLUXER_SETUP}
   FLUXER_PASSKEY_RP_ID: fluxer.chenn.dev
   FLUXER_PASSKEY_RP_NAME: Fluxer
   FLUXER_SUDO_MODE_SECRET: ${FLUXER_SUDO}
@@ -256,7 +277,7 @@ services:
       FLUXER_POSTGRES_MAX_CONNECTIONS: 25
       FLUXER_API_PRESIGNED_ATTACHMENT_UPLOADS_ENABLED: true
     healthcheck:
-      test: node -e "fetch('http://127.0.0.1:8080/_health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      test: ['CMD-SHELL', "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /_health HTTP/1.0\\r\\nHost: 127.0.0.1\\r\\n\\r\\n\" >&3 && head -n 1 <&3 | grep -q \" 200 \"'"]
       <<: *health
     depends_on:
       fluxer_db: *healthy
@@ -275,13 +296,13 @@ services:
       FLUXER_POSTGRES_MAX_CONNECTIONS: 25
       FLUXER_API_WORKER_MODE: all_lanes
       FLUXER_API_WORKER_ENABLE_CRON_SCHEDULER: true
+    healthcheck:
+      test: ['CMD-SHELL', "find /tmp/fluxer-worker-heartbeat -newermt '-30 seconds' | grep -q ."]
+      <<: *health
     depends_on:
       fluxer_db: *healthy
       fluxer_redis: *healthy
-    #      fluxer-s3-init: *completed
-    healthcheck:
-      test: ['CMD', 'node', '-e', "const age=Date.now()-require('node:fs').statSync('/tmp/fluxer-worker-heartbeat').mtimeMs;if(age>30000){console.error('worker heartbeat is '+Math.round(age)+'ms old');process.exit(1)}"]
-      <<: *health
+      #      fluxer-s3-init: *completed
 
   fluxer_gateway:
     image: ghcr.io/fluxerapp/fluxer-gateway:v1
@@ -300,7 +321,7 @@ services:
     depends_on:
       fluxer_redis: *healthy
     healthcheck:
-      test: curl -fsS -o /dev/null http://127.0.0.1:8080/_health/ready
+      test: ['CMD-SHELL', "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /_health/ready HTTP/1.0\\r\\nHost: 127.0.0.1\\r\\n\\r\\n\" >&3 && head -n 1 <&3 | grep -q \" 200 \"'"]
       <<: *health
 
   fluxer_media:
@@ -329,6 +350,12 @@ services:
       FLUXER_MEDIA_PROXY_UPLOAD_RELAY_BUFFERED_RETRY_TOTAL_BYTES: 536870912
       FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SPOOL_CHUNK_BYTES: 1048576
       FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SPOOL_MAX_TOTAL_BYTES: 8589934592
+    volumes:
+      - $DATA/fluxer/media:/tmp
+    healthcheck:
+      test: /usr/local/bin/fluxer-media-proxy healthcheck
+      <<: *health
+      interval: 30s
   #    depends_on:
   #      fluxer-s3-init: *completed
 
@@ -343,6 +370,7 @@ services:
     healthcheck:
       test: /usr/local/bin/fluxer-push healthcheck
       <<: *health
+      start_period: 60s
     depends_on:
       fluxer_api: *healthy
 
@@ -350,6 +378,9 @@ services:
     image: ghcr.io/fluxerapp/fluxer-static:v1
     container_name: fluxer_static
     <<: *fluxer_common
+    healthcheck:
+      test: wget -q -O /dev/null http://127.0.0.1:8080/avatars/0.png
+      <<: *health
 
   fluxer_app:
     image: ghcr.io/fluxerapp/fluxer-app-proxy-self-hosted:v1
@@ -370,17 +401,7 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_NAME: snowflakes
-      FLUXER_SVC_MODE: router
-
-  fluxer_snowflakes-shard:
-    image: ghcr.io/fluxerapp/fluxer-snowflakes:v1
-    container_name: fluxer_snowflakes-shard
-    <<: [*fluxer_common, *svc_health]
-    environment:
-      <<: *fluxer_env
-      FLUXER_SVC_NAME: snowflakes
-      FLUXER_SVC_MODE: shard
-      FLUXER_SVC_SHARD_ID: 0
+      FLUXER_SVC_MODE: combined
 
   fluxer_users:
     image: ghcr.io/fluxerapp/fluxer-users:v1
@@ -389,20 +410,8 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_NAME: users
-      FLUXER_SVC_MODE: router
-
-  fluxer_users-shard:
-    image: ghcr.io/fluxerapp/fluxer-users:v1
-    container_name: fluxer_users-shard
-    <<: [*fluxer_common, *svc_health]
-    environment:
-      <<: *fluxer_env
-      FLUXER_SVC_NAME: users
-      FLUXER_SVC_MODE: shard
-      FLUXER_SVC_SHARD_ID: 0
+      FLUXER_SVC_MODE: combined
       FLUXER_POSTGRES_MAX_CONNECTIONS: 20
-    depends_on:
-      fluxer_db: *healthy
 
   fluxer_gifs:
     image: ghcr.io/fluxerapp/fluxer-gifs:v1
@@ -411,17 +420,7 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_NAME: gifs
-      FLUXER_SVC_MODE: router
-
-  fluxer_gifs-shard:
-    image: ghcr.io/fluxerapp/fluxer-gifs:v1
-    container_name: fluxer_gifs-shard
-    <<: [*fluxer_common, *svc_health]
-    environment:
-      <<: *fluxer_env
-      FLUXER_SVC_NAME: gifs
-      FLUXER_SVC_MODE: shard
-      FLUXER_SVC_SHARD_ID: 0
+      FLUXER_SVC_MODE: combined
       FLUXER_GIFS_SHARD_CACHE_MAX_BYTES: 536870912
 
   fluxer_messages:
@@ -431,20 +430,8 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_NAME: messages
-      FLUXER_SVC_MODE: router
-
-  fluxer_messages-shard:
-    image: ghcr.io/fluxerapp/fluxer-messages:v1
-    container_name: fluxer_messages-shard
-    <<: [*fluxer_common, *svc_health]
-    environment:
-      <<: *fluxer_env
-      FLUXER_SVC_NAME: messages
-      FLUXER_SVC_MODE: shard
-      FLUXER_SVC_SHARD_ID: 0
+      FLUXER_SVC_MODE: combined
       FLUXER_POSTGRES_MAX_CONNECTIONS: 20
-    depends_on:
-      fluxer_db: *healthy
 
   fluxer_unfurl:
     image: ghcr.io/fluxerapp/fluxer-unfurl:v1
@@ -453,17 +440,7 @@ services:
     environment:
       <<: *fluxer_env
       FLUXER_SVC_NAME: unfurl
-      FLUXER_SVC_MODE: router
-
-  fluxer_unfurl-shard:
-    image: ghcr.io/fluxerapp/fluxer-unfurl:v1
-    container_name: fluxer_unfurl-shard
-    <<: [*fluxer_common, *svc_health]
-    environment:
-      <<: *fluxer_env
-      FLUXER_SVC_NAME: unfurl
-      FLUXER_SVC_MODE: shard
-      FLUXER_SVC_SHARD_ID: 0
+      FLUXER_SVC_MODE: combined
 
   fluxer_admin:
     image: ghcr.io/fluxerapp/fluxer-admin:v1
@@ -478,6 +455,7 @@ services:
     healthcheck:
       test: ['CMD', 'bash', '-c', "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /_health HTTP/1.0\\r\\n\\r\\n' >&3 && head -n 1 <&3 | grep -q ' 200 '"]
       <<: *health
+      start_period: 60s
 
   fluxer_db:
     image: postgres:18-alpine

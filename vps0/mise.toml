@@ -16,3 +16,9 @@ BACKUP = "/home/chris/backup"
 [tasks.policies]
 description = "Apply pangolin blueprint with shared access policies"
 run = "pangolin apply blueprint --file $REPO/vps0/apps/pangolin/policies.yml"
+
+[tasks.uv]
+run = "uv venv create --allow-existing && uv sync"
+sources = ["./uv.lock"]
+outputs = [".venv"]
+cache = { enabled = true }

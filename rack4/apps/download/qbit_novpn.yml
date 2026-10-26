@@ -1,0 +1,36 @@
+---
+services:
+  qbit_novpn:
+    profiles: [qbit_novpn]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_novpn
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit_novpn/config:/config
+      - $DATA/qbit_novpn/downloads:/qbit_novpn/downloads
+    networks: [traefik, arr, newt]
+    labels:
+      homepage.group: Download
+      homepage.name: QBittorrent (No VPN)
+      homepage.icon: https://icons.chenn.dev/qbittorrent.svg
+      homepage.href: https://novpn.qbit.chenn.dev
+      homepage.description: Torrent Client
+
+      traefik.enable: true
+      traefik.http.routers.qbit-novpn.rule: Host(`novpn.qbit.henn.dev`)
+      traefik.http.routers.qbit-novpn.entrypoints: websecure
+      traefik.http.routers.qbit-novpn.middlewares: hdrs@file
+      traefik.http.routers.qbit-novpn.tls.certresolver: cf
+      traefik.http.services.qbit-novpn.loadbalancer.server.port: 8080
+
+      pangolin.public-resources.qbit-novpn.name: qbit-novpn
+      pangolin.public-resources.qbit-novpn.full-domain: novpn.qbit.chenn.dev
+      pangolin.public-resources.qbit-novpn.mode: http
+      pangolin.public-resources.qbit-novpn.targets[0].method: http
+      pangolin.public-resources.qbit-novpn.targets[0].port: 8080
+      pangolin.public-resources.qbit-novpn.policy: member

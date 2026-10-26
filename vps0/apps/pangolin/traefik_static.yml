@@ -14,7 +14,7 @@ experimental:
     badger:
       # https://github.com/fosrl/badger/releases/latest
       moduleName: github.com/fosrl/badger
-      version: v1.7.0
+      version: v1.8.0
 
 tls:
   options:
