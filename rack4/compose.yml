@@ -94,9 +94,11 @@ include:
   - apps/doc_server/zipline.yml
 
   - apps/download/qbit.yml
+  - apps/download/qbit_novpn.yml
   - apps/download/sab.yml
-  - apps/download/solverr.yml
-  #  - apps/download/byparr.yml
+  #  - apps/download/solverr.yml
+  - apps/download/byparr.yml
+  - apps/download/qui.yml
 
   - apps/email/mailflow.yml
   - apps/email/stalwart.yml
@@ -151,10 +153,10 @@ include:
   - apps/movie/tracearr.yml
   - apps/movie/transcodarr.yml
   - apps/movie/yamtrack.yml
+  - apps/movie/scry.yml
 
   - apps/music/aurral.yml
   - apps/music/dneedle.yml
-  - apps/music/feishin.yml
   - apps/music/lidarr.yml
   - apps/music/mdrm.yml
   - apps/music/meelo.yml

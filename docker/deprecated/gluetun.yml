@@ -1,0 +1,80 @@
+---
+services:
+  qbit_vpn:
+    profiles: [qbit]
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbit_vpn
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit/config:/config
+      - $DATA/qbit/downloads:/qbit/downloads
+    depends_on:
+      - gluetun
+    network_mode: service:gluetun
+    labels:
+      homepage.group: Download
+      homepage.name: Qbittorrent (VPN)
+      homepage.icon: https://icons.chenn.dev/qbittorrent.svg
+      homepage.href: https://vpn.qbit.chenn.dev
+      homepage.description: VPN Torrents
+
+  gluetun:
+    profiles: [qbit]
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: unless-stopped
+    hostname: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+
+      VPN_SERVICE_PROVIDER: protonvpn
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      SERVER_COUNTRIES: United States,Canada
+      WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL: 60s
+    networks: [traefik, arr, newt]
+    labels:
+      homepage.group: Download
+      homepage.name: Gluetun
+      homepage.icon: https://icons.chenn.dev/gluetun.svg
+      homepage.description: Qbittorrent VPN Tunnel
+
+      traefik.enable: true
+      traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
+      traefik.http.routers.qbit.entrypoints: websecure
+      traefik.http.routers.qbit.middlewares: hdrs@file
+      traefik.http.routers.qbit.tls.certresolver: cf
+      traefik.http.services.qbit.loadbalancer.server.port: 8080
+
+      # It appears that qbit can't deal with with pangolin's basic auth header. This could also be an nzb360 problem.
+      # nzb360 appears to be negotiating with qbit only for part of the login exchange
+      # password auth into qbit (as opposed to qbit api key) is also not fixing this
+      pangolin.public-resources.qbit.name: qbit
+      pangolin.public-resources.qbit.full-domain: vpn.qbit.chenn.dev
+      pangolin.public-resources.qbit.mode: http
+      pangolin.public-resources.qbit.targets[0].method: http
+      pangolin.public-resources.qbit.targets[0].port: 8080
+      pangolin.public-resources.qbit.policy: member
+
+      pangolin.public-resources.qbit.rules[0].action: allow
+      pangolin.public-resources.qbit.rules[0].match: path
+      pangolin.public-resources.qbit.rules[0].value: /api/*
+    ports:
+      - '6888:6888/tcp'
+      - '6888:6888/udp'
+      - '8388:8388/tcp'
+      - '8388:8388/udp'
+      - '8888:8888/tcp'
+      - '51413:51413/tcp'
+      - '51413:51413/udp'

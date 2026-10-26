@@ -1,4 +1,5 @@
 # works great. Only thing missing is oidc
+# web ui's have to access server/rest/* directly from browser - sadge
 # sudo chown -R 1000:1000 $DATA/juuz
 ---
 services:
@@ -17,10 +18,10 @@ services:
     volumes:
       - $DATA/juuz/data:/data
       - $MEDIA/Music:/music
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
       homepage.group: Music
-      homepage.name: juuz
+      homepage.name: Juuz
       homepage.icon: https://icons.chenn.dev/custom/juuz.png
       homepage.href: https://juuz.chenn.dev
       homepage.description: Music Server
@@ -30,14 +31,25 @@ services:
       pangolin.public-resources.juuz.mode: http
       pangolin.public-resources.juuz.targets[0].method: http
       pangolin.public-resources.juuz.targets[0].port: 4533
-      pangolin.public-resources.juuz.policy: subsonic
+      pangolin.public-resources.juuz.policy: member
+
+      pangolin.public-resources.juuz.rules[0].action: allow
+      pangolin.public-resources.juuz.rules[0].match: path
+      pangolin.public-resources.juuz.rules[0].value: /rest/*
 
   mist:
+    profiles: [juuz]
     image: ghcr.io/kusefiru/mist:latest
     container_name: mist
     restart: unless-stopped
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Mist (Juuz)
+      homepage.icon: https://icons.chenn.dev/custom/mist.svg
+      homepage.href: https://mist.chenn.dev
+      homepage.description: Juuz Web UI
+
       pangolin.public-resources.mist.name: mist
       pangolin.public-resources.mist.full-domain: mist.chenn.dev
       pangolin.public-resources.mist.mode: http
@@ -46,11 +58,18 @@ services:
       pangolin.public-resources.mist.policy: member
 
   airsonic:
+    profiles: [juuz]
     image: tamland/airsonic-refix:latest
     container_name: airsonic
     restart: unless-stopped
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Airsonic (Juuz)
+      homepage.icon: https://icons.chenn.dev/airsonic.svg
+      homepage.href: https://airsonic.chenn.dev
+      homepage.description: Juuz Web UI
+
       pangolin.public-resources.airsonic.name: airsonic
       pangolin.public-resources.airsonic.full-domain: airsonic.chenn.dev
       pangolin.public-resources.airsonic.mode: http
@@ -59,6 +78,7 @@ services:
       pangolin.public-resources.airsonic.policy: member
 
   aonsoku:
+    profiles: [juuz]
     image: ghcr.io/victoralvesf/aonsoku:latest
     container_name: aonsoku
     restart: unless-stopped
@@ -68,8 +88,14 @@ services:
       APP_AUTH_TYPE: password
       SERVER_URL: https://juuz.chenn.dev
       HIDE_SERVER: true
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Aonsoku (Juuz)
+      homepage.icon: https://icons.chenn.dev/aonsoku.svg
+      homepage.href: https://aonsoku.chenn.dev
+      homepage.description: Juuz Web UI
+
       pangolin.public-resources.aonsoku.name: aonsoku
       pangolin.public-resources.aonsoku.full-domain: aonsoku.chenn.dev
       pangolin.public-resources.aonsoku.mode: http
@@ -78,11 +104,18 @@ services:
       pangolin.public-resources.aonsoku.policy: member
 
   airdrome:
+    profiles: [juuz]
     image: h7p3ri0n/airdrome:latest
     container_name: airdrome
     restart: unless-stopped
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Airdrome (Juuz)
+      homepage.icon: https://icons.chenn.dev/custom/airdrome.svg
+      homepage.href: https://airdrome.chenn.dev
+      homepage.description: Juuz Web UI
+
       pangolin.public-resources.airdrome.name: airdrome
       pangolin.public-resources.airdrome.full-domain: airdrome.chenn.dev
       pangolin.public-resources.airdrome.mode: http
@@ -91,6 +124,7 @@ services:
       pangolin.public-resources.airdrome.policy: member
 
   fei:
+    profiles: [juuz]
     image: ghcr.io/jeffvli/feishin:latest
     container_name: fei
     restart: unless-stopped
@@ -102,11 +136,20 @@ services:
       REMOTE_URL: https://juuz.chenn.dev
       LEGACY_AUTHENTICATION: false
       ANALYTICS_DISABLED: true
-    networks: [newt]
+    networks: [juuz, newt]
     labels:
+      homepage.group: Music
+      homepage.name: Feishin (Juuz)
+      homepage.icon: https://icons.chenn.dev/feishin.svg
+      homepage.href: https://fei.chenn.dev
+      homepage.description: Subsonic Web UI
+
       pangolin.public-resources.fei.name: fei
       pangolin.public-resources.fei.full-domain: fei.chenn.dev
       pangolin.public-resources.fei.mode: http
       pangolin.public-resources.fei.targets[0].method: http
       pangolin.public-resources.fei.targets[0].port: 9180
       pangolin.public-resources.fei.policy: member
+
+networks:
+  juuz:

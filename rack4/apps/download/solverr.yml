@@ -1,7 +1,7 @@
 ---
 services:
   solverr:
-    profiles: [download]
+    profiles: [solverr]
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: solverr
     restart: unless-stopped

@@ -209,6 +209,7 @@ NEXTERM_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/nexterm/creden
 TUDUDI_SECRET = { provider = "op", value = "op://homelab/tududi/credential" }
 SEARXNG_SECRET = { provider = "op", value = "op://homelab/searxng/credential" }
 WIREGUARD_PRIVATE_KEY = { provider = "op", value = "op://homelab/proton/VPN/wireguard_private_key" }
+PROTONVPN_WG0 = { provider = "op", value = "op://homelab/proton/VPN/wg0.conf" }
 POCKETID_SECRET = { provider = "op", value = "op://homelab/Pocketid/secret_key" }
 VIKUNJA_SECRET = { provider = "op", value = "op://homelab/vikunja/secret" }
 RALLY_SECRET = { provider = "op", value = "op://homelab/rally/secret" }

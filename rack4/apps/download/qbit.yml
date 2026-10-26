@@ -1,67 +1,65 @@
+# user: admin
+# pass: cat $DATA/qbit2/config/supervisord.log | grep -i 'temporary password' | tail -n 1
+
+# in the web ui:
+# - change user, pass
+# - change download location
 ---
+configs:
+  qbit:
+    content: |
+      ${PROTONVPN_WG0}
+
 services:
-  qbit_vpn:
-    profiles: [download]
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbit_vpn
+  qbit:
+    profiles: [qbit]
+    image: binhex/arch-qbittorrentvpn:latest
+    container_name: qbit
     restart: unless-stopped
+    cap_add: [NET_ADMIN]
+    privileged: true
+    sysctls:
+      net.ipv4.conf.all.src_valid_mark: 1
     environment:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
+      VPN_ENABLED: yes
+      # tricks startup script into enabling port forwarding, even though protonvpn creds are in wg0.conf
+      VPN_USER: +pmp
+      VPN_PROV: protonvpn
+      VPN_CLIENT: wireguard
+      ENABLE_STARTUP_SCRIPTS: no
+      ENABLE_PRIVOXY: no
+      STRICT_PORT_FORWARD: yes
+      USERSPACE_WIREGUARD: no
+      ENABLE_SOCKS: no
+      LAN_NETWORK: 192.168.1.0/24
+      NAME_SERVERS: 1.1.1.1,1.0.0.1
+      DEBUG: false
+    configs:
+      - source: qbit
+        target: /config/wireguard/wg0.conf
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - $DATA/qbit/data:/data
       - $DATA/qbit/config:/config
       - $DATA/qbit/downloads:/qbit/downloads
-    depends_on:
-      - gluetun
-    network_mode: service:gluetun
+    ports:
+      - '8118:8118'
+      - '9118:9118'
+      - '58946:58946'
+      - '58946:58946/udp'
+    networks: [newt, scry]
     labels:
       homepage.group: Download
       homepage.name: Qbittorrent (VPN)
       homepage.icon: https://icons.chenn.dev/qbittorrent.svg
-      homepage.href: https://vpn.qbit.chenn.dev
+      homepage.href: https://qbit.chenn.dev
       homepage.description: VPN Torrents
 
-  gluetun:
-    profiles: [download]
-    image: qmcgaw/gluetun:latest
-    container_name: gluetun
-    restart: unless-stopped
-    hostname: gluetun
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    environment:
-      TZ: $TZ
-      PUID: $PUID
-      PGID: $PGID
-
-      VPN_SERVICE_PROVIDER: protonvpn
-      VPN_TYPE: wireguard
-      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
-      SERVER_COUNTRIES: United States,Canada
-      WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL: 60s
-    networks: [traefik, arr, newt]
-    labels:
-      homepage.group: Download
-      homepage.name: Gluetun
-      homepage.icon: https://icons.chenn.dev/gluetun.svg
-      homepage.description: Qbittorrent VPN Tunnel
-
-      traefik.enable: true
-      traefik.http.routers.qbit.rule: Host(`vpn.qbit.henn.dev`)
-      traefik.http.routers.qbit.entrypoints: websecure
-      traefik.http.routers.qbit.middlewares: hdrs@file
-      traefik.http.routers.qbit.tls.certresolver: cf
-      traefik.http.services.qbit.loadbalancer.server.port: 8080
-
-      # It appears that qbit can't deal with with pangolin's basic auth header. This could also be an nzb360 problem.
-      # nzb360 appears to be negotiating with qbit only for part of the login exchange
-      # password auth into qbit (as opposed to qbit api key) is also not fixing this
       pangolin.public-resources.qbit.name: qbit
-      pangolin.public-resources.qbit.full-domain: vpn.qbit.chenn.dev
+      pangolin.public-resources.qbit.full-domain: qbit.chenn.dev
       pangolin.public-resources.qbit.mode: http
       pangolin.public-resources.qbit.targets[0].method: http
       pangolin.public-resources.qbit.targets[0].port: 8080
@@ -70,81 +68,6 @@ services:
       pangolin.public-resources.qbit.rules[0].action: allow
       pangolin.public-resources.qbit.rules[0].match: path
       pangolin.public-resources.qbit.rules[0].value: /api/*
-    ports:
-      - '6888:6888/tcp'
-      - '6888:6888/udp'
-      - '8388:8388/tcp'
-      - '8388:8388/udp'
-      - '8888:8888/tcp'
-      - '51413:51413/tcp'
-      - '51413:51413/udp'
 
-  qbit_novpn:
-    profiles: [download]
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbit_novpn
-    restart: unless-stopped
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $DATA/qbit_novpn/config:/config
-      - $DATA/qbit_novpn/downloads:/qbit_novpn/downloads
-    networks: [traefik, arr, newt]
-    labels:
-      homepage.group: Download
-      homepage.name: QBittorrent (No VPN)
-      homepage.icon: https://icons.chenn.dev/qbittorrent.svg
-      homepage.href: https://novpn.qbit.chenn.dev
-      homepage.description: Torrent Client
-
-      traefik.enable: true
-      traefik.http.routers.qbit-novpn.rule: Host(`novpn.qbit.henn.dev`)
-      traefik.http.routers.qbit-novpn.entrypoints: websecure
-      traefik.http.routers.qbit-novpn.middlewares: hdrs@file
-      traefik.http.routers.qbit-novpn.tls.certresolver: cf
-      traefik.http.services.qbit-novpn.loadbalancer.server.port: 8080
-
-      pangolin.public-resources.qbit-novpn.name: qbit-novpn
-      pangolin.public-resources.qbit-novpn.full-domain: novpn.qbit.chenn.dev
-      pangolin.public-resources.qbit-novpn.mode: http
-      pangolin.public-resources.qbit-novpn.targets[0].method: http
-      pangolin.public-resources.qbit-novpn.targets[0].port: 8080
-      pangolin.public-resources.qbit-novpn.policy: member
-
-  qui:
-    # crashes if oidc redirect not set. sadge
-    profiles: [download]
-    image: ghcr.io/autobrr/qui:latest
-    container_name: qui
-    restart: unless-stopped
-    environment:
-      QUI__OIDC_ISSUER: $OIDC
-      QUI__OIDC_ENABLED: true
-      QUI__OIDC_CLIENT_ID: $QUI_OIDC_CLIENT
-      QUI__OIDC_CLIENT_SECRET: $QUI_OIDC_SECRET
-      QUI__OIDC_REDIRECT_URL: https://qui.chenn.dev/api/auth/oidc/callback
-      QUI__OIDC_DISABLE_BUILT_IN_LOGIN: true
-    volumes:
-      - $DATA/qui/config:/config
-      - $DATA/qui/torrents:/data/torrents
-      - $DATA/qbit/downloads:/qbit/downloads
-      - $DATA/qbit_novpn/downloads:/qbit_novpn/downloads
-    healthcheck:
-      test: [CMD, wget, -qO, --no-verbose, http://localhost:7476]
-    networks: [arr, newt]
-    labels:
-      homepage.group: Download
-      homepage.name: Qui
-      homepage.icon: https://icons.chenn.dev/qui.svg
-      homepage.href: https://qui.chenn.dev
-      homepage.description: Bittorrent GUI
-
-      pangolin.public-resources.qui.name: qui
-      pangolin.public-resources.qui.full-domain: qui.chenn.dev
-      pangolin.public-resources.qui.mode: http
-      pangolin.public-resources.qui.targets[0].method: http
-      pangolin.public-resources.qui.targets[0].port: 7476
-      pangolin.public-resources.qui.policy: member
+networks:
+  qbit:

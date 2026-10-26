@@ -37,3 +37,31 @@ services:
       pangolin.public-resources.navidrome.rules[2].action: allow
       pangolin.public-resources.navidrome.rules[2].match: path
       pangolin.public-resources.navidrome.rules[2].value: /auth/*
+
+  feishin:
+    profiles: [navidrome]
+    image: ghcr.io/jeffvli/feishin:latest
+    container_name: feishin
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: Navidrome
+      SERVER_LOCK: true
+      SERVER_TYPE: navidrome
+      SERVER_URL: https://navidrome.chenn.dev
+      REMOTE_URL: https://navidrome.chenn.dev
+      LEGACY_AUTHENTICATION: false
+      ANALYTICS_DISABLED: true
+    networks: [newt]
+    labels:
+      homepage.group: Music
+      homepage.name: Feishin (Navidrome)
+      homepage.icon: https://icons.chenn.dev/feishin.svg
+      homepage.href: https://feishin.chenn.dev
+      homepage.description: Subsonic Web UI
+
+      pangolin.public-resources.feishin.name: feishin
+      pangolin.public-resources.feishin.full-domain: feishin.chenn.dev
+      pangolin.public-resources.feishin.mode: http
+      pangolin.public-resources.feishin.targets[0].method: http
+      pangolin.public-resources.feishin.targets[0].port: 9180
+      pangolin.public-resources.feishin.policy: member
