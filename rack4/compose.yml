@@ -115,6 +115,7 @@ include:
   - apps/infra/traefik.yml
   - apps/infra/technitium.yml
   - apps/infra/icons.yml
+  - apps/infra/mbx.yml
   #  - apps/infra/netdata.yml
   #  - apps/infra/watchtower.yml
 

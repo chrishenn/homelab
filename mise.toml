@@ -1,9 +1,11 @@
+monorepo_root = true
+
 [settings]
 env_shell_expand = true
 
 [monorepo]
 # only python subprojects require a local mise+uv env when running (eg) "ty check"
-config_roots = [".", "dns", "k3s", "protonmail", "traefik", "rack3", "vps0"]
+config_roots = ["dns", "k3s", "protonmail", "traefik", "rack3", "vps0"]
 
 [tools]
 "aqua:anordal/shellharden" = { version = "latest", lazy = true, lazy_bins = ["shellharden"] }

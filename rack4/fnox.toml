@@ -147,6 +147,9 @@ NETBOX_PEPPER = { provider = "op", value = "op://homelab/netbox/pepper" }
 BOOKORBIT_SECRET = { provider = "op", value = "op://homelab/bookorbit/secret" }
 BOOKORBIT_BOOT = { provider = "op", value = "op://homelab/bookorbit/boot" }
 
+MBX_S3 = { provider = "op", value = "op://homelab/mbx/s3" }
+MBX_TOKEN = { provider = "op", value = "op://homelab/mbx/credential" }
+
 PODCAST_INDEX_API_KEY = { provider = "op", value = "op://homelab/podcastindex/api_key" }
 PODCAST_INDEX_API_SECRET = { provider = "op", value = "op://homelab/podcastindex/api_secret" }
 

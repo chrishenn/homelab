@@ -1,0 +1,125 @@
+---
+x-healthy: &healthy
+  condition: service_healthy
+
+x-mbx: &mbx
+  profiles: [mbx]
+  restart: unless-stopped
+  networks: [mbx]
+
+services:
+  mbx:
+    <<: *mbx
+    build: https://github.com/jdx/mr-boxington-cache.git
+    image: ${REGISTRY}/mbx:latest
+    container_name: mbx
+    environment:
+      MBX_CACHE_STORAGE: s3
+      MBX_CACHE_DATABASE_URL: postgres://mbx_cache:mbx_cache@mbx_db/mbx_cache
+      MBX_CACHE_S3_BUCKET: mbx
+      MBX_CACHE_S3_REGION: mbx
+      MBX_CACHE_S3_ENDPOINT: http://mbx-s3:9000
+      MBX_CACHE_S3_PATH_STYLE: true
+      AWS_ACCESS_KEY_ID: mbx
+      AWS_SECRET_ACCESS_KEY: ${MBX_S3}
+      MBX_CACHE_TOKENS_JSON: '[ {"token":"${MBX_TOKEN}", "read":["chris/*"], "write":["chris/*"]} ]'
+    depends_on:
+      mbx-s3-init: {condition: service_completed_successfully}
+    networks: [newt, mbx]
+    labels:
+      homepage.group: Infra
+      homepage.name: Mbx
+      homepage.icon: https://icons.chenn.dev/mbx.svg
+      homepage.href: https://mbx.chenn.dev
+      homepage.description: MBX Cache
+
+      pangolin.public-resources.mbx.name: mbx
+      pangolin.public-resources.mbx.full-domain: mbx.chenn.dev
+      pangolin.public-resources.mbx.mode: http
+      pangolin.public-resources.mbx.targets[0].method: http
+      pangolin.public-resources.mbx.targets[0].port: 8080
+      pangolin.public-resources.mbx.policy: us
+
+  mbx_db:
+    <<: *mbx
+    image: postgres:18-alpine
+    container_name: mbx_db
+    environment:
+      POSTGRES_USER: mbx_cache
+      POSTGRES_PASSWORD: mbx_cache
+      POSTGRES_DB: mbx_cache
+    volumes:
+      - $DATA/mbx/db:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U mbx_cache']
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  mbx-s3:
+    <<: *mbx
+    image: rustfs/rustfs:latest
+    container_name: mbx-s3
+    command: /data
+    environment:
+      RUSTFS_OBS_LOGGER_LEVEL: info
+      RUSTFS_DRIVE_WALKDIR_TIMEOUT_SECS: 60
+      RUSTFS_DRIVE_WALKDIR_STALL_TIMEOUT_SECS: 60
+      RUSTFS_CAPACITY_STAT_TIMEOUT: 60
+      RUSTFS_CAPACITY_MAX_TIMEOUT: 120
+      RUSTFS_CAPACITY_STALL_TIMEOUT: 60
+      RUSTFS_SCANNER_DELAY: 60
+      RUSTFS_SCANNER_MAX_WAIT_SECS: 120
+      RUSTFS_SCANNER_CYCLE: 3600
+      RUSTFS_SCANNER_CACHE_SAVE_TIMEOUT_SECS: 120
+      RUSTFS_OBS_LOG_STDOUT_ENABLED: true
+      RUSTFS_ACCESS_KEY: mbx
+      RUSTFS_SECRET_KEY: ${MBX_S3}
+      RUSTFS_REGION: mbx
+      RUSTFS_ADDRESS: :9000
+      RUSTFS_CORS_ALLOWED_ORIGINS: '*'
+    volumes:
+      - $DATA/mbx/s3:/data
+    healthcheck:
+      test: curl -f http://localhost:9000/health
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+      interval: 60s
+    depends_on:
+      mbx-s3-perm: {condition: service_completed_successfully}
+
+  mbx-s3-perm:
+    <<: *mbx
+    image: alpine
+    container_name: mbx-s3-perm
+    restart: no
+    user: root
+    volumes:
+      - $DATA/mbx/s3:/data
+    command: chown -R 10001:10001 /data
+
+  mbx-s3-init:
+    <<: *mbx
+    image: rustfs/rc
+    container_name: mbx-s3-init
+    restart: no
+    environment:
+      S3_ACCESS_KEY: mbx
+      S3_SECRET_KEY: ${MBX_S3}
+      S3_ENDPOINT: http://mbx-s3:9000
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        set -ex
+        until rc alias set fs $$S3_ENDPOINT $$S3_ACCESS_KEY $$S3_SECRET_KEY; do
+          echo 'waiting to connect to s3 host'
+          sleep 2
+        done
+        rc mb fs/mbx --ignore-existing
+        exit $?
+    depends_on:
+      mbx-s3: *healthy
+
+networks:
+  mbx:
