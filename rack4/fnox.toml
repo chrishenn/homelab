@@ -196,6 +196,7 @@ FLUXER_ADMIN_OAUTH = { provider = "op", value = "op://homelab/FLUXER/ADMIN_OAUTH
 FLUXER_ERLANG_COOKIE = { provider = "op", value = "op://homelab/FLUXER/ERLANG_COOKIE" }
 FLUXER_ATTACHMENT = { provider = "op", value = "op://homelab/FLUXER/ATTACHMENT" }
 FLUXER_PSEUDONYM = { provider = "op", value = "op://homelab/FLUXER/PSEUDONYM" }
+FLUXER_SETUP = { provider = "op", value = "op://homelab/FLUXER/SETUP" }
 
 STALWART_USER = { provider = "op", value = "op://homelab/stalwart/username" }
 STALWART_PASSWORD = { provider = "op", value = "op://homelab/stalwart/password" }
