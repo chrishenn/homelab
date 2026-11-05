@@ -16,7 +16,7 @@ services:
     labels:
       homepage.group: Music
       homepage.name: tocata
-      homepage.icon: https://icons.chenn.dev/tocata.svg
+      homepage.icon: https://icons.chenn.dev/custom/tocata.svg
       homepage.href: https://tocata.chenn.dev
       homepage.description: Music Server
 

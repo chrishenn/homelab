@@ -14,7 +14,7 @@ services:
     networks: [newt]
     labels:
       homepage.group: General Tools
-      homepage.name: calrs
+      homepage.name: Calrs
       homepage.icon: https://icons.chenn.dev/cal-rs.png
       homepage.href: https://calrs.chenn.dev
       homepage.description: Calendly

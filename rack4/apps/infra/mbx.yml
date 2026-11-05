@@ -27,12 +27,6 @@ services:
       mbx-s3-init: {condition: service_completed_successfully}
     networks: [newt, mbx]
     labels:
-      homepage.group: Infra
-      homepage.name: Mbx
-      homepage.icon: https://icons.chenn.dev/mbx.svg
-      homepage.href: https://mbx.chenn.dev
-      homepage.description: MBX Cache
-
       pangolin.public-resources.mbx.name: mbx
       pangolin.public-resources.mbx.full-domain: mbx.chenn.dev
       pangolin.public-resources.mbx.mode: http
