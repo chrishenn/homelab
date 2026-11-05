@@ -159,15 +159,15 @@ include:
   - apps/movie/seerr.yml
   - apps/movie/tracearr.yml
   - apps/movie/transcodarr.yml
-  - apps/movie/yamtrack.yml
   - apps/movie/scry.yml
   - apps/movie/mediarium.yml
+  - apps/movie/silo.yml
 
   - apps/music/aurral.yml
   - apps/music/dneedle.yml
   - apps/music/lidarr.yml
   - apps/music/mdrm.yml
-  - apps/music/meelo.yml
+  #  - apps/music/meelo.yml
   - apps/music/navidrome.yml
   - apps/music/tocata.yml
   - apps/music/juuz.yml
@@ -207,6 +207,7 @@ include:
   - apps/tool/rally.yml
   - apps/tool/sure.yml
   - apps/tool/warden.yml
+  - apps/tool/calrs.yml
 #  - apps/tool/netbox.yml
 #  - apps/tool/kestra.yml
 #  - apps/tool/shlink.yml

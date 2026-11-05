@@ -1,0 +1,160 @@
+# I am skeptical that this sloppiness would make the juice worth the squeeze
+# wtf is `gpus: all` ?? Surely this project doesn't even run on gpu with this illegal compose kv?
+---
+services:
+  echora_nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '${ECHORA_HTTP_PORT:-8080}:80'
+    restart: unless-stopped
+
+  echora_web:
+    restart: unless-stopped
+    build:
+      context: https://github.com/hcx-labs/echora-app.git
+      dockerfile: apps/web/Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://echora:echora-local@postgres:5432/echora}
+      ANALYSIS_URL: http://analysis:8000
+      NAVIDROME_URL: ${NAVIDROME_URL:-}
+      NAVIDROME_USERNAME: ${NAVIDROME_USERNAME:-}
+      NAVIDROME_PASSWORD: ${NAVIDROME_PASSWORD:-}
+      ECHORA_MEDIA_BASE: ${ECHORA_MEDIA_BASE:-/api}
+
+  echora_db:
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: echora
+      POSTGRES_USER: echora
+      POSTGRES_PASSWORD: echora
+    volumes:
+      - $DATA/echora/deb:/var/lib/postgresql
+      #      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  echora_redis:
+    image: valkey/valkey:alpine
+    container_name: echora_redis
+    restart: unless-stopped
+    command: valkey-server --save --appendonly no --maxmemory 5gb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: valkey-cli ping
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  echora_analysis:
+    restart: unless-stopped
+    build:
+      context: https://github.com/hcx-labs/echora-app.git
+      dockerfile: services/analysis/docker/Dockerfile.gpu
+      #    env_file: &analysis-env-files
+      #      - path: .env
+      #        required: false
+    environment: &analysis-environment
+      DATABASE_URL: ${DATABASE_URL:-postgresql://echora:echora-local@postgres:5432/echora}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      # Only needed for cross-origin browser deployments (no nginx entry point)
+      # where palette extraction reads canvas pixels from another origin.
+      ECHORA_CORS_ORIGINS: ${ECHORA_CORS_ORIGINS:-}
+      CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY:?Set CREDENTIAL_ENCRYPTION_KEY in .env}
+      OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_REDIRECT_URI: ${OIDC_REDIRECT_URI:-http://localhost:3000/analysis/auth/oidc/callback}
+      OIDC_POST_LOGIN_REDIRECT: ${OIDC_POST_LOGIN_REDIRECT:-http://localhost:3000/home}
+      OIDC_BOOTSTRAP_ADMIN_EMAIL: ${OIDC_BOOTSTRAP_ADMIN_EMAIL:-}
+      OIDC_REQUIRE_VERIFIED_EMAIL: ${OIDC_REQUIRE_VERIFIED_EMAIL:-false}
+      OIDC_SCOPES: ${OIDC_SCOPES:-openid profile email}
+      OIDC_SESSION_SECRET: ${OIDC_SESSION_SECRET:?Set OIDC_SESSION_SECRET in .env}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      NAVIDROME_URL: ${NAVIDROME_URL:-}
+      NAVIDROME_USERNAME: ${NAVIDROME_USERNAME:-}
+      NAVIDROME_PASSWORD: ${NAVIDROME_PASSWORD:-}
+      MUQ_MODEL_ID: ${MUQ_MODEL_ID:-OpenMuQ/MuQ-MuLan-large}
+      MUQ_REVISION: ${MUQ_REVISION:-2e01c796b71dca71b45251384c04cd7b237c9020}
+      MERT_MODEL_ID: ${MERT_MODEL_ID:-m-a-p/MERT-v1-95M}
+      MERT_REVISION: ${MERT_REVISION:-12af15fef9d0ac838c3f475bfbbf26d2060dd4f5}
+      LYRICS_MODEL_ID: ${LYRICS_MODEL_ID:-BAAI/bge-m3}
+      LYRICS_REVISION: ${LYRICS_REVISION:-5617a9f61b028005a4858fdac845db406aefb181}
+      FA_KARA_MODEL_ID: ${FA_KARA_MODEL_ID:-hcX02/echora-mms-300m-multilingual-lyrics-forced-aligner}
+      FA_KARA_REVISION: ${FA_KARA_REVISION:-701595f1be1125cce835d4e32fd432358ea8ed9f}
+      # Vocal-only analysis always uses the pinned Roformer overlap-2 recipe.
+      # Optional recording bundle for `python -m echora_analysis.download_models`.
+      # Serving and --prune-only never download models.
+      ECHORA_RECORDING_MODEL_ID: ${ECHORA_RECORDING_MODEL_ID:-}
+      ECHORA_RECORDING_MODEL_REVISION: ${ECHORA_RECORDING_MODEL_REVISION:-}
+      ECHORA_RECORDING_MODEL_DIRECTORY: ${ECHORA_RECORDING_MODEL_DIRECTORY:-/data/models/recording}
+      # Runtime paths must point into the installed, revision-specific directory.
+      ECHORA_RECORDING_MODEL_MANIFEST: ${ECHORA_RECORDING_MODEL_MANIFEST:-}
+      ECHORA_RECORDING_MATCH_POLICY: ${ECHORA_RECORDING_MATCH_POLICY:-}
+      # Explicit opt-in collection; raw clips expire after seven days.
+      ECHORA_RECORDING_CALIBRATION_ENABLED: ${ECHORA_RECORDING_CALIBRATION_ENABLED:-false}
+      ECHORA_RECORDING_CALIBRATION_DIR: /data/recording-calibration
+      ECHORA_PREPROCESS_DIR: /data/preprocessed
+      ECHORA_PREPROCESS_MAX_BYTES: ${ECHORA_PREPROCESS_MAX_BYTES:-21474836480}
+      ECHORA_PREPROCESS_TTL_SECONDS: ${ECHORA_PREPROCESS_TTL_SECONDS:-604800}
+      MOSS_MODEL_ID: ${MOSS_MODEL_ID-hcX02/echora-moss-0.9b-multilingual-lyrics-transcriber}
+      MOSS_REVISION: ${MOSS_REVISION-1cf9dc6d910a6c90c82d8ddc86b83e1533f39f4e}
+      HF_HOME: /models/huggingface
+      HF_HUB_OFFLINE: '1'
+      # Generated motion artwork videos, kept apart from model storage.
+      ECHORA_MOTION_ARTWORK_DIR: /motion-artwork
+    volumes: &analysis-volumes
+      - ${MUSIC_LIBRARY_PATH:-./testdata/music}:/music:ro
+      - ./data:/data
+      - ./data/models/huggingface:/models/huggingface
+      - ./data/models/torch:/models/torch
+      # Generated motion artwork videos, written by the analysis worker.
+      - ${ECHORA_MOTION_ARTWORK_PATH:-./data/motion-artwork}:/motion-artwork
+    gpus: all
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  echora_analysis-worker:
+    #    env_file: *analysis-env-files
+    build:
+      context: https://github.com/hcx-labs/echora-app.git
+      dockerfile: services/analysis/docker/Dockerfile.gpu
+    environment:
+      <<: *analysis-environment
+      ECHORA_BATCH_SIZE: ${ECHORA_BATCH_SIZE:-128}
+      ECHORA_SOURCE_RECHECK_SECONDS: ${ECHORA_SOURCE_RECHECK_SECONDS:-0}
+    volumes: *analysis-volumes
+    user: '1001'
+    command: ['python', '-m', 'echora_analysis.worker', 'analysis']
+    depends_on:
+      analysis: {condition: service_healthy}
+    gpus: all
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+  echora_scheduled-worker:
+    #    env_file: *analysis-env-files
+    build:
+      context: https://github.com/hcx-labs/echora-app.git
+      dockerfile: services/analysis/docker/Dockerfile.cpu
+    environment: *analysis-environment
+    volumes: *analysis-volumes
+    user: '1001'
+    command: ['python', '-m', 'echora_analysis.worker', 'scheduled']
+    depends_on:
+      analysis: {condition: service_healthy}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
+    stop_grace_period: 30s

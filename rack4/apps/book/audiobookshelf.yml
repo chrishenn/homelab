@@ -25,3 +25,31 @@ services:
       pangolin.public-resources.audiobookshelf.targets[0].method: http
       pangolin.public-resources.audiobookshelf.targets[0].port: 80
       pangolin.public-resources.audiobookshelf.policy: member
+
+      pangolin.public-resources.audiobookshelf.rules[0].action: allow
+      pangolin.public-resources.audiobookshelf.rules[0].match: path
+      pangolin.public-resources.audiobookshelf.rules[0].value: /api/*
+      pangolin.public-resources.audiobookshelf.rules[1].action: allow
+      pangolin.public-resources.audiobookshelf.rules[1].match: path
+      pangolin.public-resources.audiobookshelf.rules[1].value: /login
+      pangolin.public-resources.audiobookshelf.rules[2].action: allow
+      pangolin.public-resources.audiobookshelf.rules[2].match: path
+      pangolin.public-resources.audiobookshelf.rules[2].value: /auth/*
+      pangolin.public-resources.audiobookshelf.rules[3].action: allow
+      pangolin.public-resources.audiobookshelf.rules[3].match: path
+      pangolin.public-resources.audiobookshelf.rules[3].value: /feed/*
+      pangolin.public-resources.audiobookshelf.rules[4].action: allow
+      pangolin.public-resources.audiobookshelf.rules[4].match: path
+      pangolin.public-resources.audiobookshelf.rules[4].value: /socket.io/
+      pangolin.public-resources.audiobookshelf.rules[5].action: allow
+      pangolin.public-resources.audiobookshelf.rules[5].match: path
+      pangolin.public-resources.audiobookshelf.rules[5].value: /status
+      pangolin.public-resources.audiobookshelf.rules[6].action: allow
+      pangolin.public-resources.audiobookshelf.rules[6].match: path
+      pangolin.public-resources.audiobookshelf.rules[6].value: /logout
+      pangolin.public-resources.audiobookshelf.rules[7].action: allow
+      pangolin.public-resources.audiobookshelf.rules[7].match: path
+      pangolin.public-resources.audiobookshelf.rules[7].value: /ping
+      pangolin.public-resources.audiobookshelf.rules[8].action: allow
+      pangolin.public-resources.audiobookshelf.rules[8].match: path
+      pangolin.public-resources.audiobookshelf.rules[8].value: /public/*

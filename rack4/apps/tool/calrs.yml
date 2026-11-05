@@ -1,0 +1,27 @@
+# sudo chown -R 1000:1000 $DATA/calrs
+---
+services:
+  calrs:
+    profiles: [calrs]
+    image: ghcr.io/olivierlambert/calrs:latest
+    container_name: calrs
+    restart: unless-stopped
+    user: 1000:1000
+    volumes:
+      - $DATA/calrs/data:/var/lib/calrs
+    environment:
+      CALRS_BASE_URL: https://calrs.chenn.dev
+    networks: [newt]
+    labels:
+      homepage.group: General Tools
+      homepage.name: calrs
+      homepage.icon: https://icons.chenn.dev/cal-rs.png
+      homepage.href: https://calrs.chenn.dev
+      homepage.description: Calendly
+
+      pangolin.public-resources.calrs.name: calrs
+      pangolin.public-resources.calrs.full-domain: calrs.chenn.dev
+      pangolin.public-resources.calrs.mode: http
+      pangolin.public-resources.calrs.targets[0].method: http
+      pangolin.public-resources.calrs.targets[0].port: 3000
+      pangolin.public-resources.calrs.policy: member

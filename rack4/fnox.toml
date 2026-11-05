@@ -137,6 +137,8 @@ NEWSHOSTING_USER = { provider = "op", value = "op://homelab/newshosting/username
 NEWSHOSTING_PASS = { provider = "op", value = "op://homelab/newshosting/password" }
 NEWSHOSTING_RETENTION = { provider = "op", value = "op://homelab/newshosting/retention" }
 NEWSHOSTING_CONNECTIONS = { provider = "op", value = "op://homelab/newshosting/connections" }
+NEWSHOSTING_HOST = { provider = "op", value = "op://homelab/newshosting/host" }
+NEWSHOSTING_PORT = { provider = "op", value = "op://homelab/newshosting/port" }
 
 CAMPFIRE_VAPID_PUBLIC_KEY = { provider = "op", value = "op://homelab/campfire/vapid_public_key" }
 CAMPFIRE_VAPID_PRIVATE_KEY = { provider = "op", value = "op://homelab/campfire/vapid_private_key" }
@@ -152,6 +154,9 @@ MBX_TOKEN = { provider = "op", value = "op://homelab/mbx/credential" }
 
 FLOWPLAN_CALENDAR_CLIENT_ID = { provider = "op", value = "op://homelab/flowplan/calendar_client_id" }
 FLOWPLAN_CALENDAR_CLIENT_SECRET = { provider = "op", value = "op://homelab/flowplan/calendar_client_secret" }
+
+SILO_SECRET_KEY = { provider = "op", value = "op://homelab/silo/secret_key" }
+SILO_MEILI = { provider = "op", value = "op://homelab/silo/meili" }
 
 ORCAH_SESSION_SECRET = { provider = "op", value = "op://homelab/orcah/SESSION_SECRET" }
 ORCAH_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/orcah/ENCRYPTION_KEY" }

@@ -34,13 +34,17 @@ less popular
 
 ### android
 
-symfonium
-- best by far for android (rock solid)
-- supports mtls, basic auth, api keys, custom headers - the works
+jellybox
+- best for simple music playback
 
 namida
-- holy crap. This this is a damn spaceship compared to these other amateurs
+- holy crap. This this is a damn spaceship
 - no mtls
+
+symfonium
+- update: totally broken for subsonic servers? Not sure what happened
+- supports mtls, basic auth, api keys, custom headers - the works
+- supports audiobookshelf
 
 castafiore
 - https://github.com/sawyerf/Castafiore

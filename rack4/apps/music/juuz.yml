@@ -1,5 +1,6 @@
 # works great. Only thing missing is oidc
 # web ui's have to access server/rest/* directly from browser - sadge
+# web ui's generally don't allow custom headers - desktop clients do, tho
 # sudo chown -R 1000:1000 $DATA/juuz
 ---
 services:

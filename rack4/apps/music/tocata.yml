@@ -25,4 +25,8 @@ services:
       pangolin.public-resources.tocata.mode: http
       pangolin.public-resources.tocata.targets[0].method: http
       pangolin.public-resources.tocata.targets[0].port: 4224
-      pangolin.public-resources.tocata.policy: subsonic
+      pangolin.public-resources.tocata.policy: member
+
+      pangolin.public-resources.tocata.rules[0].action: allow
+      pangolin.public-resources.tocata.rules[0].match: path
+      pangolin.public-resources.tocata.rules[0].value: /rest/*

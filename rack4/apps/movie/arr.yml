@@ -71,7 +71,7 @@ services:
       TZ: ${TZ}
     volumes:
       - $DATA/prowlarr:/config
-    networks: [arr, newt, traefik]
+    networks: [arr, newt, traefik, byparr]
     labels:
       homepage.group: Movies and TV
       homepage.name: Prowlarr

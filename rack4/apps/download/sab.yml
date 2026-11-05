@@ -182,9 +182,9 @@ configs:
       [[news.newshosting.com]]
       name = news.newshosting.com
       displayname = news.newshosting.com
-      host = news.newshosting.com
-      port = 563
       timeout = 60
+      host = ${NEWSHOSTING_HOST}
+      port = ${NEWSHOSTING_PORT}
       username = ${NEWSHOSTING_USER}
       password = ${NEWSHOSTING_PASS}
       connections = ${NEWSHOSTING_CONNECTIONS}

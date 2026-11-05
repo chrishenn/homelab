@@ -1,0 +1,113 @@
+# add $NEWT_SUBNET to trusted proxies in the silo web ui
+# oidc and other stuff is also ui-only
+---
+x-silo: &silo
+  profiles: [silo]
+  networks: [silo]
+  restart: unless-stopped
+
+services:
+  silo:
+    <<: *silo
+    image: ghcr.io/silo-server/silo-server:latest
+    container_name: silo
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility, video]
+    cap_add: [NET_ADMIN]
+    environment:
+      SECRET_KEY: ${SILO_SECRET_KEY}
+      DATABASE_URL: postgres://silo:silo@silo_db:5432/silo?sslmode=disable
+      REDIS_URL: redis://silo_redis:6379
+      SILO_PLUGIN_CACHE_DIR: /var/lib/silo/plugins
+      POSTGRES_TUNE: auto
+      SILO_SEARCH_PROVIDER: meilisearch
+      SILO_MEILISEARCH_URL: http://silo_meili:7700
+      SILO_MEILISEARCH_API_KEY: ${SILO_MEILI}
+      MODE: integrated
+      PORT: 8080
+      JF_PORT: 8096
+      ABS_PORT: 13378
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: $TZ
+    volumes:
+      - $MEDIA:/mnt/media:ro
+      - $DATA/silo/plugins:/var/lib/silo/plugins
+      - $DATA/silo/artwork:/var/lib/silo/artwork
+      - $DATA/silo/compat:/var/lib/silo/compat
+      - $DATA/silo/transcode:/tmp/silo-transcode
+      - $DATA/silo/download-artifacts:/tmp/silo-download-artifacts
+      - $DATA/silo/catalog-seeds:/catalog-seeds:ro
+    networks: [silo, newt, ollama, seerr]
+    labels:
+      homepage.group: Movies and TV
+      homepage.name: silo
+      homepage.icon: https://icons.chenn.dev/silo-media-server.svg
+      homepage.href: https://silo.chenn.dev
+      homepage.description: Media
+
+      pangolin.public-resources.silo.name: silo
+      pangolin.public-resources.silo.full-domain: silo.chenn.dev
+      pangolin.public-resources.silo.mode: http
+      pangolin.public-resources.silo.targets[0].method: http
+      pangolin.public-resources.silo.targets[0].port: 8080
+      pangolin.public-resources.silo.policy: member
+
+      pangolin.public-resources.silo.rules[0].action: allow
+      pangolin.public-resources.silo.rules[0].match: path
+      pangolin.public-resources.silo.rules[0].value: /api/*
+
+      pangolin.public-resources.silo-jelly.name: silo-jelly
+      pangolin.public-resources.silo-jelly.full-domain: jelly.silo.chenn.dev
+      pangolin.public-resources.silo-jelly.mode: http
+      pangolin.public-resources.silo-jelly.targets[0].method: http
+      pangolin.public-resources.silo-jelly.targets[0].port: 8096
+      pangolin.public-resources.silo-jelly.policy: member
+
+  silo_db:
+    <<: *silo
+    image: pgvector/pgvector:pg18
+    container_name: silo_db
+    shm_size: 8gb
+    command: ['postgres', '-c', 'listen_addresses=*', '-c', 'shared_preload_libraries=pg_stat_statements']
+    environment:
+      POSTGRES_USER: silo
+      POSTGRES_PASSWORD: silo
+      POSTGRES_DB: silo
+    volumes:
+      - $DATA/silo/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  silo_redis:
+    <<: *silo
+    image: valkey/valkey:alpine
+    container_name: silo_redis
+    volumes:
+      - $DATA/silo/redis:/data
+    healthcheck:
+      test: valkey-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  silo_meili:
+    <<: *silo
+    image: getmeili/meilisearch:latest
+    container_name: silo_meili
+    environment:
+      MEILI_UPGRADE_DB: true
+      MEILI_MASTER_KEY: ${SILO_MEILI}
+    volumes:
+      - $DATA/silo/meili:/meili_data
+
+networks:
+  silo:

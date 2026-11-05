@@ -50,7 +50,7 @@ services:
       - '9118:9118'
       - '58946:58946'
       - '58946:58946/udp'
-    networks: [newt, scry]
+    networks: [newt, qbit]
     labels:
       homepage.group: Download
       homepage.name: Qbittorrent (VPN)

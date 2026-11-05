@@ -66,7 +66,7 @@ services:
 
       DOWNLOAD_CLIENT_2_NAME: qBittorrent
       DOWNLOAD_CLIENT_2_TYPE: qbittorrent
-      DOWNLOAD_CLIENT_2_HOST: gluetun
+      DOWNLOAD_CLIENT_2_HOST: qbit
       DOWNLOAD_CLIENT_2_PORT: 8080
       DOWNLOAD_CLIENT_2_USERNAME: ${USER}
       DOWNLOAD_CLIENT_2_PASSWORD: ${PASS}
@@ -83,7 +83,7 @@ services:
       homepage.name: Mydia
       homepage.icon: https://icons.chenn.dev/custom/mydia.svg
       homepage.href: https://mydia.chenn.dev
-      homepage.description: Video Manager
+      homepage.description: Media Manager
 
       pangolin.public-resources.mydia.name: mydia
       pangolin.public-resources.mydia.full-domain: mydia.chenn.dev
