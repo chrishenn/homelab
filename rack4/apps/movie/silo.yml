@@ -43,7 +43,7 @@ services:
       - $DATA/silo/transcode:/tmp/silo-transcode
       - $DATA/silo/download-artifacts:/tmp/silo-download-artifacts
       - $DATA/silo/catalog-seeds:/catalog-seeds:ro
-    networks: [silo, newt, ollama, seerr]
+    networks: [silo, traefik, newt, ollama, seerr]
     labels:
       homepage.group: Movies and TV
       homepage.name: silo
@@ -68,6 +68,13 @@ services:
       pangolin.public-resources.silo-jelly.targets[0].method: http
       pangolin.public-resources.silo-jelly.targets[0].port: 8096
       pangolin.public-resources.silo-jelly.policy: member
+
+      traefik.enable: true
+      traefik.http.routers.silo.rule: Host(`silo.henn.dev`)
+      traefik.http.routers.silo.entrypoints: websecure
+      traefik.http.routers.silo.middlewares: hdrs@file
+      traefik.http.routers.silo.tls.certresolver: cf
+      traefik.http.services.silo.loadbalancer.server.port: 8080
 
   silo_db:
     <<: *silo
