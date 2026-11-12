@@ -2,6 +2,9 @@
 set -oue pipefail
 
 # https://github.com/FlyinPancake/1password-flatpak-browser-integration
+
+# todo: write this in a real language, or add to mise bootstrap
+
 # 1password gui must be installed using system package
 # flatpak list --app --columns=application | grep -i <browser name>
 

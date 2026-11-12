@@ -2,7 +2,15 @@
 services:
   vert:
     profiles: [vert]
-    image: ghcr.io/vert-sh/vert:latest
+    image: ${REGISTRY}/vert/vert:latest
+    build:
+      context: https://github.com/VERT-sh/VERT.git
+      args:
+        PUB_HOSTNAME: vert.chenn.dev
+        PUB_ENV: production
+        PUB_DISABLE_ALL_EXTERNAL_REQUESTS: false
+        PUB_VERTD_URL: https://vertd.chenn.dev
+        PUB_DISABLE_FAILURE_BLOCKS: false
     container_name: vert
     restart: unless-stopped
     healthcheck:
@@ -29,6 +37,12 @@ services:
     restart: unless-stopped
     environment:
       PORT: 24153
+      ADMIN_PASSWORD: ${VERTD_ADMIN}
+      PUBLIC_URL: https://vertd.chenn.dev
+      ALLOW_CPU_FALLBACK: true
+      MAX_UPLOAD_BYTES: 8589934592
+      VERTD_FORCE_GPU: nvidia
+      CORS_ORIGINS: https://vert.chenn.dev
     runtime: nvidia
     deploy:
       resources:
@@ -36,7 +50,7 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu, video, compute]
+              capabilities: [gpu]
     healthcheck:
       test: [CMD, curl, http://localhost:24153/api/version]
     networks: [newt]

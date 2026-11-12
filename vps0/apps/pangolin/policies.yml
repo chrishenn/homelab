@@ -117,3 +117,21 @@ public-policies:
       ca-certificates:
         - |
           {{env.MTLS_CA_CERT}}
+
+  # couldn't get vert to connect using basic auth header
+  vertd:
+    name: Vertd Basic Auth
+    sso: true
+    sso-roles:
+      - Member
+    basic-auth:
+      user: '{{env.VERTD_PANGOLIN_AUTH_USER}}'
+      password: '{{env.VERTD_PANGOLIN_AUTH_PASS}}'
+    apply-rules: true
+    rules:
+      - action: pass
+        match: country
+        value: US
+      - action: deny
+        match: country
+        value: ALL

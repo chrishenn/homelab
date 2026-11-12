@@ -274,6 +274,7 @@ SEND_PASS = { provider = "op", value = "op://homelab/send/password" }
 RESUME_SECRET = { provider = "op", value = "op://homelab/resume/secret" }
 JUUZ_PASS = { provider = "op", value = "op://homelab/juuz/password" }
 GAMEYFIN_APP_KEY = { provider = "op", value = "op://homelab/gameyfin/app_key" }
+VERTD_ADMIN = { provider = "op", value = "op://homelab/vertd/password" }
 
 GIST_OIDC_CLIENT = { provider = "op", value = "op://homelab/gist/oidc_client" }
 GIST_OIDC_SECRET = { provider = "op", value = "op://homelab/gist/oidc_secret" }
