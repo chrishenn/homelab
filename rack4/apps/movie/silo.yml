@@ -46,7 +46,7 @@ services:
     networks: [silo, traefik, newt, ollama, seerr]
     labels:
       homepage.group: Movies and TV
-      homepage.name: silo
+      homepage.name: Silo
       homepage.icon: https://icons.chenn.dev/silo-media-server.svg
       homepage.href: https://silo.chenn.dev
       homepage.description: Media

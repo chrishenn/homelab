@@ -21,7 +21,7 @@ services:
     networks: [arr, jellyfin, newt]
     labels:
       homepage.group: Movies and TV
-      homepage.name: mediarium
+      homepage.name: Mediarium
       homepage.icon: https://icons.chenn.dev/custom/mediarium.svg
       homepage.href: https://mediarium.chenn.dev
       homepage.description: Media AIO
