@@ -61,7 +61,7 @@ configs:
       	  import upstream fluxer_api:8080
       	}
       	handle /.well-known/webfinger {
-          import upstream api:8080
+          import upstream fluxer_api:8080
         }
       	handle {
       	  import upstream fluxer_app:8080
@@ -70,7 +70,7 @@ configs:
 
       :8088 {
         handle /.well-known/fluxer {
-          import upstream api:8080
+          import upstream fluxer_api:8080
         }
         handle /_edge {
           respond "{system.hostname}" 200
@@ -127,6 +127,11 @@ x-fluxer_app_shared: &fluxer_app_shared
   FLUXER_TRUST_CLIENT_IP_HEADER: true
 
 x-fluxer_env: &fluxer_env
+  FLUXER_RUST_PROCESS: single
+  FLUXER_SERVER_SERVICES: snowflakes,users,messages,gifs,unfurl,push,app-proxy,admin
+  TOKIO_WORKER_THREADS: 2
+  MALLOC_ARENA_MAX: 2
+
   <<: *fluxer_app_shared
 
   FLUXER_ENV: production
@@ -216,6 +221,24 @@ x-fluxer_env: &fluxer_env
   FLUXER_EMAIL_APP_BASE_URL: https://fluxer.chenn.dev
 
 services:
+  # todo. see: https://github.com/fluxerapp/fluxer/blob/main/fluxer_rexctl/internal/stack/rust.go
+  #  fluxer_rust:
+  #    image: ghcr.io/fluxerapp/fluxer-server:v1
+  #    container_name: fluxer_rust
+  #    <<: *fluxer_common
+  #    environment:
+  #      <<: *fluxer_env
+  ##      FLUXER_RUST_PROCESS: single
+  ##      FLUXER_SERVER_SERVICES: snowflakes,users,messages,gifs,unfurl,push,app-proxy,admin
+  ##      TOKIO_WORKER_THREADS: 2
+  ##      MALLOC_ARENA_MAX: 2
+  #    healthcheck:
+  #      test: /usr/local/bin/fluxer-server healthcheck
+  #      <<: *health
+  #    networks:
+  #      fluxer:
+  #        aliases: [app-proxy, admin]
+
   fluxer_caddy:
     image: caddy:alpine
     container_name: fluxer_caddy
@@ -276,6 +299,7 @@ services:
       NODE_OPTIONS: --enable-source-maps
       FLUXER_POSTGRES_MAX_CONNECTIONS: 25
       FLUXER_API_PRESIGNED_ATTACHMENT_UPLOADS_ENABLED: true
+      FLUXER_API_EMBEDDED_WORKER: true
     healthcheck:
       test: ['CMD-SHELL', "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /_health HTTP/1.0\\r\\nHost: 127.0.0.1\\r\\n\\r\\n\" >&3 && head -n 1 <&3 | grep -q \" 200 \"'"]
       <<: *health
@@ -283,26 +307,6 @@ services:
       fluxer_db: *healthy
       fluxer_redis: *healthy
   #      fluxer-s3-init: *completed
-
-  fluxer_worker:
-    image: ghcr.io/fluxerapp/fluxer-api:v1
-    container_name: fluxer_worker
-    <<: *fluxer_common
-    working_dir: /usr/src/app/fluxer_api
-    command: [./node_modules/.bin/tsx, src/WorkerEntrypoint.ts]
-    environment:
-      <<: *fluxer_env
-      NODE_OPTIONS: --enable-source-maps
-      FLUXER_POSTGRES_MAX_CONNECTIONS: 25
-      FLUXER_API_WORKER_MODE: all_lanes
-      FLUXER_API_WORKER_ENABLE_CRON_SCHEDULER: true
-    healthcheck:
-      test: ['CMD-SHELL', "find /tmp/fluxer-worker-heartbeat -newermt '-30 seconds' | grep -q ."]
-      <<: *health
-    depends_on:
-      fluxer_db: *healthy
-      fluxer_redis: *healthy
-      #      fluxer-s3-init: *completed
 
   fluxer_gateway:
     image: ghcr.io/fluxerapp/fluxer-gateway:v1
@@ -359,6 +363,14 @@ services:
   #    depends_on:
   #      fluxer-s3-init: *completed
 
+  fluxer_static:
+    image: ghcr.io/fluxerapp/fluxer-static:v1
+    container_name: fluxer_static
+    <<: *fluxer_common
+    healthcheck:
+      test: wget -q -O /dev/null http://127.0.0.1:8080/avatars/0.png
+      <<: *health
+
   fluxer_push:
     image: ghcr.io/fluxerapp/fluxer-push:v1
     container_name: fluxer_push
@@ -373,14 +385,6 @@ services:
       start_period: 60s
     depends_on:
       fluxer_api: *healthy
-
-  fluxer_static:
-    image: ghcr.io/fluxerapp/fluxer-static:v1
-    container_name: fluxer_static
-    <<: *fluxer_common
-    healthcheck:
-      test: wget -q -O /dev/null http://127.0.0.1:8080/avatars/0.png
-      <<: *health
 
   fluxer_app:
     image: ghcr.io/fluxerapp/fluxer-app-proxy-self-hosted:v1
@@ -441,6 +445,7 @@ services:
       <<: *fluxer_env
       FLUXER_SVC_NAME: unfurl
       FLUXER_SVC_MODE: combined
+      # FLUXER_ACTIVITYPUB_SIGNING_KEY_BASE64: todo
 
   fluxer_admin:
     image: ghcr.io/fluxerapp/fluxer-admin:v1

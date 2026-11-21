@@ -65,7 +65,6 @@ include:
   - apps/dev_project/planka.yml
   - apps/dev_project/tududi.yml
   - apps/dev_project/vikunja.yml
-  - apps/dev_project/wikigo.yml
   - apps/dev_project/wikijs.yml
   - apps/dev_project/send.yml
   - apps/dev_project/flowplan.yml
