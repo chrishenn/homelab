@@ -1,8 +1,10 @@
 # user: admin
 # pass: cat $DATA/qbit2/config/supervisord.log | grep -i 'temporary password' | tail -n 1
 
+# couldn't get disk to work when running as user 1000:1000 - even when chowned the dir - not sure why. Run as 0:0
+
 # in the web ui:
-# - change user, pass
+# - change user, pass, api key
 # - change download location
 ---
 configs:
@@ -22,8 +24,8 @@ services:
       net.ipv4.conf.all.src_valid_mark: 1
     environment:
       TZ: $TZ
-      PUID: $PUID
-      PGID: $PGID
+      PUID: 0
+      PGID: 0
       VPN_ENABLED: yes
       # tricks startup script into enabling port forwarding, even though protonvpn creds are in wg0.conf
       VPN_USER: +pmp

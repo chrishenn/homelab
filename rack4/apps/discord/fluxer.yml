@@ -1,5 +1,6 @@
 # these env vars are a NIGHTMARE.
 # EXTREMELY DIFFICULT TO SIMPLIFY FROM WHAT YOU SEE HERE. DOCUMENTATION IS EXTENSIVE BUT !NOT! !CLEAR!
+# there is a config file? why is it not mentioned in the documentation? hello?
 ---
 configs:
   fluxer_caddy:
@@ -11,7 +12,6 @@ configs:
           protocols h1 h2 h3
         }
       }
-
       (upstream) {
         reverse_proxy {args[0]} {
           header_up X-Forwarded-For {client_ip}
@@ -19,10 +19,8 @@ configs:
           header_up -Forwarded
         }
       }
-
       :80 {
       	encode zstd gzip
-
         handle /_health {
           respond "OK" 200
         }
@@ -67,7 +65,6 @@ configs:
       	  import upstream fluxer_app:8080
       	}
       }
-
       :8088 {
         handle /.well-known/fluxer {
           import upstream fluxer_api:8080
@@ -127,8 +124,6 @@ x-fluxer_app_shared: &fluxer_app_shared
   FLUXER_TRUST_CLIENT_IP_HEADER: true
 
 x-fluxer_env: &fluxer_env
-  FLUXER_RUST_PROCESS: single
-  FLUXER_SERVER_SERVICES: snowflakes,users,messages,gifs,unfurl,push,app-proxy,admin
   TOKIO_WORKER_THREADS: 2
   MALLOC_ARENA_MAX: 2
 
@@ -221,24 +216,6 @@ x-fluxer_env: &fluxer_env
   FLUXER_EMAIL_APP_BASE_URL: https://fluxer.chenn.dev
 
 services:
-  # todo. see: https://github.com/fluxerapp/fluxer/blob/main/fluxer_rexctl/internal/stack/rust.go
-  #  fluxer_rust:
-  #    image: ghcr.io/fluxerapp/fluxer-server:v1
-  #    container_name: fluxer_rust
-  #    <<: *fluxer_common
-  #    environment:
-  #      <<: *fluxer_env
-  ##      FLUXER_RUST_PROCESS: single
-  ##      FLUXER_SERVER_SERVICES: snowflakes,users,messages,gifs,unfurl,push,app-proxy,admin
-  ##      TOKIO_WORKER_THREADS: 2
-  ##      MALLOC_ARENA_MAX: 2
-  #    healthcheck:
-  #      test: /usr/local/bin/fluxer-server healthcheck
-  #      <<: *health
-  #    networks:
-  #      fluxer:
-  #        aliases: [app-proxy, admin]
-
   fluxer_caddy:
     image: caddy:alpine
     container_name: fluxer_caddy
@@ -406,6 +383,7 @@ services:
       <<: *fluxer_env
       FLUXER_SVC_NAME: snowflakes
       FLUXER_SVC_MODE: combined
+      FLUXER_SNOWFLAKES_WORKER_GUARD: true
 
   fluxer_users:
     image: ghcr.io/fluxerapp/fluxer-users:v1
