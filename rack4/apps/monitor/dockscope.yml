@@ -1,9 +1,8 @@
-# versions after v0.5.0 are borked
 ---
 services:
   dockscope:
     profiles: [dockscope]
-    image: ghcr.io/manuelr-t/dockscope:v0.5.0
+    image: ghcr.io/manuelr-t/dockscope:latest
     container_name: dockscope
     restart: unless-stopped
     volumes:
