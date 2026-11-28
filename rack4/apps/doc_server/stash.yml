@@ -1,0 +1,103 @@
+# compose formatting is odd and amateurish. Why are we doing standalone containers to migrate the db? FFS guys
+# SSO is only half implemented, and in the doc - the rest should ship in the next release? odd
+# apps don't have custom auth headers
+---
+x-stash_env: &stash_env
+  DATABASE_URL: postgresql://stash:stash@stash_db/stash
+  NODE_ENV: production
+  UPLOAD_LOCATION: /data/files
+  UPLOAD_STAGING_RETENTION_HOURS: 2
+
+x-stash: &stash
+  profiles: [stash]
+  networks: [stash]
+  restart: unless-stopped
+
+services:
+  stash:
+    <<: *stash
+    image: ghcr.io/itsmeares/staaash:latest
+    container_name: stash
+    command: node dist/server/main.mjs
+    environment:
+      <<: *stash_env
+      STAAASH_PUBLIC_URL: https://stash.chenn.dev
+      PORT: 2113
+      SECURE_COOKIES: true
+
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: ${STASH_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${STASH_OIDC_SECRET}
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_AUTO_REGISTER: true
+      OIDC_ADMIN_GROUP: admin
+      OIDC_PASSWORD_LOGIN: true
+    volumes:
+      - $DATA/stash/data:/data/files
+    healthcheck:
+      test: wget -q --spider http://127.0.0.1:2113/api/health/live
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      stash_migrate:
+        condition: service_completed_successfully
+    networks: [stash, newt]
+    labels:
+      homepage.group: File Servers
+      homepage.name: Stash
+      homepage.icon: https://icons.chenn.dev/stash.svg
+      homepage.href: https://stash.chenn.dev
+      homepage.description: File Server
+
+      pangolin.public-resources.stash.name: stash
+      pangolin.public-resources.stash.full-domain: stash.chenn.dev
+      pangolin.public-resources.stash.mode: http
+      pangolin.public-resources.stash.targets[0].method: http
+      pangolin.public-resources.stash.targets[0].port: 2113
+      pangolin.public-resources.stash.policy: us
+
+  stash_worker:
+    <<: *stash
+    image: ghcr.io/itsmeares/staaash:latest
+    container_name: stash_worker
+    command: node /worker/dist/index.js
+    environment:
+      <<: *stash_env
+    volumes:
+      - $DATA/stash/data:/data/files
+    depends_on:
+      stash_migrate:
+        condition: service_completed_successfully
+
+  stash_migrate:
+    <<: *stash
+    image: ghcr.io/itsmeares/staaash:latest
+    container_name: stash_migrate
+    restart: no
+    command: prisma migrate deploy
+    environment:
+      <<: *stash_env
+    depends_on:
+      stash_db:
+        condition: service_healthy
+
+  stash_db:
+    <<: *stash
+    image: postgres:18-alpine
+    container_name: stash_db
+    environment:
+      POSTGRES_USER: stash
+      POSTGRES_PASSWORD: stash
+      POSTGRES_DB: stash
+    volumes:
+      - $DATA/stash/db:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  stash:

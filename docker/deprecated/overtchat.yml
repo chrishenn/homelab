@@ -1,0 +1,61 @@
+# turbo slop! Do not use
+
+# sudo chown -R 1001:1001 $DATA/overchat
+# see docker logs for setup code
+# overtchat setup - must run manually? not included in docker image? why? not good
+# the cli hardcodes localhost to hit the server api - very very slop. It would be trivial to hit this api call from the
+# UI, or of course read an env var, or literally document the payload format for the api call to do setup, or you know,
+# do it automatically - just terrible software
+---
+services:
+  overtchat:
+    profiles: [overtchat]
+    image: ghcr.io/yoloyash/overtchat-app:latest
+    container_name: overtchat
+    restart: unless-stopped
+    environment:
+      HOST_CONNECTOR_URL: https://chat.chenn.dev
+      BETTER_AUTH_URL: https://chat.chenn.dev
+      BETTER_AUTH_SECRET: ${OVERTCHAT_BETTER_AUTH_SECRET}
+      REDIS_URL: redis://chat_redis:6379
+      OVERTCHAT_INSTALLED_CAPABILITIES: ''
+      OVERTCHAT_UPDATE_METHOD: compose
+
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: ${OVERTCHAT_OIDC_CLIENT}
+      OIDC_CLIENT_SECRET: ${OVERTCHAT_OIDC_SECRET}
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_AUTO_CREATE_USERS: true
+      OVERTCHAT_REQUIRE_ADMIN_TWO_FACTOR: true
+    volumes:
+      - $DATA/overchat/data:/app/data
+    networks: [newt, overtchat]
+    labels:
+      homepage.group: AI
+      homepage.name: Overt Chat
+      homepage.icon: https://icons.chenn.dev/overtchat.svg
+      homepage.href: https://chat.chenn.dev
+      homepage.description: AI Chat
+
+      pangolin.public-resources.chat.name: chat
+      pangolin.public-resources.chat.full-domain: chat.chenn.dev
+      pangolin.public-resources.chat.mode: http
+      pangolin.public-resources.chat.targets[0].method: http
+      pangolin.public-resources.chat.targets[0].port: 4717
+      pangolin.public-resources.chat.policy: member
+
+  overtchat_redis:
+    profiles: [overtchat]
+    image: valkey/valkey:alpine
+    container_name: chat_redis
+    restart: unless-stopped
+    command: valkey-server --save --appendonly no --maxmemory 64mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: valkey-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: [overtchat]
+
+networks:
+  overtchat:

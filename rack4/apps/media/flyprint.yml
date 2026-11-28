@@ -1,0 +1,28 @@
+# Reading screenshots and PDFs needs an Anthropic API key
+# sudo chown -R 1000:1000 $DATA/flyprint
+---
+services:
+  flyprint:
+    profiles: [flyprint]
+    image: ghcr.io/billpwchan/flyprint:latest
+    container_name: flyprint
+    restart: unless-stopped
+    environment:
+      FLYPRINT_DATA_DIR: /data
+      FLYPRINT_ORIGIN: https://flyprint.chenn.dev
+    volumes:
+      - $DATA/flyprint/data:/data
+    networks: [newt]
+    labels:
+      homepage.group: General Media
+      homepage.name: Flyprint
+      homepage.icon: https://icons.chenn.dev/flyprint.svg
+      homepage.href: https://flyprint.chenn.dev
+      homepage.description: Flight Tracker
+
+      pangolin.public-resources.flyprint.name: flyprint
+      pangolin.public-resources.flyprint.full-domain: flyprint.chenn.dev
+      pangolin.public-resources.flyprint.mode: http
+      pangolin.public-resources.flyprint.targets[0].method: http
+      pangolin.public-resources.flyprint.targets[0].port: 3000
+      pangolin.public-resources.flyprint.policy: member

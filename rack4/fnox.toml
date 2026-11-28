@@ -164,6 +164,8 @@ ORCAH_ENCRYPTION_KEY = { provider = "op", value = "op://homelab/orcah/ENCRYPTION
 PODCAST_INDEX_API_KEY = { provider = "op", value = "op://homelab/podcastindex/api_key" }
 PODCAST_INDEX_API_SECRET = { provider = "op", value = "op://homelab/podcastindex/api_secret" }
 
+OVERTCHAT_BETTER_AUTH_SECRET = { provider = "op", value = "op://homelab/overtchat/better_auth_secret" }
+
 KEPT_SECRET_KEY = { provider = "op", value = "op://homelab/kept/secret_key" }
 KEPT_SECRET_AUTH_SECRET = { provider = "op", value = "op://homelab/kept/auth_secret" }
 
@@ -382,3 +384,7 @@ FLOWPLAN_OIDC_CLIENT = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_cl
 FLOWPLAN_OIDC_SECRET = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_secret" }
 TUDUDI_OIDC_CLIENT = { provider = "op", value = "op://homelab/TUDUDI/oidc_client" }
 TUDUDI_OIDC_SECRET = { provider = "op", value = "op://homelab/TUDUDI/oidc_secret" }
+OVERTCHAT_OIDC_CLIENT = { provider = "op", value = "op://homelab/overtchat/oidc_client" }
+OVERTCHAT_OIDC_SECRET = { provider = "op", value = "op://homelab/overtchat/oidc_secret" }
+STASH_OIDC_CLIENT = { provider = "op", value = "op://homelab/STASH/oidc_client" }
+STASH_OIDC_SECRET = { provider = "op", value = "op://homelab/STASH/oidc_secret" }

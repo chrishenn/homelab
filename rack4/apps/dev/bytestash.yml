@@ -31,12 +31,12 @@ services:
       homepage.group: Development Tools
       homepage.name: ByteStash
       homepage.icon: https://icons.chenn.dev/bytestash.svg
-      homepage.href: https://stash.chenn.dev
+      homepage.href: https://bytestash.chenn.dev
       homepage.description: Code Snippets
 
-      pangolin.public-resources.stash.name: stash
-      pangolin.public-resources.stash.full-domain: stash.chenn.dev
-      pangolin.public-resources.stash.mode: http
-      pangolin.public-resources.stash.targets[0].method: http
-      pangolin.public-resources.stash.targets[0].port: 5000
-      pangolin.public-resources.stash.policy: member
+      pangolin.public-resources.bytestash.name: bytestash
+      pangolin.public-resources.bytestash.full-domain: bytestash.chenn.dev
+      pangolin.public-resources.bytestash.mode: http
+      pangolin.public-resources.bytestash.targets[0].method: http
+      pangolin.public-resources.bytestash.targets[0].port: 5000
+      pangolin.public-resources.bytestash.policy: member

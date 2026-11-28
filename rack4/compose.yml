@@ -93,6 +93,7 @@ include:
   - apps/doc_server/zipline.yml
   - apps/doc_server/guardou.yml
   - apps/doc_server/eigenshare.yml
+  - apps/doc_server/stash.yml
 
   - apps/download/qbit.yml
   - apps/download/qbit_novpn.yml
@@ -136,6 +137,7 @@ include:
   - apps/media/ytp.yml
   - apps/media/orcah.yml
   - apps/media/hister.yml
+  - apps/media/flyprint.yml
 
   - apps/monitor/arcane.yml
   - apps/monitor/beszel.yml
