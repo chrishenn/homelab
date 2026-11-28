@@ -84,7 +84,6 @@ include:
   #  - apps/discord/vocechat.yml
 
   - apps/doc_server/docmost.yml
-  - apps/doc_server/files.yml
   - apps/doc_server/hoodik.yml
   - apps/doc_server/oxicloud.yml
   - apps/doc_server/paperless.yml
