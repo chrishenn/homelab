@@ -9,14 +9,26 @@ services:
       TZ: $TZ
       PUID: $PUID
       PGID: $PGID
+
+      DATABASE_URL: postgres://tududi:tududi@tududi_db/tududi
       TUDUDI_USER_EMAIL: ${EMAIL}
       TUDUDI_USER_PASSWORD: ${PASS}
       TUDUDI_ALLOWED_ORIGINS: https://tududi.chenn.dev,http://tududi:3002
       TUDUDI_SESSION_SECRET: ${TUDUDI_SECRET}
+
+      OIDC_ENABLED: true
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_PROVIDER_SLUG: pocketid
+      OIDC_ISSUER_URL: $OIDC
+      OIDC_CLIENT_ID: $TUDUDI_OIDC_CLIENT
+      OIDC_CLIENT_SECRET: $TUDUDI_OIDC_SECRET
+      OIDC_SCOPE: openid profile email groups
+      OIDC_AUTO_PROVISION: true
+      BASE_URL: https://tududi.chenn.dev
     volumes:
-      - $DATA/tududi/db:/app/backend/db
-      - $DATA/tududi/uploads:/app/backend/uploads
-    networks: [newt]
+      - $DATA/tududi/uploads:/app/uploads
+      - $DATA/tududi/backups:/app/backups
+    networks: [tududi, newt]
     labels:
       homepage.group: Project Management
       homepage.name: Tududi
@@ -30,3 +42,24 @@ services:
       pangolin.public-resources.tududi.targets[0].method: http
       pangolin.public-resources.tududi.targets[0].port: 3002
       pangolin.public-resources.tududi.policy: member
+
+  tududi_db:
+    profiles: [tududi]
+    image: postgres:18-alpine
+    container_name: tududi_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tududi
+      POSTGRES_PASSWORD: tududi
+      POSTGRES_USER: tududi
+    volumes:
+      - $DATA/tududi/db:/var/lib/postgresql
+    networks: [tududi]
+    healthcheck:
+      test: pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  tududi:

@@ -380,3 +380,5 @@ GUARDOU_OIDC_CLIENT = { provider = "op", value = "op://homelab/GUARDOU/oidc_clie
 GUARDOU_OIDC_SECRET = { provider = "op", value = "op://homelab/GUARDOU/oidc_secret" }
 FLOWPLAN_OIDC_CLIENT = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_client" }
 FLOWPLAN_OIDC_SECRET = { provider = "op", value = "op://homelab/FLOWPLAN/oidc_secret" }
+TUDUDI_OIDC_CLIENT = { provider = "op", value = "op://homelab/TUDUDI/oidc_client" }
+TUDUDI_OIDC_SECRET = { provider = "op", value = "op://homelab/TUDUDI/oidc_secret" }
